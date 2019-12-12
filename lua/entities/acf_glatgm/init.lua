@@ -132,7 +132,7 @@ function ENT:Detonate()
 		btdat.DragCoef = btdat.SlugDragCoef
 		btdat.ProjMass = btdat.SlugMass
 		btdat.Caliber = btdat.SlugCaliber
-		btdat.PenAera = btdat.SlugPenAera
+		btdat.PenArea = btdat.SlugPenArea
 		btdat.Ricochet = btdat.SlugRicochet
 		
 		

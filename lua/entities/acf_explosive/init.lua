@@ -27,9 +27,9 @@ end
 
 
 local nullhit = {Damage = 0, Overkill = 1, Loss = 0, Kill = false}
-function ENT:ACF_OnDamage( Entity , Energy , FrAera , Angle , Inflictor )
+function ENT:ACF_OnDamage( Entity , Energy , FrArea , Angle , Inflictor )
 	self.ACF.Armour = 0.1
-	local HitRes = ACF_PropDamage( Entity , Energy , FrAera , Angle , Inflictor )	--Calling the standard damage prop function
+	local HitRes = ACF_PropDamage( Entity , Energy , FrArea , Angle , Inflictor )	--Calling the standard damage prop function
 	if self.Detonated or self.DisableDamage then return table.Copy(nullhit) end
 	
 	local CanDo = hook.Run("ACF_AmmoExplode", self, self.BulletData )
@@ -291,7 +291,7 @@ function ENT:ClusterNew(bdata)
 	self.BulletData["Filter"]			= self
 	self.BulletData["Flight"]			= bdata.Flight
 	self.BulletData["FlightTime"]		= 0
-	self.BulletData["FrAera"]			= bdata.FrAera
+	self.BulletData["FrArea"]			= bdata.FrArea
 	self.BulletData["FuseLength"]		= 0
 	self.BulletData["Gun"]				= self
 	self.BulletData["Id"]				= bdata.Id
@@ -300,7 +300,7 @@ function ENT:ClusterNew(bdata)
 	self.BulletData["LimitVel"]			= 700
 	self.BulletData["MuzzleVel"]		= bdata.MuzzleVel*20
 	self.BulletData["Owner"]			= bdata.Owner
-	self.BulletData["PenAera"]			= bdata.PenAera
+	self.BulletData["PenArea"]			= bdata.PenArea
 	self.BulletData["Pos"]				= bdata.Pos
 	self.BulletData["ProjLength"]		= bdata.ProjLength/Bomblets/2
 	self.BulletData["ProjMass"]			= bdata.ProjMass/Bomblets/2
@@ -322,13 +322,13 @@ function ENT:ClusterNew(bdata)
 	self.BulletData["SlugCaliber"]		= bdata.SlugCaliber/(Bomblets/6)
 	self.BulletData["SlugDragCoef"]		= bdata.SlugDragCoef/(Bomblets/6)
 	self.BulletData["SlugMV"]			= bdata.SlugMV/(Bomblets/6)
-	self.BulletData["SlugPenAera"]		= bdata.SlugPenAera/(Bomblets/6)
+	self.BulletData["SlugPenArea"]		= bdata.SlugPenArea/(Bomblets/6)
 	self.BulletData["SlugRicochet"]		= bdata.SlugRicochet
 	self.BulletData["ConeVol"] = bdata.SlugMass*1000/7.9/(Bomblets/6)
 	self.BulletData["CasingMass"] = self.BulletData.ProjMass + self.BulletData.FillerMass + (self.BulletData.ConeVol*1000/7.9)
 	self.BulletData["BoomFillerMass"] = self.BulletData.FillerMass/1.5
 	local SlugEnergy = ACF_Kinetic( self.BulletData.MuzzleVel*39.37 + self.BulletData.SlugMV*39.37 , self.BulletData.SlugMass, 999999 )
-	local  MaxPen = (SlugEnergy.Penetration/self.BulletData.SlugPenAera)*ACF.KEtoRHA
+	local  MaxPen = (SlugEnergy.Penetration/self.BulletData.SlugPenArea)*ACF.KEtoRHA
 	print(MaxPen)
 	
 	end
