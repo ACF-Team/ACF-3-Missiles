@@ -8,7 +8,7 @@ ACF_defineGunClass("FGL", {
 	sound = "acf_extra/tankfx/flare_launch.wav",
 	soundDistance = " ",
 	soundNormal = " ",
-	
+
 	ammoBlacklist   = {"AP", "APHE", "FL", "HE", "HEAT", "HP", "SM"} -- ok fun's over
 } )
 
@@ -28,4 +28,4 @@ ACF_defineGun("40mmFGL", { --id
 		maxlength = 9,
 		propweight = 0.007
 	}
-} )
+})

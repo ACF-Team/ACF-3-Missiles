@@ -1,4 +1,4 @@
-DEFINE_BASECLASS( "base_wire_entity" )
+DEFINE_BASECLASS("base_wire_entity")
 
 ENT.PrintName 		= "XCF Bomb"
 ENT.Author 			= "Bubbus"

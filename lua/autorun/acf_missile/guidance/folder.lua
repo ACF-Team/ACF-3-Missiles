@@ -13,6 +13,5 @@ include("autorun/acf_missile/guidance/guidance_radar.lua")
 AddCSLuaFile("autorun/acf_missile/guidance/guidance_antimissile.lua")
 include("autorun/acf_missile/guidance/guidance_antimissile.lua")
 
-
 AddCSLuaFile("autorun/acf_missile/guidance/guidance_infrared.lua")
 include("autorun/acf_missile/guidance/guidance_infrared.lua")

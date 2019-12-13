@@ -1,108 +1,83 @@
 AddCSLuaFile()
 
-function ACFMissiles_MenuSlider(config, controlGroup, combo, conCmd, min, max)
+function ACFMissiles_SetCommand(Combo, ControlGroup, Concmd)
+	local Argument
 
-    local slider = vgui.Create( "DNumSlider" )
-        slider.Label:SetText(config.DisplayName or "")
-        slider.Label:SetDark(true)
-        slider:SetMin( min )
-        slider:SetMax( max )
-        slider:SetValue( config.Min )
-        slider:SetDecimals( 2 )
-        --slider:Dock(FILL)
-        --slider:DockMargin(6,0,0,0)
-        slider.Configurable = config
-        
-        slider.GetConfigValue = function( slider )
-			local config = slider.Configurable
-            return math.Round(math.Clamp(slider:GetValue(), config.Min, config.Max), 3)
-        end
-        
-        slider.OnValueChanged = function( slider, val )
-            ACFMissiles_SetCommand(combo, controlGroup, conCmd)
-        end
-        
-        controlGroup[#controlGroup+1] = slider
-        
-    return slider
+	if not ControlGroup then
+		Argument = tostring(Combo:GetValue())
+	else
+		local CGString = ""
 
+		for _, Control in ipairs(ControlGroup) do
+			CGString = CGString .. ":" .. Control.Configurable.CommandName .. "=" .. tostring(Control:GetConfigValue())
+		end
+
+		Argument = tostring(Combo:GetValue()) .. tostring(CGString)
+	end
+
+	RunConsoleCommand(Concmd, Argument)
 end
 
+function ACFMissiles_MenuSlider(Config, ControlGroup, Combo, Concmd, Min, Max)
+	local MenuSlider = vgui.Create("DNumSlider")
+	MenuSlider.Label:SetText(Config.DisplayName or "")
+	MenuSlider.Label:SetDark(true)
+	MenuSlider:SetMinMax(Min, Max)
+	MenuSlider:SetValue(Config.Min)
+	MenuSlider:SetDecimals( 2 )
+	MenuSlider.Configurable = Config
 
+	MenuSlider.GetConfigValue = function(This)
+		local SliderConfig = MenuSlider.Configurable
 
-function ACFMissiles_SetCommand(combo, controlGroup, conCmd)
+		return math.Round(math.Clamp(This:GetValue(), SliderConfig.Min, SliderConfig.Max), 3)
+	end
 
-    if not controlGroup then
-        local name = combo:GetValue()
-        RunConsoleCommand( conCmd, tostring(name) )
-    else
-        local name = combo:GetValue()
-        local kvString = ""
-        
-        if #controlGroup > 0 then
-            local i = 1
-            repeat
-                local control = controlGroup[i]
-                kvString = kvString .. ":" .. control.Configurable.CommandName .. "=" .. tostring(control:GetConfigValue())
-                i = i+1
-            until i > #controlGroup
-        end
-        
-        RunConsoleCommand( conCmd, tostring(name) .. tostring(kvString) )
-    end
+	MenuSlider.OnValueChanged = function()
+		ACFMissiles_SetCommand(Combo, ControlGroup, Concmd)
+	end
 
+	ControlGroup[#ControlGroup + 1] = MenuSlider
+
+	return MenuSlider
 end
 
+ACFMissiles_ConfigurationFactory = {
+	number = function(Config, ControlGroup, Combo, Concmd, GunData)
+		local Min = Config.MinConfig and GunData.armdelay or Config.Min
 
-
-
-ACFMissiles_ConfigurationFactory = 
-{
-    number =    function(config, controlGroup, combo, conCmd, gundata) 
-                    --print(config.MinConfig, gundata.armdelay, config.Min, gundata[config.MinConfig], gundata.id)
-                    local min = config.MinConfig and gundata.armdelay or config.Min
-                    return ACFMissiles_MenuSlider(config, controlGroup, combo, conCmd, min, config.Max)
-                end
+		return ACFMissiles_MenuSlider(Config, ControlGroup, Combo, Concmd, Min, Config.Max)
+	end
 }
 
+function ACFMissiles_CreateMenuConfiguration(Data, Combo, Concmd, Panel, GunData)
 
+	Panel = Panel or vgui.Create("DScrollPanel")
+	Panel:Clear()
 
+	if not Data.Configurable or not next(Data.Configurable) then
+		Panel:SetTall(0)
 
-function ACFMissiles_CreateMenuConfiguration(tbl, combo, conCmd, existingPanel, gundata)
-    
-    local panel = existingPanel or vgui.Create("DScrollPanel")
-    
-    panel:Clear()
-    
-    if not tbl.Configurable or #tbl.Configurable < 1 then 
-        panel:SetTall(0)
-        return panel 
-    end
-    
-    local controlGroup = {}
-    
-    local height = 0
-    
-    for _, config in pairs(tbl.Configurable) do
-        local control = ACFMissiles_ConfigurationFactory[config.Type](config, controlGroup, combo, conCmd, gundata)
-        control:SetPos(6, height)
-        
-        panel:Add(control)
-        
-        control:StretchToParent(0,nil,0,nil)
-        
-        height = height + control:GetTall()
-    end
-    
-    panel:SetTall(height + 2)
-    
-    combo.ControlGroup = controlGroup
-    
-    return panel
-    
-end
+		return Panel
+	end
 
+	local ControlGroup = {}
+	local Height = 0
 
-function ACFMissiles_RemoveMenuConfiguration()
-    ErrorNoHalt("TODO: ACFMissiles_RemoveMenuConfiguration")
+	for _, Config in pairs(Data.Configurable) do
+		local Control = ACFMissiles_ConfigurationFactory[Config.Type](Config, ControlGroup, Combo, Concmd, GunData)
+		Control:SetPos(6, Height)
+
+		Panel:Add(Control)
+
+		Control:StretchToParent(0, nil, 0, nil)
+
+		Height = Height + Control:GetTall()
+	end
+
+	Panel:SetTall(Height + 2)
+
+	Combo.ControlGroup = ControlGroup
+
+	return Panel
 end

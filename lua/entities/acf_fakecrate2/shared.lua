@@ -1,4 +1,5 @@
 DEFINE_BASECLASS("base_gmodentity")
+
 ENT.PrintName 		= "ACF SWEP Fake Crate"
 ENT.Author 			= "Bubbus"
 ENT.Contact 		= "splambob@googlemail.com"

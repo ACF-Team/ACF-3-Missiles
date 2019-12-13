@@ -1,248 +1,173 @@
 
-
 ACFM_Flares = {}
-
 ACFM_FlareUID = 0
 
+function ACFM_RegisterFlare(BulletData)
+	BulletData.FlareUID = ACFM_FlareUID
 
-
-
-function ACFM_RegisterFlare(bdata)
-
-	bdata.FlareUID = ACFM_FlareUID
-	ACFM_Flares[bdata.Index] = ACFM_FlareUID
-	
+	ACFM_Flares[BulletData.Index] = ACFM_FlareUID
 	ACFM_FlareUID = ACFM_FlareUID + 1
-	
-	
-	local flareObj = ACF.Countermeasure.Flare()
-	flareObj:Configure(bdata)
-	
-	bdata.FlareObj = flareObj
 
-	
-	ACFM_OnFlareSpawn(bdata)
-	
+	local FlareObj = ACF.Countermeasure.Flare()
+	FlareObj:Configure(BulletData)
+
+	BulletData.FlareObj = FlareObj
+
+	ACFM_OnFlareSpawn(BulletData)
 end
 
+function ACFM_UnregisterFlare(BulletData)
+	local FlareObj = BulletData.FlareObj
 
-
-
-function ACFM_UnregisterFlare(bdata)
-
-	local flareObj = bdata.FlareObj
-	
-	if flareObj then
-		flareObj.Flare = nil
+	if FlareObj then
+		FlareObj.Flare = nil
 	end
 
-	ACFM_Flares[bdata.Index] = nil
-
+	ACFM_Flares[BulletData.Index] = nil
 end
 
+function ACFM_OnFlareSpawn(BulletData)
+	local FlareObj = BulletData.FlareObj
+	local Missiles = FlareObj:ApplyToAll()
 
-
-
-function ACFM_OnFlareSpawn(bdata)
-
-	local flareObj = bdata.FlareObj
-
-	local missiles = flareObj:ApplyToAll()
-	
-	for k, missile in pairs(missiles) do
-		missile.Guidance.Override = flareObj
+	for _, Missile in pairs(Missiles) do
+		Missile.Guidance.Override = FlareObj
 	end
-
 end
 
+function ACFM_GetFlaresInCone(Position, Direction, Degrees)
+	local Result = {}
+	local Bullets = ACF.Bullet
 
+	for Index, UID in pairs(ACFM_Flares) do
+		local Flare = Bullets[Index]
 
-
-function ACFM_GetFlaresInCone(pos, dir, degs)
-
-	local ret = {}
-	local bullets = ACF.Bullet
-	
-	for idx, uid in pairs(ACFM_Flares) do
-		
-		local flare = bullets[idx]
-		
-		if not (flare and flare.FlareUID and flare.FlareUID == uid) then continue end
-		
-		if ACFM_ConeContainsPos(pos, dir, degs, flare.Pos) then
-			ret[#ret+1] = flare
+		if not (Flare and Flare.FlareUID and Flare.FlareUID == UID) then
+			continue
 		end
-		
-	end
 
-	return ret
-	
-end
-
-
-
-
-function ACFM_GetAnyFlareInCone(pos, dir, degs)
-
-	local bullets = ACF.Bullet
-	
-	for idx, uid in pairs(ACFM_Flares) do
-		
-		local flare = bullets[idx]
-		
-		if not (flare and flare.FlareUID and flare.FlareUID == uid) then continue end
-		
-		if ACFM_ConeContainsPos(pos, dir, degs, flare.Pos) then
-			return flare
+		if ACFM_ConeContainsPos(Position, Direction, Degrees, Flare.Pos) then
+			Result[#Result + 1] = Flare
 		end
-		
 	end
-	
+
+	return Result
 end
 
+function ACFM_GetAnyFlareInCone(Position, Direction, Degrees)
+	local Bullets = ACF.Bullet
 
+	for Index, UID in pairs(ACFM_Flares) do
+		local Flare = Bullets[Index]
 
-
-function ACFM_GetMissilesInCone(pos, dir, degs)
-
-	local ret = {}
-	
-	for missile, _ in pairs(ACF_ActiveMissiles) do
-		
-		if not IsValid(missile) then continue end
-		
-		if ACFM_ConeContainsPos(pos, dir, degs, missile:GetPos()) then
-			ret[#ret+1] = missile
+		if not (Flare and Flare.FlareUID and Flare.FlareUID == UID) then
+			continue
 		end
-		
-	end
 
-	return ret
-	
-end
-
-
-
-
-function ACFM_GetMissilesInSphere(pos, radius)
-
-	local ret = {}
-	
-	local radSqr = radius * radius
-	
-	for missile, _ in pairs(ACF_ActiveMissiles) do
-		
-		if not IsValid(missile) then continue end
-		
-		if pos:DistToSqr(missile:GetPos()) <= radSqr then
-			ret[#ret+1] = missile
+		if ACFM_ConeContainsPos(Position, Direction, Degrees, Flare.Pos) then
+			return Flare
 		end
-		
 	end
-
-	return ret
-	
 end
 
+function ACFM_GetMissilesInCone(Position, Direction, Degrees)
+	local Result = {}
 
+	for Missile in pairs(ACF_ActiveMissiles) do
+		if not IsValid(Missile) then
+			continue
+		end
 
+		if ACFM_ConeContainsPos(Position, Direction, Degrees, Missile:GetPos()) then
+			Result[#Result + 1] = Missile
+		end
+
+	end
+
+	return Result
+end
+
+function ACFM_GetMissilesInSphere(Position, Radius)
+	local Result = {}
+	local RadiusSqr = Radius * Radius
+
+	for Missile in pairs(ACF_ActiveMissiles) do
+		if not IsValid(Missile) then
+			continue
+		end
+
+		if Position:DistToSqr(Missile:GetPos()) <= RadiusSqr then
+			Result[#Result + 1] = Missile
+		end
+	end
+
+	return Result
+end
 
 -- Tests flare distraction effect upon all undistracted missiles, but does not perform the effect itself.  Returns a list of potentially affected missiles.
 -- argument is the bullet in the acf bullet table which represents the flare - not the cm_flare object!
-function ACFM_GetAllMissilesWhichCanSee(pos)
+function ACFM_GetAllMissilesWhichCanSee(Position)
+	local Result = {}
 
-	local ret = {}
+	for Missile in pairs(ACF_ActiveMissiles) do
+		local Guidance = Missile.Guidance
 
-	for missile, _ in pairs(ACF_ActiveMissiles) do
-	
-		local guidance = missile.Guidance
-	
-		if not guidance or guidance.Override or not guidance.ViewCone then 
-			continue 
-		end
-				
-		if ACFM_ConeContainsPos(missile:GetPos(), missile:GetForward(), guidance.ViewCone, pos) then
-			ret[#ret+1] = missile
-		end
-		
-	end
-	
-	return ret
-	
-end
-
-
-
-
-function ACFM_ConeContainsPos(conePos, coneDir, degs, pos)
-
-	local minDot = math.cos( math.rad(degs) )	
-		
-	local testDir = pos - conePos
-	testDir:Normalize()
-	
-	local dot = coneDir:Dot(testDir)
-	
-	return (dot >= minDot)
-end
-
-
-
-
-function ACFM_ApplyCountermeasures(missile, guidance)
-
-	if guidance.Override then return end
-	
-	for name, measure in pairs(ACF.Countermeasure) do
-	
-		if not measure.ApplyContinuous then
+		if not Guidance or Guidance.Override or not Guidance.ViewCone then
 			continue
 		end
-	
-		if ACFM_ApplyCountermeasure(missile, guidance, measure) then
-			break
+
+		if ACFM_ConeContainsPos(Missile:GetPos(), Missile:GetForward(), Guidance.ViewCone, Position) then
+			Result[#Result + 1] = Missile
 		end
-	
 	end
 
+	return Result
 end
 
+function ACFM_ConeContainsPos(ConePos, ConeDir, Degrees, Position)
+	local MinimumDot = math.cos(math.rad(Degrees))
+	local Direction = (Position - ConePos):GetNormalized()
 
+	return ConeDir:Dot(Direction) >= MinimumDot
+end
 
+function ACFM_ApplyCountermeasures(Missile, Guidance)
+	if Guidance.Override then return end
 
-function ACFM_ApplySpawnCountermeasures(missile, guidance)
-
-	if guidance.Override then return end
-	
-	for name, measure in pairs(ACF.Countermeasure) do
-	
-		if measure.ApplyContinuous then
+	for _, CounterMeasure in pairs(ACF.Countermeasure) do
+		if not CounterMeasure.ApplyContinuous then
 			continue
 		end
-	
-		if ACFM_ApplyCountermeasure(missile, guidance, measure) then
+
+		if ACFM_ApplyCountermeasure(Missile, Guidance, CounterMeasure) then
 			break
 		end
-	
 	end
-
 end
 
+function ACFM_ApplySpawnCountermeasures(Missile, Guidance)
+	if Guidance.Override then return end
 
+	for _, CounterMeasure in pairs(ACF.Countermeasure) do
+		if CounterMeasure.ApplyContinuous then
+			continue
+		end
 
+		if ACFM_ApplyCountermeasure(Missile, Guidance, CounterMeasure) then
+			break
+		end
+	end
+end
 
-function ACFM_ApplyCountermeasure(missile, guidance, measure)
-
-	if not measure.AppliesTo[guidance.Name] then 
+function ACFM_ApplyCountermeasure(Missile, Guidance, CounterMeasure)
+	if not CounterMeasure.AppliesTo[Guidance.Name] then
 		return false
-	end		
-	
-	local override = measure.ApplyAll(missile, guidance)
-	
-	if override then
-		guidance.Override = override
+	end
+
+	local Override = CounterMeasure.ApplyAll(Missile, Guidance)
+
+	if Override then
+		Guidance.Override = Override
 		return true
 	end
-
 end
-

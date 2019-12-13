@@ -16,15 +16,12 @@ AddCSLuaFile("autorun/printbyname.lua")
 AddCSLuaFile("acf/client/cl_acfmenu_missileui.lua")
 
 if SERVER then
-
-  include("gitrc.lua")
-
+	include("gitrc.lua")
 end
 
 AddCSLuaFile("includes/modules/markdown.lua")
 AddCSLuaFile("acf/client/cl_missilewiki.lua")
 AddCSLuaFile("autorun/client/acfm_wiki.lua")
-
 
 AddCSLuaFile("acf/shared/sh_acfm_getters.lua")
 AddCSLuaFile("autorun/sh_acfm_roundinject.lua")

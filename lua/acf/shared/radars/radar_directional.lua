@@ -4,9 +4,6 @@ ACF_DefineRadarClass("DIR-AM", {
 	desc = "A radar with unlimited range but a limited view cone.  Only detects launched missiles.\nThese can be parented to what they are welded to.",
 } )
 
-
-
-
 ACF_DefineRadar("SmallDIR-AM", {
 	name 		= "Small Directional Radar",
 	ent			= "acf_missileradar",
@@ -17,7 +14,6 @@ ACF_DefineRadar("SmallDIR-AM", {
 	viewcone 	= 25 -- half of the total cone.  'viewcone = 30' means 60 degs total viewcone.
 } )
 
-
 ACF_DefineRadar("MediumDIR-AM", {
 	name 		= "Medium Directional Radar",
 	ent			= "acf_missileradar",
@@ -27,7 +23,6 @@ ACF_DefineRadar("MediumDIR-AM", {
 	weight 		= 400,
 	viewcone 	= 40 -- half of the total cone.  'viewcone = 30' means 60 degs total viewcone.
 } )
-
 
 ACF_DefineRadar("LargeDIR-AM", {
 	name 		= "Large Directional Radar",

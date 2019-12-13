@@ -1,6 +1,6 @@
 --define the class
 ACF_defineGunClass("BOMB", {
-    type            = "missile",  -- i know i know
+	type            = "missile",  -- i know i know
 	spread          = 1,
 	name            = "General Purpose Bomb",
 	desc            = "Free-falling bombs.  Despite their lack of guidance and sophistication, they are exceptionally destructive on impact relative to their weight.",
@@ -10,10 +10,10 @@ ACF_defineGunClass("BOMB", {
 	soundDistance   = " ",
 	soundNormal     = " ",
 	nothrust		= true,
-    
-    reloadmul       = 8,
-    
-    ammoBlacklist   = {"AP", "APHE", "FL"} -- Including FL would mean changing the way round classes work.
+
+	reloadmul       = 8,
+
+	ammoBlacklist   = {"AP", "APHE", "FL"} -- Including FL would mean changing the way round classes work.
 } )
 
 --[[ we don't use barrels!
@@ -44,9 +44,9 @@ ACF_defineGun("BarrelBOMB", { --id
 			penmul = math.sqrt(0.01),
 	},
 
-    ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
-    guidance    = {"Dumb"}, --no shit.
-    fuses       = {"Contact"},
+	ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
+	guidance    = {"Dumb"}, --no shit.
+	fuses       = {"Contact"},
 
 	racks       = {["1xRK_small"] = true,  ["1xRK"] = true, ["2xRK"] = true,  ["3xRK"] = true, ["4xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
@@ -64,12 +64,12 @@ ACF_defineGun("50kgBOMB", { --id
 	desc = "Old WW2 100lb bomb, most effective vs exposed infantry and light trucks.",
 	model = "models/bombs/fab50.mdl",
 	gunclass = "BOMB",
-    rack = "3xRK",  -- Which rack to spawn this missile on?
+	rack = "3xRK",  -- Which rack to spawn this missile on?
 	length = 5,
 	caliber = 5.0,
 	weight = 50,    -- Don't scale down the weight though!
 	year = 1936,
-    modeldiameter = 2.4 * 2.7, -- in cm
+	modeldiameter = 2.4 * 2.7, -- in cm
 	round = {
 		model		= "models/bombs/fab50.mdl",
 		rackmdl		= "models/bombs/fab50.mdl",
@@ -83,35 +83,34 @@ ACF_defineGun("50kgBOMB", { --id
 		minspeed	= 1,			-- minimum speed beyond which the fins work at 100% efficiency
 		dragcoef	= 0.002,		-- drag coefficient of the missile
 		finmul		= 0.008,		-- fin multiplier (mostly used for unpropelled guidance)
-        penmul      = math.sqrt(0.6)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
+		penmul      = math.sqrt(0.6)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
 	},
-   
-    ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
-    guidance    = {"Dumb"},
-    fuses       = {"Contact", "Optical", "Cluster"},
-    
+
+	ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
+	guidance    = {"Dumb"},
+	fuses       = {"Contact", "Optical", "Cluster"},
+
 	racks       = {["1xRK_small"] = true,  ["1xRK"] = true, ["2xRK"] = true,  ["3xRK"] = true, ["4xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
-  
-	
-    seekcone    = 40,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
-    viewcone    = 60,   -- getting outside this cone will break the lock.  Divided by 2. 
-    
-    agility     = 1,     -- multiplier for missile turn-rate.
+
+
+	seekcone    = 40,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
+	viewcone    = 60,   -- getting outside this cone will break the lock.  Divided by 2. 
+
+	agility     = 1,     -- multiplier for missile turn-rate.
 	armdelay    = 0.5     -- minimum fuse arming delay
 } )
-
 
 ACF_defineGun("100kgBOMB", { --id
 	name = "100kg Free Falling Bomb",
 	desc = "An old 250lb WW2 bomb, as used by Soviet bombers to destroy enemies of the Motherland.",
 	model = "models/bombs/fab100.mdl",
 	gunclass = "BOMB",
-    rack = "1xRK",  -- Which rack to spawn this missile on?
+	rack = "1xRK",  -- Which rack to spawn this missile on?
 	length = 50,
 	caliber = 10.0,
 	weight = 100,    -- Don't scale down the weight though!
 	year = 1939,
-    modeldiameter = 21.2 * 1.4, -- in cm
+	modeldiameter = 21.2 * 1.4, -- in cm
 	round = {
 		model		= "models/bombs/fab100.mdl",
 		rackmdl		= "models/bombs/fab100.mdl",
@@ -125,20 +124,20 @@ ACF_defineGun("100kgBOMB", { --id
 		minspeed	= 1,			-- minimum speed beyond which the fins work at 100% efficiency
 		dragcoef	= 0.002,		-- drag coefficient of the missile
 		finmul		= 0.007,			-- fin multiplier (mostly used for unpropelled guidance)
-        penmul      = math.sqrt(0.6)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
+		penmul      = math.sqrt(0.6)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
 	},
-   
-    ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
+
+	ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
 	guidance    = {"Dumb"},
 	fuses       = {"Contact", "Optical", "Cluster"},
-    
-	racks       = {["1xRK_small"] = true, ["1kRK"] = true, ["2xRK"] = true,  ["3xRK"] = true, ["4xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
- 
-    seekcone    = 40,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
-    viewcone    = 60,   -- getting outside this cone will break the lock.  Divided by 2. 
-    
-    agility     = 1,     -- multiplier for missile turn-rate.
-    armdelay    = 1     -- minimum fuse arming delay
+
+	racks       = {["1xRK_small"] = true, ["1xRK"] = true, ["2xRK"] = true,  ["3xRK"] = true, ["4xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
+
+	seekcone    = 40,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
+	viewcone    = 60,   -- getting outside this cone will break the lock.  Divided by 2. 
+
+	agility     = 1,     -- multiplier for missile turn-rate.
+	armdelay    = 1     -- minimum fuse arming delay
 } )
 
 ACF_defineGun("250kgBOMB", { --id
@@ -146,12 +145,12 @@ ACF_defineGun("250kgBOMB", { --id
 	desc = "A heavy 500lb bomb, widely used as a tank buster on various WW2 aircraft.",
 	model = "models/bombs/fab250.mdl",
 	gunclass = "BOMB",
-    rack = "1xRK",  -- Which rack to spawn this missile on?
+	rack = "1xRK",  -- Which rack to spawn this missile on?
 	length = 5000,
 	caliber = 12.5,
 	weight = 250,    -- Don't scale down the weight though!
 	year = 1941,
-    modeldiameter = 16.3 * 1.9, -- in cm
+	modeldiameter = 16.3 * 1.9, -- in cm
 	round = {
 		model		= "models/bombs/fab250.mdl",
 		rackmdl		= "models/bombs/fab250.mdl",
@@ -165,21 +164,21 @@ ACF_defineGun("250kgBOMB", { --id
 		minspeed	= 1,			-- minimum speed beyond which the fins work at 100% efficiency
 		dragcoef	= 0.002,		-- drag coefficient of the missile
 		finmul		= 0.005,			-- fin multiplier (mostly used for unpropelled guidance)
-        penmul      = math.sqrt(0.6)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
+		penmul      = math.sqrt(0.6)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
 	},
-   
-    ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
+
+	ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
 	guidance    = {"Dumb"},
-    fuses       = {"Contact", "Optical", "Cluster"},
- 
+	fuses       = {"Contact", "Optical", "Cluster"},
+
 	racks       = {["1xRK"] = true,  ["2xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
- 
-    seekcone    = 40,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
-    viewcone    = 60,   -- getting outside this cone will break the lock.  Divided by 2. 
-    
-    agility     = 1,     -- multiplier for missile turn-rate.
-    armdelay    = 1     -- minimum fuse arming delay
+
+	seekcone    = 40,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
+	viewcone    = 60,   -- getting outside this cone will break the lock.  Divided by 2. 
+
+	agility     = 1,     -- multiplier for missile turn-rate.
+	armdelay    = 1     -- minimum fuse arming delay
 } )
 
 ACF_defineGun("500kgBOMB", { --id
@@ -187,12 +186,12 @@ ACF_defineGun("500kgBOMB", { --id
 	desc = "A 1000lb bomb, as found in the heavy bombers of late WW2. Best used against fortifications or immobile targets.",
 	model = "models/bombs/fab500.mdl",
 	gunclass = "BOMB",
-    rack = "1xRK",  -- Which rack to spawn this missile on?
+	rack = "1xRK",  -- Which rack to spawn this missile on?
 	length = 15000,
 	caliber = 30.0,
 	weight = 500,    -- Don't scale down the weight though!
 	year = 1943,
-    modeldiameter = 16.3 * 1.9, -- in cm
+	modeldiameter = 16.3 * 1.9, -- in cm
 	round = {
 		model		= "models/bombs/fab500.mdl",
 		rackmdl		= "models/bombs/fab500.mdl",
@@ -206,20 +205,20 @@ ACF_defineGun("500kgBOMB", { --id
 		minspeed	= 1,			-- minimum speed beyond which the fins work at 100% efficiency
 		dragcoef	= 0.002,		-- drag coefficient of the missile
 		finmul		= 0.004,			-- fin multiplier (mostly used for unpropelled guidance)
-        penmul      = math.sqrt(0.6)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
+		penmul      = math.sqrt(0.6)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
 	},
-   
-    ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
+
+	ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
 	guidance    = {"Dumb"},
 	fuses       = {"Contact", "Optical", "Cluster"},
 
 	racks       = {["1xRK"] = true,  ["2xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
- 
-    seekcone    = 40,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
-    viewcone    = 60,   -- getting outside this cone will break the lock.  Divided by 2. 
-    
-    agility     = 1,     -- multiplier for missile turn-rate.
-    armdelay    = 2     -- minimum fuse arming delay
+
+	seekcone    = 40,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
+	viewcone    = 60,   -- getting outside this cone will break the lock.  Divided by 2. 
+
+	agility     = 1,     -- multiplier for missile turn-rate.
+	armdelay    = 2     -- minimum fuse arming delay
 } )
 
 ACF_defineGun("1000kgBOMB", { --id
@@ -227,12 +226,12 @@ ACF_defineGun("1000kgBOMB", { --id
 	desc = "A 2000lb bomb. As close to a nuke as you can get in ACF, this munition will turn everything it touches to ashes. Handle with care.",
 	model = "models/bombs/an_m66.mdl",
 	gunclass = "BOMB",
-    rack = "1xRK",  -- Which rack to spawn this missile on?
+	rack = "1xRK",  -- Which rack to spawn this missile on?
 	length = 30000,
 	caliber = 30.0,
 	weight = 1000,    -- Don't scale down the weight though! 
 	year = 1945,
-    modeldiameter = 16.3 * 4.5, -- in cm
+	modeldiameter = 16.3 * 4.5, -- in cm
 	round = {
 		model		= "models/bombs/an_m66.mdl",
 		rackmdl		= "models/bombs/an_m66.mdl",
@@ -246,34 +245,33 @@ ACF_defineGun("1000kgBOMB", { --id
 		minspeed	= 1,			-- minimum speed beyond which the fins work at 100% efficiency
 		dragcoef	= 0.002,		-- drag coefficient of the missile
 		finmul		= 0.004,			-- fin multiplier (mostly used for unpropelled guidance)
-        penmul      = math.sqrt(0.6)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
+		penmul      = math.sqrt(0.6)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
 	},
-   
-    ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
+
+	ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
 	guidance    = {"Dumb"},
 	fuses       = {"Contact", "Optical", "Cluster"},
- 
-	racks       = {["1xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
- 
-    seekcone    = 40,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
-    viewcone    = 60,   -- getting outside this cone will break the lock.  Divided by 2. 
-    
-    agility     = 1,     -- multiplier for missile turn-rate.
-    armdelay    = 3     -- minimum fuse arming delay
-} )
 
+	racks       = {["1xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
+
+	seekcone    = 40,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
+	viewcone    = 60,   -- getting outside this cone will break the lock.  Divided by 2. 
+
+	agility     = 1,     -- multiplier for missile turn-rate.
+	armdelay    = 3     -- minimum fuse arming delay
+} )
 
 ACF_defineGun("100kgGBOMB", { --id
 	name = "100kg Glide Bomb",
 	desc = "A 250-pound bomb, fitted with fins for a longer reach.  Well suited to dive bombing, but bulkier and heavier from its fins.",
 	model = "models/missiles/micro.mdl",
 	gunclass = "BOMB",
-    rack = "1xRK",  -- Which rack to spawn this missile on?
+	rack = "1xRK",  -- Which rack to spawn this missile on?
 	length = 75,
 	caliber = 10.0,
 	weight = 150,    -- Don't scale down the weight though!
 	year = 1939,
-    modeldiameter = 21.2 * 1.4, -- in cm
+	modeldiameter = 21.2 * 1.4, -- in cm
 	round = {
 		model		= "models/missiles/micro.mdl",
 		rackmdl		= "models/missiles/micro.mdl",
@@ -287,33 +285,32 @@ ACF_defineGun("100kgGBOMB", { --id
 		minspeed	= 500,			-- minimum speed beyond which the fins work at 100% efficiency
 		dragcoef	= 0.0001,		-- drag coefficient of the missile
 		finmul		= 0.05,			-- fin multiplier (mostly used for unpropelled guidance)
-        penmul      = math.sqrt(0.6)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
+		penmul      = math.sqrt(0.6)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
 	},
-   
-    ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
+
+	ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
 	guidance    = {"Dumb"},
 	fuses       = {"Contact", "Optical", "Cluster"},
-	racks       = {["1xRK_small"] = true, ["1kRK"] = true, ["2xRK"] = true,  ["3xRK"] = true, ["4xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
-    
+	racks       = {["1xRK_small"] = true, ["1xRK"] = true, ["2xRK"] = true,  ["3xRK"] = true, ["4xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
+
 	armdelay    = 1     -- minimum fuse arming delay
 })
-
 
 ACF_defineGun("250kgGBOMB", { --id
 	name = "250kg Glide Bomb",
 	desc = "A heavy 500lb bomb, fitted with fins for a gliding trajectory better suited to striking point targets.",
 	model = "models/missiles/fab250.mdl",
 	gunclass = "BOMB",
-    rack = "1xRK",  -- Which rack to spawn this missile on?
+	rack = "1xRK",  -- Which rack to spawn this missile on?
 	length = 150,
 	caliber = 12.5,
 	weight = 375,    -- Don't scale down the weight though!
 	year = 1941,
-    modeldiameter = 16.3 * 1.9, -- in cm
+	modeldiameter = 16.3 * 1.9, -- in cm
 	round = {
 		model		= "models/missiles/fab250.mdl",
 		rackmdl		= "models/missiles/fab250.mdl",
-		maxlength	= 250, 
+		maxlength	= 250,
 		casing		= 1.5,	        -- thickness of missile casing, cm
 		armour		= 25,			-- effective armour thickness of casing, in mm
 		propweight	= 0,	        -- motor mass - motor casing
@@ -323,13 +320,13 @@ ACF_defineGun("250kgGBOMB", { --id
 		minspeed	= 500,			-- minimum speed beyond which the fins work at 100% efficiency
 		dragcoef	= 0.001,		-- drag coefficient of the missile
 		finmul		= 0.05,			-- fin multiplier (mostly used for unpropelled guidance)
-        penmul      = math.sqrt(0.6)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
+		penmul      = math.sqrt(0.6)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
 	},
-   
-    ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
+
+	ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
 	guidance    = {"Dumb"},
-    fuses       = {"Contact", "Optical", "Cluster"},
- 
+	fuses       = {"Contact", "Optical", "Cluster"},
+
 	racks       = {["1xRK"] = true,  ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
-    armdelay    = 1     -- minimum fuse arming delay
+	armdelay    = 1     -- minimum fuse arming delay
 } )
