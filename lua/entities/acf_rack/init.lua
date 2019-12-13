@@ -913,7 +913,7 @@ function ENT:CheckLegal()
 	if self:GetPhysicsObject():GetMass() < (self.LegalWeight or self.Mass) then return false end
 
 	-- update the acfphysparent
-	ACF_GetPhysicalParent(self)
+	ACF_GetAncestor(self)
 	
 	return self.acfphysparent:IsSolid()
 	
