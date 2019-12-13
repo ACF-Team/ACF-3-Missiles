@@ -46,7 +46,9 @@ function ACF_DefineRack(ID, Data)
 	Data.id = ID
 
 	for K, V in pairs(rack_base) do
-		Data[K] = V
+		if not Data[K] then
+			Data[K] = V
+		end
 	end
 
 	Racks[ID] = Data
@@ -62,7 +64,9 @@ function ACF_DefineRadar(ID, Data)
 	Data.id = ID
 
 	for K, V in pairs(radar_base) do
-		Data[K] = V
+		if not Data[K] then
+			Data[K] = V
+		end
 	end
 
 	Radars[ID] = Data
@@ -99,7 +103,9 @@ function ACF_defineGun(ID, Data)
 	Data.round.id = ID
 
 	for K, V in pairs(gun_base) do
-		Data[K] = V
+		if not Data[K] then
+			Data[K] = V
+		end
 	end
 
 	Weapons.Guns[ID] = Data
