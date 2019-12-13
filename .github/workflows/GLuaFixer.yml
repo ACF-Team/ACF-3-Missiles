@@ -7,12 +7,14 @@ on:
     - '!lua/expadv/**'
     - '!lua/starfall/**'
     - '!lua/entities/gmod_wire_expression2/**'
+    - '!lua/includes/modules/markdown.lua'
   pull_request:
     paths:
     - 'lua/**'
     - '!lua/expadv/**'
     - '!lua/starfall/**'
     - '!lua/entities/gmod_wire_expression2/**'
+    - '!lua/includes/modules/markdown.lua'
 
 jobs:
   build:
