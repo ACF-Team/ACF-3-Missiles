@@ -7,6 +7,26 @@ include("shared.lua")
 
 DEFINE_BASECLASS("acf_explosive")
 
+local function CheckRackID(ID, MissileID)
+	local Weapons = ACF.Weapons
+
+	if not (ID and Weapons.Rack[ID]) then
+		local GunClass = Weapons.Guns[MissileID]
+
+		if not GunClass then
+			error("Couldn't spawn the missile rack: can't find the gun-class '" .. tostring(MissileID) .. "'.")
+		end
+
+		if not GunClass.rack then
+			error("Couldn't spawn the missile rack: '" .. tostring(MissileID) .. "' doesn't have a preferred missile rack.")
+		end
+
+		ID = GunClass.rack
+	end
+
+	return ID
+end
+
 function ENT:GetReloadTime(nextMsl)
 	local reloadMul = (self.ReloadMultiplier or 1)
 	local reloadBonus = (self.ReloadMultiplierBonus or 0)
@@ -207,7 +227,7 @@ function ENT:CanLinkCrate(crate)
 	local bdata = crate.BulletData
 
 	-- Don't link if it's a refill crate
-	if bdata["RoundType"] == "Refill" or bdata["Type"] == "Refill" then
+	if bdata.RoundType == "Refill" or bdata.Type == "Refill" then
 		return false, "Refill crates cannot be linked!"
 	end
 
@@ -298,10 +318,10 @@ function ENT:GetUser( inp )
 			return inp.Pod:GetDriver()
 		end
 	elseif inp:GetClass() == "gmod_wire_expression2" then
-		if inp.Inputs["Fire"] then
-			return self:GetUser(inp.Inputs["Fire"].Src)
-		elseif inp.Inputs["Shoot"] then
-			return self:GetUser(inp.Inputs["Shoot"].Src)
+		if inp.Inputs.Fire then
+			return self:GetUser(inp.Inputs.Fire.Src)
+		elseif inp.Inputs.Shoot then
+			return self:GetUser(inp.Inputs.Shoot.Src)
 		elseif inp.Inputs then
 			for _,v in pairs(inp.Inputs) do
 				if not IsValid(v.Src) then return inp.Owner or inp:GetOwner() end
@@ -318,7 +338,7 @@ end
 function ENT:TriggerInput( iname , value )
 	if ( iname == "Fire" and value ~= 0 and ACF.GunfireEnabled ) then
 		if self.NextFire >= 1 then
-			self.User = self:GetUser(self.Inputs["Fire"].Src)
+			self.User = self:GetUser(self.Inputs.Fire.Src)
 			if not IsValid(self.User) then self.User = self.Owner end
 			self:FireMissile()
 			self:Think()
@@ -347,9 +367,9 @@ function RetDist( enta, entb )
 end
 
 function ENT:SetStatusString()
-	local phys = self:GetPhysicsObject()
+	local PhysObj = self:GetPhysicsObject()
 
-	if not IsValid(phys) then
+	if not IsValid(PhysObj) then
 		self:SetNWString("Status", "Something truly horrifying happened to this rack - it has no physics object.")
 		return
 	end
@@ -542,19 +562,19 @@ function ENT:SetLoadedWeight()
 	for _, missile in pairs(self.Missiles) do
 		addWeight = addWeight + missile.RoundWeight
 
-		local phys = missile:GetPhysicsObject()
+		local PhysObj = missile:GetPhysicsObject()
 
-		if IsValid(phys) then
-			phys:SetMass( 5 ) -- Will result in slightly heavier rack but is probably a good idea to have some mass for any damage calcs.
+		if IsValid(PhysObj) then
+			PhysObj:SetMass( 5 ) -- Will result in slightly heavier rack but is probably a good idea to have some mass for any damage calcs.
 		end
 	end
 
 	self.LegalWeight = baseWeight + addWeight
 
-	local phys = self:GetPhysicsObject()
+	local PhysObj = self:GetPhysicsObject()
 
-	if IsValid(phys) then
-		phys:SetMass(self.LegalWeight)
+	if IsValid(PhysObj) then
+		PhysObj:SetMass(self.LegalWeight)
 	end
 end
 
@@ -664,92 +684,74 @@ end
 
 function ENT:OnLoaded() end
 
-function MakeACF_Rack (Owner, Pos, Angle, Id, UpdateRack)
-	if not Owner:CheckLimit("_acf_gun") then return false end
+function MakeACF_Rack(Owner, Pos, Angle, Id, MissileId)
+	if not Owner:CheckLimit("_acf_gun") then return end
 
-	local Rack = UpdateRack or ents.Create("acf_rack")
+	local Rack = ents.Create("acf_rack")
+
+	if not IsValid(Rack) then return end
+
+	Id = CheckRackID(Id, MissileId)
+
 	local List = ACF.Weapons.Rack
 	local Classes = ACF.Classes.Rack
+	local GunData = List[Id] or error("Couldn't find the " .. tostring(Id) .. " gun-definition!")
+	local GunClass = Classes[GunData.gunclass] or error("Couldn't find the " .. tostring(GunData.gunclass) .. " gun-class!")
 
-	if not IsValid(Rack) then return false end
-
+	Rack:SetModel(GunData.model)
 	Rack:SetAngles(Angle)
 	Rack:SetPos(Pos)
+	Rack:Spawn()
 
-	if not UpdateRack then
-		Rack:Spawn()
-		Owner:AddCount("_acf_gun", Rack)
-		Owner:AddCleanup( "acfmenu", Rack )
-	end
+	Rack:PhysicsInit(SOLID_VPHYSICS)
+	Rack:SetMoveType(MOVETYPE_VPHYSICS)
 
-	Id = Id or Rack.Id
+	Rack.Id					= Id
+	Rack.MissileId			= MissileId
+	Rack.MinCaliber			= GunData.mincaliber
+	Rack.MaxCaliber			= GunData.maxcaliber
+	Rack.Caliber			= GunData.caliber
+	Rack.Model				= GunData.model
+	Rack.Mass				= GunData.weight
+	Rack.LegalWeight		= Rack.Mass
+	Rack.Class				= GunData.gunclass
+	Rack.Owner				= Owner
 
-	Rack:SetPlayer(Owner)
-	Rack.Owner = Owner
-	Rack.Id = Id
+	-- Custom BS for karbine: Per Rack ROF, Magazine Size, Mag reload Time
+	Rack.PGRoFmod			= GunData.rofmod and math.max(0, GunData.rofmod) or 1
+	Rack.MagSize			= GunData.magsize and math.max(1, GunData.magsize) or 1
+	Rack.MagReload 			= GunData.magreload and math.max(Rack.MagReload, GunData.magreload) or  0
 
-	local gundef = List[Id] or error("Couldn't find the " .. tostring(Id) .. " gun-definition!")
+	Rack.Muzzleflash		= GunData.muzzleflash or GunClass.muzzleflash or ""
+	Rack.RoFmod				= GunClass.rofmod
+	Rack.Sound				= GunData.sound or GunClass.sound
+	Rack.Inaccuracy			= GunClass.spread
 
-	Rack.MinCaliber = gundef.mincaliber
-	Rack.MaxCaliber = gundef.maxcaliber
-	Rack.Caliber	= gundef["caliber"]
-	Rack.Model      = gundef["model"]
-	Rack.Mass       = gundef["weight"]
-	Rack.LegalWeight = Rack.Mass
-	Rack.Class      = gundef["gunclass"]
-
-	-- Custom BS for karbine. Per Rack ROF.
-	Rack.PGRoFmod = gundef["rofmod"] and math.max(0, gundef["rofmod"]) or 1
-
-	-- Custom BS for karbine. Magazine Size, Mag reload Time
-	Rack.MagSize = gundef["magsize"] and math.max(Rack.MagSize, gundef["magsize"]) or  1
-	Rack.MagReload = gundef["magreload"] and math.max(Rack.MagReload, gundef["magreload"]) or  0
-
-	local gunclass = Classes[Rack.Class] or error("Couldn't find the " .. tostring(Rack.Class) .. " gun-class!")
-
-	Rack.Muzzleflash        = gundef.muzzleflash or gunclass.muzzleflash or ""
-	Rack.RoFmod             = gunclass["rofmod"]
-	Rack.Sound              = gundef.sound or gunclass.sound
-	Rack.Inaccuracy         = gunclass["spread"]
-
-	Rack.HideMissile        = ACF_GetRackValue(Id, "hidemissile")
-	Rack.ProtectMissile     = gundef.protectmissile or gunclass.protectmissile
-	Rack.CustomArmour       = gundef.armour or gunclass.armour
+	Rack.HideMissile		= ACF_GetRackValue(Id, "hidemissile")
+	Rack.ProtectMissile		= GunData.protectmissile or GunClass.protectmissile
+	Rack.CustomArmour		= GunData.armour or GunClass.armour
 
 	Rack.ReloadMultiplier   = ACF_GetRackValue(Id, "reloadmul")
 	Rack.WhitelistOnly      = ACF_GetRackValue(Id, "whitelistonly")
 
-	Rack:SetNWString( "Class",  Rack.Class )
-	Rack:SetNWString( "ID",     Rack.Id )
-	Rack:SetNWString( "Sound",  Rack.Sound )
+	Rack:SetNWString("Class", Rack.Class)
+	Rack:SetNWString("ID", Rack.Id)
+	Rack:SetNWString("Sound", Rack.Sound)
 
-	if not UpdateRack or Rack.Model ~= Rack:GetModel() then
-		Rack:SetModel( Rack.Model )
+	local PhysObj = Rack:GetPhysicsObject()
 
-		Rack:PhysicsInit( SOLID_VPHYSICS )
-		Rack:SetMoveType( MOVETYPE_VPHYSICS )
-		Rack:SetSolid( SOLID_VPHYSICS )
+	if IsValid(PhysObj) then
+		PhysObj:SetMass(Rack.Mass)
 	end
 
-
-	local phys = Rack:GetPhysicsObject()
-
-	if IsValid(phys) then
-		phys:SetMass(Rack.Mass)
-	end
-
-	hook.Call("ACF_RackCreate", nil, Rack)
-
-	undo.Create( "acf_rack" )
-		undo.AddEntity( Rack )
-		undo.SetPlayer( Owner )
-	undo.Finish()
+	Owner:AddCount("_acf_gun", Rack)
+	Owner:AddCleanup("acfmenu", Rack)
 
 	return Rack
 end
 
-list.Set( "ACFCvars", "acf_rack" , {"id"} )
-duplicator.RegisterEntityClass("acf_rack", MakeACF_Rack, "Pos", "Angle", "Id")
+list.Set( "ACFCvars", "acf_rack" , {"data9", "id"} )
+duplicator.RegisterEntityClass("acf_rack", MakeACF_Rack, "Pos", "Angle", "Id", "MissileId")
 
 function ENT:GetInaccuracy()
 	return self.Inaccuracy * ACF.GunInaccuracyScale
@@ -826,10 +828,10 @@ function ENT:FireMissile()
 				missile.RackModelApplied = nil
 			end
 
-			local phys = missile:GetPhysicsObject()
+			local PhysObj = missile:GetPhysicsObject()
 
-			if IsValid(phys) then
-				phys:SetMass( missile.RoundWeight )
+			if IsValid(PhysObj) then
+				PhysObj:SetMass( missile.RoundWeight )
 			end
 
 			if self.Sound and self.Sound ~= "" then
@@ -869,45 +871,48 @@ end
 function ENT:ReloadEffect() end
 
 function ENT:PreEntityCopy()
-	local info = {}
-	local entids = {}
+	local AmmoLink = self.AmmoLink
 
-	for _, Value in pairs(self.AmmoLink) do					--First clean the table of any invalid entities
-		if not IsValid(Value) then
-			table.remove(self.AmmoLink, Value)
+	if next(AmmoLink) then
+		local EntIDs = {}
+
+		for _, V in ipairs(AmmoLink) do
+			if IsValid(V) then
+				EntIDs[#EntIDs + 1] = V:EntIndex()
+			end
+		end
+
+		if next(EntIDs) then
+			local Info = {
+				entities = EntIDs
+			}
+
+			duplicator.StoreEntityModifier(self, "ACFAmmoLink", Info)
 		end
 	end
 
-	for _, Value in pairs(self.AmmoLink) do					--Then save it
-		table.insert(entids, Value:EntIndex())
-	end
-
-	info.entities = entids
-
-	if info.entities then
-		duplicator.StoreEntityModifier( self, "ACFAmmoLink", info )
-	end
-
-	duplicator.StoreEntityModifier( self, "ACFRackInfo", {Id = self.Id} )
+	duplicator.StoreEntityModifier(self, "ACFRackInfo", {
+		Id = self.Id,
+		MissileId = self.MissileId
+	})
 
 	-- Wire dupe info
-	self.BaseClass.PreEntityCopy( self )
+	self.BaseClass.PreEntityCopy(self)
 end
 
-function ENT:PostEntityPaste( Player, Ent, CreatedEntities )
-	self.Id = Ent.EntityMods.ACFRackInfo.Id
+function ENT:PostEntityPaste(Player, Ent, CreatedEntities)
+	local AmmoLink = Ent.EntityMods.ACFAmmoLink
 
-	MakeACF_Rack(self.Owner, self:GetPos(), self:GetAngles(), self.Id, self)
+	if AmmoLink and AmmoLink.entities then
+		for _, Index in pairs(AmmoLink.entities) do
+			local Ammo = CreatedEntities[Index]
 
-	if Ent.EntityMods and Ent.EntityMods.ACFAmmoLink and Ent.EntityMods.ACFAmmoLink.entities then
-		local AmmoLink = Ent.EntityMods.ACFAmmoLink
+			if IsValid(Ammo) and Ammo:GetClass() == "acf_ammo" then
+				self:Link(Ammo)
 
-		if AmmoLink.entities and table.Count(AmmoLink.entities) > 0 then
-			for _,AmmoID in pairs(AmmoLink.entities) do
-				local Ammo = CreatedEntities[ AmmoID ]
-
-				if Ammo and Ammo:IsValid() and Ammo:GetClass() == "acf_ammo" then
-					self:Link( Ammo )
+				-- Old racks don't have this variable, so we just update them
+				if not self.MissileId then
+					self.MissileId = Ammo.RoundId
 				end
 			end
 		end
@@ -919,13 +924,15 @@ function ENT:PostEntityPaste( Player, Ent, CreatedEntities )
 	self.BaseClass.PostEntityPaste( self, Player, Ent, CreatedEntities )
 end
 
-function ACF_Rack_OnPhysgunDrop(_, ent)
-	if ent:GetClass() == "acf_rack" then
-		timer.Simple(0.01, function() if IsValid(ent) then ent:SetLoadedWeight() end end)
+hook.Add("PhysgunDrop", "ACF_Rack_OnPhysgunDrop", function(_, Entity)
+	if Entity:GetClass() == "acf_rack" then
+		timer.Simple(0.01, function()
+			if IsValid(Entity) then
+				Entity:SetLoadedWeight()
+			end
+		end)
 	end
-end
-
-hook.Add("PhysgunDrop", "ACF_Rack_OnPhysgunDrop", ACF_Rack_OnPhysgunDrop)
+end)
 
 function ENT:OnRemove()
 	Wire_Remove(self)

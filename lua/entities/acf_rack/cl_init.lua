@@ -13,7 +13,7 @@ end
 
 function ENT:DoNormalDraw()
 	if self ~= LocalPlayer():GetEyeTrace().Entity then return end
-	if EyePos():Distance(e:GetPos()) > 256 then return end
+	if EyePos():Distance(self:GetPos()) > 256 then return end
 	if self:GetOverlayText() == "" then return end
 
 	AddWorldTip(self:EntIndex(), self:GetOverlayText(), 0.5, self:GetPos(), self)

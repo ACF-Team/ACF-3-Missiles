@@ -7,26 +7,6 @@ include("radar_types_support.lua")
 
 CreateConVar("sbox_max_acf_missileradar", 6)
 
-function ENT:Initialize()
-	self.BaseClass.Initialize(self)
-
-	self.Inputs = WireLib.CreateInputs( self, { "Active" } )
-	self.Outputs = WireLib.CreateOutputs( self, {"Detected", "ClosestDistance", "Entities [ARRAY]", "Position [ARRAY]", "Velocity [ARRAY]"} )
-
-	self.ThinkDelay = 0.1
-	self.StatusUpdateDelay = 0.5
-	self.LastStatusUpdate = CurTime()
-
-	self.LegalMass = self.Weight or 0
-
-	self.Active = false
-
-	self:CreateRadar(self.ACFName or "Missile Radar", self.ConeDegs or 0)
-	self:EnableClientInfo(true)
-	self:ConfigureForClass()
-	self:SetActive(false)
-end
-
 function ENT:ConfigureForClass()
 	local behaviour = ACFM.RadarBehaviour[self.Class]
 
@@ -58,9 +38,9 @@ end
 function MakeACF_MissileRadar(Owner, Pos, Angle, Id)
 	if not Owner:CheckLimit("_acf_missileradar") then return false end
 
-	local radar = ACF.Weapons.Radar[Id]
+	local RadarData = ACF.Weapons.Radar[Id]
 
-	if not radar then return end
+	if not RadarData then return end
 
 	local Radar = ents.Create("acf_missileradar")
 
@@ -68,28 +48,36 @@ function MakeACF_MissileRadar(Owner, Pos, Angle, Id)
 
 	Radar:SetAngles(Angle)
 	Radar:SetPos(Pos)
-
-	Radar.Model 	= radar.model
-	Radar.Weight 	= radar.weight
-	Radar.ACFName 	= radar.name
-	Radar.ConeDegs 	= radar.viewcone
-	Radar.Range 	= radar.range
-	Radar.Id 		= Id
-	Radar.Class 	= radar.class
-
 	Radar:Spawn()
-	Radar:SetPlayer(Owner)
 
-	if CPPI then
-		Radar:CPPISetOwner(Owner)
-	end
+	Radar.BaseClass.Initialize(Radar)
 
-	Radar.Owner = Owner
+	Radar.Id 				= Id
+	Radar.Model 			= RadarData.model
+	Radar.Weight 			= RadarData.weight
+	Radar.ACFName 			= RadarData.name
+	Radar.ConeDegs		 	= RadarData.viewcone
+	Radar.Range 			= RadarData.range
+	Radar.Class 			= RadarData.class
+	Radar.Owner				= Owner
+	Radar.LegalMass			= Radar.Weight or 0
+	Radar.Active			= false
 
-	Radar:SetModelEasy(radar.model)
+	Radar.ThinkDelay		= 0.1
+	Radar.StatusUpdateDelay	= 0.5
+	Radar.LastStatusUpdate	= CurTime()
 
-	Owner:AddCount( "_acf_missileradar", Radar )
-	Owner:AddCleanup( "acfmenu", Radar )
+	Radar.Inputs			= WireLib.CreateInputs(Radar, { "Active" })
+	Radar.Outputs			= WireLib.CreateOutputs(Radar, {"Detected", "ClosestDistance", "Entities [ARRAY]", "Position [ARRAY]", "Velocity [ARRAY]"})
+
+	Radar:CreateRadar(Radar.ACFName or "Missile Radar", Radar.ConeDegs or 0)
+	Radar:EnableClientInfo(true)
+	Radar:ConfigureForClass()
+	Radar:SetActive(false)
+	Radar:SetModelEasy(RadarData.model)
+
+	Owner:AddCount("_acf_missileradar", Radar)
+	Owner:AddCleanup("acfmenu", Radar)
 
 	return Radar
 end

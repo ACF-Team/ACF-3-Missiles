@@ -44,7 +44,7 @@ ACF_defineGun("RS82 ASR", { --id
 		penmul      = math.sqrt(6.63)  	--  139 HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
 	},
 
-	ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
+	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
 	guidance    = {"Dumb"},
 	fuses       = {"Contact", "Timed"},
 
@@ -83,7 +83,7 @@ ACF_defineGun("HVAR ASR", { --id
 		penmul      = math.sqrt(6.25)  	-- 215.9 HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
 	},
 
-	ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
+	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
 	guidance    = {"Dumb"},
 	fuses       = {"Contact", "Timed"},
 
@@ -122,7 +122,7 @@ ACF_defineGun("SPG-9 ASR", { --id
 		penmul      = math.sqrt(4.5)  	-- 215.9 HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
 	},
 
-	ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
+	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
 	guidance    = {"Dumb"},
 	fuses       = {"Contact", "Optical"},
 
@@ -161,7 +161,7 @@ ACF_defineGun("S-24 ASR", { --id
 		penmul      = math.sqrt(5)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
 	},
 
-	ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
+	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
 	guidance    = {"Dumb"},
 	fuses       = {"Contact", "Timed"},
 
@@ -200,7 +200,7 @@ ACF_defineGun("Zuni ASR", { --id
 		finmul		= 0.0001,
 		penmul		= math.sqrt(2)
 	},
-	ent			= "acf_missile_to_rack",
+	ent			= "acf_rack",
 	guidance	= {"Dumb"},
 	fuses		= {"Contact", "Timed", "Optical", "Radio"},
 	racks		= {["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true, ["127mm4xPOD"] = true},
@@ -237,7 +237,7 @@ ACF_defineGun("RW61 ASR", { --id
 		penmul      = math.sqrt(2)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
 	},
 
-	ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
+	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
 	guidance    = {"Dumb"},
 	fuses       = {"Contact", "Optical"},
 
@@ -280,7 +280,7 @@ ACF_defineGun("298mmDUMB", { --id placeholder for tinytim
 		penmul      = math.sqrt(0.1)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
 	},
 
-	ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
+	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
 	guidance    = {"Dumb"},
 	fuses       = {"Contact", "Timed"},
 

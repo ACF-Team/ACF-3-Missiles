@@ -44,7 +44,7 @@ ACF_defineGun("Type 63 RA", { --id
 		penmul      = math.sqrt(2)  	--  139 HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
 	},
 
-	ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
+	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
 	guidance    = {"Dumb", "Laser"},
 	fuses       = {"Contact", "Timed", "Optical", "Cluster"},
 
@@ -86,7 +86,7 @@ ACF_defineGun("SAKR-10 RA", { --id
 		penmul      = math.sqrt(1.1)  	--  139 HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
 	},
 
-	ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
+	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
 	guidance    = {"Dumb", "Laser"},
 	fuses       = {"Contact", "Timed", "Optical", "Cluster"},
 
@@ -128,7 +128,7 @@ ACF_defineGun("SS-40 RA", { --id
 		penmul      = math.sqrt(2)  	--  139 HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
 	},
 
-	ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
+	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
 	guidance    = {"Dumb", "Laser"},
 	fuses       = {"Contact", "Timed", "Optical", "Cluster"},
 

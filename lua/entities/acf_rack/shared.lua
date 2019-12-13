@@ -28,10 +28,10 @@ function ENT:GetOverlayText()
 				"Reload interval: " .. (math.Round(Reload, 2)) .. " sec" .. (ReloadBonus > 0 and (" (-" .. math.floor(ReloadBonus * 100) .. "%)") or "") ..
 				((Status and Status ~= "") and ("\n - " .. Status .. " - ") or "")
 
-	if not game.SinglePlayer() then
-		local PlayerName = self:GetPlayerName()
+	if CPPI and not game.SinglePlayer() then
+		local Owner = self:CPPIGetOwner():GetName()
 
-		txt = txt .. "\n(" .. PlayerName .. ")"
+		txt = txt .. "\n(" .. Owner .. ")"
 	end
 
 	if name and name ~= "" then

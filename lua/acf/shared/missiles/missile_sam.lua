@@ -46,7 +46,7 @@ ACF_defineGun("FIM-92 SAM", { --id
 		finmul		= 0.02		-- fin multiplier (mostly used for unpropelled guidance)
 	},
 
-	ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
+	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
 	guidance    = {"Dumb", "Infrared","Antimissile"},
 	fuses       = {"Contact", "Radio"},
 
@@ -88,7 +88,7 @@ ACF_defineGun("Strela-1 SAM", { --id
 		finmul		= 0.03				-- fin multiplier (mostly used for unpropelled guidance)
 	},
 
-	ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
+	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
 	guidance    = {"Dumb", "Infrared","Antimissile"},
 	fuses       = {"Contact", "Radio"},
 
@@ -131,7 +131,7 @@ ACF_defineGun("SIMBAD-RC SAM", { --id
 		finmul		= 0.02			-- fin multiplier (mostly used for unpropelled guidance)
 	},
 
-	ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
+	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
 	guidance    = {"Antimissile"},
 	fuses       = {"Contact"},
 
