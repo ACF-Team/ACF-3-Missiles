@@ -9,4 +9,3 @@ ENT.Category 		= "ACF"
 
 ENT.Spawnable 		= false
 ENT.AdminOnly		= false
-ENT.AdminSpawnable = false

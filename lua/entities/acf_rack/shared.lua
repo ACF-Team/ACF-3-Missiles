@@ -12,7 +12,6 @@ ENT.Instructions 	= "Point towards face for removal of face.  Point away from fa
 
 ENT.Spawnable 		= false
 ENT.AdminOnly		= false
-ENT.AdminSpawnable = false
 
 function ENT:GetOverlayText()
 	local name          = self:GetNWString("WireName")

@@ -10,4 +10,3 @@ ENT.WireDebugName = "XCF Bomb"
 
 ENT.Spawnable 		= false
 ENT.AdminOnly		= false
-ENT.AdminSpawnable = false
