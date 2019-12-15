@@ -199,7 +199,7 @@ function ENT:Detonate(overrideBData)
 
 	timer.Simple(3, function() if IsValid(self) then if IsValid(self.FakeCrate) then self.FakeCrate:Remove() end self:Remove() end end)
 
-	if overrideBData.Entity.Fuse.Cluster == nil then
+	if not bdata.Entity.Fuse.Cluster then
 		bdata.Owner = 	bdata.Owner or self.Owner
 		bdata.Pos = 	pos + (self.DetonateOffset or bdata.Flight:GetNormalized())
 		bdata.NoOcc = 	self
