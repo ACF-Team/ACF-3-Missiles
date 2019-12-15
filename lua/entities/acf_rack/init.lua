@@ -619,7 +619,7 @@ function ENT:AddMissile()
 
 			if IsValid(self:GetParent()) then
 				if table.Count(self:GetAttachments()) == 0 then
-					muzzle.Pos = Vector(0,0,0)
+					muzzle.Pos = Vector()
 				end
 
 				missile:SetPos(muzzle.Pos)
@@ -790,7 +790,7 @@ function ENT:FireMissile()
 			local MuzzlePos = muzzle.Pos
 
 			if table.Count(self:GetAttachments()) == 0 and IsValid(self:GetParent()) then
-				MuzzlePos = Vector(0,0,0)
+				MuzzlePos = Vector()
 			end
 
 			local MuzzleVec = muzzle.Ang:Forward()

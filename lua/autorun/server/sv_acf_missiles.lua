@@ -86,8 +86,8 @@ function ACFM_ExpandBulletData(bullet)
 	if not conversion then error("No conversion available for this shell!") end
 	local ret = conversion( nil, toconvert )
 
-	ret.Pos = bullet.Pos or Vector(0,0,0)
-	ret.Flight = bullet.Flight or Vector(0,0,0)
+	ret.Pos = bullet.Pos or Vector()
+	ret.Flight = bullet.Flight or Vector()
 	ret.Type = ret.Type or bullet.Type
 
 	ret.Accel = Vector(0, 0, cvarGrav:GetInt() * -1)

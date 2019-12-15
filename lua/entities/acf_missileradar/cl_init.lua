@@ -55,7 +55,7 @@ function ACFRadarGUICreate( Table )
 	acfmenupanel.CData.DisplayModel = vgui.Create( "DModelPanel", acfmenupanel.CustomDisplay )
 	acfmenupanel.CData.DisplayModel:SetModel( Table.model )
 	acfmenupanel.CData.DisplayModel:SetCamPos( Vector( 250, 500, 250 ) )
-	acfmenupanel.CData.DisplayModel:SetLookAt( Vector( 0, 0, 0 ) )
+	acfmenupanel.CData.DisplayModel:SetLookAt( Vector() )
 	acfmenupanel.CData.DisplayModel:SetFOV( 20 )
 	acfmenupanel.CData.DisplayModel:SetSize(acfmenupanel:GetWide(),acfmenupanel:GetWide())
 	acfmenupanel.CData.DisplayModel.LayoutEntity = function() end

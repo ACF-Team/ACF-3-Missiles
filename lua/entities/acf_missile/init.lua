@@ -348,7 +348,7 @@ function ENT:ConfigureFlight()
 	self.CurDir = BulletData.Flight:GetNormalized()
 	self.LastPos = self.CurPos
 	self.Hit = false
-	self.HitNorm = Vector(0,0,0)
+	self.HitNorm = Vector()
 	self.FirstThink = true
 	self.MinArmingDelay = math.max(Round.armdelay or GunData.armdelay, GunData.armdelay)
 
@@ -357,7 +357,7 @@ function ENT:ConfigureFlight()
 	local Width = GunData.caliber
 	self.Inertia = 0.08333 * Mass * (3.1416 * (Width / 2) ^ 2 + Length)
 	self.TorqueMul = Length * 25
-	self.RotAxis = Vector(0,0,0)
+	self.RotAxis = Vector()
 
 	self:UpdateBodygroups()
 	self:UpdateSkin()
@@ -426,7 +426,7 @@ function ENT:Dud()
 	Phys:EnableMotion(true)
 	local Vel = self.LastVel
 
-	if self.HitNorm ~= Vector(0,0,0) then
+	if self.HitNorm ~= Vector() then
 		local Dot = self.CurDir:Dot(self.HitNorm)
 		local NewDir = self.CurDir - 2 * Dot * self.HitNorm
 		local VelMul = (0.8 + Dot * 0.7) * Vel:Length()
