@@ -195,9 +195,9 @@ local function CalcFlight(Missile)
 		local DirDiff = 0
 
 		if LastLOS then
-			local SpeedMul = math.min(LastSpeed / DeltaTime / Missile.MinimumSpeed, 1)
+			local SpeedMul = math.min((LastSpeed / DeltaTime / Missile.MinimumSpeed) ^ 3, 1)
 			local LOSDiff = math.deg(math.acos(LastLOS:Dot(LOS))) * 20
-			local MaxTurn = Missile.Agility * SpeedMul
+			local MaxTurn = Missile.Agility * SpeedMul * 3
 
 			if LOSDiff > 0.01 and MaxTurn > 0.1 then
 				local LOSNormal = LastLOS:Cross(LOS):GetNormalized()
