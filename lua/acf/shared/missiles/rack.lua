@@ -22,7 +22,7 @@ ACF_DefineRack("1xRK", {
 	armour = 20,
 
 	mountpoints = {
-		["missile1"] = {["offset"] = Vector(0, 0, 2), ["scaledir"] = Vector(0, 0, -1)}
+		missile1 = {offset = Vector(0, 0, 2), scaledir = Vector(0, 0, -1)}
 	}
 } )
 
@@ -39,7 +39,7 @@ ACF_DefineRack("1xRK_small", {
 	armour = 20,
 
 	mountpoints = {
-		["missile1"] = {["offset"] = Vector(0, 0, 2), ["scaledir"] = Vector(0, 0, -1)}
+		missile1 = {offset = Vector(0, 0, 2), scaledir = Vector(0, 0, -1)}
 	}
 } )
 
@@ -54,8 +54,8 @@ ACF_DefineRack("2xRK", {
 	armour = 20,
 
 	mountpoints = {
-		["missile1"] = {["offset"] = Vector(4, -1.5, -1.7),	["scaledir"] = Vector(0, -1, 0)},
-		["missile2"] = {["offset"] = Vector(4, 1.5, -1.7),	["scaledir"] = Vector(0, 1, 0)}
+		missile1 = {offset = Vector(4, -1.5, -1.7),	scaledir = Vector(0, -1, 0)},
+		missile2 = {offset = Vector(4, 1.5, -1.7),	scaledir = Vector(0, 1, 0)}
 	}
 } )
 
@@ -70,9 +70,9 @@ ACF_DefineRack("3xRK", {
 	magsize = 3,
 
 	mountpoints = {
-		["missile1"] = {["offset"] = Vector(5.5, 0, -4.5), ["scaledir"] = Vector(-0.2, 0, -0.3)},
-		["missile2"] = {["offset"] = Vector(5.5, 3, 0), ["scaledir"] = Vector(-0.2, 0.3, -0.1)},
-		["missile3"] = {["offset"] = Vector(5.5, -3, 0), ["scaledir"] = Vector(-0.2, -0.3, -0.1)},
+		missile1 = {offset = Vector(5.5, 0, -4.5), scaledir = Vector(-0.2, 0, -0.3)},
+		missile2 = {offset = Vector(5.5, 3, 0), scaledir = Vector(-0.2, 0.3, -0.1)},
+		missile3 = {offset = Vector(5.5, -3, 0), scaledir = Vector(-0.2, -0.3, -0.1)},
 	}
 } )
 
@@ -87,10 +87,10 @@ ACF_DefineRack("4xRK", {
 	magsize = 4,
 
 	mountpoints = {
-		["missile1"] = {["offset"] = Vector(), ["scaledir"] = Vector(0, 1, 0)},
-		["missile2"] = {["offset"] = Vector(), ["scaledir"] = Vector(0, -1, 0)},
-		["missile3"] = {["offset"] = Vector(), ["scaledir"] = Vector(0, 0, -1)},
-		["missile4"] = {["offset"] = Vector(), ["scaledir"] = Vector(0, 0, -1)}
+		missile1 = {offset = Vector(), scaledir = Vector(0, 1, 0)},
+		missile2 = {offset = Vector(), scaledir = Vector(0, -1, 0)},
+		missile3 = {offset = Vector(), scaledir = Vector(0, 0, -1)},
+		missile4 = {offset = Vector(), scaledir = Vector(0, 0, -1)}
 	}
 } )
 
@@ -106,8 +106,8 @@ ACF_DefineRack("2x AGM-114", {
 	caliber = 16,
 
 	mountpoints = {
-		["missile1"] = {["offset"] = Vector(), ["scaledir"] = Vector(0, 0, -1)},
-		["missile2"] = {["offset"] = Vector(), ["scaledir"] = Vector(0, 0, -1)},
+		missile1 = {offset = Vector(), scaledir = Vector(0, 0, -1)},
+		missile2 = {offset = Vector(), scaledir = Vector(0, 0, -1)},
 	}
 } )
 
@@ -123,10 +123,10 @@ ACF_DefineRack("4x AGM-114", {
 	caliber = 16,
 
 	mountpoints = {
-		["missile1"] = {["offset"] = Vector(), ["scaledir"] = Vector(0, 0, -1)},
-		["missile2"] = {["offset"] = Vector(), ["scaledir"] = Vector(0, 0, -1)},
-		["missile3"] = {["offset"] = Vector(), ["scaledir"] = Vector(0, 0, -1)},
-		["missile4"] = {["offset"] = Vector(), ["scaledir"] = Vector(0, 0, -1)}
+		missile1 = {offset = Vector(), scaledir = Vector(0, 0, -1)},
+		missile2 = {offset = Vector(), scaledir = Vector(0, 0, -1)},
+		missile3 = {offset = Vector(), scaledir = Vector(0, 0, -1)},
+		missile4 = {offset = Vector(), scaledir = Vector(0, 0, -1)}
 	}
 } )
 
@@ -142,7 +142,7 @@ ACF_DefineRack("1xAT3RK", {
 	armour = 15,
 
 	mountpoints = {
-		["missile1"] = {["offset"] = Vector(3.2, 0, 1),	["scaledir"] = Vector(0, 0, -1)}
+		missile1 = {offset = Vector(3.2, 0, 1),	scaledir = Vector(0, 0, -1)}
 	}
 } )
 
@@ -158,6 +158,6 @@ ACF_DefineRack("1xAT3RKS", {
 	armour = 15,
 
 	mountpoints = {
-		["missile1"] = {["offset"] = Vector(21, 0, 6.2), ["scaledir"] = Vector(0, 0, -1)}
+		missile1 = {offset = Vector(21, 0, 6.2), scaledir = Vector(0, 0, -1)}
 	}
 } )
