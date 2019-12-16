@@ -1,5 +1,8 @@
-ENT.Type		= "anim"
-ENT.PrintName	= "GLATGM Optical Computer"
-ENT.Author		= "Polymorphic Turtle"
-ENT.Category	= "ACF"
-ENT.Spawnable	= true
+
+DEFINE_BASECLASS("base_wire_entity")
+
+ENT.PrintName		= "Optical Computer"
+ENT.Author			= "Polymorphic Turtle"
+ENT.Category		= "ACF"
+ENT.Spawnable		= true
+ENT.WireDebugName	= "Optical Computer"
