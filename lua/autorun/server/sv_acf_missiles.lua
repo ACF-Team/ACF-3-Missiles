@@ -15,7 +15,7 @@
 if not ACF then error("ACF is not installed - ACF Missiles requires it!") end
 
 -- Lookup table of all currently flying missiles.
-ACF_ActiveMissiles = ACF_ActiveMissiles or {}
+ACF.ActiveMissiles = ACF.ActiveMissiles or {}
 
 include("acf/shared/sh_acfm_getters.lua")
 

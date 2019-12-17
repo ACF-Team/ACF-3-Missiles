@@ -73,7 +73,7 @@ end
 function ACFM_GetMissilesInCone(Position, Direction, Degrees)
 	local Result = {}
 
-	for Missile in pairs(ACF_ActiveMissiles) do
+	for Missile in pairs(ACF.ActiveMissiles) do
 		if not IsValid(Missile) then
 			continue
 		end
@@ -91,7 +91,7 @@ function ACFM_GetMissilesInSphere(Position, Radius)
 	local Result = {}
 	local RadiusSqr = Radius * Radius
 
-	for Missile in pairs(ACF_ActiveMissiles) do
+	for Missile in pairs(ACF.ActiveMissiles) do
 		if not IsValid(Missile) then
 			continue
 		end
@@ -109,7 +109,7 @@ end
 function ACFM_GetAllMissilesWhichCanSee(Position)
 	local Result = {}
 
-	for Missile in pairs(ACF_ActiveMissiles) do
+	for Missile in pairs(ACF.ActiveMissiles) do
 		local Guidance = Missile.Guidance
 
 		if not Guidance or Guidance.Override or not Guidance.ViewCone then

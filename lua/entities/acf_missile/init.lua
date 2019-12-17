@@ -384,7 +384,7 @@ function ENT:Launch()
 
 	LaunchEffect(self)
 
-	ACF_ActiveMissiles[self] = true
+	ACF.ActiveMissiles[self] = true
 
 	self:Think()
 end
@@ -407,7 +407,7 @@ function ENT:Detonate()
 	self:StopParticles()
 	self:SetNWFloat("LightSize", 0)
 
-	ACF_ActiveMissiles[self] = nil
+	ACF.ActiveMissiles[self] = nil
 
 	if self.Disabled then
 		Dud(self)
@@ -463,7 +463,7 @@ end
 function ENT:OnRemove()
 	self.BaseClass.OnRemove(self)
 
-	ACF_ActiveMissiles[self] = nil
+	ACF.ActiveMissiles[self] = nil
 
 	if IsValid(self.Launcher) and not self.Launched then
 		self.Launcher:UpdateAmmoCount(self.Attachment)
