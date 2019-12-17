@@ -65,10 +65,10 @@ local Inputs = {
 		end
 	end,
 	["Target Pos"] = function(Rack, Value)
-		Wire_TriggerOutput(Rack, "Position", Value)
+		WireLib.TriggerOutput(Rack, "Position", Value)
 	end,
 	["Target Ent"] = function(Rack, Value)
-		Wire_TriggerOutput(Rack, "Target", Value)
+		WireLib.TriggerOutput(Rack, "Target", Value)
 	end,
 }
 
@@ -360,8 +360,8 @@ function MakeACF_Rack(Owner, Pos, Angle, Id, MissileId)
 	Rack:SetNWString("GunType", Rack.MissileId or Rack.Id)
 	Rack:SetNWString("Sound", Rack.Sound)
 
-	Wire_TriggerOutput(Rack, "Entity", Rack)
-	Wire_TriggerOutput(Rack, "Ready", 1)
+	WireLib.TriggerOutput(Rack, "Entity", Rack)
+	WireLib.TriggerOutput(Rack, "Ready", 1)
 
 	local PhysObj = Rack:GetPhysicsObject()
 
@@ -604,7 +604,7 @@ function ENT:FireMissile()
 			self:EmitSound("weapons/pistol/pistol_empty.wav", 500, 100)
 		end
 
-		Wire_TriggerOutput(self, "Ready", 0)
+		WireLib.TriggerOutput(self, "Ready", 0)
 		self.Ready = false
 		self.NextFire = 0
 		self.WaitFunction = self.GetFireDelay
@@ -627,7 +627,7 @@ function ENT:Reload()
 	self.Ready = false
 	self.ReloadTime = IsValid(Missile) and self:GetReloadTime(Missile) or 1
 
-	Wire_TriggerOutput(self, "Ready", 0)
+	WireLib.TriggerOutput(self, "Ready", 0)
 end
 
 function ENT:UpdateAmmoCount(Attachment, Missile)
@@ -636,7 +636,7 @@ function ENT:UpdateAmmoCount(Attachment, Missile)
 
 	self:SetNWInt("Ammo", self.AmmoCount)
 
-	Wire_TriggerOutput(self, "Shots Left", self.AmmoCount)
+	WireLib.TriggerOutput(self, "Shots Left", self.AmmoCount)
 end
 
 function ENT:Think()
@@ -659,7 +659,7 @@ function ENT:Think()
 		if Missile then
 			self.Ready = true
 
-			Wire_TriggerOutput(self, "Ready", 1)
+			WireLib.TriggerOutput(self, "Ready", 1)
 
 			if self.Firing then
 				self:FireMissile()
@@ -743,9 +743,5 @@ function ENT:OnRemove()
 		self:Unlink(Crate)
 	end
 
-	Wire_Remove(self)
-end
-
-function ENT:OnRestore()
-	Wire_Restored(self)
+	WireLib.Remove(self)
 end

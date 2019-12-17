@@ -11,8 +11,8 @@ function ENT:Initialize()
 	self.SpecialDamage = true	--If true needs a special ACF_OnDamage function
 	self.ShouldTrace = false
 
-	self.Inputs = Wire_CreateInputs( self, { "Detonate" } )
-	self.Outputs = Wire_CreateOutputs( self, {} )
+	self.Inputs = WireLib.CreateInputs( self, { "Detonate" } )
+	self.Outputs = WireLib.CreateOutputs( self, {} )
 
 	self.ThinkDelay = 0.1
 

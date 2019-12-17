@@ -26,8 +26,8 @@ local function CheckLegal(Entity)
 end
 
 local function ResetOutputs(Entity)
-	Wire_TriggerOutput(Entity, "Distance", 0)
-	Wire_TriggerOutput(Entity, "HitPos", { 0, 0, 0 })
+	WireLib.TriggerOutput(Entity, "Distance", 0)
+	WireLib.TriggerOutput(Entity, "HitPos", { 0, 0, 0 })
 end
 
 local function GetTrace(Entity, Filter)
@@ -53,7 +53,7 @@ function ENT:Initialize()
 	self.Inputs = WireLib.CreateInputs(self, { "Active" })
 	self.Outputs = WireLib.CreateOutputs(self, { "Entity [ENTITY]", "Distance", "HitPos [VECTOR]" })
 
-	Wire_TriggerOutput(self, "Entity", self)
+	WireLib.TriggerOutput(self, "Entity", self)
 
 	local PhysObj = self:GetPhysicsObject()
 
@@ -78,8 +78,8 @@ function ENT:Think()
 		local HitPos = Trace.HitPos
 		local Distance = Trace.StartPos:Distance(HitPos)
 
-		Wire_TriggerOutput(self, "Distance", Distance)
-		Wire_TriggerOutput(self, "HitPos", { HitPos[1], HitPos[2], HitPos[3] })
+		WireLib.TriggerOutput(self, "Distance", Distance)
+		WireLib.TriggerOutput(self, "HitPos", { HitPos[1], HitPos[2], HitPos[3] })
 	end
 
 	self:NextThink(CurTime() + 0.15)
