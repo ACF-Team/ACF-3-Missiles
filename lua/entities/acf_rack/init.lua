@@ -197,7 +197,7 @@ local function CheckLegal(Rack)
 	local PhysObj = Rack:GetPhysicsObject()
 
 	if not IsValid(PhysObj) then return end
-	if PhysObj:GetMass() < Rack.LegalWeight then return end
+	if PhysObj:GetMass() < Rack.LegalMass then return end
 	if not PhysObj:GetVolume() then return end
 
 	-- Update the ancestor of the rack
@@ -261,8 +261,8 @@ local function SetStatusString(Rack)
 		return
 	end
 
-	if PhysObj:GetMass() < Rack.LegalWeight then
-		Rack:SetNWString("Status", "Underweight! (should be " .. Rack.LegalWeight .. " kg)")
+	if PhysObj:GetMass() < Rack.LegalMass then
+		Rack:SetNWString("Status", "Underweight! (should be " .. Rack.LegalMass .. " kg)")
 
 		return
 	end
@@ -307,7 +307,7 @@ function MakeACF_Rack(Owner, Pos, Angle, Id, MissileId)
 	Rack.Caliber			= GunData.caliber
 	Rack.Model				= GunData.model
 	Rack.Mass				= GunData.weight
-	Rack.LegalWeight		= Rack.Mass
+	Rack.LegalMass			= Rack.Mass
 	Rack.Class				= GunData.gunclass
 	Rack.Owner				= Owner
 

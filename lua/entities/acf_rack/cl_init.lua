@@ -3,19 +3,19 @@
 include ("shared.lua")
 
 local function GetOverlayText(Entity)
-	local WireName	= Entity:GetNWString("WireName")
-	local GunType	= Entity:GetNWString("GunType")
-	local Ammo		= Entity:GetNWInt("Ammo")
-	local FireRate	= math.Round(Entity:GetNWFloat("Interval"), 2)
-	local Reload	= math.Round(Entity:GetNWFloat("Reload"), 2)
-	local Bonus		= math.floor(Entity:GetNWFloat("ReloadBonus") * 100)
-	local Status	= Entity:GetNWString("Status")
+	local WireName	= Entity:GetNWString("WireName", "")
+	local GunType	= Entity:GetNWString("GunType", "")
+	local Ammo		= Entity:GetNWInt("Ammo", "")
+	local FireRate	= math.Round(Entity:GetNWFloat("Interval", 0), 2)
+	local Reload	= math.Round(Entity:GetNWFloat("Reload", 0), 2)
+	local Bonus		= math.floor(Entity:GetNWFloat("ReloadBonus", 0) * 100)
+	local Status	= Entity:GetNWString("Status", "")
 
 	local Text = (WireName ~= "" and "- " .. WireName .. " -\n" or "") ..
 				GunType .. " (" .. Ammo .. " left) \n" ..
 				"Fire interval: " .. FireRate .. " sec\n" ..
 				"Reload interval: " .. Reload .. " sec" .. (Bonus > 0 and (" (-" .. Bonus .. "%)") or "") ..
-				((Status and Status ~= "") and ("\n - " .. Status .. " - ") or "")
+				(Status ~= "" and ("\n - " .. Status .. " - ") or "")
 
 	if CPPI and not game.SinglePlayer() then
 		local Owner = Entity:CPPIGetOwner()
