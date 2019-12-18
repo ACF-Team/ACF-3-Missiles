@@ -176,7 +176,7 @@ local function AddMissile(Rack, Crate)
 		Missile:SetNoDraw(true)
 	end
 
-	Rack:EmitSound("acf_extra/tankfx/resupply_single.wav", 500, 100)
+	Rack:EmitSound("acf_extra/tankfx/resupply_single.mp3", 500, 100)
 	Rack:UpdateAmmoCount(Attach, Missile)
 
 	Rack.CurrentCrate = Crate
@@ -666,7 +666,7 @@ function ENT:Think()
 			elseif self.Inputs.Reload and self.Inputs.Reload.Value ~= 0 then
 				self:Reload()
 			elseif self.ReloadTime and self.ReloadTime > 1 then
-				self:EmitSound("acf_extra/airfx/weapon_select.wav", 500, 100)
+				self:EmitSound("acf_extra/airfx/weapon_select.mp3", 500, 100)
 				self.ReloadTime = nil
 			end
 		else

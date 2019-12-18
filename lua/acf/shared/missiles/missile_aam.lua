@@ -6,7 +6,7 @@ ACF_defineGunClass("AAM", {
 	desc            = "Missiles specialized for air-to-air flight.  They have varying range, but are agile, can be radar-guided, and withstand difficult launch angles well.",
 	muzzleflash     = "40mm_muzzleflash_noscale",
 	rofmod          = 1,
-	sound           = "acf_extra/airfx/rocket_fire2.wav",
+	sound           = "acf_extra/airfx/rocket_fire2.mp3",
 	soundDistance   = " ",
 	soundNormal     = " ",
 	effect          = "Rocket Motor",

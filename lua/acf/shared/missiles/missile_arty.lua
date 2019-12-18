@@ -6,7 +6,7 @@ ACF_defineGunClass("ARTY", {
 	desc            = "Artillery rockets provide massive HE delivery over a broad area, with arcing ballistic trajectories and limited guidance. Best equipped with a seeker head, fired up at an angle, then guided toward a stationary target.",
 	muzzleflash     = "40mm_muzzleflash_noscale",
 	rofmod          = 1,
-	sound           = "acf_extra/airfx/rocket_fire2.wav",
+	sound           = "acf_extra/airfx/rocket_fire2.mp3",
 	soundDistance   = " ",
 	soundNormal     = " ",
 	effect          = "Rocket Motor",

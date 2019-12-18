@@ -5,7 +5,7 @@ ACF_DefineRackClass("POD", {
 	desc            = "An accurate, lightweight rocket launcher which can explode if its armour is pierced.",
 	muzzleflash     = "40mm_muzzleflash_noscale",
 	rofmod          = 2,
-	sound           = "acf_extra/airfx/rocket_fire2.wav",
+	sound           = "acf_extra/airfx/rocket_fire2.mp3",
 	soundDistance   = " ",
 	soundNormal     = " ",
 	armour          = 15,

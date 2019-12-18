@@ -6,7 +6,7 @@ ACF_defineGunClass("SAM", {
 	desc            = "Missiles specialized for surface-to-air operation, and well suited to lower altitude operation against ground attack aircraft.",
 	muzzleflash     = "40mm_muzzleflash_noscale",
 	rofmod          = 1,
-	sound           = "acf_extra/airfx/rocket_fire2.wav",
+	sound           = "acf_extra/airfx/rocket_fire2.mp3",
 	soundDistance   = " ",
 	soundNormal     = " ",
 	effect          = "Rocket Motor",

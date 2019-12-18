@@ -6,7 +6,7 @@ ACF_defineGunClass("ASM", {
 	desc            = "Missiles specialized for air-to-surface operation or antitank. These missiles are heavier than air-to-air missiles and may only be wire or laser guided.",
 	muzzleflash     = "40mm_muzzleflash_noscale",
 	rofmod          = 1,
-	sound           = "acf_extra/airfx/rocket_fire2.wav",
+	sound           = "acf_extra/airfx/rocket_fire2.mp3",
 	soundDistance   = " ",
 	soundNormal     = " ",
 	effect          = "Rocket Motor ATGM",

@@ -6,7 +6,7 @@ ACF_defineGunClass("BOMB", {
 	desc            = "Free-falling bombs.  Despite their lack of guidance and sophistication, they are exceptionally destructive on impact relative to their weight.",
 	muzzleflash     = "40mm_muzzleflash_noscale",
 	rofmod          = 0.1,
-	sound           = "acf_extra/tankfx/clunk.wav",
+	sound           = "acf_extra/tankfx/clunk.mp3",
 	soundDistance   = " ",
 	soundNormal     = " ",
 	nothrust		= true,

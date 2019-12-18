@@ -6,7 +6,7 @@ ACF_defineGunClass("UAR", {
 	desc            = "Rockets which fit in racks. Usefull in rocket artillery. Slower fire-rate than FFAR but bigger 'boom'",
 	muzzleflash     = "40mm_muzzleflash_noscale",
 	rofmod          = 0.5,
-	sound           = "acf_extra/airfx/rocket_fire2.wav",
+	sound           = "acf_extra/airfx/rocket_fire2.mp3",
 	soundDistance   = " ",
 	soundNormal     = " ",
 	effect          = "Rocket Motor",
