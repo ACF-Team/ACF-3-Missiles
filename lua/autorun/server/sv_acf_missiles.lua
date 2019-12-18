@@ -17,6 +17,9 @@ if not ACF then error("ACF is not installed - ACF Missiles requires it!") end
 -- Lookup table of all currently flying missiles.
 ACF.ActiveMissiles = ACF.ActiveMissiles or {}
 
+-- Lookup table for all currently active radars.
+ACF.ActiveRadars = ACF.ActiveRadars or {}
+
 include("acf/shared/sh_acfm_getters.lua")
 
 local cvarGrav = GetConVar("sv_gravity")

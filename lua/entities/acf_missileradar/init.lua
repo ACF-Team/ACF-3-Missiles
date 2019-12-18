@@ -7,33 +7,164 @@ include("radar_types_support.lua")
 
 CreateConVar("sbox_max_acf_missileradar", 6)
 
-function ENT:ConfigureForClass()
-	local behaviour = ACFM.RadarBehaviour[self.Class]
+-------------------------------[[ Local Functions ]]-------------------------------
 
-	if not behaviour then return end
+local function IsLegal(Entity)
+	if Entity:GetNoDraw() then return false, "Not drawn" end
+	if not Entity:IsSolid() then return false, "Not solid" end
+	if Entity.ClipData and next(Entity.ClipData) then return false, "Visually clipped" end
+	if Entity:GetModel() ~= Entity.Model then return false, "Different model, should be " .. Entity.Model end
 
-	self.GetDetectedEnts = behaviour.GetDetectedEnts
+	local PhysObj = Entity:GetPhysicsObject()
+
+	if not IsValid(PhysObj) then return false, "Invalid physics object" end
+	if PhysObj:GetMass() < Entity.LegalMass then return false, "Underweight, should be " .. Entity.LegalMass .. " kg" end
+	if not PhysObj:GetVolume() then return false, "Spherical collisions" end
+
+	return true
 end
 
-function ENT:TriggerInput( inp, value )
-	if inp == "Active" then
-		self:SetActive(value ~= 0)
+local function CheckLegal(Entity)
+	local Legal, Reason = IsLegal(Entity)
+
+	Entity.DisableReason = Reason
+
+	if not Legal then
+		Entity:Disable()
+		return false
+	end
+
+	timer.Simple(math.Rand(1, 5), function()
+		if IsValid(Entity) then
+			CheckLegal(Entity)
+		end
+	end)
+
+	return true
+end
+
+local function UpdateStatus(Entity)
+	if Entity.Disabled and Entity.DisableReason then
+		Entity:SetNWString("Status", "Disabled: " .. Entity.DisableReason)
+		return
+	end
+
+	if Entity.TargetCount > 0 then
+		Entity:SetNWString("Status", Entity.TargetCount .. " target(s) detected!")
+		return
+	end
+
+	Entity:SetNWString("Status", Entity.Active and "Active" or "Idle")
+end
+
+local function ResetOutputs(Entity)
+	if Entity.TargetCount == 0 then return end
+
+	Entity.TargetCount = 0
+
+	WireLib.TriggerOutput(Entity, "Detected", 0)
+	WireLib.TriggerOutput(Entity, "ClosestDistance", 0)
+	WireLib.TriggerOutput(Entity, "Entities", {})
+	WireLib.TriggerOutput(Entity, "Position", {})
+	WireLib.TriggerOutput(Entity, "Velocity", {})
+
+	UpdateStatus(Entity)
+end
+
+local function SetSequence(Entity, Active)
+	if Entity.Disabled and Active then return end
+
+	local SequenceName = Active and "active" or "idle"
+	local Sequence = Entity:LookupSequence(SequenceName)
+
+	Entity:ResetSequence(Sequence or 0)
+
+	Entity.AutomaticFrameAdvance = Active
+end
+
+local function SetActive(Entity, Active)
+	Entity.Active = Active
+
+	SetSequence(Entity, Active)
+	ResetOutputs(Entity)
+	UpdateStatus(Entity)
+
+	ACF.ActiveRadars[Entity] = Active or nil
+end
+
+local function HasLineOfSight(From, To, Target, Filter)
+	local TraceData = {
+		start = From,
+		endpos = To,
+		mask = MASK_SHOT,
+		filter = Filter
+	}
+
+	return util.TraceLine(TraceData).Entity == Target
+end
+
+local function ScanForEntities(Entity)
+	if not Entity.GetDetected then return end
+
+	local Detected = Entity:GetDetected()
+	local Entities = {}
+	local Position = {}
+	local Velocity = {}
+	local Filter = { Entity }
+
+	local Origin = Entity:LocalToWorld(Entity.ScanOrigin)
+	local Closest = math.huge
+	local Count = 0
+
+	-- If cframe is installed, we can give it a proper filter
+	if cframe then
+		local FilterEnts = cframe.GetAllEntities(Entity)
+		local Index = 0
+
+		for K in pairs(FilterEnts) do
+			Index = Index + 1
+			Filter[Index] = K
+		end
+	end
+
+	for _, Ent in ipairs(Detected) do
+		if HasLineOfSight(Origin, Ent.CurPos, Ent, Filter) then
+			local DistanceSqr = Origin:DistToSqr(Ent.CurPos)
+
+			Count = Count + 1
+
+			Entities[Count] = Ent
+			Position[Count] = Ent.CurPos
+			Velocity[Count] = Ent.LastVel
+
+			if DistanceSqr < Closest then
+				Closest = DistanceSqr
+			end
+		end
+	end
+
+	Closest = Closest < math.huge and Closest ^ 0.5 or 0
+
+	WireLib.TriggerOutput(Entity, "Detected", Count)
+	WireLib.TriggerOutput(Entity, "ClosestDistance", Closest)
+	WireLib.TriggerOutput(Entity, "Entities", Entities)
+	WireLib.TriggerOutput(Entity, "Position", Position)
+	WireLib.TriggerOutput(Entity, "Velocity", Velocity)
+
+	if Count ~= Entity.TargetCount then
+		if Count > Entity.TargetCount then
+			local Sound = Entity.Sound or ACFM.DefaultRadarSound
+
+			Entity:EmitSound(Sound, 500, 100)
+		end
+
+		Entity.TargetCount = Count
+
+		UpdateStatus(Entity)
 	end
 end
 
-function ENT:SetActive(active)
-	self.Active = active
-
-	if active then
-		local sequence = self:LookupSequence("active") or 0
-		self:ResetSequence(sequence)
-		self.AutomaticFrameAdvance = true
-	else
-		local sequence = self:LookupSequence("idle") or 0
-		self:ResetSequence(sequence)
-		self.AutomaticFrameAdvance = false
-	end
-end
+-------------------------------[[ Global Functions ]]-------------------------------
 
 function MakeACF_MissileRadar(Owner, Pos, Angle, Id)
 	if not Owner:CheckLimit("_acf_missileradar") then return false end
@@ -46,214 +177,108 @@ function MakeACF_MissileRadar(Owner, Pos, Angle, Id)
 
 	if not IsValid(Radar) then return end
 
+	local Behavior = ACFM.RadarBehaviour[RadarData.class]
+
+	Radar:SetModel(RadarData.model)
 	Radar:SetAngles(Angle)
 	Radar:SetPos(Pos)
 	Radar:Spawn()
 
-	Radar.BaseClass.Initialize(Radar)
+	Radar:PhysicsInit(SOLID_VPHYSICS)
+	Radar:SetMoveType(MOVETYPE_VPHYSICS)
 
-	Radar.Id 				= Id
-	Radar.Model 			= RadarData.model
-	Radar.Weight 			= RadarData.weight
-	Radar.ACFName 			= RadarData.name
-	Radar.ConeDegs		 	= RadarData.viewcone
-	Radar.Range 			= RadarData.range
-	Radar.Class 			= RadarData.class
-	Radar.Owner				= Owner
-	Radar.LegalMass			= Radar.Weight or 0
-	Radar.Active			= false
+	Radar.Id			= Id
+	Radar.Model			= RadarData.model
+	Radar.LegalMass		= RadarData.weight
+	Radar.ACFName		= RadarData.name
+	Radar.ConeDegs		= RadarData.viewcone
+	Radar.Range 		= RadarData.range
+	Radar.Class 		= RadarData.class
+	Radar.Owner			= Owner
 
-	Radar.ThinkDelay		= 0.1
-	Radar.StatusUpdateDelay	= 0.5
-	Radar.LastStatusUpdate	= CurTime()
+	Radar.ThinkDelay	= 0.1
+	Radar.UpdateDelay	= 0.5
+	Radar.LastUpdate	= CurTime()
+	Radar.TargetCount	= 0
 
-	Radar.Inputs			= WireLib.CreateInputs(Radar, { "Active" })
-	Radar.Outputs			= WireLib.CreateOutputs(Radar, {"Detected", "ClosestDistance", "Entities [ARRAY]", "Position [ARRAY]", "Velocity [ARRAY]"})
+	Radar.Inputs		= WireLib.CreateInputs(Radar, { "Active" })
+	Radar.Outputs		= WireLib.CreateOutputs(Radar, { "Detected", "ClosestDistance", "Entities [ARRAY]", "Position [ARRAY]", "Velocity [ARRAY]" })
+	Radar.GetDetected	= Behavior and Behavior.GetDetectedEnts
 
-	Radar:CreateRadar(Radar.ACFName or "Missile Radar", Radar.ConeDegs or 0)
-	Radar:EnableClientInfo(true)
-	Radar:ConfigureForClass()
-	Radar:SetActive(false)
-	Radar:SetModelEasy(RadarData.model)
+	local OriginAttach = Radar:LookupAttachment("missile1") -- All radars currently have this attachment
+	local AttachData = Radar:GetAttachment(OriginAttach)
+
+	Radar.ScanOrigin = AttachData and Radar:WorldToLocal(AttachData.Pos) or Vector()
+
+	Radar:SetNWString("Name", Radar.ACFName)
+	Radar:SetNWFloat("ConeDegs", Radar.ConeDegs)
+	Radar:SetNWFloat("Range", Radar.Range)
 
 	Owner:AddCount("_acf_missileradar", Radar)
 	Owner:AddCleanup("acfmenu", Radar)
 
+	local PhysObj = Radar:GetPhysicsObject()
+
+	if IsValid(PhysObj) then
+		PhysObj:SetMass(Radar.LegalMass)
+	end
+
+	CheckLegal(Radar)
+
 	return Radar
 end
 
-list.Set( "ACFCvars", "acf_missileradar", {"id"} )
-duplicator.RegisterEntityClass("acf_missileradar", MakeACF_MissileRadar, "Pos", "Angle", "Id" )
-
-function ENT:CreateRadar(ACFName, ConeDegs)
-	self.ConeDegs = ConeDegs
-	self.ACFName = ACFName
-
-	self:RefreshClientInfo()
-end
-
-function ENT:RefreshClientInfo()
-	self:SetNWFloat("ConeDegs", self.ConeDegs)
-	self:SetNWFloat("Range", self.Range)
-	self:SetNWString("Id", self.ACFName)
-	self:SetNWString("Name", self.ACFName)
-end
-
-function ENT:SetModelEasy(mdl)
-	self:SetModel( mdl )
-	self.Model = mdl
-
-	self:PhysicsInit( SOLID_VPHYSICS )
-	self:SetMoveType( MOVETYPE_VPHYSICS )
-	self:SetSolid( SOLID_VPHYSICS )
-
-	local phys = self:GetPhysicsObject()
-
-	if IsValid(phys) then
-		phys:SetMass(self.Weight)
-	end
-end
+list.Set("ACFCvars", "acf_missileradar", {"id"})
+duplicator.RegisterEntityClass("acf_missileradar", MakeACF_MissileRadar, "Pos", "Angle", "Id")
 
 function ENT:Think()
-	if self.Inputs.Active.Value ~= 0 and self:AllowedToScan() then
-		self:ScanForMissiles()
-	else
-		self:ClearOutputs()
+	if not self.Disabled and self.Active then
+		ScanForEntities(self)
 	end
 
-	local curTime = CurTime()
-
-	self:NextThink(curTime + self.ThinkDelay)
-
-	if self.LastStatusUpdate + self.StatusUpdateDelay < curTime then
-		self:UpdateStatus()
-		self.LastStatusUpdate = curTime
-	end
+	self:NextThink(CurTime() + self.ThinkDelay)
 
 	return true
 end
 
---adapted from acf engine checks, thanks ferv
---returns if passes weldparent check.  True means good, false means bad
-function ENT:CheckWeldParent()
-	local entParent = self:GetParent()
+function ENT:TriggerInput(_, Value)
+	if self.Disabled then return end
 
-	-- if it's not parented we're fine
-	if not IsValid(self:GetParent()) then return true end
-
-	--if welded to parent, it's ok
-	for _, v in pairs( constraint.FindConstraints( self, "Weld" ) ) do
-		if v.Ent1 == entParent or v.Ent2 == entParent then return true end
-	end
-
-	return false
+	SetActive(self, tobool(Value))
+	CheckLegal(self)
 end
 
-function ENT:UpdateStatus()
+function ENT:Enable()
+	self.Disabled = nil
 
-	local phys = self:GetPhysicsObject()
-	if not IsValid(phys) then
-		self:SetNWBool("Status", "Physics error, please respawn this")
-		return
-	end
+	ACF.ActiveRadars[self] = self.Active or nil
 
-	if phys:GetMass() < self.LegalMass then
-		self:SetNWBool("Status", "Illegal mass, should be " .. self.LegalMass .. " kg")
-		return
-	end
-
-	if not self:CheckWeldParent() then
-		self:SetNWBool("Status", "Deactivated: parenting is disallowed")
-		return
-	end
-
-	if not self.Active then
-		self:SetNWBool("Status", "Inactive")
-	elseif self.Outputs.Detected.Value > 0 then
-		self:SetNWBool("Status", self.Outputs.Detected.Value .. " objects detected!")
-	else
-		self:SetNWBool("Status", "Active")
-	end
+	SetSequence(self, self.Active)
+	UpdateStatus(self)
+	CheckLegal(self)
 end
 
-function ENT:AllowedToScan()
-	if not self.Active then return false end
+function ENT:Disable()
+	self.Disabled = true
 
-	local phys = self:GetPhysicsObject()
-
-	if not IsValid(phys) then return false end
-
-	--TODO: replace self:getParent with a function check on if weldparent valid.
-	return phys:GetMass() == self.LegalMass and not IsValid(self:GetParent())
-end
-
-function ENT:GetDetectedEnts()
-	print("reached base GetDetectedEnts")
-end
-
-function ENT:ScanForMissiles()
-	local missiles = self:GetDetectedEnts() or {}
-
-	local entArray = {}
-	local posArray = {}
-	local velArray = {}
-
-	local i = 0
-
-	local closest
-	local closestSqr = 999999
-
-	local thisPos = self:GetPos()
-
-	for _, missile in pairs(missiles) do
-		i = i + 1
-
-		entArray[i] = missile
-		posArray[i] = missile.CurPos
-		velArray[i] = missile.LastVel
-
-		local curSqr = thisPos:DistToSqr(missile.CurPos)
-		if curSqr < closestSqr then
-			closest = missile.CurPos
-			closestSqr = curSqr
+	-- ACF.IllegalDisableTime hasn't been implemented yet
+	timer.Simple(ACF.IllegalDisableTime or 30, function()
+		if IsValid(self) then
+			self:Enable()
 		end
-	end
+	end)
 
-	if not closest then closestSqr = 0 end
+	SetSequence(self, false)
+	ResetOutputs(self)
+	UpdateStatus(self)
 
-	WireLib.TriggerOutput( self, "Detected", i )
-	WireLib.TriggerOutput( self, "ClosestDistance", math.sqrt(closestSqr) )
-	WireLib.TriggerOutput( self, "Entities", entArray )
-	WireLib.TriggerOutput( self, "Position", posArray )
-	WireLib.TriggerOutput( self, "Velocity", velArray )
-
-	if i > (self.LastMissileCount or 0) then
-		self:EmitSound( self.Sound or ACFM.DefaultRadarSound, 500, 100 )
-	end
-
-	self.LastMissileCount = i
+	ACF.ActiveRadars[self] = nil
 end
 
-function ENT:ClearOutputs()
-	if #self.Outputs.Entities.Value > 0 then
-		WireLib.TriggerOutput( self, "Entities", {} )
+function ENT:OnRemove()
+	if ACF.ActiveRadars[self] then
+		ACF.ActiveRadars[self] = nil
 	end
 
-	if #self.Outputs.Position.Value > 0 then
-		WireLib.TriggerOutput( self, "Position", {} )
-		WireLib.TriggerOutput( self, "ClosestDistance", 0 )
-	end
-
-	if #self.Outputs.Velocity.Value > 0 then
-		WireLib.TriggerOutput( self, "Velocity", {} )
-	end
-end
-
-function ENT:EnableClientInfo(bool)
-	self.ClientInfo = bool
-	self:SetNWBool("VisInfo", bool)
-
-	if bool then
-		self:RefreshClientInfo()
-	end
+	WireLib.Remove(self)
 end
