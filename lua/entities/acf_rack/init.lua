@@ -7,8 +7,11 @@ include("shared.lua")
 DEFINE_BASECLASS("acf_explosive")
 
 -------------------------------[[ Local Functions ]]-------------------------------
-
 local WireTable = {
+	gmod_wire_adv_pod = true,
+	gmod_wire_joystick = true,
+	gmod_wire_expression2 = true,
+	gmod_wire_joystick_multi = true,
 	gmod_wire_pod = function(Input)
 		if Input.Pod then
 			return Input.Pod:GetDriver()
@@ -18,29 +21,29 @@ local WireTable = {
 		if Input.ply then
 			return Input.ply
 		end
-	end,
-	gmod_wire_expression2 = function(Input, This)
-		if Input.Inputs.Fire then
-			return This:GetUser(Input.Inputs.Fire.Src)
-		elseif Input.Inputs.Shoot then
-			return This:GetUser(Input.Inputs.Shoot.Src)
-		elseif Input.Inputs then
-			for _, V in pairs(Input.Inputs) do
-				if not IsValid(V.Src) then
-					return Input.Owner or Input:GetOwner()
-				end
-
-				if WireTable[V.Src:GetClass()] then
-					return This:GetUser(V.Src)
-				end
-			end
-		end
-	end,
+	end
 }
 
 WireTable.gmod_wire_adv_pod = WireTable.gmod_wire_pod
 WireTable.gmod_wire_joystick = WireTable.gmod_wire_pod
 WireTable.gmod_wire_joystick_multi = WireTable.gmod_wire_pod
+WireTable.gmod_wire_expression2 = function(Input, This)
+	if Input.Inputs.Fire then
+		return This:GetUser(Input.Inputs.Fire.Src)
+	elseif Input.Inputs.Shoot then
+		return This:GetUser(Input.Inputs.Shoot.Src)
+	elseif Input.Inputs then
+		for _, V in pairs(Input.Inputs) do
+			if not IsValid(V.Src) then
+				return Input.Owner or Input:GetOwner()
+			end
+
+			if WireTable[V.Src:GetClass()] then
+				return This:GetUser(V.Src)
+			end
+		end
+	end
+end
 
 local Inputs = {
 	Fire = function(Rack, Value)
