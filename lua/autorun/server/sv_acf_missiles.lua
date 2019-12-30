@@ -199,13 +199,6 @@ function ACFM_ResetVelocity(bdata)
 	return resetFunc(bdata)
 end
 
-include("autorun/server/duplicatorDeny.lua")
-
-hook.Add( "InitPostEntity", "ACFMissiles_DupeDeny", function()
-	-- Need to ensure this is called after InitPostEntity because Adv. Dupe 2 resets its whitelist upon this event.
-	timer.Simple(1, function() duplicator.Deny("acf_missile") end)
-end )
-
 hook.Add( "InitPostEntity", "ACFMissiles_AddLinkable", function()
 	-- Need to ensure this is called after InitPostEntity because Adv. Dupe 2 resets its whitelist upon this event.
 	timer.Simple(1, function() ACF_E2_LinkTables["acf_rack"] = {Crates = false} end)
