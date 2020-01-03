@@ -57,5 +57,3 @@ function ACFRadarGUICreate(Table)
 
 	acfmenupanel.CustomDisplay:PerformLayout()
 end
-
-PrintTable(ACF.Classes)

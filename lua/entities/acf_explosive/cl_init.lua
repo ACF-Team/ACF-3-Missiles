@@ -1,5 +1,6 @@
 include ("shared.lua")
 
+--[[]
 function ENT:Draw()
 	self:DoNormalDraw()
 	self:DrawModel()
@@ -38,4 +39,20 @@ function ENT:GetOverlayText()
 	}
 
 	return table.concat(ret)
+end
+]]--
+
+local ACF_GunInfoWhileSeated = CreateClientConVar("ACF_GunInfoWhileSeated", 0, true, false)
+
+function ENT:Draw()
+	local Player = LocalPlayer()
+	local HideBubble = IsValid(Player) and Player:InVehicle() and not ACF_GunInfoWhileSeated:GetBool()
+
+	self.BaseClass.DoNormalDraw(self, false, HideBubble)
+	Wire_Render(self)
+
+	if self.GetBeamLength and (not self.GetShowBeam or self:GetShowBeam()) then
+		-- Every SENT that has GetBeamLength should draw a tracer. Some of them have the GetShowBeam boolean
+		Wire_DrawTracerBeam(self, 1, self.GetBeamHighlight and self:GetBeamHighlight() or false)
+	end
 end
