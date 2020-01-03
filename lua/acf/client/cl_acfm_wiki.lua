@@ -1,5 +1,3 @@
-include('acf/client/cl_missilewiki.lua')
-
 local Menu = {}
 
 // the category the menu goes under
@@ -15,15 +13,6 @@ Menu.Command = ''
 Menu.ShouldRefresh = false
 
 local HTML = {}
-
-if not markdown then
-	if file.Exists('includes/modules/markdown.lua', 'LUA') then
-		require('markdown')
-	else
-		Error('markdown module not found, aborting creating XCF wiki!')
-		return
-	end
-end
 
 local Name, Repo = 'TwistedTail', 'ACF-3-Missiles'
 

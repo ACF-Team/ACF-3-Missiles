@@ -3,8 +3,6 @@
 -- Go edit those files instead of this one.
 -- Thanks ferv <3
 
-AddCSLuaFile()
-
 ACF.Weapons.Rack = ACF.Weapons.Rack or {}
 ACF.Classes.Rack = ACF.Classes.Rack or {}
 
@@ -78,24 +76,23 @@ function ACF_DefineRadarClass(ID, Data)
 	RadarClasses[ID] = Data
 end
 
-local Weapons = list.GetForEdit("ACFEnts")
-local Classes = list.GetForEdit("ACFClasses")
-
 -- some factory functions for defining ents
 function ACF_defineGunClass( ID, Data )
 	Data.id = ID
 
-	Classes.GunClass[ID] = Data
 	ACF.Classes.GunClass[ID] = Data
 
-	local Blacklist = Data.ammoBlacklist
-	if Blacklist then
-		for _, V in pairs(Blacklist) do
-			local AmmoBlackList = ACF.AmmoBlacklist[V]
+	timer.Simple(0, function()
+		local Blacklist = Data.ammoBlacklist
 
-			AmmoBlackList[#AmmoBlackList + 1] = ID
+		if Blacklist then
+			for _, V in ipairs(Blacklist) do
+				local AmmoBlackList = ACF.AmmoBlacklist[V]
+
+				AmmoBlackList[#AmmoBlackList + 1] = ID
+			end
 		end
-	end
+	end)
 end
 
 function ACF_defineGun(ID, Data)
@@ -108,7 +105,6 @@ function ACF_defineGun(ID, Data)
 		end
 	end
 
-	Weapons.Guns[ID] = Data
 	ACF.Weapons.Guns[ID] = Data
 end
 
@@ -161,9 +157,5 @@ function ACF_GetAllFuseNamesExcept(List)
 	return GetAllInTableExcept(ACF.Fuse, List)
 end
 
-aaa_IncludeShared("acf/shared/missiles")
-aaa_IncludeShared("acf/shared/guns")
-aaa_IncludeShared("acf/shared/radars")
-
-ACF.RoundTypes = list.Get("ACFRoundTypes")
-ACF.IdRounds = list.Get("ACFIdRounds")	--Lookup tables so i can get rounds classes from clientside with just an integer
+game.AddParticles("particles/flares_fx.pcf")
+PrecacheParticleSystem("ACFM_Flare")

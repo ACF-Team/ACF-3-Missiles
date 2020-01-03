@@ -13,7 +13,7 @@ ACF.RegisterClassLink("acf_rack", "acf_ammo", function(Weapon, Target)
 
 	local BulletData = Target.BulletData
 	local GunClass = ACF_GetGunValue(BulletData, "gunclass")
-	local Blacklist = ACF.AmmoBlacklist[Target.RoundType] or {}
+	local Blacklist = ACF.AmmoBlacklist[Target.RoundType]
 
 	if not GunClass or table.HasValue(Blacklist, GunClass) then return false, "That round type cannot be used with this rack!" end
 
@@ -170,7 +170,7 @@ local function GetNextAttachName(Rack)
 end
 
 local function GetMissileAngPos(Rack, Missile, AttachName)
-	local GunData = list.Get("ACFEnts").Guns[Missile.BulletData.Id]
+	local GunData = ACF.Weapons.Guns[Missile.BulletData.Id]
 	local RackData = ACF.Weapons.Rack[Rack.Id]
 	local Position = Rack.AttachPoints[AttachName]
 
@@ -425,13 +425,13 @@ function ENT:GetFireDelay(Missile)
 	end
 
 	local BulletData = Missile.BulletData
-	local GunData = list.Get("ACFEnts").Guns[BulletData.Id]
+	local GunData = ACF.Weapons.Guns[BulletData.Id]
 
 	if not GunData then
 		return self.LastValidFireDelay or 1
 	end
 
-	local Class = list.Get("ACFClasses").GunClass[GunData.gunclass]
+	local Class = ACF.Classes.GunClass[GunData.gunclass]
 	local Interval = ((BulletData.RoundVolume / 500) ^ 0.60) * (GunData.rofmod or 1) * (Class.rofmod or 1)
 
 	self.LastValidFireDelay = Interval

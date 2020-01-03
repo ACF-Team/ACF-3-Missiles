@@ -1,5 +1,3 @@
-include("gitrc.lua")
-
 ACFM_VersionStatus = nil
 
 net.Receive( "acfm_versioncheck", function(_, ply)
@@ -11,7 +9,7 @@ end )
 function ACF_Missiles_VersionCheck()
 	-- make sure version checker only runs for people who've installed the mod.
 	if file.Exists("ACFMissiles_VCheck.txt", "GAME") then
-		GitRC.CheckVersion("Bubbus", "ACF-Missiles", function(data)
+		GitRC.CheckVersion("TwistedTail", "ACF-3-Missiles", function(data)
 			ACFM_VersionStatus = {
 				IsLatest = data.uptodate,
 				LatestDate = data.committime

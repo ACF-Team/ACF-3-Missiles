@@ -7,7 +7,6 @@ Round.type = "Ammo" --Tells the spawn menu what entity to spawn
 Round.name = "Gun-Launched Anti-Tank Missile (GLATGM)" --Human readable name
 Round.model = "models/munitions/round_100mm_shot.mdl" --Shell flight model
 Round.desc = "A missile fired from a gun. While slower than a traditional shell it makes up for that with guidance."
-Round.netid = 9 --Unique ammotype ID for network transmission
 
 function Round.create(Gun, BulletData)
 	if Gun:GetClass() == "acf_ammo" then
@@ -129,7 +128,7 @@ function Round.getDisplayData(Data)
 end
 
 function Round.network(Crate, BulletData)
-	ACF.RoundTypes["HEAT"].network( Crate, BulletData )
+	ACF.RoundTypes.HEAT.network( Crate, BulletData )
 end
 
 function Round.cratetxt(BulletData)
@@ -345,5 +344,4 @@ function Round.guiupdate(Panel)
 	acfmenupanel:CPanelText("SlugDisplay", "Penetrator Mass : " .. math.floor(Data.SlugMass * 10000) / 10 .. " g \n Penetrator Caliber : " .. math.floor(Data.SlugCaliber * 100) / 10 .. " mm \n Penetrator Velocity : " .. math.floor(Data.MuzzleVel + Data.SlugMV) .. " m/s \n Penetrator Maximum Penetration : " .. math.floor(Data.MaxPen) .. " mm RHA\n\n300m pen: " .. math.Round(R1P,0) .. "mm @ " .. math.Round(R1V,0) .. " m\\s\n800m pen: " .. math.Round(R2P,0) .. "mm @ " .. math.Round(R2V,0) .. " m\\s\n\nThe range data is an approximation and may not be entirely accurate.")	--Proj muzzle penetration (Name, Desc)
 end
 
-list.Set("ACFRoundTypes", "GLATGM", Round) --Set the round properties
-list.Set("ACFIdRounds", Round.netid, "GLATGM") --Index must equal the ID entry in the table above, Data must equal the index of the table above
+ACF.RoundTypes.GLATGM = Round --Set the round properties

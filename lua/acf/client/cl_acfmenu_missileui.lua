@@ -1,5 +1,3 @@
-AddCSLuaFile()
-
 function ACFMissiles_SetCommand(Combo, ControlGroup, Concmd)
 	local Argument
 

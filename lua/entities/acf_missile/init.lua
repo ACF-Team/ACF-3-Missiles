@@ -85,7 +85,7 @@ end
 
 local function ConfigureFlight(Missile)
 	local BulletData = Missile.BulletData
-	local GunData = list.Get("ACFEnts").Guns[BulletData.Id]
+	local GunData = ACF.Weapons.Guns[BulletData.Id]
 	local Round = GunData.round
 	local Length = GunData.length
 
@@ -343,7 +343,7 @@ end
 function ENT:SetBulletData(BulletData)
 	self.BaseClass.SetBulletData(self, BulletData)
 
-	local Gun = list.Get("ACFEnts").Guns[BulletData.Id]
+	local Gun = ACF.Weapons.Guns[BulletData.Id]
 	local PhysObj = self:GetPhysicsObject()
 
 	self:SetModelEasy(Gun.round.model or Gun.model or "models/missiles/aim9.mdl")

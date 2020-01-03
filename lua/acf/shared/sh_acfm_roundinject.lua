@@ -1,23 +1,19 @@
-
-AddCSLuaFile()
-include("acf/shared/sh_acfm_getters.lua")
-
 local function checkIfDataIsMissile(data)
-	local guns = list.Get("ACFEnts").Guns
+	local guns = ACF.Weapons.Guns
 	local class = guns[data.Id]
 
 	if not (class and class.gunclass) then
 		return -- oldDisplayData(data)
 	end
 
-	local classes = list.Get("ACFClasses").GunClass
+	local classes = ACF.Classes.GunClass
 	class = classes[class.gunclass]
 
 	return class.type and class.type == "missile"
 end
 
 function ACFM_ModifyRoundDisplayFuncs()
-	local roundTypes = list.GetForEdit("ACFRoundTypes")
+	local roundTypes = ACF.RoundTypes
 
 	if not ACFM_RoundDisplayFuncs then
 		ACFM_RoundDisplayFuncs = {}
@@ -65,7 +61,7 @@ local function configConcat(tbl, sep)
 end
 
 function ACFM_ModifyCrateTextFuncs()
-	local roundTypes = list.GetForEdit("ACFRoundTypes")
+	local roundTypes = ACF.RoundTypes
 
 	if not ACFM_CrateTextFuncs then
 		ACFM_CrateTextFuncs = {}

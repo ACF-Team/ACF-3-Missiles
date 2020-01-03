@@ -2,7 +2,7 @@
 function ACF_GetGunValue(BulletData, Value)
 	BulletData = istable(BulletData) and BulletData.Id or BulletData
 
-	local Class = list.Get("ACFEnts").Guns[BulletData]
+	local Class = ACF.Weapons.Guns[BulletData]
 
 	if Class then
 		local Result = Class.RoundData and Class.RoundData[Value] or Class[Value]
@@ -11,7 +11,7 @@ function ACF_GetGunValue(BulletData, Value)
 			return Result
 		end
 
-		local GunClasses = list.Get("ACFClasses").GunClass
+		local GunClasses = ACF.Classes.GunClass
 
 		Class = GunClasses[Class.gunclass]
 
@@ -70,7 +70,7 @@ function ACF_CanLinkRack(RackID, AmmoID, BulletData)
 		return false, "Rack '" .. tostring(RackID) .. "' does not exist."
 	end
 
-	local GunData = list.Get("ACFEnts").Guns[AmmoID]
+	local GunData = ACF.Weapons.Guns[AmmoID]
 
 	if not GunData then
 		return false, "Ammo '" .. tostring(AmmoID) .. "' does not exist."
@@ -98,7 +98,7 @@ function ACF_CanLinkRack(RackID, AmmoID, BulletData)
 		return false, Message
 	end
 
-	local Classes = list.Get("ACFClasses").GunClass
+	local Classes = ACF.Classes.GunClass
 
 	if Classes[GunData.gunclass].type ~= "missile" then
 		return false, "Racks cannot be linked to ammo crates of type '" .. tostring(AmmoID) .. "'!"

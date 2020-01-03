@@ -19,13 +19,11 @@ function PANEL:Init()
 	self.ModelView:SetCamPos( centre + Vector( 0, dist, 0 ) )
 	self.ModelView:SetLookAt( centre )
 
-	//*
-	self.Close = vgui.Create('DButton', self)
-	self.Close:SetSize(40, 15)
-	self.Close:SetPos(580, 440)
-	self.Close:SetText('Close')
-	self.Close.DoClick = function() self:Close() end
-	//*/
+	self.CloseButton = vgui.Create('DButton', self)
+	self.CloseButton:SetSize(40, 15)
+	self.CloseButton:SetPos(580, 440)
+	self.CloseButton:SetText('Close')
+	self.CloseButton.DoClick = function() self:Close() end
 
 	self.HTML = vgui.Create('DHTML', self)
 	self.HTML:SetSize(450, 400)
@@ -89,7 +87,7 @@ function PANEL:PerformLayout()
 	local SidebarWide = 160
 	local InitTall = Tall
 
-	self.Close:SetPos(X - (self.Close:GetWide() + 3), 3)
+	self.CloseButton:SetPos(X - (self.CloseButton:GetWide() + 3), 3)
 
 	self.ModelView:SetPos(Wide, Tall)
 	self.ModelView:SetWide(SidebarWide)

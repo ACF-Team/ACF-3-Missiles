@@ -20,8 +20,6 @@ ACF.ActiveMissiles = ACF.ActiveMissiles or {}
 -- Lookup table for all currently active radars.
 ACF.ActiveRadars = ACF.ActiveRadars or {}
 
-include("acf/shared/sh_acfm_getters.lua")
-
 local cvarGrav = GetConVar("sv_gravity")
 
 function ACFM_BulletLaunch(BData)
@@ -212,7 +210,7 @@ hook.Add("InitPostEntity", "ACFMissiles_AddSoundSupport", function()
 
 			ResetSound = function(ent)
 				local Class = ent.Class
-				local Classes = list.Get("ACFClasses")
+				local Classes = ACF.Classes
 
 				local soundData = { Sound = Classes.GunClass[Class].sound }
 

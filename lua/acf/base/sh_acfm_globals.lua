@@ -1,5 +1,3 @@
-AddCSLuaFile()
-
 ACFM = ACFM or {}
 
 ACFM.FlareBurnMultiplier = 0.025
