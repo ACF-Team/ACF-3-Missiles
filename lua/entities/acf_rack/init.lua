@@ -389,24 +389,18 @@ duplicator.RegisterEntityClass("acf_rack", MakeACF_Rack, "Pos", "Angle", "Id", "
 ACF.RegisterLinkSource("acf_gun", "Crates")
 
 function ENT:Enable()
+	if not CheckLegal(self) then return end
+
 	self.Disabled	   = nil
 	self.DisableReason = nil
 
 	self:UpdateOverlay()
-
-	CheckLegal(self)
 end
 
 function ENT:Disable()
 	self.Disabled = true
 
 	self:UpdateOverlay()
-
-	timer.Simple(ACF.IllegalDisableTime, function()
-		if IsValid(self) then
-			self:Enable()
-		end
-	end)
 end
 
 function ENT:GetReloadTime(Missile)
@@ -718,48 +712,28 @@ function ENT:ReloadEffect() end
 
 function ENT:PreEntityCopy()
 	if next(self.Crates) then
-		local EntIDs = {}
+		local Entities = {}
 
 		for Crate in pairs(self.Crates) do
-			EntIDs[#EntIDs + 1] = Crate:EntIndex()
+			Entities[#Entities + 1] = Crate:EntIndex()
 		end
 
-		if next(EntIDs) then
-			local Info = {
-				entities = EntIDs
-			}
-
-			duplicator.StoreEntityModifier(self, "ACFAmmoLink", Info)
-		end
+		duplicator.StoreEntityModifier(self, "ACFCrates", Entities)
 	end
-
-	duplicator.StoreEntityModifier(self, "ACFRackInfo", {
-		Id = self.Id,
-		MissileId = self.MissileId
-	})
 
 	-- Wire dupe info
 	self.BaseClass.PreEntityCopy(self)
 end
 
 function ENT:PostEntityPaste(Player, Ent, CreatedEntities)
-	local AmmoLink = Ent.EntityMods.ACFAmmoLink
+	local EntMods = Ent.EntityMods
 
-	if AmmoLink and AmmoLink.entities then
-		for _, Index in pairs(AmmoLink.entities) do
-			local Ammo = CreatedEntities[Index]
-
-			if IsValid(Ammo) and Ammo:GetClass() == "acf_ammo" then
-				self:Link(Ammo)
-
-				-- Old racks don't have this variable, so we just update them
-				if not self.MissileId then
-					self.MissileId = Ammo.RoundId
-				end
-			end
+	if EntMods.ACFCrates then
+		for _, EntID in pairs(EntMods.ACFCrates) do
+			self:Link(CreatedEntities[EntID])
 		end
 
-		Ent.EntityMods.ACFAmmoLink = nil
+		EntMods.ACFCrates = nil
 	end
 
 	-- Wire dupe info
