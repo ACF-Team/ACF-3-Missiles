@@ -386,7 +386,8 @@ end
 
 list.Set("ACFCvars", "acf_rack" , {"data9", "id"})
 duplicator.RegisterEntityClass("acf_rack", MakeACF_Rack, "Pos", "Angle", "Id", "MissileId")
-ACF.RegisterLinkSource("acf_gun", "Crates")
+ACF.RegisterLinkSource("acf_rack", "Crates")
+ACF.RegisterLinkSource("acf_rack", "Computer", true)
 
 function ENT:Enable()
 	if not CheckLegal(self) then return end
@@ -704,13 +705,11 @@ function ENT:Think()
 	return true
 end
 
-function ENT:MuzzleEffect()
-	self:EmitSound( "phx/epicmetal_hard.wav", 500, 100 )
-end
-
-function ENT:ReloadEffect() end
-
 function ENT:PreEntityCopy()
+	if IsValid(self.Computer) then
+		duplicator.StoreEntityModifier(self, "ACFComputer", self.Computer:EntIndex())
+	end
+
 	if next(self.Crates) then
 		local Entities = {}
 
@@ -727,6 +726,12 @@ end
 
 function ENT:PostEntityPaste(Player, Ent, CreatedEntities)
 	local EntMods = Ent.EntityMods
+
+	if EntMods.ACFComputer then
+		self:Link(CreatedEntities[EntMods.ACFComputer])
+
+		EntMods.ACFComputer = nil
+	end
 
 	if EntMods.ACFCrates then
 		for _, EntID in pairs(EntMods.ACFCrates) do

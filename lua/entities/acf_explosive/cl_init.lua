@@ -42,11 +42,10 @@ function ENT:GetOverlayText()
 end
 ]]--
 
-local ACF_GunInfoWhileSeated = CreateClientConVar("ACF_GunInfoWhileSeated", 0, true, false)
+local ACF_GunInfoWhileSeated = GetConVar("ACF_GunInfoWhileSeated")
 
 function ENT:Draw()
-	local Player = LocalPlayer()
-	local HideBubble = IsValid(Player) and Player:InVehicle() and not ACF_GunInfoWhileSeated:GetBool()
+	local HideBubble = LocalPlayer():InVehicle() and not ACF_GunInfoWhileSeated:GetBool()
 
 	self.BaseClass.DoNormalDraw(self, false, HideBubble)
 	Wire_Render(self)
