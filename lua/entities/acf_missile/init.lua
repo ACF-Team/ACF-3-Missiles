@@ -261,7 +261,7 @@ local function CalcFlight(Missile)
 	end
 
 	--Physics calculations
-	local Vel = LastVel + (Dir * Missile.Motor - Vector(0, 0, Gravity:GetFloat())) * ACF.VelScale * DeltaTime ^ 2
+	local Vel = LastVel + (Dir * Missile.Motor - Vector(0, 0, Gravity:GetFloat())) * ACF.Scale * DeltaTime ^ 2
 	local Up = Dir:Cross(Vel):Cross(Dir):GetNormalized()
 	local Speed = Vel:Length()
 	local VelNorm = Vel / Speed
@@ -270,7 +270,7 @@ local function CalcFlight(Missile)
 	Vel = Vel - Up * Speed * DotSimple * Missile.FinMultiplier
 
 	local SpeedSq = Vel:LengthSqr()
-	local Drag = Vel:GetNormalized() * (DragCoef * SpeedSq) / ACF.DragDiv * ACF.VelScale
+	local Drag = Vel:GetNormalized() * (DragCoef * SpeedSq) / ACF.DragDiv * ACF.Scale
 
 	Vel = Vel - Drag
 
