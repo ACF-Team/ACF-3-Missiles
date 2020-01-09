@@ -707,7 +707,7 @@ end
 
 function ENT:PreEntityCopy()
 	if IsValid(self.Computer) then
-		duplicator.StoreEntityModifier(self, "ACFComputer", self.Computer:EntIndex())
+		duplicator.StoreEntityModifier(self, "ACFComputer", { self.Computer:EntIndex() })
 	end
 
 	if next(self.Crates) then
@@ -728,7 +728,9 @@ function ENT:PostEntityPaste(Player, Ent, CreatedEntities)
 	local EntMods = Ent.EntityMods
 
 	if EntMods.ACFComputer then
-		self:Link(CreatedEntities[EntMods.ACFComputer])
+		local _, EntIndex = next(EntMods.ACFComputer)
+
+		self:Link(CreatedEntities[EntIndex])
 
 		EntMods.ACFComputer = nil
 	end
