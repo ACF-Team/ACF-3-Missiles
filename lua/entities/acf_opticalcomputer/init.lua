@@ -229,7 +229,7 @@ end
 
 function ENT:GetTrace()
 	TraceData.start = self:GetPos()
-	TraceData.endpos = self:GetForward() * 50000
+	TraceData.endpos = self:LocalToWorld(Vector(50000))
 	TraceData.filter = self.Filter
 
 	return TraceLine(TraceData)
