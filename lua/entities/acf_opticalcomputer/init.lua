@@ -40,6 +40,8 @@ local ActiveLasers = ACF.ActiveLasers
 local CheckLegal = ACF_CheckLegal
 local ClassLink = ACF.GetClassLink
 local ClassUnlink = ACF.GetClassUnlink
+local UnlinkSound = "physics/metal/metal_box_impact_bullet%s.wav"
+local MaxDistance = ACF.RefillDistance * ACF.RefillDistance
 local TraceLine = util.TraceLine
 local TraceData = { start = true, endpos = true, filter = true }
 local ZeroHitPos = { 0, 0, 0 }
@@ -57,7 +59,7 @@ end
 
 local function UpdateOutputs(Entity)
 	local Trace = Entity:GetTrace()
-	local HitPos = Trace.HitPos
+	local HitPos = Trace.HitPos * VectorRand(-Entity.Spread, Entity.Spread)
 
 	Entity.HitPos = HitPos
 
@@ -74,6 +76,19 @@ local function UpdateOutputs(Entity)
 	end
 
 	Entity:UpdateOverlay()
+end
+
+local function CheckDistantLinks(Entity, Source)
+	local Position = Entity:GetPos()
+
+	for Link in pairs(Entity[Source]) do
+		if Position:DistToSqr(Link:GetPos()) > MaxDistance then
+			Entity:EmitSound(UnlinkSound:format(math.random(1, 3)), 500, 100)
+			Link:EmitSound(UnlinkSound:format(math.random(1, 3)), 500, 100)
+
+			Entity:Unlink(Link)
+		end
+	end
 end
 
 local Inputs = {
@@ -119,7 +134,8 @@ function ENT:Initialize()
 	self:PhysicsInit(SOLID_VPHYSICS)
 	self:SetMoveType(MOVETYPE_VPHYSICS)
 
-	self.LegalMass	= 65
+	self.Mass		= 65
+	self.Armor		= 20
 	self.Model		= "models/props_lab/monitor01b.mdl"
 	self.Active		= false
 	self.LaserOn	= false
@@ -129,6 +145,7 @@ function ENT:Initialize()
 	self.LaseTime	= 0
 	self.MaxTime	= 20
 	self.Cooldown	= 10
+	self.Spread		= 0
 	self.Filter		= { self }
 	self.Weapons	= {}
 
@@ -145,12 +162,67 @@ function ENT:Initialize()
 
 	ACF_Activate(self)
 
-	self.ACF.LegalMass = self.LegalMass
+	self.ACF.LegalMass = self.Mass
 	self.ACF.Model	   = self.Model
 
 	self:UpdateOverlay()
 
 	CheckLegal(self)
+
+	timer.Create("ACF Computer Clock " .. self:EntIndex(), 3, 0, function()
+		if IsValid(self) then
+			CheckDistantLinks(self, "Weapons")
+		else
+			timer.Remove("ACF Computer Clock " .. self:EntIndex())
+		end
+	end)
+end
+
+function ENT:ACF_Activate(Recalc)
+	local PhysObj = self.ACF.PhysObj
+	local Count
+
+	if PhysObj:GetMesh() then
+		Count = #PhysObj:GetMesh()
+	end
+
+	if IsValid(PhysObj) and Count and Count > 100 then
+		if not self.ACF.Area then
+			self.ACF.Area = PhysObj:GetSurfaceArea() * 6.45
+		end
+	else
+		local Size = self:OBBMaxs() - self:OBBMins()
+
+		if not self.ACF.Area then
+			self.ACF.Area = ((Size.x * Size.y) + (Size.x * Size.z) + (Size.y * Size.z)) * 6.45
+		end
+	end
+
+	self.ACF.Ductility = self.ACF.Ductility or 0
+
+	local Area = self.ACF.Area
+	local Armour = self.Armor
+	local Health = Area / ACF.Threshold
+	local Percent = 1
+
+	if Recalc and self.ACF.Health and self.ACF.MaxHealth then
+		Percent = self.ACF.Health / self.ACF.MaxHealth
+	end
+
+	self.ACF.Health = Health * Percent
+	self.ACF.MaxHealth = Health
+	self.ACF.Armour = Armour * (0.5 + Percent / 2)
+	self.ACF.MaxArmour = Armour * ACF.ArmorMod
+	self.ACF.Mass = self.Mass
+	self.ACF.Type = "Prop"
+end
+
+function ENT:ACF_OnDamage(Entity, Energy, FrArea, Angle, Inflictor)
+	local HitRes = ACF_PropDamage(Entity, Energy, FrArea, Angle, Inflictor)
+
+	self.Spread = ACF.MaxDamageInaccuracy * (1 - math.Round(self.ACF.Health / self.ACF.MaxHealth, 2))
+
+	return HitRes
 end
 
 function ENT:Enable()
@@ -183,7 +255,7 @@ function ENT:Link(Target)
 	if not IsValid(Target) then return false, "Attempted to link an invalid entity." end
 	if self == Target then return false, "Can't link a computer to itself." end
 
-	local Function = ClassLink(self:GetClass(), Target:GetClass())
+	local Function = ClassLink("acf_opticalcomputer", Target:GetClass())
 
 	if Function then
 		return Function(self, Target)
@@ -196,7 +268,7 @@ function ENT:Unlink(Target)
 	if not IsValid(Target) then return false, "Attempted to unlink an invalid entity." end
 	if self == Target then return false, "Can't unlink a computer from itself." end
 
-	local Function = ClassUnlink(self:GetClass(), Target:GetClass())
+	local Function = ClassUnlink("acf_opticalcomputer", Target:GetClass())
 
 	if Function then
 		return Function(self, Target)
