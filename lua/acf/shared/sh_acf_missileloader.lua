@@ -27,7 +27,7 @@ local rack_base = {
 }
 
 local radar_base = {
-	ent =   "acf_missileradar",
+	ent =   "acf_radar",
 	type =  "Radar"
 }
 

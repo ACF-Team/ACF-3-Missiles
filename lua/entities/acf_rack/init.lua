@@ -706,6 +706,10 @@ function ENT:Think()
 end
 
 function ENT:PreEntityCopy()
+	if IsValid(self.Radar) then
+		duplicator.StoreEntityModifier(self, "ACFRadar", { self.Radar:EntIndex() })
+	end
+
 	if IsValid(self.Computer) then
 		duplicator.StoreEntityModifier(self, "ACFComputer", { self.Computer:EntIndex() })
 	end
@@ -726,6 +730,14 @@ end
 
 function ENT:PostEntityPaste(Player, Ent, CreatedEntities)
 	local EntMods = Ent.EntityMods
+
+	if EntMods.ACFRadar then
+		local _, EntIndex = next(EntMods.ACFRadar)
+
+		self:Link(CreatedEntities[EntIndex])
+
+		EntMods.ACFRadar = nil
+	end
 
 	if EntMods.ACFComputer then
 		local _, EntIndex = next(EntMods.ACFComputer)
@@ -751,6 +763,9 @@ function ENT:OnRemove()
 	for Crate in pairs(self.Crates) do
 		self:Unlink(Crate)
 	end
+
+	self:Unlink(self.Radar)
+	self:Unlink(self.Computer)
 
 	WireLib.Remove(self)
 end

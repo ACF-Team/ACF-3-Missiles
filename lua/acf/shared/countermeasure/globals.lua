@@ -79,7 +79,7 @@ function ACFM_GetMissilesInCone(Position, Direction, Degrees)
 		end
 
 		if ACFM_ConeContainsPos(Position, Direction, Degrees, Missile:GetPos()) then
-			Result[#Result + 1] = Missile
+			Result[Missile] = true
 		end
 
 	end
@@ -97,7 +97,7 @@ function ACFM_GetMissilesInSphere(Position, Radius)
 		end
 
 		if Position:DistToSqr(Missile:GetPos()) <= RadiusSqr then
-			Result[#Result + 1] = Missile
+			Result[Missile] = true
 		end
 	end
 

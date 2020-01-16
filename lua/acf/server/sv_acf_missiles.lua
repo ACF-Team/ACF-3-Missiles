@@ -18,6 +18,10 @@ ACF.ActiveMissiles = ACF.ActiveMissiles or {}
 ACF.ActiveRadars = ACF.ActiveRadars or {}
 ACF.ActiveLasers = ACF.ActiveLasers or {}
 
+ACF.MaxDamageInaccuracy = 250
+
+ACFM.DefaultRadarSound = "buttons/button16.wav"
+
 local cvarGrav = GetConVar("sv_gravity")
 
 function ACFM_BulletLaunch(BData)
@@ -218,7 +222,7 @@ hook.Add("InitPostEntity", "ACFMissiles_AddSoundSupport", function()
 			end
 		}
 
-		ACF.SoundToolSupport["acf_missileradar"] = {
+		ACF.SoundToolSupport["acf_radar"] = {
 			GetSound = function(ent) return {Sound = ent.Sound} end,
 
 			SetSound = function(ent, soundData)
@@ -227,7 +231,7 @@ hook.Add("InitPostEntity", "ACFMissiles_AddSoundSupport", function()
 			end,
 
 			ResetSound = function(ent)
-				local soundData = {Sound = ACFM.DefaultRadarSound}
+				local soundData = { Sound = ACFM.DefaultRadarSound }
 
 				local setSound = ACF.SoundToolSupport["acf_gun"].SetSound
 				setSound( ent, soundData )

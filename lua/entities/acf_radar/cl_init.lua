@@ -1,38 +1,20 @@
 include ("shared.lua")
 
-function GetOverlayText(Entity)
-	local Text		= Entity:GetNWString("Name", "")
-	local Degrees	= Entity:GetNWFloat("ConeDegs", 0) * 2
-	local Range		= Entity:GetNWFloat("Range", 0)
-	local Status	= Entity:GetNWString("Status", "")
+language.Add("Undone_acf_radar", "Undone ACF Radar")
+language.Add("SBoxLimit__acf_radar", "You've hit the ACF Radar limit!")
 
-	if Degrees > 0 then
-		Text = Text .. "\nScanning angle: " .. math.Round(Degrees, 2) .. " deg"
-	end
-
-	if Range > 0 then
-		Text = Text .. "\nDetection range: " .. math.Round(Range / 39.37 , 2) .. " m"
-	end
-
-	if Status ~= "" then
-		Text = Text .. "\n(" .. Status .. ")"
-	end
-
-	return Text
-end
-
-function DrawWorldTip(Entity)
-	if Entity ~= LocalPlayer():GetEyeTrace().Entity then return end
-	if EyePos():Distance(Entity:GetPos()) > 256 then return end
-
-	AddWorldTip(Entity:EntIndex(), GetOverlayText(Entity), 0.5, Entity:GetPos(), Entity)
-end
+local ACF_GunInfoWhileSeated = GetConVar("ACF_GunInfoWhileSeated")
 
 function ENT:Draw()
-	self:DrawModel()
+	local HideBubble = LocalPlayer():InVehicle() and not ACF_GunInfoWhileSeated:GetBool()
 
-	DrawWorldTip(self)
+	self.BaseClass.DoNormalDraw(self, false, HideBubble)
 	Wire_Render(self)
+
+	if self.GetBeamLength and (not self.GetShowBeam or self:GetShowBeam()) then
+		-- Every SENT that has GetBeamLength should draw a tracer. Some of them have the GetShowBeam boolean
+		Wire_DrawTracerBeam(self, 1, self.GetBeamHighlight and self:GetBeamHighlight() or false)
+	end
 end
 
 function ACFRadarGUICreate(Table)
