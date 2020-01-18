@@ -130,10 +130,9 @@ function ENT:Detonate()
 		btdat.FuseLength = 0
 		btdat.Pos = self:GetPos()
 
-		--btdat.InitTime = SysTime()
 		-- manual detonation
 		btdat.Detonated = true
-		btdat.InitTime = SysTime()
+		btdat.InitTime = CurTime()
 		btdat.Flight = btdat.Flight + btdat.Flight:GetNormalized() * btdat.SlugMV * 39.37
 		btdat.FuseLength = 0.005 + 40 / ((btdat.Flight + btdat.Flight:GetNormalized() * btdat.SlugMV * 39.37):Length() * 0.0254)
 		btdat.DragCoef = btdat.SlugDragCoef

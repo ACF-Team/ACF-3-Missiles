@@ -12,8 +12,6 @@
 
 ]]
 
-if not ACF then error("ACF is not installed - ACF Missiles requires it!") end
-
 ACF.ActiveMissiles = ACF.ActiveMissiles or {}
 ACF.ActiveRadars = ACF.ActiveRadars or {}
 ACF.ActiveLasers = ACF.ActiveLasers or {}
@@ -31,11 +29,11 @@ function ACFM_BulletLaunch(BData)
 	end
 
 	BData.Accel = Vector(0, 0, cvarGrav:GetInt() * -1)            --Those are BData settings that are global and shouldn't change round to round
-	BData.LastThink = BData.LastThink or SysTime()
+	BData.LastThink = BData.LastThink or CurTime()
 	BData["FlightTime"] = 0
 
 	if BData["FuseLength"] then
-		BData["InitTime"] = SysTime()
+		BData["InitTime"] = CurTime()
 	end
 
 	if not BData.TraceBackComp then                                            --Check the Gun's velocity and add a modifier to the flighttime so the traceback system doesn't hit the originating contraption if it's moving along the shell path

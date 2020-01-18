@@ -13,7 +13,7 @@ function Round.create(_, BulletData)
 
 	local bdata = ACF.Bullet[BulletData.Index]
 
-	bdata.CreateTime = SysTime()
+	bdata.CreateTime = CurTime()
 
 	ACFM_RegisterFlare(bdata)
 end
