@@ -157,7 +157,7 @@ function ENT:Initialize()
 	local PhysObj = self:GetPhysicsObject()
 
 	if IsValid(PhysObj) then
-		PhysObj:SetMass(self.LegalMass)
+		PhysObj:SetMass(self.Mass)
 	end
 
 	ACF_Activate(self)
