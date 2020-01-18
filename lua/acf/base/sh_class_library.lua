@@ -1,7 +1,6 @@
 
 local Classes = {}
 local Queued = {}
-local Loaded = {}
 
 local function CreateInstance(Class)
 	local New = {}
@@ -43,7 +42,11 @@ local function AttachMetaTable(Class, Name, Base)
 
 	setmetatable(Class, OldMeta)
 
-	Loaded[Class] = true
+	timer.Simple(0, function()
+		if Class.OnLoaded then
+			Class:OnLoaded()
+		end
+	end)
 end
 
 local function RegisterClass(Name, Base, Destiny)
@@ -88,15 +91,3 @@ function ACF.RegisterCountermeasure(Name, Base)
 end
 
 ACF.RegisterClass = RegisterClass
-
-hook.Add("Initialize", "ACF Init Classes", function()
-	for K in pairs(Loaded) do
-		if K.OnLoaded then
-			K:OnLoaded()
-		end
-	end
-
-	Loaded = nil
-
-	hook.Remove("Initialize", "ACF Init Classes")
-end)
