@@ -3,7 +3,7 @@ ACF_DefineRackClass("RK", {
 	spread = 1,
 	name = "Munitions Rack",
 	desc = "A lightweight rack for rockets and bombs which is vulnerable to shots and explosions.",
-	muzzleflash = "40mm_muzzleflash_noscale",
+	muzzleflash = "gl_muzzleflash_noscale",
 	rofmod = 1,
 
 	reloadmul       = 8,

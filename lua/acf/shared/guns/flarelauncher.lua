@@ -3,7 +3,7 @@ ACF_defineGunClass("FGL", {
 	spread = 1.5,
 	name = "Flare Launcher",
 	desc = "Flare Launchers can fire flares much more rapidly than other launchers, but can't load any other ammo types.",
-	muzzleflash = "40mm_muzzleflash_noscale",
+	muzzleflash = "gl_muzzleflash_noscale",
 	rofmod = 0.6,
 	sound = "acf_extra/tankfx/flare_launch.mp3",
 	soundDistance = " ",

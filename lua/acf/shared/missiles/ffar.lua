@@ -5,7 +5,7 @@ ACF_defineGunClass("FFAR", {
 	spread          = 1,
 	name            = "Folding-Fin Aerial Rockets",
 	desc            = "Small rockets which fit in tubes or pods.  Rapid-firing and versatile.",
-	muzzleflash     = "40mm_muzzleflash_noscale",
+	muzzleflash     = "gl_muzzleflash_noscale",
 	rofmod          = 0.5,
 	sound           = "acf_extra/airfx/rocket_fire2.mp3",
 	soundDistance   = " ",
