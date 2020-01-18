@@ -327,8 +327,6 @@ function MakeACF_Rack(Owner, Pos, Angle, Id, MissileId)
 	Rack.ReloadMultiplier   = ACF_GetRackValue(Id, "reloadmul")
 	Rack.WhitelistOnly      = ACF_GetRackValue(Id, "whitelistonly")
 
-	Rack.SpecialHealth		= true	--If true needs a special ACF_Activate function
-	Rack.SpecialDamage		= true	--If true needs a special ACF_OnDamage function
 	Rack.ReloadTime			= 1
 	Rack.Ready				= true
 	Rack.NextFire			= 1
@@ -388,6 +386,7 @@ list.Set("ACFCvars", "acf_rack" , {"data9", "id"})
 duplicator.RegisterEntityClass("acf_rack", MakeACF_Rack, "Pos", "Angle", "Id", "MissileId")
 ACF.RegisterLinkSource("acf_rack", "Crates")
 ACF.RegisterLinkSource("acf_rack", "Computer", true)
+ACF.RegisterLinkSource("acf_rack", "Radar", true)
 
 function ENT:Enable()
 	if not CheckLegal(self) then return end
@@ -506,7 +505,7 @@ function ENT:Link(Target)
 	if not IsValid(Target) then return false, "Attempted to link an invalid entity." end
 	if self == Target then return false, "Can't link a rack to itself." end
 
-	local Function = ClassLink(self:GetClass(), Target:GetClass())
+	local Function = ClassLink("acf_rack", Target:GetClass())
 
 	if Function then
 		return Function(self, Target)
@@ -519,7 +518,7 @@ function ENT:Unlink(Target)
 	if not IsValid(Target) then return false, "Attempted to unlink an invalid entity." end
 	if self == Target then return false, "Can't unlink a rack from itself." end
 
-	local Function = ClassUnlink(self:GetClass(), Target:GetClass())
+	local Function = ClassUnlink("acf_rack", Target:GetClass())
 
 	if Function then
 		return Function(self, Target)

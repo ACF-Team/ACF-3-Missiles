@@ -10,6 +10,7 @@ ENT.DisableDuplicator	= true
 -------------------------------[[ Local Functions ]]-------------------------------
 
 local Gravity = GetConVar("sv_gravity")
+local GhostPeriod = GetConVar("ACFM_GhostPeriod")
 
 local function SetGuidance(Missile, Guidance)
 	Missile.Guidance = Guidance
@@ -323,8 +324,7 @@ end)
 function ENT:Initialize()
 	self.BaseClass.Initialize(self)
 
-	self.SpecialDamage = true --If true needs a special ACF_OnDamage function
-	self.SpecialHealth = true --If true needs a special ACF_Activate function
+	self.ExhaustPos = self:WorldToLocal(self:GetAttachment(self:LookupAttachment("exhaust")).Pos)
 
 	self:SetNWFloat("LightSize", 0)
 
@@ -372,7 +372,7 @@ function ENT:Launch()
 	self.Fuse:Configure(self, self.Guidance)
 	self.Launched = true
 	self.ThinkDelay = engine.TickInterval()
-	self.GhostPeriod = CurTime() + ACFM_GhostPeriod:GetFloat()
+	self.GhostPeriod = CurTime() + GhostPeriod:GetFloat()
 	self.DisableDamage = nil
 
 	ConfigureFlight(self)

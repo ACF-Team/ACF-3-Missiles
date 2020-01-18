@@ -4,7 +4,6 @@ AddCSLuaFile( "shared.lua" )
 include("shared.lua")
 
 function ENT:Initialize()
-	self.SpecialDamage = true
 	self.Owner = self:GetOwner()
 end
 
