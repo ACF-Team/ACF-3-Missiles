@@ -132,10 +132,7 @@ local function ScanForEntities(Entity)
 			Position[Count] = EntPos
 			Velocity[Count] = EntVel
 
-			Entity.Targets[Ent] = {
-				Position = EntPos,
-				Velocity = EntVel
-			}
+			Entity.Targets[Ent] = Spread
 
 			if EntDist < Closest then
 				Closest = EntDist

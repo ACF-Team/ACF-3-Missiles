@@ -142,7 +142,9 @@ end
 local function GetNextCrate(Rack)
 	if not next(Rack.Crates) then return end -- No crates linked to this gun
 
-	local Select = next(Rack.Crates, Rack.CurrentCrate) or next(Rack.Crates) -- Next crate from Start or, if at last crate, first crate
+	local Current = Rack.CurrentCrate
+	local NextKey = (IsValid(Current) and Rack.Crates[Current]) and Current or nil
+	local Select = next(Rack.Crates, NextKey) or next(Rack.Crates) -- Next crate from Start or, if at last crate, first crate
 	local Start = Select
 
 	repeat
