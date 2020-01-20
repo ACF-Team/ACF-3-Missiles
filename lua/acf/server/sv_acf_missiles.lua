@@ -237,3 +237,111 @@ hook.Add("InitPostEntity", "ACFMissiles_AddSoundSupport", function()
 		}
 	end)
 end)
+
+do -- Entity find
+	local NextUpdate = 0
+	local Entities = {}
+	local Ancestors = {}
+	local Whitelist = {
+		prop_physics                = true,
+		gmod_wheel                  = true,
+		gmod_hoverball              = true,
+		gmod_wire_expression2       = true,
+		gmod_wire_thruster          = true,
+		gmod_thruster               = true,
+		gmod_wire_light             = true,
+		gmod_light                  = true,
+		gmod_emitter                = true,
+		gmod_button                 = true,
+		phys_magnet                 = true,
+		prop_vehicle_jeep           = true,
+		prop_vehicle_airboat        = true,
+		prop_vehicle_prisoner_pod   = true,
+		acf_engine                  = true,
+		acf_ammo                    = true,
+		acf_gun                     = true,
+		acf_gearbox                 = true,
+		acf_opticalcomputer			= true,
+	}
+
+	hook.Add("OnEntityCreated", "ACF Entity Tracking", function(Entity)
+		if IsValid(Entity) and Whitelist[Entity:GetClass()] then
+			Entities[Entity] = true
+
+			Entity:CallOnRemove("ACF Entity Tracking", function()
+				Entities[Entity] = nil
+			end)
+		end
+	end)
+
+	-- Similar to ACF_GetAncestor, except it'll prevent checking parents more than once
+	local function FindNewAncestor(Entity, Checked)
+		if not IsValid(Entity) then return end
+		if Checked[Entity] then return end
+
+		local Parent = Entity
+
+		Checked[Parent] = true
+
+		while IsValid(Parent:GetParent()) do
+			Parent = Parent:GetParent()
+
+			if Checked[Parent] then return end
+
+			Checked[Parent] = true
+		end
+
+		return Parent
+	end
+
+	local function GetAncestorEntities()
+		if CurTime() < NextUpdate then return Ancestors end
+
+		local Checked = {}
+		local Ancestor
+
+		-- Cleanup
+		for K in pairs(Ancestors) do Ancestors[K] = nil end
+
+		for K in pairs(Entities) do
+			Ancestor = FindNewAncestor(K, Checked)
+
+			if IsValid(Ancestor) and Ancestor ~= K then
+				Ancestors[Ancestor] = true
+			end
+		end
+
+		NextUpdate = CurTime() + 2
+
+		return Ancestors
+	end
+
+	function ACF.GetEntitiesInCone(Position, Direction, Degrees)
+		local Result = {}
+
+		for Entity in pairs(GetAncestorEntities()) do
+			if not IsValid(Entity) then continue end
+
+			if ACFM_ConeContainsPos(Position, Direction, Degrees, Entity:GetPos()) then
+				Result[Entity] = true
+			end
+		end
+
+		return Result
+	end
+
+	function ACF.GetEntitiesInSphere(Position, Radius)
+		local Result = {}
+		local RadiusSqr = Radius * Radius
+
+		for Entity in pairs(GetAncestorEntities()) do
+			if not IsValid(Entity) then continue end
+
+			if Position:DistToSqr(Entity:GetPos()) <= RadiusSqr then
+				Result[Entity] = true
+			end
+		end
+
+		return Result
+	end
+end

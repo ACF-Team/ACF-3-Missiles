@@ -48,13 +48,13 @@ local TimerCreate = timer.Create
 local TimerRemove = timer.Remove
 
 local function Overlay(Entity)
-	local Text = "%s\n\nDetection range: %s\nScanning angle: %s degree(s)"
+	local Text = "%s\n\n%s\nDetection range: %s\nScanning angle: %s degree(s)"
 	local Status, Range, Cone
 
 	if Entity.DisableReason then
 		Status = "Disabled: " .. Entity.DisableReason
 	elseif Entity.TargetCount > 0 then
-		Status = Entity.TargetCount .. " target(s) detected!"
+		Status = Entity.TargetCount .. " target(s) detected"
 	else
 		Status = Entity.Active and "Active" or "Idle"
 	end
@@ -62,7 +62,7 @@ local function Overlay(Entity)
 	Range = Entity.Range and math.Round(Entity.Range / 39.37 , 2) .. " meter(s)" or "Infinite"
 	Cone = Entity.ConeDegs and math.Round(Entity.ConeDegs, 2) or 360
 
-	Entity:SetOverlayText(string.format(Text, Status, Range, Cone))
+	Entity:SetOverlayText(string.format(Text, Status, Entity.EntType, Range, Cone))
 end
 
 local function ClearTargets(Entity)
@@ -255,7 +255,8 @@ function MakeACF_Radar(Owner, Pos, Angle, Id)
 	Radar.Mass			= RadarData.weight
 	Radar.Name			= RadarData.name
 	Radar.ShortName		= Radar.Name
-	Radar.EntType 		= RadarData.class
+	Radar.EntType 		= RadarClass.name
+	Radar.ClassType		= RadarClass.type
 	Radar.ConeDegs		= RadarData.viewcone
 	Radar.Range 		= RadarData.range
 	Radar.Armor			= 20

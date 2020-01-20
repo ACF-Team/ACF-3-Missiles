@@ -2,6 +2,7 @@
 ACF_DefineRadarClass("DIR-AM", {
 	name = "Directional Anti-missile Radar",
 	desc = "A radar with unlimited range but a limited view cone. Only detects launched missiles.",
+	type = "AM",
 	detect = function(Radar)
 		return ACFM_GetMissilesInCone(Radar:GetPos(), Radar:GetForward(), Radar.ConeDegs)
 	end,
@@ -39,7 +40,11 @@ ACF_DefineRadar("LargeDIR-AM", {
 
 ACF_DefineRadarClass("DIR-A2A", {
 	name = "Directional Air-to-Air Radar",
-	desc = "A radar with unlimited range but a limited view cone. Will detect enemy vehicles."
+	desc = "A radar with unlimited range but a limited view cone. Will detect enemy vehicles.",
+	type = "A2A",
+	detect = function(Radar)
+		return ACF.GetEntitiesInCone(Radar:GetPos(), Radar:GetForward(), Radar.ConeDegs)
+	end,
 })
 
 ACF_DefineRadar("SmallDIR-A2A", {
