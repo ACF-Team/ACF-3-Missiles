@@ -746,6 +746,25 @@ function ENT:PostEntityPaste(Player, Ent, CreatedEntities)
 		EntMods.ACFComputer = nil
 	end
 
+	-- Backwards compatibility
+	if EntMods.ACFAmmoLink then
+		local Entities = EntMods.ACFAmmoLink.entities
+		local Entity
+
+		for _, EntID in pairs(Entities) do
+			Entity = CreatedEntities[EntID]
+
+			-- Old racks don't have this
+			if not self.MissileId and IsValid(Entity) then
+				self.MissileId = Entity.RoundId
+			end
+
+			self:Link(Entity)
+		end
+
+		EntMods.ACFAmmoLink = nil
+	end
+
 	if EntMods.ACFCrates then
 		for _, EntID in pairs(EntMods.ACFCrates) do
 			self:Link(CreatedEntities[EntID])
