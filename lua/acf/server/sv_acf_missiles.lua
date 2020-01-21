@@ -274,26 +274,6 @@ do -- Entity find
 		end
 	end)
 
-	-- Similar to ACF_GetAncestor, except it'll prevent checking parents more than once
-	local function FindNewAncestor(Entity, Checked)
-		if not IsValid(Entity) then return end
-		if Checked[Entity] then return end
-
-		local Parent = Entity
-
-		Checked[Parent] = true
-
-		while IsValid(Parent:GetParent()) do
-			Parent = Parent:GetParent()
-
-			if Checked[Parent] then return end
-
-			Checked[Parent] = true
-		end
-
-		return Parent
-	end
-
 	local function GetAncestorEntities()
 		if CurTime() < NextUpdate then return Ancestors end
 
@@ -304,10 +284,11 @@ do -- Entity find
 		for K in pairs(Ancestors) do Ancestors[K] = nil end
 
 		for K in pairs(Entities) do
-			Ancestor = FindNewAncestor(K, Checked)
+			Ancestor = ACF_GetAncestor(K)
 
-			if IsValid(Ancestor) and Ancestor ~= K then
+			if IsValid(Ancestor) and Ancestor ~= K and not Checked[Ancestor] then
 				Ancestors[Ancestor] = true
+				Checked[Ancestor] = true
 			end
 		end
 
