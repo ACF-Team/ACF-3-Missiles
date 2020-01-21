@@ -2,7 +2,7 @@
 
 
 
-ACFM_EffectOverrides =
+local Overrides =
 {
 	FLR = function(self, Bullet)
 		local setPos = Bullet.SimPos
@@ -42,7 +42,7 @@ ACFM_EffectOverrides =
 
 		if not self.FlareEffect and curtime < cutoutTime then
 			if not self.FlareCutout then
-				ParticleEffectAttach( "ACFM_Flare", PATTACH_ABSORIGIN_FOLLOW, self, 0 )
+				ParticleEffectAttach( "acfm_flare", PATTACH_ABSORIGIN_FOLLOW, self, 0 )
 				self.FlareEffect = true
 			end
 		elseif not self.FlareCutout and curtime >= cutoutTime then
@@ -52,32 +52,13 @@ ACFM_EffectOverrides =
 	end
 }
 
--- For finding bullet effects which have special ammo-types and making them look different.
-function ACFM_EffectTryOverride(ent)
-	if ent:GetClass() == "class CLuaEffect" then
-		-- wish there was a better way... could modify the bullet effect to call a hook...
-		timer.Simple(0.01, function() ACFM_InspectEffect(ent) end)
+hook.Add("ACF_BulletEffect", "ACF Missiles Custom Effects", function(AmmoType)
+	local Custom = Overrides[AmmoType]
+
+	if Custom then
+		return Custom
 	end
-end
-
-hook.Add("OnEntityCreated", "ACFM_EffectTryOverride", ACFM_EffectTryOverride)
-
-function ACFM_InspectEffect(ent)
-	local index = ent.Index
-
-	if not index then return end
-
-	local bullet = ACF.BulletEffect[index]
-
-	if not (bullet and bullet.AmmoType) then return end
-
-	local override = ACFM_EffectOverrides[bullet.AmmoType]
-
-	if override then
-		ent.ApplyMovement = override
-		ent:ApplyMovement(bullet)
-	end
-end
+end)
 
 function ACFM_CanEmitLight(lightSize)
 	local minLightSize = GetConVar("ACFM_MissileLights"):GetFloat()
