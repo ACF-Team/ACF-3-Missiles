@@ -30,7 +30,7 @@ function ACFM_OnFlareSpawn(BulletData)
 	local FlareObj = BulletData.FlareObj
 	local Missiles = FlareObj:ApplyToAll()
 
-	for _, Missile in pairs(Missiles) do
+	for Missile in pairs(Missiles) do
 		Missile.Guidance.Override = FlareObj
 	end
 end
@@ -47,7 +47,7 @@ function ACFM_GetFlaresInCone(Position, Direction, Degrees)
 		end
 
 		if ACFM_ConeContainsPos(Position, Direction, Degrees, Flare.Pos) then
-			Result[#Result + 1] = Flare
+			Result[Flare] = true
 		end
 	end
 
@@ -117,7 +117,7 @@ function ACFM_GetAllMissilesWhichCanSee(Position)
 		end
 
 		if ACFM_ConeContainsPos(Missile:GetPos(), Missile:GetForward(), Guidance.ViewCone, Position) then
-			Result[#Result + 1] = Missile
+			Result[Missile] = true
 		end
 	end
 
@@ -160,9 +160,7 @@ function ACFM_ApplySpawnCountermeasures(Missile, Guidance)
 end
 
 function ACFM_ApplyCountermeasure(Missile, Guidance, CounterMeasure)
-	if not CounterMeasure.AppliesTo[Guidance.Name] then
-		return false
-	end
+	if not CounterMeasure.AppliesTo[Guidance.Name] then return end
 
 	local Override = CounterMeasure.ApplyAll(Missile, Guidance)
 
