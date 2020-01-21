@@ -4,7 +4,7 @@ ACF_DefineRadarClass("DIR-AM", {
 	desc = "A radar with unlimited range but a limited view cone. Only detects launched missiles.",
 	type = "AM",
 	detect = function(Radar)
-		return ACFM_GetMissilesInCone(Radar:GetPos(), Radar:GetForward(), Radar.ConeDegs)
+		return ACFM_GetMissilesInCone(Radar:LocalToWorld(Radar.Origin), Radar:GetForward(), Radar.ConeDegs)
 	end,
 } )
 
@@ -33,7 +33,7 @@ ACF_DefineRadar("LargeDIR-AM", {
 	desc 		= "A heavy directional radar with a large view cone.",
 	model		= "models/radar/radar_big.mdl",
 	class 		= "DIR-AM",
-	weight 		= 600,
+	weight 		= 800,
 	viewcone 	= 80, -- half of the total cone.  'viewcone = 30' means 60 degs total viewcone.
 	origin		= "missile1",
 } )
@@ -43,7 +43,7 @@ ACF_DefineRadarClass("DIR-A2A", {
 	desc = "A radar with unlimited range but a limited view cone. Will detect enemy vehicles.",
 	type = "A2A",
 	detect = function(Radar)
-		return ACF.GetEntitiesInCone(Radar:GetPos(), Radar:GetForward(), Radar.ConeDegs)
+		return ACF.GetEntitiesInCone(Radar:LocalToWorld(Radar.Origin), Radar:GetForward(), Radar.ConeDegs)
 	end,
 })
 
@@ -53,7 +53,7 @@ ACF_DefineRadar("SmallDIR-A2A", {
 	model		= "models/radar/radar_sml.mdl",
 	class 		= "DIR-A2A",
 	weight 		= 200,
-	viewcone 	= 25, -- half of the total cone.  'viewcone = 30' means 60 degs total viewcone.
+	viewcone 	= 15, -- half of the total cone.  'viewcone = 30' means 60 degs total viewcone.
 	origin		= "missile1",
 } )
 
@@ -63,7 +63,7 @@ ACF_DefineRadar("MediumDIR-A2A", {
 	model		= "models/radar/radar_mid.mdl", -- medium one is for now scalled big one - will be changed
 	class 		= "DIR-A2A",
 	weight 		= 400,
-	viewcone 	= 40, -- half of the total cone.  'viewcone = 30' means 60 degs total viewcone.
+	viewcone 	= 35, -- half of the total cone.  'viewcone = 30' means 60 degs total viewcone.
 	origin		= "missile1",
 } )
 
@@ -72,7 +72,7 @@ ACF_DefineRadar("LargeDIR-A2A", {
 	desc 		= "A heavy directional radar with a large view cone.",
 	model		= "models/radar/radar_big.mdl",
 	class 		= "DIR-A2A",
-	weight 		= 600,
-	viewcone 	= 50, -- half of the total cone.  'viewcone = 30' means 60 degs total viewcone.
+	weight 		= 800,
+	viewcone 	= 80, -- half of the total cone.  'viewcone = 30' means 60 degs total viewcone.
 	origin		= "missile1",
 } )

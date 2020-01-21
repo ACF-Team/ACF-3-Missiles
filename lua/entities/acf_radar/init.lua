@@ -48,7 +48,7 @@ local TimerCreate = timer.Create
 local TimerRemove = timer.Remove
 
 local function Overlay(Entity)
-	local Text = "%s\n\n%s\nDetection range: %s\nScanning angle: %s degree(s)"
+	local Text = "%s\n\n%s\nDetection range: %s\nScanning angle: %s degrees"
 	local Status, Range, Cone
 
 	if Entity.DisableReason then
@@ -59,7 +59,7 @@ local function Overlay(Entity)
 		Status = Entity.Active and "Active" or "Idle"
 	end
 
-	Range = Entity.Range and math.Round(Entity.Range / 39.37 , 2) .. " meter(s)" or "Infinite"
+	Range = Entity.Range and math.Round(Entity.Range / 39.37 , 2) .. " meters" or "Infinite"
 	Cone = Entity.ConeDegs and math.Round(Entity.ConeDegs, 2) or 360
 
 	Entity:SetOverlayText(string.format(Text, Status, Entity.EntType, Range, Cone))

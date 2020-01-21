@@ -4,7 +4,7 @@ ACF_DefineRadarClass("OMNI-AM", {
 	desc = "A missile radar with full 360-degree detection but a limited range. Only detects launched missiles.",
 	type = "AM",
 	detect = function(Radar)
-		return ACFM_GetMissilesInSphere(Radar:GetPos(), Radar.Range)
+		return ACFM_GetMissilesInSphere(Radar:LocalToWorld(Radar.Origin), Radar.Range)
 	end,
 } )
 
@@ -43,7 +43,7 @@ ACF_DefineRadarClass("OMNI-A2A", {
 	desc = "A missile radar with full 360-degree detection but a limited range. Will detect enemy vehicles.",
 	type = "A2A",
 	detect = function(Radar)
-		return ACF.GetEntitiesInSphere(Radar:GetPos(), Radar.Range)
+		return ACF.GetEntitiesInSphere(Radar:LocalToWorld(Radar.Origin), Radar.Range)
 	end,
 } )
 
