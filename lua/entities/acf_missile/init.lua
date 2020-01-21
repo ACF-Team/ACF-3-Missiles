@@ -384,6 +384,8 @@ function ENT:Launch()
 
 	LaunchEffect(self)
 
+	self.Guidance:OnLaunched(self)
+
 	ACF.ActiveMissiles[self] = true
 
 	self:Think()
@@ -461,13 +463,17 @@ function ENT:PhysicsCollide(Data)
 end
 
 function ENT:OnRemove()
-	self.BaseClass.OnRemove(self)
-
 	ACF.ActiveMissiles[self] = nil
+
+	if self.Guidance then
+		self.Guidance:OnRemoved(self)
+	end
 
 	if IsValid(self.Launcher) and not self.Launched then
 		self.Launcher:UpdateAmmoCount(self.Attachment)
 	end
+
+	WireLib.Remove(self)
 end
 
 function ENT:ACF_Activate(Recalc)

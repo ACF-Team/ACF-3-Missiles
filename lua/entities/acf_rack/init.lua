@@ -112,10 +112,15 @@ local Inputs = {
 		end
 	end,
 	["Target Pos"] = function(Rack, Value)
+		Rack.TargetPos = Vector(Value[1], Value[2], Value[3])
+
 		WireLib.TriggerOutput(Rack, "Position", Value)
 	end,
-	["Target Ent"] = function(Rack, Value)
-		WireLib.TriggerOutput(Rack, "Target", Value)
+	Elevation = function(Rack, Value)
+		Rack.Elevation = -Value
+	end,
+	Azimuth = function(Rack, Value)
+		Rack.Azimuth = -Value
 	end,
 }
 
@@ -206,8 +211,10 @@ local function AddMissile(Rack, Crate)
 
 	Missile:SetBulletData(BulletData)
 
-	local Pos, Angles = GetMissileAngPos(Rack, Missile, Attach)
 	local RackModel = ACF_GetRackValue(Rack.Id, "rackmdl") or ACF_GetGunValue(BulletData.Id, "rackmdl")
+	local Pos, Angles = GetMissileAngPos(Rack, Missile, Attach)
+
+	Missile.AttachPos = Pos
 
 	if RackModel then
 		Missile:SetModelEasy(RackModel)
@@ -335,6 +342,9 @@ function MakeACF_Rack(Owner, Pos, Angle, Id, MissileId)
 	Rack.PostReloadWait		= CurTime()
 	Rack.WaitFunction		= Rack.GetFireDelay
 	Rack.LastSend			= 0
+	Rack.TargetPos			= Vector()
+	Rack.Elevation			= 0
+	Rack.Azimuth			= 0
 
 	Rack.AmmoCount			= 0
 	Rack.LastThink			= CurTime()
@@ -343,7 +353,7 @@ function MakeACF_Rack(Owner, Pos, Angle, Id, MissileId)
 	Rack.Crates				= {}
 	Rack.AttachPoints		= {}
 
-	Rack.Inputs = WireLib.CreateInputs(Rack, { "Fire", "Reload", "Target Pos [VECTOR]", "Target Ent [ENTITY]" })
+	Rack.Inputs = WireLib.CreateInputs(Rack, { "Fire", "Reload", "Elevation", "Azimuth", "Target Pos [VECTOR]" })
 	Rack.Outputs = WireLib.CreateOutputs(Rack, { "Ready", "Entity [ENTITY]", "Shots Left", "Position [VECTOR]", "Target [ENTITY]" })
 
 	Rack.BulletData	= {
@@ -396,10 +406,26 @@ function ENT:Enable()
 	self.Disabled	   = nil
 	self.DisableReason = nil
 
+	if self.Inputs["Target Pos"].Path then
+		self:TriggerInput("Target Pos", self.Inputs["Target Pos"].Value)
+	end
+
+	if self.Inputs.Elevation.Path then
+		self:TriggerInput("Elevation", self.Inputs.Elevation.Value)
+	end
+
+	if self.Inputs.Azimuth.Path then
+		self:TriggerInput("Azimuth", self.Inputs.Azimuth.Value)
+	end
+
 	self:UpdateOverlay()
 end
 
 function ENT:Disable()
+	self:TriggerInput("Target Pos", Vector())
+	self:TriggerInput("Elevation", 0)
+	self:TriggerInput("Azimuth", 0)
+
 	self.Disabled = true
 
 	self:UpdateOverlay()

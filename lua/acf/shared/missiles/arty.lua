@@ -45,8 +45,8 @@ ACF_defineGun("Type 63 RA", { --id
 	},
 
 	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
-	guidance    = {"Dumb", "Laser"},
-	fuses       = {"Contact", "Timed", "Optical", "Cluster"},
+	guidance    = { "Dumb" },
+	fuses       = { "Contact", "Timed", "Optical", "Cluster" },
 
 	racks       = {["1xRK_small"] = true, ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true, ["6xUARRK"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 	viewcone	= 180, -- cone radius, 180 = full 360 tracking
@@ -87,8 +87,8 @@ ACF_defineGun("SAKR-10 RA", { --id
 	},
 
 	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
-	guidance    = {"Dumb", "Laser"},
-	fuses       = {"Contact", "Timed", "Optical", "Cluster"},
+	guidance    = { "Dumb" },
+	fuses       = { "Contact", "Timed", "Optical", "Cluster" },
 
 	racks       = {["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true, ["6xUARRK"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
@@ -129,8 +129,8 @@ ACF_defineGun("SS-40 RA", { --id
 	},
 
 	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
-	guidance    = {"Dumb", "Laser"},
-	fuses       = {"Contact", "Timed", "Optical", "Cluster"},
+	guidance    = { "Dumb" },
+	fuses       = { "Contact", "Timed", "Optical", "Cluster" },
 
 	racks       = {["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true, ["6xUARRK"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 

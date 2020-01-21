@@ -1,46 +1,41 @@
 
-local ClassName = "Dumb"
+local Guidance = ACF.RegisterGuidance("Dumb")
 
-ACF = ACF or {}
-ACF.Guidance = ACF.Guidance or {}
+Guidance.desc = "This guidance package is empty and provides no control."
 
-local this = ACF.Guidance[ClassName] or inherit.NewBaseClass()
-ACF.Guidance[ClassName] = this
+function Guidance:OnLoaded() end
 
----
+function Guidance:Configure() end
 
-this.Name = ClassName
+function Guidance:OnLaunched() end
 
-this.desc = "This guidance package is empty and provides no control."
-
--- an object containing an obj:GetGuidanceOverride(missile, guidance) function
-this.Override = nil
-
-this.AppliedSpawnCountermeasures = false
-
-function this:Init() end
-
-function this:Configure() end
-
-function this:GetGuidance(missile)
-	self:PreGuidance(missile)
-
-	return self:ApplyOverride(missile) or {}
-end
-
-function this:PreGuidance(missile)
+function Guidance:PreGuidance(Missile)
 	if not self.AppliedSpawnCountermeasures then
-		ACFM_ApplySpawnCountermeasures(missile, self)
+		ACFM_ApplySpawnCountermeasures(Missile, self)
 
 		self.AppliedSpawnCountermeasures = true
 	end
 
-	ACFM_ApplyCountermeasures(missile, self)
-
+	ACFM_ApplyCountermeasures(Missile, self)
 end
 
-function this:ApplyOverride() end
+function Guidance:ApplyOverride(Missile)
+	if not self.Override then return end
 
-function this:GetDisplayConfig()
+	local Override = self.Override:GetGuidanceOverride(Missile, self)
+
+	if Override then
+		Override.ViewCone = self.ViewCone or 0
+		Override.ViewConeRad = math.rad(self.ViewCone)
+
+		return Override
+	end
+end
+
+function Guidance:GetGuidance() return {} end
+
+function Guidance:OnRemoved() end
+
+function Guidance:GetDisplayConfig()
 	return {}
 end

@@ -1,18 +1,6 @@
-local Guidance = ACF.RegisterGuidance("Anti-missile", "Anti-radiation")
+local Guidance = ACF.RegisterGuidance("Semi-Active Radar", "Anti-missile")
 
-Guidance.desc = "This guidance package uses a radar to detect missiles and guides the munition towards the most centered one it can find."
-
-function Guidance:GetRadar(Type)
-	if not IsValid(self.Source) then return end
-
-	local Radar = self.Source.Radar
-
-	if not IsValid(Radar) then return end
-	if not Radar.Scanning then return end
-	if Radar.ClassType ~= Type then return end
-
-	return Radar
-end
+Guidance.desc = "This guidance package uses a radar to detect contraptions and guides the munition towards the most centered one it can find."
 
 function Guidance:FindNewTarget(Missile, Radar)
 	if not Radar then return end
@@ -27,7 +15,7 @@ function Guidance:FindNewTarget(Missile, Radar)
 		TargetPos = Entity:GetPos() + Spread
 		Distance = Position:DistToSqr(TargetPos)
 
-		if Distance >= self.MinDistance and self:CheckConeLOS(Missile, Position, TargetPos, self.SeekConeCos) then
+		if Distance >= self.MinDistance and self:CheckConeLOS(Missile, Position, TargetPos, self.ViewConeCos) then
 			CurrentDot = self.GetDirectionDot(Missile, TargetPos)
 
 			if CurrentDot > HighestDot then
@@ -41,13 +29,19 @@ function Guidance:FindNewTarget(Missile, Radar)
 end
 
 function Guidance:OnLaunched(Missile)
-	self.Target = self:FindNewTarget(Missile, self:GetRadar("AM"))
+	self.Target = self:FindNewTarget(Missile, self:GetRadar("A2A"))
 end
 
 function Guidance:GetGuidance(Missile)
-	local Radar = self:GetRadar("AM")
+	local Radar = self:GetRadar("A2A")
 
 	if not Radar then return {} end
+
+	self:PreGuidance(Missile)
+
+	local Override = self:ApplyOverride(Missile)
+
+	if Override then return Override end
 
 	local Targets = Radar.Targets
 	local TargetPos, Spread

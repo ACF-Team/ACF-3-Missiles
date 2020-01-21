@@ -47,8 +47,8 @@ ACF_defineGun("FIM-92 SAM", { --id
 	},
 
 	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
-	guidance    = {"Dumb", "Infrared","Antimissile"},
-	fuses       = {"Contact", "Radio"},
+	guidance    = { "Dumb", "Infrared", "Anti-missile" },
+	fuses       = { "Contact", "Radio" },
 
 	racks       = {["1x FIM-92"] = true,  ["2x FIM-92"] = true,  ["4x FIM-92"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
@@ -89,8 +89,8 @@ ACF_defineGun("Strela-1 SAM", { --id
 	},
 
 	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
-	guidance    = {"Dumb", "Infrared","Antimissile"},
-	fuses       = {"Contact", "Radio"},
+	guidance    = { "Dumb", "Infrared", "Anti-missile" },
+	fuses       = { "Contact", "Radio" },
 
 	racks       = {["1x Strela-1"] = true,  ["2x Strela-1"] = true,  ["4x Strela-1"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
@@ -132,8 +132,8 @@ ACF_defineGun("SIMBAD-RC SAM", { --id
 	},
 
 	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
-	guidance    = {"Antimissile"},
-	fuses       = {"Contact"},
+	guidance    = { "Anti-missile" },
+	fuses       = { "Contact" },
 
 	racks       = {["2x FIM-92"] = true,  ["4x FIM-92"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 

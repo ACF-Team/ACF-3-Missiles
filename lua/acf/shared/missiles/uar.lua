@@ -201,8 +201,8 @@ ACF_defineGun("Zuni ASR", { --id
 		penmul		= math.sqrt(2)
 	},
 	ent			= "acf_rack",
-	guidance	= {"Dumb"},
-	fuses		= {"Contact", "Timed", "Optical", "Radio"},
+	guidance	= { "Dumb", "Laser" },
+	fuses		= { "Contact", "Timed", "Optical", "Radio" },
 	racks		= {["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true, ["127mm4xPOD"] = true},
 	armdelay	= 0.1
 

@@ -50,8 +50,8 @@ ACF_defineGun("AT-3 ASM", { --id
 	},
 
 	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
-	guidance    = {"Dumb", "Wire"},
-	fuses       = {"Contact", "Optical"},
+	guidance    = { "Dumb", "Wire (MCLOS)", "Wire (SACLOS)" },
+	fuses       = { "Contact", "Optical" },
 
 	racks       = {["1xAT3RKS"] = true, ["1xAT3RK"] = true, ["1xRK_small"] = true, ["3xRK"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
@@ -91,8 +91,8 @@ ACF_defineGun("BGM-71E ASM", { --id
 	},
 
 	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
-	guidance    = {"Dumb", "Wire"},
-	fuses       = {"Contact", "Optical"},
+	guidance    = { "Dumb", "Wire (SACLOS)" },
+	fuses       = { "Contact", "Optical" },
 
 	racks       = {["1x BGM-71E"] = true, ["2x BGM-71E"] = true, ["4x BGM-71E"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
@@ -135,12 +135,13 @@ ACF_defineGun("AGM-114 ASM", { --id
 	},
 
 	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
-	guidance    = {"Dumb", "Laser"},
-	fuses       = {"Contact", "Optical"},
+	guidance    = { "Dumb", "Laser", "Active Radar" },
+	fuses       = { "Contact", "Optical" },
 
 	racks       = {["2x AGM-114"] = true, ["4x AGM-114"] = true, ["1xRK"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
-	viewcone    = 50,   -- getting outside this cone will break the lock.  Divided by 2.
+	viewcone    = 40,   -- getting outside this cone will break the lock.  Divided by 2.
+	seekcone	= 10,
 
 	agility     = 0.09,		-- multiplier for missile turn-rate.
 	armdelay    = 0.5     -- minimum fuse arming delay
@@ -177,8 +178,8 @@ ACF_defineGun("Ataka ASM", { --id
 	},
 
 	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
-	guidance    = {"Dumb", "Laser"},
-	fuses       = {"Contact", "Optical"},
+	guidance    = { "Dumb", "Radio (SACLOS)" },
+	fuses       = { "Contact", "Optical" },
 
 	racks       = {["1x Ataka"] = true, ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
@@ -223,8 +224,8 @@ ACF_defineGun("9M113 ASM", { --id
 	},
 
 	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
-	guidance    = {"Dumb", "Laser"},
-	fuses       = {"Contact", "Optical"},
+	guidance    = { "Dumb", "Laser" },
+	fuses       = { "Contact", "Optical" },
 
 	racks       = {["1x Kornet"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
@@ -264,8 +265,8 @@ ACF_defineGun("AT-2 ASM", { --id
 	},
 
 	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
-	guidance    = {"Dumb", "Laser", "Wire"},
-	fuses       = {"Contact", "Optical"},
+	guidance    = { "Dumb", "Radio (MCLOS)", "Radio (SACLOS)" },
+	fuses       = { "Contact", "Optical" },
 	viewcone    = 90,   -- getting outside this cone will break the lock.  Divided by 2.
 	racks       = {["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true, ["2x AGM-114"] = true, ["4x AGM-114"] = true, ["1xRK_small"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 	agility     = 0.2,     -- multiplier for missile turn-rate.
@@ -307,8 +308,8 @@ ACF_defineGun("AGM-45 ASM", { --id
 	},
 
 	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
-	guidance    = {"Dumb", "Infrared", "Laser"},
-	fuses       = {"Contact", "Timed"},
+	guidance    = { "Dumb", "Anti-radiation" },
+	fuses       = { "Contact", "Timed" },
 
 	racks       = {["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true, ["6xUARRK"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
@@ -348,8 +349,8 @@ ACF_defineGun("AGM-122 ASM", { --id
 	},
 
 	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
-	guidance    = {"Dumb", "Infrared"},
-	fuses       = {"Contact", "Optical"},
+	guidance    = { "Dumb", "Anti-radiation" },
+	fuses       = { "Contact", "Optical" },
 
 	racks       = {["1xRK"] = true,  ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true, ["1xRK_small"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 

@@ -48,7 +48,7 @@ ACF_defineGun("WalleyeGBU", { --id
 	},
 
 	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
-	guidance    = {"Dumb", "Laser"},
+	guidance    = { "Dumb", "Radio (MCLOS)" },
 	fuses       = {"Contact", "Timed", "Optical"},
 	racks       = {["1xRK"] = true,  ["2xRK"] = true,  ["3xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 	seekcone    = 90,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
@@ -86,7 +86,7 @@ ACF_defineGun("227kgGBU", { --id
 	},
 
 	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
-	guidance    = {"Dumb", "Laser"},
+	guidance    = { "Dumb", "Laser", "GPS Guided" },
 
 	fuses       = {"Contact", "Timed", "Optical", "Cluster"},
 
@@ -127,7 +127,7 @@ ACF_defineGun("454kgGBU", { --id
 	},
 
 	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
-	guidance    = {"Dumb", "Laser"},
+	guidance    = { "Dumb", "Laser", "GPS Guided" },
 	fuses       = {"Contact", "Timed", "Optical", "Cluster"},
 
 	racks       = {["1xRK"] = true,  ["2xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
@@ -167,7 +167,7 @@ ACF_defineGun("909kgGBU", { --id
 	},
 
 	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
-	guidance    = {"Dumb", "Laser"},
+	guidance    = { "Dumb", "Laser", "GPS Guided" },
 	fuses       = {"Contact", "Timed", "Optical", "Cluster"},
 
 	racks       = {["1xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
