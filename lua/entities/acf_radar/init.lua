@@ -55,8 +55,10 @@ local function Overlay(Entity)
 		Status = "Disabled: " .. Entity.DisableReason
 	elseif Entity.TargetCount > 0 then
 		Status = Entity.TargetCount .. " target(s) detected"
+	elseif not Entity.Active then
+		Status = "Idle"
 	else
-		Status = Entity.Active and "Active" or "Idle"
+		Status = Entity.Scanning and "Active" or "Activating"
 	end
 
 	Range = Entity.Range and math.Round(Entity.Range / 39.37 , 2) .. " meters" or "Infinite"
@@ -260,7 +262,7 @@ function MakeACF_Radar(Owner, Pos, Angle, Id)
 
 	Radar.Active		= false
 	Radar.Scanning		= false
-	Radar.SwitchDelay	= 5
+	Radar.SwitchDelay	= RadarData.delay
 	Radar.ThinkDelay	= 0.1
 	Radar.TargetCount	= 0
 	Radar.Spread		= 0

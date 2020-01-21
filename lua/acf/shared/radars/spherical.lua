@@ -16,6 +16,7 @@ ACF_DefineRadar("SmallOMNI-AM", {
 	weight 	= 300,
 	range 	= 7874, -- range in inches.
 	origin	= "missile1",
+	delay	= 3,
 } )
 
 ACF_DefineRadar("MediumOMNI-AM", {
@@ -26,6 +27,7 @@ ACF_DefineRadar("MediumOMNI-AM", {
 	weight 	= 600,
 	range 	= 15748, -- range in inches.
 	origin	= "missile1",
+	delay	= 6,
 } )
 
 ACF_DefineRadar("LargeOMNI-AM", {
@@ -36,6 +38,7 @@ ACF_DefineRadar("LargeOMNI-AM", {
 	weight 	= 1200,
 	range 	= 31496, -- range in inches.
 	origin	= "missile1",
+	delay	= 12,
 } )
 
 ACF_DefineRadarClass("OMNI-TGT", {
@@ -55,6 +58,7 @@ ACF_DefineRadar("SmallOMNI-TGT", {
 	weight 	= 300,
 	range 	= 7874, -- range in inches.
 	origin	= "missile1",
+	delay	= 3,
 } )
 
 ACF_DefineRadar("MediumOMNI-TGT", {
@@ -65,6 +69,7 @@ ACF_DefineRadar("MediumOMNI-TGT", {
 	weight 	= 600,
 	range 	= 15748, -- range in inches.
 	origin	= "missile1",
+	delay	= 6,
 } )
 
 ACF_DefineRadar("LargeOMNI-TGT", {
@@ -75,4 +80,5 @@ ACF_DefineRadar("LargeOMNI-TGT", {
 	weight 	= 1200,
 	range 	= 31496, -- range in inches.
 	origin	= "missile1",
+	delay	= 12,
 } )

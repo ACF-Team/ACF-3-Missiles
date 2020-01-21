@@ -16,6 +16,7 @@ ACF_DefineRadar("SmallDIR-AM", {
 	weight 		= 200,
 	viewcone 	= 15, -- half of the total cone.  'viewcone = 30' means 60 degs total viewcone.
 	origin		= "missile1",
+	delay		= 2,
 } )
 
 ACF_DefineRadar("MediumDIR-AM", {
@@ -26,6 +27,7 @@ ACF_DefineRadar("MediumDIR-AM", {
 	weight 		= 400,
 	viewcone 	= 35, -- half of the total cone.  'viewcone = 30' means 60 degs total viewcone.
 	origin		= "missile1",
+	delay		= 4,
 } )
 
 ACF_DefineRadar("LargeDIR-AM", {
@@ -36,6 +38,7 @@ ACF_DefineRadar("LargeDIR-AM", {
 	weight 		= 800,
 	viewcone 	= 80, -- half of the total cone.  'viewcone = 30' means 60 degs total viewcone.
 	origin		= "missile1",
+	delay		= 8,
 } )
 
 ACF_DefineRadarClass("DIR-TGT", {
@@ -55,6 +58,7 @@ ACF_DefineRadar("SmallDIR-TGT", {
 	weight 		= 200,
 	viewcone 	= 15, -- half of the total cone.  'viewcone = 30' means 60 degs total viewcone.
 	origin		= "missile1",
+	delay		= 2,
 } )
 
 ACF_DefineRadar("MediumDIR-TGT", {
@@ -65,6 +69,7 @@ ACF_DefineRadar("MediumDIR-TGT", {
 	weight 		= 400,
 	viewcone 	= 35, -- half of the total cone.  'viewcone = 30' means 60 degs total viewcone.
 	origin		= "missile1",
+	delay		= 4,
 } )
 
 ACF_DefineRadar("LargeDIR-TGT", {
@@ -75,4 +80,5 @@ ACF_DefineRadar("LargeDIR-TGT", {
 	weight 		= 800,
 	viewcone 	= 80, -- half of the total cone.  'viewcone = 30' means 60 degs total viewcone.
 	origin		= "missile1",
+	delay		= 8,
 } )
