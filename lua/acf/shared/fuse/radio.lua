@@ -1,7 +1,6 @@
 
 local Fuse = ACF.RegisterFuse("Radio", "Contact")
 
-Fuse.Name = "Radio"
 Fuse.desc = "This fuse tracks the Guidance module's target and detonates when the distance becomes low enough.\nDistance in inches."
 Fuse.Distance = 2000
 

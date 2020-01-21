@@ -1,7 +1,6 @@
 
 local Fuse = ACF.RegisterFuse("Contact")
 
-Fuse.Name = "Contact"
 Fuse.desc = "This fuse triggers upon direct contact against solid surfaces."
 Fuse.Primer = 0
 

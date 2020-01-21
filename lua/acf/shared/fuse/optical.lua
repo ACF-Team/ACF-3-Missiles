@@ -2,7 +2,6 @@
 local Fuse = ACF.RegisterFuse("Optical", "Contact")
 local TraceData = { start = true, endpos = true, filter = true }
 
-Fuse.Name = "Optical"
 Fuse.desc = "This fuse fires a beam directly ahead and detonates when the beam hits something close-by.\nDistance in inches."
 Fuse.Distance = 2000
 
@@ -28,7 +27,7 @@ function Fuse:GetDetonate(Missile)
 	local Position = Missile:GetPos()
 
 	TraceData.start = Position
-	TraceData.endpos = Position + Missile:GetForward() * self.Cluster
+	TraceData.endpos = Position + Missile:GetForward() * self.Distance
 	TraceData.filter = Missile.Filter or Missile
 
 	return util.TraceLine(TraceData).Hit

@@ -2,7 +2,6 @@
 local Fuse = ACF.RegisterFuse("Cluster", "Contact")
 local TraceData = { start = true, endpos = true, filter = true }
 
-Fuse.Name = "Cluster"
 Fuse.desc = "This fuse fires a beam directly ahead and releases bomblets when the beam hits something close-by.\nDistance in inches."
 Fuse.Cluster = 2000
 

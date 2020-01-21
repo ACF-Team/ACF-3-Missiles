@@ -1,7 +1,6 @@
 
 local Fuse = ACF.RegisterFuse("Timed", "Contact")
 
-Fuse.Name = "Timed"
 Fuse.desc = "This fuse triggers upon direct contact, or when the timer ends.\nDelay in seconds."
 Fuse.Timer = 10 -- Time to explode, begins ticking after configuration.
 
