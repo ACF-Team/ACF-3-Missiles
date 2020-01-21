@@ -62,7 +62,7 @@ function Guidance:GetGuidance(Missile)
 
 	if Override then return Override end
 
-	local Radar = self:GetRadar("A2A")
+	local Radar = self:GetRadar("TGT")
 	local TargetPos, Spread
 
 	if IsValid(self.Target) then

@@ -38,40 +38,40 @@ ACF_DefineRadar("LargeOMNI-AM", {
 	origin	= "missile1",
 } )
 
-ACF_DefineRadarClass("OMNI-A2A", {
-	name = "Spherical Air-To-Air Radar",
+ACF_DefineRadarClass("OMNI-TGT", {
+	name = "Spherical Targeting Radar",
 	desc = "A missile radar with full 360-degree detection but a limited range. Will detect enemy vehicles.",
-	type = "A2A",
+	type = "TGT",
 	detect = function(Radar)
 		return ACF.GetEntitiesInSphere(Radar:LocalToWorld(Radar.Origin), Radar.Range)
 	end,
 } )
 
-ACF_DefineRadar("SmallOMNI-A2A", {
+ACF_DefineRadar("SmallOMNI-TGT", {
 	name 	= "Small Spherical Radar",
 	desc 	= "A lightweight omni-directional radar with a smaller range.",
 	model	= "models/radar/radar_sp_sml.mdl",
-	class 	= "OMNI-A2A",
+	class 	= "OMNI-TGT",
 	weight 	= 300,
 	range 	= 7874, -- range in inches.
 	origin	= "missile1",
 } )
 
-ACF_DefineRadar("MediumOMNI-A2A", {
+ACF_DefineRadar("MediumOMNI-TGT", {
 	name 	= "Medium Spherical Radar",
 	desc 	= "A omni-directional radar with a regular range.",
 	model	= "models/radar/radar_sp_mid.mdl", -- medium one is for now scalled big one - will be changed
-	class 	= "OMNI-A2A",
+	class 	= "OMNI-TGT",
 	weight 	= 600,
 	range 	= 15748, -- range in inches.
 	origin	= "missile1",
 } )
 
-ACF_DefineRadar("LargeOMNI-A2A", {
+ACF_DefineRadar("LargeOMNI-TGT", {
 	name 	= "Large Spherical Radar",
 	desc 	= "A heavy omni-directional radar with a large range.",
 	model	= "models/radar/radar_sp_big.mdl",
-	class 	= "OMNI-A2A",
+	class 	= "OMNI-TGT",
 	weight 	= 1200,
 	range 	= 31496, -- range in inches.
 	origin	= "missile1",

@@ -29,11 +29,11 @@ function Guidance:FindNewTarget(Missile, Radar)
 end
 
 function Guidance:OnLaunched(Missile)
-	self.Target = self:FindNewTarget(Missile, self:GetRadar("A2A"))
+	self.Target = self:FindNewTarget(Missile, self:GetRadar("TGT"))
 end
 
 function Guidance:GetGuidance(Missile)
-	local Radar = self:GetRadar("A2A")
+	local Radar = self:GetRadar("TGT")
 
 	if not Radar then return {} end
 
