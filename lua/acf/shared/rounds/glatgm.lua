@@ -145,7 +145,7 @@ function Round.cratetxt(BulletData)
 end
 
 function Round.detonate(_, Bullet, HitPos, HitNormal)
-	ACF_HE(HitPos - Bullet.Flight:GetNormalized() * 3 , HitNormal , Bullet.BoomFillerMass , Bullet.CasingMass , Bullet.Owner)
+	ACF_HE(HitPos - Bullet.Flight:GetNormalized() * 3 , Bullet.BoomFillerMass , Bullet.CasingMass , Bullet.Owner)
 
 	Bullet.Detonated = true
 	Bullet.InitTime = CurTime()

@@ -151,6 +151,6 @@ function ENT:Detonate()
 
 		self:Remove()
 
-		ACF_HE( btdat.Pos, -btdat.Flight:GetNormalized() , btdat.BoomFillerMass , btdat.CasingMass , btdat.Owner )
+		ACF_HE( btdat.Pos, btdat.BoomFillerMass , btdat.CasingMass , btdat.Owner )
 	end
 end
