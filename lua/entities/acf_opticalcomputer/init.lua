@@ -152,6 +152,13 @@ function ENT:Initialize()
 	self.Inputs		= WireLib.CreateInputs(self, { "Active", "Lase" })
 	self.Outputs	= WireLib.CreateOutputs(self, { "Lasing", "LaseTime", "Distance", "HitPos [VECTOR]", "Entity [ENTITY]" })
 
+	if CPPI then
+		timer.Simple(0, function()
+			self.Owner = self:CPPIGetOwner()
+			self:SetPlayer(self.Owner)
+		end)
+	end
+
 	WireLib.TriggerOutput(self, "Entity", self)
 
 	local PhysObj = self:GetPhysicsObject()
@@ -255,7 +262,7 @@ function ENT:Link(Target)
 	if not IsValid(Target) then return false, "Attempted to link an invalid entity." end
 	if self == Target then return false, "Can't link a computer to itself." end
 
-	local Function = ClassLink("acf_opticalcomputer", Target:GetClass())
+	local Function = ClassLink(self:GetClass(), Target:GetClass())
 
 	if Function then
 		return Function(self, Target)
@@ -268,7 +275,7 @@ function ENT:Unlink(Target)
 	if not IsValid(Target) then return false, "Attempted to unlink an invalid entity." end
 	if self == Target then return false, "Can't unlink a computer from itself." end
 
-	local Function = ClassUnlink("acf_opticalcomputer", Target:GetClass())
+	local Function = ClassUnlink(self:GetClass(), Target:GetClass())
 
 	if Function then
 		return Function(self, Target)
@@ -300,7 +307,7 @@ function ENT:UpdateOverlay()
 end
 
 function ENT:GetTrace()
-	TraceData.start = self:GetPos()
+	TraceData.start = self:LocalToWorld(Vector())
 	TraceData.endpos = self:LocalToWorld(Vector(50000))
 	TraceData.filter = self.Filter
 
