@@ -59,7 +59,7 @@ end
 
 local function UpdateOutputs(Entity)
 	local Trace = Entity:GetTrace()
-	local HitPos = Trace.HitPos * VectorRand(-Entity.Spread, Entity.Spread)
+	local HitPos = Trace.HitPos + VectorRand(-Entity.Spread, Entity.Spread)
 
 	Entity.HitPos = HitPos
 
