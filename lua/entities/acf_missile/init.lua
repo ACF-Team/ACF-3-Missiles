@@ -10,6 +10,7 @@ ENT.DisableDuplicator	= true
 -------------------------------[[ Local Functions ]]-------------------------------
 
 local Gravity = GetConVar("sv_gravity")
+local GhostPeriod = GetConVar("ACFM_GhostPeriod")
 
 local function SetGuidance(Missile, Guidance)
 	Missile.Guidance = Guidance
@@ -25,12 +26,18 @@ local function SetFuse(Missile, Fuse)
 	return Fuse
 end
 
-local function ApplyBodySubgroup(Missile, Group, Target)
-	local TargetLower = string.lower(Target) .. ".smd"
+local function ApplyBodySubgroup(Missile, Group, Source, Phase)
+	local Target = Source.DataSource(Missile)
+
 	if not Group.submodels then return end
+	if not Target then return end
+	if not Source[Target] then return end
+	if not Source[Target][Phase] then return end
+
+	Target = Source[Target][Phase]
 
 	for K, V in pairs(Group.submodels) do
-		if string.lower(V) == TargetLower then
+		if Target == V then
 			Missile:SetBodygroup(Group.id, K)
 
 			return
@@ -38,14 +45,16 @@ local function ApplyBodySubgroup(Missile, Group, Target)
 	end
 end
 
-local function UpdateBodygroups(Missile)
-	for _, V in pairs(Missile:GetBodyGroups()) do
-		local GroupName = string.lower(V.name)
+local function UpdateBodygroups(Missile, Phase)
+	local Sources = Missile.Bodygroups
 
-		if GroupName == "guidance" and Missile.Guidance then
-			ApplyBodySubgroup(Missile, V, Missile.Guidance.Name)
-		elseif GroupName == "warhead" and Missile.BulletData then
-			ApplyBodySubgroup(Missile, V, Missile.BulletData.Type)
+	if Sources then
+		for _, V in pairs(Missile:GetBodyGroups()) do
+			local Source = Sources[string.lower(V.name)]
+
+			if Source then
+				ApplyBodySubgroup(Missile, V, Source, Phase)
+			end
 		end
 	end
 end
@@ -83,9 +92,9 @@ local function ParseBulletData(Missile, BulletData)
 	end
 end
 
-local function ConfigureFlight(Missile)
+local function ConfigureFlight(Missile, Phase)
 	local BulletData = Missile.BulletData
-	local GunData = list.Get("ACFEnts").Guns[BulletData.Id]
+	local GunData = ACF.Weapons.Guns[BulletData.Id]
 	local Round = GunData.round
 	local Length = GunData.length
 
@@ -107,7 +116,6 @@ local function ConfigureFlight(Missile)
 	Missile.CurPos = BulletData.Pos
 	Missile.CurDir = BulletData.Flight:GetNormalized()
 	Missile.LastPos = Missile.CurPos
-	Missile.Hit = nil
 	Missile.HitNorm = Vector()
 	Missile.FirstThink = true
 	Missile.MinArmingDelay = math.max(Round.armdelay or GunData.armdelay, GunData.armdelay)
@@ -115,7 +123,7 @@ local function ConfigureFlight(Missile)
 	Missile.TorqueMul = Length * 25
 	Missile.RotAxis = Vector()
 
-	UpdateBodygroups(Missile)
+	UpdateBodygroups(Missile, Phase)
 	UpdateSkin(Missile)
 end
 
@@ -261,7 +269,7 @@ local function CalcFlight(Missile)
 	end
 
 	--Physics calculations
-	local Vel = LastVel + (Dir * Missile.Motor - Vector(0, 0, Gravity:GetFloat())) * ACF.VelScale * DeltaTime ^ 2
+	local Vel = LastVel + (Dir * Missile.Motor - Vector(0, 0, Gravity:GetFloat())) * ACF.Scale * DeltaTime ^ 2
 	local Up = Dir:Cross(Vel):Cross(Dir):GetNormalized()
 	local Speed = Vel:Length()
 	local VelNorm = Vel / Speed
@@ -270,7 +278,7 @@ local function CalcFlight(Missile)
 	Vel = Vel - Up * Speed * DotSimple * Missile.FinMultiplier
 
 	local SpeedSq = Vel:LengthSqr()
-	local Drag = Vel:GetNormalized() * (DragCoef * SpeedSq) / ACF.DragDiv * ACF.VelScale
+	local Drag = Vel:GetNormalized() * (DragCoef * SpeedSq) / ACF.DragDiv * ACF.Scale
 
 	Vel = Vel - Drag
 
@@ -323,8 +331,7 @@ end)
 function ENT:Initialize()
 	self.BaseClass.Initialize(self)
 
-	self.SpecialDamage = true --If true needs a special ACF_OnDamage function
-	self.SpecialHealth = true --If true needs a special ACF_Activate function
+	self.ExhaustPos = self:WorldToLocal(self:GetAttachment(self:LookupAttachment("exhaust")).Pos)
 
 	self:SetNWFloat("LightSize", 0)
 
@@ -343,20 +350,17 @@ end
 function ENT:SetBulletData(BulletData)
 	self.BaseClass.SetBulletData(self, BulletData)
 
-	local Gun = list.Get("ACFEnts").Guns[BulletData.Id]
-	local PhysObj = self:GetPhysicsObject()
-
-	self:SetModelEasy(Gun.round.model or Gun.model or "models/missiles/aim9.mdl")
-
 	ParseBulletData(self, BulletData)
 
 	self.RoundWeight = ACF_GetGunValue(BulletData, "weight") or 10
+
+	local PhysObj = self:GetPhysicsObject()
 
 	if IsValid(PhysObj) then
 		PhysObj:SetMass(self.RoundWeight)
 	end
 
-	ConfigureFlight(self)
+	ConfigureFlight(self, "OnRack")
 end
 
 function ENT:Launch()
@@ -372,10 +376,10 @@ function ENT:Launch()
 	self.Fuse:Configure(self, self.Guidance)
 	self.Launched = true
 	self.ThinkDelay = engine.TickInterval()
-	self.GhostPeriod = CurTime() + ACFM_GhostPeriod:GetFloat()
+	self.GhostPeriod = CurTime() + GhostPeriod:GetFloat()
 	self.DisableDamage = nil
 
-	ConfigureFlight(self)
+	ConfigureFlight(self, "OnLaunch")
 
 	if self.Motor > 0 or self.MotorLength > 0.1 then
 		self.CacheParticleEffect = CurTime() + 0.01
@@ -383,6 +387,8 @@ function ENT:Launch()
 	end
 
 	LaunchEffect(self)
+
+	self.Guidance:OnLaunched(self)
 
 	ACF.ActiveMissiles[self] = true
 
@@ -432,7 +438,7 @@ function ENT:Think()
 		if self.FirstThink then
 			self.FirstThink = nil
 			self.LastThink = Time - self.ThinkDelay
-			self.LastVel = self.Launcher.Physical:GetVelocity() * self.ThinkDelay
+			self.LastVel = ACF_GetAncestor(self.Launcher):GetVelocity() * self.ThinkDelay
 		end
 
 		CalcFlight(self)
@@ -461,13 +467,17 @@ function ENT:PhysicsCollide(Data)
 end
 
 function ENT:OnRemove()
-	self.BaseClass.OnRemove(self)
-
 	ACF.ActiveMissiles[self] = nil
+
+	if self.Guidance then
+		self.Guidance:OnRemoved(self)
+	end
 
 	if IsValid(self.Launcher) and not self.Launched then
 		self.Launcher:UpdateAmmoCount(self.Attachment)
 	end
+
+	WireLib.Remove(self)
 end
 
 function ENT:ACF_Activate(Recalc)

@@ -4,11 +4,8 @@ AddCSLuaFile( "shared.lua" )
 
 include("shared.lua")
 
-CreateConVar("sbox_max_acf_explosive", 20)
-
 function ENT:Initialize()
 	self.BulletData = self.BulletData or {}
-	self.SpecialDamage = true	--If true needs a special ACF_OnDamage function
 	self.ShouldTrace = false
 
 	self.Inputs = WireLib.CreateInputs( self, { "Detonate" } )

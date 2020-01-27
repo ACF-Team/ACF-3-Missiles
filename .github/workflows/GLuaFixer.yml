@@ -4,11 +4,9 @@ on:
   push:
     paths:
     - 'lua/**'
-    - '!lua/includes/modules/**'
   pull_request:
     paths:
     - 'lua/**'
-    - '!lua/includes/modules/**'
 
 jobs:
   build:
@@ -19,7 +17,7 @@ jobs:
       run: curl -o glualint.zip -L https://github.com/FPtje/GLuaFixer/releases/download/1.12.0/glualint-1.12.0-linux.zip
     - name: Extract glualint.zip
       run: unzip glualint.zip
-    - name: Removing blacklisted folders
-      run: rm -r lua/includes/modules
+    - name: Remove blacklisted files
+      run: rm lua/acf/base/cl_markdown.lua
     - name: Initiate linting
       run: ./glualint lua
