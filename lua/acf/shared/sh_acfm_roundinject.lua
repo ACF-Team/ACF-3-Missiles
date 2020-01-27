@@ -81,9 +81,10 @@ local function ModifyCrateTextFuncs()
 
 				if Guidance then
 					Guidance = ACFM_CreateConfigurable(Guidance, ACF.Guidance, nil, "Guidance")
-					Guidance:Configure(Crate)
 
 					if Guidance and Guidance.Name ~= "Dumb" then
+						Guidance:Configure(Crate)
+
 						Text = configConcat(Guidance:GetDisplayConfig())
 						CrateText = CrateText .. Display:format(Guidance.Name, "guidance", Text)
 					end
@@ -91,9 +92,10 @@ local function ModifyCrateTextFuncs()
 
 				if Fuse then
 					Fuse = ACFM_CreateConfigurable(Fuse, ACF.Fuse, nil, "fuses")
-					Fuse:Configure(Crate)
 
 					if Fuse then
+						Fuse:Configure(Crate)
+
 						Text = configConcat(Fuse:GetDisplayConfig())
 						CrateText = CrateText .. Display:format(Fuse.Name, "fuse", Text)
 					end
