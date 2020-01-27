@@ -1,123 +1,111 @@
-local function checkIfDataIsMissile(data)
-	local guns = ACF.Weapons.Guns
-	local class = guns[data.Id]
+ACFM_RoundDisplayFuncs = ACFM_RoundDisplayFuncs or {}
+ACFM_CrateTextFuncs = ACFM_CrateTextFuncs or {}
 
-	if not (class and class.gunclass) then
-		return -- oldDisplayData(data)
-	end
+local function checkIfDataIsMissile(BulletData)
+	local class = ACF.Weapons.Guns[BulletData.Id]
 
-	local classes = ACF.Classes.GunClass
-	class = classes[class.gunclass]
+	if not (class and class.gunclass) then return end
+
+	class = ACF.Classes.GunClass[class.gunclass]
 
 	return class.type and class.type == "missile"
 end
 
-function ACFM_ModifyRoundDisplayFuncs()
-	local roundTypes = ACF.RoundTypes
+local function configConcat(tbl)
+	local toConcat = {}
 
-	if not ACFM_RoundDisplayFuncs then
-		ACFM_RoundDisplayFuncs = {}
-
-		for k, v in pairs(roundTypes) do
-			ACFM_RoundDisplayFuncs[k] = v.getDisplayData
-		end
+	for K, V in pairs(tbl) do
+		toConcat[#toConcat + 1] = tostring(K) .. ": " .. tostring(V)
 	end
 
-	for k, v in pairs(roundTypes) do
-		local oldDisplayData = ACFM_RoundDisplayFuncs[k]
+	return table.concat(toConcat, "\n")
+end
 
-		if oldDisplayData then
-			v.getDisplayData = function(data)
+local function ModifyRoundDisplayFuncs()
+	for K, V in pairs(ACF.RoundTypes) do
+		local OldDisplayData = ACFM_RoundDisplayFuncs[K]
 
-				if not checkIfDataIsMissile(data) then
-					return oldDisplayData(data)
+		if not OldDisplayData then
+			ACFM_RoundDisplayFuncs[K] = V.getDisplayData
+			OldDisplayData = V.getDisplayData
+		end
+
+		if OldDisplayData then
+			V.getDisplayData = function(BulletData)
+				if not checkIfDataIsMissile(BulletData) then
+					return OldDisplayData(BulletData)
 				end
 
 				-- NOTE: if these replacements cause side-effects somehow, move to a masking-metatable approach
 
-				local MuzzleVel = data.MuzzleVel
+				local MuzzleVel = BulletData.MuzzleVel
 
-				data.MuzzleVel = 0
-				data.SlugPenMul = ACF_GetGunValue(data.Id, "penmul")
+				BulletData.MuzzleVel = 0
+				BulletData.SlugPenMul = ACF_GetGunValue(BulletData.Id, "penmul")
 
-				local ret = oldDisplayData(data)
+				local DisplayData = OldDisplayData(BulletData)
 
-				data.MuzzleVel = MuzzleVel
+				BulletData.MuzzleVel = MuzzleVel
 
-				return ret
+				return DisplayData
 			end
 		end
 	end
 end
 
-local function configConcat(tbl, sep)
-	local toConcat = {}
+local function ModifyCrateTextFuncs()
+	for K, V in pairs(ACF.RoundTypes) do
+		local OldCrateText = ACFM_CrateTextFuncs[K]
 
-	for k, v in pairs(tbl) do
-		toConcat[#toConcat + 1] = tostring(k) .. " = " .. tostring(v)
-	end
-
-	return table.concat(toConcat, sep)
-end
-
-function ACFM_ModifyCrateTextFuncs()
-	local roundTypes = ACF.RoundTypes
-
-	if not ACFM_CrateTextFuncs then
-		ACFM_CrateTextFuncs = {}
-
-		for k, v in pairs(roundTypes) do
-			ACFM_CrateTextFuncs[k] = v.cratetxt
+		if not OldCrateText then
+			ACFM_CrateTextFuncs[K] = V.cratetxt
+			OldCrateText = V.cratetxt
 		end
-	end
 
-	for k, v in pairs(roundTypes) do
-		local oldCratetxt = ACFM_CrateTextFuncs[k]
+		if OldCrateText then
+			V.cratetxt = function(BulletData)
+				local CrateText = OldCrateText(BulletData)
 
-		if oldCratetxt then
-			v.cratetxt = function(data, crate)
-				local origCrateTxt = oldCratetxt(data)
-
-				if not checkIfDataIsMissile(data) then
-					return origCrateTxt
+				if not checkIfDataIsMissile(BulletData) then
+					return CrateText
 				end
 
-				local str = { origCrateTxt }
+				local Crate = Entity(BulletData.Crate)
+				local Display = "\n\n%s %s\n%s"
+				local Guidance, Fuse, Text
 
-				local guidance  = IsValid(crate) and crate.RoundData7 or data.Data7
-				local fuse      = IsValid(crate) and crate.RoundData8 or data.Data8
+				if IsValid(Crate) then
+					Guidance = Crate.RoundData7 or BulletData.Data7
+					Fuse = Crate.RoundData8 or BulletData.Data8
+				end
 
-				if guidance then
-					guidance = ACFM_CreateConfigurable(guidance, ACF.Guidance, bdata, "guidance")
-					if guidance and guidance.Name ~= "Dumb" then
-						str[#str + 1] = "\n\n"
-						str[#str + 1] = guidance.Name
-						str[#str + 1] = " guidance\n("
-						str[#str + 1] = configConcat(guidance:GetDisplayConfig(), ", ")
-						str[#str + 1] = ")"
+				if Guidance then
+					Guidance = ACFM_CreateConfigurable(Guidance, ACF.Guidance, nil, "Guidance")
+					Guidance:Configure(Crate)
+
+					if Guidance and Guidance.Name ~= "Dumb" then
+						Text = configConcat(Guidance:GetDisplayConfig())
+						CrateText = CrateText .. Display:format(Guidance.Name, "guidance", Text)
 					end
 				end
 
-				if fuse then
-					fuse = ACFM_CreateConfigurable(fuse, ACF.Fuse, bdata, "fuses")
-					if fuse then
-						str[#str + 1] = "\n\n"
-						str[#str + 1] = fuse.Name
-						str[#str + 1] = " fuse\n("
-						str[#str + 1] = configConcat(fuse:GetDisplayConfig(), ", ")
-						str[#str + 1] = ")"
+				if Fuse then
+					Fuse = ACFM_CreateConfigurable(Fuse, ACF.Fuse, nil, "fuses")
+					Fuse:Configure(Crate)
+
+					if Fuse then
+						Text = configConcat(Fuse:GetDisplayConfig())
+						CrateText = CrateText .. Display:format(Fuse.Name, "fuse", Text)
 					end
 				end
 
-				return table.concat(str)
+				return CrateText
 			end
-
-			ACF.RoundTypes[k].cratetxt = v.cratetxt
 		end
 	end
 end
 
-function ACFM_ModifyRoundBaseGunpowder()
+local function ModifyRoundBaseGunpowder()
 	local oldGunpowder = ACFM_ModifiedRoundBaseGunpowder and oldGunpowder or ACF_RoundBaseGunpowder
 
 	ACF_RoundBaseGunpowder = function(PlayerData, Data, ServerData, GUIData)
@@ -131,6 +119,8 @@ function ACFM_ModifyRoundBaseGunpowder()
 	ACFM_ModifiedRoundBaseGunpowder = true
 end
 
-timer.Simple(1, ACFM_ModifyRoundBaseGunpowder)
-timer.Simple(1, ACFM_ModifyRoundDisplayFuncs)
-timer.Simple(1, ACFM_ModifyCrateTextFuncs)
+timer.Simple(1, function()
+	ModifyRoundBaseGunpowder()
+	ModifyRoundDisplayFuncs()
+	ModifyCrateTextFuncs()
+end)
