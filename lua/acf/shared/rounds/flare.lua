@@ -9,13 +9,11 @@ Round.model = "models/munitions/round_100mm_shot.mdl" --Shell flight model
 Round.desc = "A flare designed to confuse guided munitions."
 
 function Round.create(_, BulletData)
-	ACF_CreateBullet(BulletData)
+	local Bullet = ACF_CreateBullet(BulletData)
 
-	local bdata = ACF.Bullet[BulletData.Index]
+	Bullet.CreateTime = CurTime()
 
-	bdata.CreateTime = CurTime()
-
-	ACFM_RegisterFlare(bdata)
+	ACFM_RegisterFlare(Bullet)
 end
 
 -- Function to convert the player's slider data into the complete round data
