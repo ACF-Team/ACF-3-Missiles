@@ -82,7 +82,6 @@ ACF_defineGun("AIM-9 AAM", { --id
 	year = 1953,
 	round = {
 		model		= "models/missiles/aim9m.mdl",
-		rackmdl		= "models/missiles/aim9m.mdl",
 		maxlength	= 35,
 		casing		= 0.1,	        -- thickness of missile casing, cm
 		armour		= 15,			-- effective armour thickness of casing, in mm
@@ -125,7 +124,6 @@ ACF_defineGun("AIM-120 AAM", { --id
 	modeldiameter = 7.1 * 2.54, -- in cm
 	round = {
 		model		= "models/missiles/aim120c.mdl",
-		rackmdl		= "models/missiles/aim120c.mdl",
 		maxlength	= 50,
 		casing		= 0.1,	        -- thickness of missile casing, cm
 		armour		= 20,			-- effective armour thickness of casing, in mm
@@ -168,7 +166,6 @@ ACF_defineGun("AIM-54 AAM", { --id
 	modeldiameter = 9.0 * 2.54, -- in cm
 	round = {
 		model		= "models/missiles/aim54.mdl",
-		rackmdl		= "models/missiles/aim54.mdl",
 		maxlength	= 50,
 		casing		= 0.2,	        -- thickness of missile casing, cm
 		armour		= 5,			-- effective armour thickness of casing, in mm

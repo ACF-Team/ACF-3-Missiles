@@ -29,7 +29,6 @@ ACF_defineGun("RS82 ASR", { --id
 	round		=
 	{
 		model		= "models/missiles/rs82.mdl",
-		rackmdl		= "models/missiles/rs82.mdl",
 		maxlength	= 25,
 		casing		= 0.2,			-- thickness of missile casing, cm
 		armour		= 8,			-- effective armour thickness of casing, in mm

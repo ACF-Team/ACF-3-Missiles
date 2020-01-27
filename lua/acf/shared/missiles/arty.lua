@@ -29,7 +29,6 @@ ACF_defineGun("Type 63 RA", { --id
 	round		=
 	{
 		model		= "models/missiles/glatgm/mgm51.mdl",
-		rackmdl		= "models/missiles/glatgm/mgm51.mdl",
 		maxlength	= 50,
 		casing		= 0.1,			-- thickness of missile casing, cm
 		armour		= 8,			-- effective armour thickness of casing, in mm
@@ -71,7 +70,6 @@ ACF_defineGun("SAKR-10 RA", { --id
 	round		=
 	{
 		model		= "models/missiles/9m31.mdl",
-		rackmdl		= "models/missiles/9m31.mdl",
 		maxlength	= 140,
 		casing		= 0.1,			-- thickness of missile casing, cm
 		armour		= 12,			-- effective armour thickness of casing, in mm
@@ -113,7 +111,6 @@ ACF_defineGun("SS-40 RA", { --id
 	round		=
 	{
 		model		= "models/missiles/aim120.mdl",
-		rackmdl		= "models/missiles/aim120.mdl",
 		maxlength	= 115,
 		casing		= 0.1,			-- thickness of missile casing, cm
 		armour		= 12,			-- effective armour thickness of casing, in mm

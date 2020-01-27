@@ -33,7 +33,6 @@ ACF_defineGun("WalleyeGBU", { --id
 	modeldiameter = 21.2 * 1.4, -- in cm
 	round = {
 		model		= "models/bombs/gbu/agm62.mdl",
-		rackmdl		= "models/bombs/gbu/agm62.mdl",
 		maxlength	= 80,			-- real length is 3.45m, filler should be about 374kg
 		casing		= 0.1,	        -- thickness of missile casing, cm
 		armour		= 25,			-- effective armour thickness of casing, in mm

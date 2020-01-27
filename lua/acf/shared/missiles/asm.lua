@@ -34,7 +34,6 @@ ACF_defineGun("AT-3 ASM", { --id
 	rofmod = 0.6,
 	round = {
 		model		= "models/missiles/at3.mdl",
-		rackmdl		= "models/missiles/at3.mdl",
 		maxlength	= 35,
 		casing		= 0.1,				-- thickness of missile casing, cm
 		armour		= 5,				-- effective armour thickness of casing, in mm
@@ -75,7 +74,6 @@ ACF_defineGun("BGM-71E ASM", { --id
 	rofmod = 0.8,
 	round = {
 		model		= "models/missiles/bgm_71e.mdl",
-		rackmdl		= "models/missiles/bgm_71e.mdl",
 		maxlength	= 35,
 		casing		= 0.1,				-- thickness of missile casing, cm
 		armour		= 6,				-- effective armour thickness of casing, in mm
@@ -119,7 +117,6 @@ ACF_defineGun("AGM-114 ASM", { --id
 	rofmod = 1,
 	round = {
 		model		= "models/missiles/agm_114.mdl",
-		rackmdl		= "models/missiles/agm_114.mdl",
 		maxlength	= 46,
 		casing		= 0.2,			-- thickness of missile casing, cm
 		armour		= 5,			-- effective armour thickness of casing, in mm
@@ -162,7 +159,6 @@ ACF_defineGun("Ataka ASM", { --id
 	rofmod = 0.8,
 	round = {
 		model		= "models/missiles/9m120.mdl",
-		rackmdl		= "models/missiles/9m120.mdl",
 		maxlength	= 60,
 		casing		= 0.12,			-- thickness of missile casing, cm
 		armour		= 5,			-- effective armour thickness of casing, in mm
@@ -249,7 +245,6 @@ ACF_defineGun("AT-2 ASM", { --id
 	rofmod = 0.9,
 	round = {
 		model		= "models/missiles/at2.mdl",
-		rackmdl		= "models/missiles/at2.mdl",
 		maxlength	= 55,
 		casing		= 0.1,				-- thickness of missile casing, cm
 		armour		= 5,				-- effective armour thickness of casing, in mm
@@ -273,9 +268,9 @@ ACF_defineGun("AT-2 ASM", { --id
 	armdelay    = 1     -- minimum fuse arming delay
 } )
 
------------------
---AntiSAM rockets
------------------
+-----------------------------
+-- Anti-radiation Missiles --
+-----------------------------
 
 -- The AGM-45 shrike, a vietnam war-era antiradiation missile built off the AIM-7 airframe.
 ACF_defineGun("AGM-45 ASM", { --id
@@ -292,7 +287,6 @@ ACF_defineGun("AGM-45 ASM", { --id
 	rofmod = 0.6,
 	round = {
 		model		= "models/missiles/aim120.mdl",
-		rackmdl		= "models/missiles/aim120.mdl",
 		maxlength	= 120,
 		casing		= 0.15,			-- thickness of missile casing, cm
 		armour		= 10,			-- effective armour thickness of casing, in mm
@@ -334,7 +328,6 @@ ACF_defineGun("AGM-122 ASM", { --id
 	year = 1986,
 	round = {
 		model		= "models/missiles/aim9.mdl",
-		rackmdl		= "models/missiles/aim9.mdl",
 		maxlength	= 70,
 		casing		= 0.1,	        -- thickness of missile casing, cm
 		armour		= 8,			-- effective armour thickness of casing, in mm
@@ -376,7 +369,6 @@ ACF_defineGun("AGM-119 ASM", { --id
 	year = 1972,
 	round = {
 		model		= "models/props/missiles/agm119_s.mdl",
-		rackmdl		= "models/props/missiles/agm119_s.mdl",
 		maxlength	= 50,
 		casing		= 0.3,			-- thickness of missile casing, cm
 		armour		= 25,			-- effective armour thickness of casing, in mm

@@ -72,7 +72,6 @@ ACF_defineGun("50kgBOMB", { --id
 	modeldiameter = 2.4 * 2.7, -- in cm
 	round = {
 		model		= "models/bombs/fab50.mdl",
-		rackmdl		= "models/bombs/fab50.mdl",
 		maxlength	= 50,
 		casing		= 0.5,	        -- thickness of missile casing, cm
 		armour		= 25,			-- effective armour thickness of casing, in mm
@@ -113,7 +112,6 @@ ACF_defineGun("100kgBOMB", { --id
 	modeldiameter = 21.2 * 1.4, -- in cm
 	round = {
 		model		= "models/bombs/fab100.mdl",
-		rackmdl		= "models/bombs/fab100.mdl",
 		maxlength	= 100,
 		casing		= 0.7,	        -- thickness of missile casing, cm
 		armour		= 25,			-- effective armour thickness of casing, in mm
@@ -153,7 +151,6 @@ ACF_defineGun("250kgBOMB", { --id
 	modeldiameter = 16.3 * 1.9, -- in cm
 	round = {
 		model		= "models/bombs/fab250.mdl",
-		rackmdl		= "models/bombs/fab250.mdl",
 		maxlength	= 250, --was 115, wtf!
 		casing		= 1.5,	        -- thickness of missile casing, cm
 		armour		= 25,			-- effective armour thickness of casing, in mm
@@ -194,7 +191,6 @@ ACF_defineGun("500kgBOMB", { --id
 	modeldiameter = 16.3 * 1.9, -- in cm
 	round = {
 		model		= "models/bombs/fab500.mdl",
-		rackmdl		= "models/bombs/fab500.mdl",
 		maxlength	= 200,
 		casing		= 1.5,	        -- thickness of missile casing, cm
 		armour		= 25,			-- effective armour thickness of casing, in mm
@@ -234,7 +230,6 @@ ACF_defineGun("1000kgBOMB", { --id
 	modeldiameter = 16.3 * 4.5, -- in cm
 	round = {
 		model		= "models/bombs/an_m66.mdl",
-		rackmdl		= "models/bombs/an_m66.mdl",
 		maxlength	= 375,
 		casing		= 2.0,	        -- thickness of missile casing, cm
 		armour		= 25,			-- effective armour thickness of casing, in mm
@@ -274,7 +269,6 @@ ACF_defineGun("100kgGBOMB", { --id
 	modeldiameter = 21.2 * 1.4, -- in cm
 	round = {
 		model		= "models/missiles/micro.mdl",
-		rackmdl		= "models/missiles/micro.mdl",
 		maxlength	= 100,
 		casing		= 0.7,	        -- thickness of missile casing, cm
 		armour		= 25,			-- effective armour thickness of casing, in mm
@@ -309,7 +303,6 @@ ACF_defineGun("250kgGBOMB", { --id
 	modeldiameter = 16.3 * 1.9, -- in cm
 	round = {
 		model		= "models/missiles/fab250.mdl",
-		rackmdl		= "models/missiles/fab250.mdl",
 		maxlength	= 250,
 		casing		= 1.5,	        -- thickness of missile casing, cm
 		armour		= 25,			-- effective armour thickness of casing, in mm
