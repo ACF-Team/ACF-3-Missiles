@@ -1,5 +1,6 @@
 
 AddCSLuaFile("shared.lua")
+AddCSLuaFile("cl_init.lua")
 
 include("shared.lua")
 
@@ -36,14 +37,12 @@ ACF.RegisterLinkSource("acf_opticalcomputer", "Weapons")
 -- Local Funcs and Vars
 --===============================================================================================--
 
-local ActiveLasers = ACF.ActiveLasers
+local Lasers = ACF.ActiveLasers
 local CheckLegal = ACF_CheckLegal
 local ClassLink = ACF.GetClassLink
 local ClassUnlink = ACF.GetClassUnlink
 local UnlinkSound = "physics/metal/metal_box_impact_bullet%s.wav"
 local MaxDistance = ACF.RefillDistance * ACF.RefillDistance
-local TraceLine = util.TraceLine
-local TraceData = { start = true, endpos = true, filter = true }
 local ZeroHitPos = { 0, 0, 0 }
 
 local function ResetOutputs(Entity)
@@ -70,7 +69,7 @@ local function UpdateOutputs(Entity)
 
 		Entity.Distance = Distance
 
-		ActiveLasers[Entity] = HitPos
+		Lasers[Entity] = HitPos
 
 		WireLib.TriggerOutput(Entity, "Distance", Distance)
 	end
@@ -107,7 +106,7 @@ local Inputs = {
 			ResetOutputs(Entity)
 		end
 
-		Entity:TriggerInput("Lase", Entity.LaserOn)
+		Entity:TriggerInput("Lase", Entity.LaserOn and Bool)
 	end,
 	Lase = function(Entity, Bool)
 		if Entity.Lasing == Bool then return end
@@ -116,8 +115,13 @@ local Inputs = {
 		Entity.LaserOn = Bool
 		Entity.Lasing = Entity.Active and Bool
 
-		if not Entity.Lasing then
-			ActiveLasers[Entity] = nil
+		if not Entity.Lasing and Lasers[Entity] then
+			Lasers[Entity] = nil
+		end
+
+		-- Wire Cam Controller FLIR compatibility
+		if FLIR then
+			Entity:SetNW2Bool("Lasing", Entity.Lasing)
 		end
 
 		WireLib.TriggerOutput(Entity, "Lasing", Entity.Lasing and 1 or 0)
@@ -146,7 +150,6 @@ function ENT:Initialize()
 	self.MaxTime	= 20
 	self.Cooldown	= 10
 	self.Spread		= 0
-	self.Filter		= { self }
 	self.Weapons	= {}
 
 	self.Inputs		= WireLib.CreateInputs(self, { "Active", "Lase" })
@@ -306,14 +309,6 @@ function ENT:UpdateOverlay()
 	end)
 end
 
-function ENT:GetTrace()
-	TraceData.start = self:LocalToWorld(Vector())
-	TraceData.endpos = self:LocalToWorld(Vector(50000))
-	TraceData.filter = self.Filter
-
-	return TraceLine(TraceData)
-end
-
 function ENT:TriggerInput(Input, Value)
 	if self.Disabled then return end
 
@@ -395,8 +390,8 @@ function ENT:OnRemove()
 		self:Unlink(Weapon)
 	end
 
-	if ActiveLasers[self] then
-		ActiveLasers[self] = nil
+	if Lasers[self] then
+		Lasers[self] = nil
 	end
 
 	WireLib.Remove(self)
