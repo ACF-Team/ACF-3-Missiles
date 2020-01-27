@@ -37,6 +37,7 @@ ACF.RegisterLinkSource("acf_opticalcomputer", "Weapons")
 -- Local Funcs and Vars
 --===============================================================================================--
 
+local Initialize = ENT.Initialize
 local Lasers = ACF.ActiveLasers
 local CheckLegal = ACF_CheckLegal
 local ClassLink = ACF.GetClassLink
@@ -133,6 +134,8 @@ local Inputs = {
 --===============================================================================================--
 
 function ENT:Initialize()
+	Initialize(self)
+
 	self:SetModel("models/props_lab/monitor01b.mdl")
 
 	self:PhysicsInit(SOLID_VPHYSICS)
