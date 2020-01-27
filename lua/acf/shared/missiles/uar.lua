@@ -49,6 +49,20 @@ ACF_defineGun("RS82 ASR", { --id
 
 	racks       = {["1xRK_small"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
+	bodygroups	= {
+		warhead = {
+			DataSource = function(Entity)
+				return Entity.BulletData and Entity.BulletData.Type
+			end,
+			HE = {
+				OnRack = "HE.smd",
+			},
+			HEAT = {
+				OnRack = "HEAT.smd",
+			}
+		}
+	},
+
 	armdelay    = 0.3     -- minimum fuse arming delay
 } )
 

@@ -5,19 +5,13 @@ function ACF_GetGunValue(BulletData, Value)
 	local Class = ACF.Weapons.Guns[BulletData]
 
 	if Class then
-		local Result = Class.RoundData and Class.RoundData[Value] or Class[Value]
+		local Result = Class.round and Class.round[Value] or Class[Value]
 
-		if Result then
-			return Result
-		end
+		if Result ~= nil then return Result end
 
-		local GunClasses = ACF.Classes.GunClass
+		local GunClass = ACF.Classes.GunClass[Class.gunclass]
 
-		Class = GunClasses[Class.gunclass]
-
-		if Class then
-			return Class[Value]
-		end
+		return GunClass and GunClass[Value]
 	end
 end
 

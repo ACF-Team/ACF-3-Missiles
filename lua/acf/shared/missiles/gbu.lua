@@ -69,7 +69,7 @@ ACF_defineGun("227kgGBU", { --id
 	year = 1976,
 	modeldiameter = 16.3 * 1.9, -- in cm
 	round = {
-		model		= "models/bombs/gbu/gbu12.mdl",
+		model		= "models/bombs/gbu/gbu12_fold.mdl",
 		rackmdl		= "models/bombs/gbu/gbu12.mdl",
 		maxlength	= 250,
 		casing		= 1.5,	        -- thickness of missile casing, cm
@@ -94,6 +94,22 @@ ACF_defineGun("227kgGBU", { --id
 	seekcone    = 60,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
 	viewcone    = 80,   -- getting outside this cone will break the lock.  Divided by 2. 
 
+	bodygroups	= {
+		guidance = {
+			DataSource = function(Entity)
+				return Entity.Guidance and Entity.Guidance.Name
+			end,
+			Laser = {
+				OnRack = "laser.smd",
+				OnLaunch = "laser_f.smd",
+			},
+			["GPS Guided"] = {
+				OnRack = "laser.smd",
+				OnLaunch = "laser_f.smd",
+			}
+		}
+	},
+
 	agility     = 1,     -- multiplier for missile turn-rate.
 	armdelay    = 1     -- minimum fuse arming delay
 } )
@@ -110,7 +126,7 @@ ACF_defineGun("454kgGBU", { --id
 	year = 1976,
 	modeldiameter = 16.3 * 1.9, -- in cm
 	round = {
-		model		= "models/bombs/gbu/gbu16.mdl",
+		model		= "models/bombs/gbu/gbu16_fold.mdl",
 		rackmdl		= "models/bombs/gbu/gbu16.mdl",
 		maxlength	= 500,
 		casing		= 2.0,	        -- thickness of missile casing, cm
@@ -132,7 +148,23 @@ ACF_defineGun("454kgGBU", { --id
 	racks       = {["1xRK"] = true,  ["2xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
 	seekcone    = 60,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
-	viewcone    = 80,   -- getting outside this cone will break the lock.  Divided by 2. 
+	viewcone    = 80,   -- getting outside this cone will break the lock.  Divided by 2.
+
+	bodygroups	= {
+		guidance = {
+			DataSource = function(Entity)
+				return Entity.Guidance and Entity.Guidance.Name
+			end,
+			Laser = {
+				OnRack = "laser.smd",
+				OnLaunch = "laser_f.smd",
+			},
+			["GPS Guided"] = {
+				OnRack = "laser.smd",
+				OnLaunch = "laser_f.smd",
+			}
+		}
+	},
 
 	agility     = 1,     -- multiplier for missile turn-rate.
 	armdelay    = 1     -- minimum fuse arming delay
@@ -173,6 +205,22 @@ ACF_defineGun("909kgGBU", { --id
 
 	seekcone    = 60,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
 	viewcone    = 80,   -- getting outside this cone will break the lock.  Divided by 2. 
+
+	bodygroups	= {
+		guidance = {
+			DataSource = function(Entity)
+				return Entity.Guidance and Entity.Guidance.Name
+			end,
+			Laser = {
+				OnRack = "laser.smd",
+				OnLaunch = "laser_f.smd",
+			},
+			["GPS Guided"] = {
+				OnRack = "laser.smd",
+				OnLaunch = "laser_f.smd",
+			}
+		}
+	},
 
 	agility     = 1,     -- multiplier for missile turn-rate.
 	armdelay    = 3     -- minimum fuse arming delay

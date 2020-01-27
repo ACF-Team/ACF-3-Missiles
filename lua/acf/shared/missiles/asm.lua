@@ -140,6 +140,20 @@ ACF_defineGun("AGM-114 ASM", { --id
 	viewcone    = 40,   -- getting outside this cone will break the lock.  Divided by 2.
 	seekcone	= 10,
 
+	bodygroups	= {
+		guidance = {
+			DataSource = function(Entity)
+				return Entity.Guidance and Entity.Guidance.Name
+			end,
+			Laser = {
+				OnRack = "laser.smd",
+			},
+			["Active Radar"] = {
+				OnRack = "radar.smd",
+			}
+		}
+	},
+
 	agility     = 0.09,		-- multiplier for missile turn-rate.
 	armdelay    = 0.5     -- minimum fuse arming delay
 } )

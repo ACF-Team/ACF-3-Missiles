@@ -209,17 +209,17 @@ local function AddMissile(Rack, Crate)
 	Missile.DisableDamage = Rack.ProtectMissile
 	Missile.Attachment = Attach
 
+	Missile.Bodygroups = ACF_GetGunValue(BulletData.Id, "bodygroups")
+	Missile.RackModel = Rack.MissileModel or ACF_GetGunValue(BulletData.Id, "rackmdl")
+	Missile.RealModel = ACF_GetGunValue(BulletData.Id, "model")
+	Missile.RackModelApplied = Missile.RackModel and true
+
+	Missile:SetModelEasy(Missile.RackModel or Missile.RealModel)
 	Missile:SetBulletData(BulletData)
 
-	local RackModel = ACF_GetRackValue(Rack.Id, "rackmdl") or ACF_GetGunValue(BulletData.Id, "rackmdl")
 	local Pos, Angles = GetMissileAngPos(Rack, Missile, Attach)
 
 	Missile.AttachPos = Pos
-
-	if RackModel then
-		Missile:SetModelEasy(RackModel)
-		Missile.RackModelApplied = true
-	end
 
 	Missile:Spawn()
 	Missile:SetParent(Rack)
@@ -332,6 +332,7 @@ function MakeACF_Rack(Owner, Pos, Angle, Id, MissileId)
 	Rack.HideMissile		= GunData.hidemissile
 	Rack.ProtectMissile		= GunData.protectmissile
 	Rack.CustomArmour		= GunData.armour or GunClass.armour
+	Rack.MissileModel		= GunData.rackmdl
 
 	Rack.ReloadMultiplier   = ACF_GetRackValue(Id, "reloadmul")
 	Rack.WhitelistOnly      = ACF_GetRackValue(Id, "whitelistonly")
@@ -633,7 +634,7 @@ function ENT:FireMissile()
 			end
 
 			if Missile.RackModelApplied then
-				Missile:SetModelEasy(ACF_GetGunValue(BulletData.Id, "model"))
+				Missile:SetModelEasy(Missile.RealModel)
 				Missile.RackModelApplied = nil
 			end
 
