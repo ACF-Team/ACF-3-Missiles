@@ -71,13 +71,10 @@ local function ModifyCrateTextFuncs()
 				end
 
 				local Crate = Entity(BulletData.Crate)
+				local Guidance = IsValid(Crate) and Crate.RoundData7 or BulletData.Data7
+				local Fuse = IsValid(Crate) and Crate.RoundData8 or BulletData.Data8
 				local Display = "\n\n%s %s\n%s"
-				local Guidance, Fuse, Text
-
-				if IsValid(Crate) then
-					Guidance = Crate.RoundData7 or BulletData.Data7
-					Fuse = Crate.RoundData8 or BulletData.Data8
-				end
+				local Text
 
 				if Guidance then
 					Guidance = ACFM_CreateConfigurable(Guidance, ACF.Guidance, nil, "Guidance")
