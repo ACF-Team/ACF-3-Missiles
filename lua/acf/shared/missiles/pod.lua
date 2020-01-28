@@ -135,7 +135,7 @@ ACF_DefineRack("4x BGM-71E", {
 ACF_DefineRack("380mmRW61", {
 	name = "1x 380mm Pod",
 	desc = "A lightweight pod for rocket-asisted mortars which is vulnerable to shots and explosions.",
-	model = "models/launcher/RW61.mdl",
+	model = "models/launcher/rw61.mdl",
 	gunclass = "POD",
 	weight = 600,
 	year = 1945,

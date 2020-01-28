@@ -688,6 +688,8 @@ function ENT:UpdateAmmoCount(Attachment, Missile)
 	self.Missiles[Attachment] = Missile
 	self.AmmoCount = self.AmmoCount + (Missile and 1 or -1)
 
+	self:UpdateOverlay()
+
 	WireLib.TriggerOutput(self, "Shots Left", self.AmmoCount)
 end
 
