@@ -52,7 +52,7 @@ ACF_defineGun("Type 63 RA", { --id
 	agility		= 0.08,
 
 
-	armdelay    = 2     -- minimum fuse arming delay
+	armdelay    = 0.2     -- minimum fuse arming delay
 } )
 
 ACF_defineGun("SAKR-10 RA", { --id
@@ -93,7 +93,7 @@ ACF_defineGun("SAKR-10 RA", { --id
 	agility		= 0.07,
 	viewcone	= 180,
 
-	armdelay    = 3     -- minimum fuse arming delay
+	armdelay    = 0.4     -- minimum fuse arming delay
 } )
 
 ACF_defineGun("SS-40 RA", { --id
@@ -126,7 +126,7 @@ ACF_defineGun("SS-40 RA", { --id
 	},
 
 	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
-	guidance    = { "Dumb" },
+	guidance    = { "Dumb", "GPS Guided" },
 	fuses       = { "Contact", "Timed", "Optical", "Cluster" },
 
 	racks       = {["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true, ["6xUARRK"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
@@ -134,5 +134,5 @@ ACF_defineGun("SS-40 RA", { --id
 	agility		= 0.03,
 	viewcone	= 180,
 
-	armdelay    = 4     -- minimum fuse arming delay
+	armdelay    = 0.6     -- minimum fuse arming delay
 } )
