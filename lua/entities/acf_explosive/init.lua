@@ -288,13 +288,13 @@ function ENT:ClusterNew(bdata)
 
 	self.BulletData["Crate"] = self.FakeCrate:EntIndex()
 
-	local Radius = self.BulletData.FillerMass ^ 0.33 * 8 * 39.37 * 2 --Explosion effect radius.
-	local Flash = EffectData()
-	Flash:SetOrigin( self:GetPos() )
-	Flash:SetNormal( self:GetForward() )
-	Flash:SetRadius( math.max( Radius, 1 ) )
+	local Effect = EffectData()
+	Effect:SetOrigin(self:GetPos())
+	Effect:SetNormal(self:GetForward())
+	Effect:SetScale(math.max(self.BulletData.FillerMass ^ 0.33 * 8 * 39.37 * 2, 1))
+	Effect:SetRadius(self.BulletData.Caliber)
 
-	util.Effect( "ACF_Scaled_Explosion", Flash )
+	util.Effect("ACF_Explosion", Effect)
 
 	for I = 1,Bomblets do
 		timer.Simple(0.01 * I,function()
