@@ -37,11 +37,12 @@ ACF.RegisterLinkSource("acf_opticalcomputer", "Weapons")
 -- Local Funcs and Vars
 --===============================================================================================--
 
-local Initialize = ENT.Initialize
-local Lasers = ACF.ActiveLasers
+local TraceLine = util.TraceLine
+local TraceData = { start = true, endpos = true, filter = true }
 local CheckLegal = ACF_CheckLegal
 local ClassLink = ACF.GetClassLink
 local ClassUnlink = ACF.GetClassUnlink
+local SetupLaser = ACF.SetupLaserSource
 local UnlinkSound = "physics/metal/metal_box_impact_bullet%s.wav"
 local MaxDistance = ACF.RefillDistance * ACF.RefillDistance
 local ZeroHitPos = { 0, 0, 0 }
@@ -59,20 +60,18 @@ end
 
 local function UpdateOutputs(Entity)
 	local Trace = Entity:GetTrace()
-	local HitPos = Trace.HitPos + VectorRand(-Entity.Spread, Entity.Spread)
+	local Spread = VectorRand(-Entity.Spread, Entity.Spread)
+	local HitPos = Trace.HitPos + Spread
 
 	Entity.HitPos = HitPos
+	Entity.LaserSpread = Spread
 
-	WireLib.TriggerOutput(Entity, "HitPos", { HitPos[1], HitPos[2], HitPos[3] })
+	WireLib.TriggerOutput(Entity, "HitPos", { HitPos.x, HitPos.y, HitPos.z })
 
 	if Entity.Lasing then
-		local Distance = Trace.StartPos:Distance(HitPos)
+		Entity.Distance = Trace.Fraction * 50000
 
-		Entity.Distance = Distance
-
-		Lasers[Entity] = HitPos
-
-		WireLib.TriggerOutput(Entity, "Distance", Distance)
+		WireLib.TriggerOutput(Entity, "Distance", Entity.Distance)
 	end
 
 	Entity:UpdateOverlay()
@@ -116,14 +115,7 @@ local Inputs = {
 		Entity.LaserOn = Bool
 		Entity.Lasing = Entity.Active and Bool
 
-		if not Entity.Lasing and Lasers[Entity] then
-			Lasers[Entity] = nil
-		end
-
-		-- Wire Cam Controller FLIR compatibility
-		if FLIR then
-			Entity:SetNW2Bool("Lasing", Entity.Lasing)
-		end
+		Entity:SetNW2Bool("Lasing", Entity.Lasing)
 
 		WireLib.TriggerOutput(Entity, "Lasing", Entity.Lasing and 1 or 0)
 	end
@@ -134,8 +126,6 @@ local Inputs = {
 --===============================================================================================--
 
 function ENT:Initialize()
-	Initialize(self)
-
 	self:SetModel("models/props_lab/monitor01b.mdl")
 
 	self:PhysicsInit(SOLID_VPHYSICS)
@@ -154,9 +144,12 @@ function ENT:Initialize()
 	self.Cooldown	= 10
 	self.Spread		= 0
 	self.Weapons	= {}
+	self.Filter		= { self }
 
 	self.Inputs		= WireLib.CreateInputs(self, { "Active", "Lase" })
 	self.Outputs	= WireLib.CreateOutputs(self, { "Lasing", "LaseTime", "Distance", "HitPos [VECTOR]", "Entity [ENTITY]" })
+
+	SetupLaser(self, "Lasing", nil, nil, "LaserSpread", self.Filter)
 
 	if CPPI then
 		timer.Simple(0, function()
@@ -322,6 +315,14 @@ function ENT:TriggerInput(Input, Value)
 	end
 end
 
+function ENT:GetTrace()
+	TraceData.start = self:LocalToWorld(Vector())
+	TraceData.endpos = self:LocalToWorld(Vector(50000))
+	TraceData.filter = self.Filter
+
+	return TraceLine(TraceData)
+end
+
 function ENT:Think()
 	if self.Lasing or self.LaseTime > 0 then
 		self.LaseTime = math.max(self.LaseTime + (self.Lasing and 0.15 or -0.15), 0)
@@ -391,10 +392,6 @@ end
 function ENT:OnRemove()
 	for Weapon in pairs(self.Weapons) do
 		self:Unlink(Weapon)
-	end
-
-	if Lasers[self] then
-		Lasers[self] = nil
 	end
 
 	WireLib.Remove(self)
