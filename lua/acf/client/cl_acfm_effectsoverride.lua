@@ -4,50 +4,48 @@
 
 local Overrides =
 {
-	FLR = function(self, Bullet)
-		local setPos = Bullet.SimPos
+	FLR = function(Effect, Bullet)
+		local Position = Bullet.SimPos
 
-		if math.abs(setPos.x) > 16000 or math.abs(setPos.y) > 16000 or setPos.z < -16000 then
-			self:Remove()
+		if math.abs(Position.x) > 16000 or math.abs(Position.y) > 16000 or Position.z < -16000 then
+			Effect.Kill = true
 
 			return
 		end
 
-		if setPos.z < 16000 then
-			self:SetPos(setPos) --Moving the effect to the calculated position
-			self:SetAngles(Bullet.SimFlight:Angle())
+		if Position.z < 16000 then
+			Effect:SetPos(Position) --Moving the effect to the calculated position
+			Effect:SetAngles(Bullet.SimFlight:Angle())
 		end
 
-		if Bullet.Tracer then
+		if IsValid(Bullet.Tracer) then
 			Bullet.Tracer:Finish()
-			Bullet.Tracer = nil
 		end
 
-		local curtime = CurTime()
-		local cutoutTime = curtime - 1
+		local Time = CurTime()
+		local CutoutTime = Time - 1
 
-		if not self.FlareCutout then
-			local frArea = 3.1416 * (Bullet.Caliber * 0.5) * (Bullet.Caliber * 0.5)
-			local burnRate = frArea * ACFM.FlareBurnMultiplier
-			local burnDuration = Bullet.FillerMass / burnRate
+		if not Effect.FlareCutout then
+			local FlareArea = 3.1416 * (Bullet.Caliber * 0.5) * (Bullet.Caliber * 0.5)
+			local BurnRate = FlareArea * ACFM.FlareBurnMultiplier
+			local Duration = Bullet.FillerMass / BurnRate
+			local Jitter = util.SharedRandom("FlareJitter", 0, 0.4, Effect.CreateTime * 10000)
 
-			local jitter = util.SharedRandom( "FlareJitter", 0, 0.4, self.CreateTime * 10000 )
+			CutoutTime = Effect.CreateTime + Duration + Jitter
 
-			cutoutTime = self.CreateTime + burnDuration + jitter
-
-			if self.FlareEffect then
-				ACFM_RenderLight(self.Index, 1024, nil, setPos)
+			if Effect.FlareEffect then
+				ACFM_RenderLight(Effect.Index, 1024, nil, Position)
 			end
 		end
 
-		if not self.FlareEffect and curtime < cutoutTime then
-			if not self.FlareCutout then
-				ParticleEffectAttach( "acfm_flare", PATTACH_ABSORIGIN_FOLLOW, self, 0 )
-				self.FlareEffect = true
+		if not Effect.FlareEffect and Time < CutoutTime then
+			if not Effect.FlareCutout then
+				ParticleEffectAttach( "acfm_flare", PATTACH_ABSORIGIN_FOLLOW, Effect, 0 )
+				Effect.FlareEffect = true
 			end
-		elseif not self.FlareCutout and curtime >= cutoutTime then
-			self:StopParticles()
-			self.FlareCutout = true
+		elseif not Effect.FlareCutout and Time >= CutoutTime then
+			Effect:StopParticles()
+			Effect.FlareCutout = true
 		end
 	end
 }

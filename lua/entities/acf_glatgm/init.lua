@@ -113,44 +113,46 @@ function ENT:Detonate()
 	if IsValid(self) and not self.Detonated then
 		self.Detonated = true
 
-		local Flash = EffectData()
-		Flash:SetOrigin( self:GetPos() )
-		Flash:SetNormal( self:GetForward() )
-		Flash:SetRadius( self.BulletData.FillerMass ^ 0.33 * 8 * 39.37 / 5 )
-
-		util.Effect( "ACF_Scaled_Explosion", Flash )
-
-		btdat = table.Copy(self.BulletData)
-		btdat["Type"]		= "HEAT"
-		btdat["Filter"]	= {self}
-		btdat["FlightTime"]		= 0
-		btdat["Gun"]		= self
-		btdat["LimitVel"]	= 100
-		btdat["Flight"] = self:GetForward():GetNormalized() * self.velocity -- initial vel from glatgm
-		btdat.FuseLength = 0
-		btdat.Pos = self:GetPos()
+		BulletData = table.Copy(self.BulletData)
+		BulletData.Type			= "HEAT"
+		BulletData.Filter		= { self }
+		BulletData.FlightTime	= 0
+		BulletData.Gun			= self
+		BulletData.LimitVel		= 100
+		BulletData.Flight		= self:GetForward():GetNormalized() * self.velocity -- initial vel from glatgm
+		BulletData.FuseLength	= 0
+		BulletData.Pos			= self:GetPos()
 
 		-- manual detonation
-		btdat.Detonated = true
-		btdat.InitTime = CurTime()
-		btdat.Flight = btdat.Flight + btdat.Flight:GetNormalized() * btdat.SlugMV * 39.37
-		btdat.FuseLength = 0.005 + 40 / ((btdat.Flight + btdat.Flight:GetNormalized() * btdat.SlugMV * 39.37):Length() * 0.0254)
-		btdat.DragCoef = btdat.SlugDragCoef
-		btdat.ProjMass = btdat.SlugMass
-		btdat.Caliber = btdat.SlugCaliber
-		btdat.PenArea = btdat.SlugPenArea
-		btdat.Ricochet = btdat.SlugRicochet
+		BulletData.Detonated	= true
+		BulletData.InitTime		= CurTime()
+		BulletData.Flight		= BulletData.Flight + BulletData.Flight:GetNormalized() * BulletData.SlugMV * 39.37
+		BulletData.FuseLength	= 0.005 + 40 / ((BulletData.Flight + BulletData.Flight:GetNormalized() * BulletData.SlugMV * 39.37):Length() * 0.0254)
+		BulletData.DragCoef		= BulletData.SlugDragCoef
+		BulletData.ProjMass		= BulletData.SlugMass
+		BulletData.Caliber		= BulletData.SlugCaliber
+		BulletData.PenArea		= BulletData.SlugPenArea
+		BulletData.Ricochet		= BulletData.SlugRicochet
 
 		self.FakeCrate = ents.Create("acf_fakecrate2")
-		self.FakeCrate:RegisterTo(btdat)
+		self.FakeCrate:RegisterTo(BulletData)
 		self:DeleteOnRemove(self.FakeCrate)
-		btdat["Crate"] = self.FakeCrate:EntIndex()
 
-		self.CreateShell = ACF.RoundTypes[btdat.Type].create
-		self:CreateShell( btdat )
+		BulletData.Crate = self.FakeCrate:EntIndex()
+
+		ACF.RoundTypes[BulletData.Type].create(self, BulletData)
+
+		local _, _, BoomFillerMass = ACF.RoundTypes.HEAT.CrushCalc(self.velocity * 0.0254, self.BulletData.FillerMass)
+		local Effect = EffectData()
+		Effect:SetOrigin(self:GetPos())
+		Effect:SetNormal(self:GetForward())
+		Effect:SetScale(math.max(BoomFillerMass ^ 0.33 * 8 * 39.37, 1))
+		Effect:SetRadius(self.BulletData.Caliber)
+
+		util.Effect("ACF_Explosion", Effect)
+
+		ACF_HE(BulletData.Pos, BulletData.BoomFillerMass , BulletData.CasingMass , BulletData.Owner, BulletData.Filter, BulletData.Gun)
 
 		self:Remove()
-
-		ACF_HE( btdat.Pos, btdat.BoomFillerMass , btdat.CasingMass , btdat.Owner )
 	end
 end

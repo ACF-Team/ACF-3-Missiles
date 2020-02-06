@@ -14,7 +14,6 @@
 
 ACF.ActiveMissiles = ACF.ActiveMissiles or {}
 ACF.ActiveRadars = ACF.ActiveRadars or {}
-ACF.ActiveLasers = ACF.ActiveLasers or {}
 
 ACF.MaxDamageInaccuracy = 250
 
