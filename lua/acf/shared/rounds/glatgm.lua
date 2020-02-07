@@ -323,11 +323,6 @@ function Round.guiupdate(Panel)
 	RunConsoleCommand("acfmenu_data6", Data.ConeAng)
 	RunConsoleCommand("acfmenu_data10", Data.Tracer)
 
-	local Volume = ACF.Weapons.Ammo[acfmenupanel.AmmoData["Id"]].volume
-	local Cap, CapMul, RoFMul = ACF_CalcCrateStats(  Volume, Data.RoundVolume )
-
-	acfmenupanel:CPanelText("BonusDisplay", "Crate info: +" .. math.Round((CapMul - 1) * 100, 1) .. "% capacity, +" .. math.Round((RoFMul - 1) * -100, 1) .. "% RoF\nContains " .. Cap .. " rounds")
-
 	acfmenupanel:AmmoSlider("PropLength", Data.PropLength, Data.MinPropLength, Data.MaxTotalLength, 3, "Propellant Length", "Propellant Mass : " .. math.floor(Data.PropMass * 1000) .. " g")	--Propellant Length Slider (Name, Min, Max, Decimals, Title, Desc)
 	acfmenupanel:AmmoSlider("ProjLength", Data.ProjLength, Data.MinProjLength, Data.MaxTotalLength, 3, "Projectile Length", "Projectile Mass : " .. math.floor(Data.ProjMass * 1000) .. " g")	--Projectile Length Slider (Name, Min, Max, Decimals, Title, Desc)
 	acfmenupanel:AmmoSlider("ConeAng", Data.ConeAng, Data.MinConeAng, Data.MaxConeAng, 0, "Crush Cone Angle", "")	--HE Filler Slider (Name, Min, Max, Decimals, Title, Desc)
