@@ -503,7 +503,7 @@ function ENT:ACF_OnDamage(Entity, Energy, FrArea, Angle, Inflictor)
 		}
 	end
 
-	local HitRes = ACF_PropDamage(Entity, Energy, FrArea, Angle, Inflictor) --Calling the standard damage prop function
+	local HitRes = ACF.PropDamage(Entity, Energy, FrArea, Angle, Inflictor) --Calling the standard damage prop function
 
 	-- If the rack gets destroyed, we just blow up all the missiles it carries
 	if HitRes.Kill then

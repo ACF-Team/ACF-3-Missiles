@@ -224,7 +224,7 @@ function ENT:ACF_Activate(Recalc)
 end
 
 function ENT:ACF_OnDamage(Entity, Energy, FrArea, Angle, Inflictor)
-	local HitRes = ACF_PropDamage(Entity, Energy, FrArea, Angle, Inflictor)
+	local HitRes = ACF.PropDamage(Entity, Energy, FrArea, Angle, Inflictor)
 
 	self.Spread = ACF.MaxDamageInaccuracy * (1 - math.Round(self.ACF.Health / self.ACF.MaxHealth, 2))
 

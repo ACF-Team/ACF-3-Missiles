@@ -21,7 +21,7 @@ local nullhit = {Damage = 0, Overkill = 1, Loss = 0, Kill = false}
 function ENT:ACF_OnDamage( Entity , Energy , FrArea , Angle , Inflictor )
 	self.ACF.Armour = 0.1
 
-	local HitRes = ACF_PropDamage( Entity , Energy , FrArea , Angle , Inflictor )	--Calling the standard damage prop function
+	local HitRes = ACF.PropDamage( Entity , Energy , FrArea , Angle , Inflictor )	--Calling the standard damage prop function
 
 	if self.Detonated or self.DisableDamage then return table.Copy(nullhit) end
 

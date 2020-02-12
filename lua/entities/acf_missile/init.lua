@@ -522,7 +522,7 @@ function ENT:ACF_OnDamage(Entity, Energy, FrArea, Angle, Inflictor)
 		}
 	end
 
-	local HitRes = ACF_PropDamage(Entity, Energy, FrArea, Angle, Inflictor) --Calling the standard damage prop function
+	local HitRes = ACF.PropDamage(Entity, Energy, FrArea, Angle, Inflictor) --Calling the standard damage prop function
 
 	-- Detonate if the shot penetrates the casing or destroys the missile.
 	if HitRes.Kill or HitRes.Overkill > 0 then
