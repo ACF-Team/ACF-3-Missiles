@@ -7,7 +7,7 @@ ACF_defineGunClass("FFAR", {
 	desc            = "Small rockets which fit in tubes or pods.  Rapid-firing and versatile.",
 	muzzleflash     = "gl_muzzleflash_noscale",
 	rofmod          = 0.5,
-	sound           = "acf_extra/airfx/rocket_fire2.mp3",
+	sound           = "acf_missiles/missiles/missile_rocket.mp3",
 	soundDistance   = " ",
 	soundNormal     = " ",
 	effect          = "Rocket Motor",

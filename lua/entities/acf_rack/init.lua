@@ -719,7 +719,7 @@ function ENT:Think()
 			elseif self.Inputs.Reload and self.Inputs.Reload.Value ~= 0 then
 				self:Reload()
 			elseif self.ReloadTime and self.ReloadTime > 1 then
-				self:EmitSound("acf_extra/airfx/weapon_select.mp3", 500, 100)
+				self:EmitSound("acf_missiles/fx/weapon_select.mp3", 500, 100)
 				self.ReloadTime = nil
 			end
 		else
