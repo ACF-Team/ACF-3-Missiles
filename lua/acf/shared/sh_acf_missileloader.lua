@@ -159,3 +159,6 @@ end
 
 game.AddParticles("particles/flares_fx.pcf")
 PrecacheParticleSystem("ACFM_Flare")
+
+-- Adding the ACF Missiles repository to the update checker
+ACF.AddRepository("TwistedTail", "ACF-3-Missiles", "lua/acf/server/sv_acf_missiles.lua")
