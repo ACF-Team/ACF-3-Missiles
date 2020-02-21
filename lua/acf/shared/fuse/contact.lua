@@ -5,6 +5,8 @@ Fuse.desc = "This fuse triggers upon direct contact against solid surfaces."
 Fuse.Primer = 0
 
 function Fuse:OnLoaded()
+	self.Name = self.ID -- Workaround
+
 	-- Configuration information for things like acfmenu.
 	self.Configurable = {
 		{

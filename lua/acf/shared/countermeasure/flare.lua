@@ -5,6 +5,7 @@ Countermeasure.Active = false
 Countermeasure.ApplyContinuous = false -- indicate to ACFM that this should only be applied when guidance is activated or Flare is spawned - not per-frame.
 
 function Countermeasure:OnLoaded()
+	self.Name = self.ID -- Workaround
 	self.AppliesTo = {
 		Infrared = true,
 		["Active Radar"] = true,

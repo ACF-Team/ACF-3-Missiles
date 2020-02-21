@@ -3,7 +3,9 @@ local Guidance = ACF.RegisterGuidance("Dumb")
 
 Guidance.desc = "This guidance package is empty and provides no control."
 
-function Guidance:OnLoaded() end
+function Guidance:OnLoaded()
+	self.Name = self.ID -- Workaround
+end
 
 function Guidance:Configure() end
 
