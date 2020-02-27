@@ -5,7 +5,13 @@ function Ammo:OnLoaded()
 
 	self.Name = "Gun-Launched Anti-Tank Missile"
 	self.Description = "A missile fired from a gun. While slower than a traditional shell it makes up for that with guidance."
-	self.Blacklist = { "AC", "HMG", "MG", "RAC", "SA", "SAM", "AAM", "ASM", "BOMB", "FFAR", "UAR", "GBU", "GL", "SL", "FGL" }
+	self.Blacklist = ACF.GetWeaponBlacklist({
+		HW = true,
+		SC = true,
+		C = true,
+		AL = true,
+		MO = true,
+	})
 end
 
 function Ammo.Create(Gun, BulletData)

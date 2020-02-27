@@ -6,7 +6,11 @@ function Ammo:OnLoaded()
 
 	self.Name = "Flare"
 	self.Description = "A flare designed to confuse guided munitions."
-	self.Blacklist = { "AC", "AL", "C", "HMG", "HW", "MG", "MO", "RAC", "SA", "SC", "SAM", "AAM", "ASM", "BOMB", "FFAR", "UAR", "GBU", "RA" }
+	self.Blacklist = ACF.GetWeaponBlacklist({
+		FLR = true,
+		GL = true,
+		SL = true,
+	})
 end
 
 function Ammo.Create(_, BulletData)
