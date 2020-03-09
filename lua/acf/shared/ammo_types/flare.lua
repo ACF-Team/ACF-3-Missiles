@@ -4,16 +4,16 @@ local IgniteConVar = GetConVar("ACFM_FlaresIgnite")
 function Ammo:OnLoaded()
 	Ammo.BaseClass.OnLoaded(self)
 
-	self.Name = "Flare"
-	self.Description = "A flare designed to confuse guided munitions."
+	self.Name		 = "Flare"
+	self.Description = "A countermeasure for infrared guided munitions."
 	self.Blacklist = ACF.GetWeaponBlacklist({
-		FLR = true,
 		GL = true,
 		SL = true,
+		FLR = true,
 	})
 end
 
-function Ammo.Create(_, BulletData)
+function Ammo:Create(_, BulletData)
 	local Bullet = ACF_CreateBullet(BulletData)
 
 	Bullet.CreateTime = ACF.CurTime
@@ -21,85 +21,88 @@ function Ammo.Create(_, BulletData)
 	ACFM_RegisterFlare(Bullet)
 end
 
-function Ammo.Convert(_, PlayerData)
-	local Data = {}
-	local ServerData = {}
-	local GUIData = {}
+function Ammo:UpdateRoundData(ToolData, Data, GUIData)
+	GUIData = GUIData or Data
 
-	if not PlayerData.PropLength then PlayerData.PropLength = 0 end
-	if not PlayerData.ProjLength then PlayerData.ProjLength = 0 end
-	if not PlayerData.Data5 then PlayerData.Data5 = 0 end
-	if not PlayerData.Data10 then PlayerData.Data10 = 0 end
+	ACF.UpdateRoundSpecs(ToolData, Data, GUIData)
 
-	PlayerData, Data, ServerData, GUIData = ACF_RoundBaseGunpowder(PlayerData, Data, ServerData, GUIData)
+	local ProjMass	= math.max(GUIData.ProjVolume - ToolData.FillerMass, 0) * 0.0079 + math.min(ToolData.FillerMass, GUIData.ProjVolume) * ACF.HEDensity / 1000 --Volume of the projectile as a cylinder - Volume of the filler * density of steel + Volume of the filler * density of TNT
+	local MuzzleVel	= ACF_MuzzleVelocity(Data.PropMass, ProjMass)
+	local Energy	= ACF_Kinetic(MuzzleVel * 39.37, ProjMass, Data.LimitVel)
+	local MaxVolume	= ACF.RoundShellCapacity(Energy.Momentum, Data.FrArea, Data.Caliber, Data.ProjLength)
 
-	Data.ProjMass = math.max(GUIData.ProjVolume - PlayerData.Data5, 0) * 7.9 / 1000 + math.min(PlayerData.Data5, GUIData.ProjVolume) * ACF.HEDensity / 1000 --Volume of the projectile as a cylinder - Volume of the filler * density of steel + Volume of the filler * density of TNT
-	Data.MuzzleVel = ACF_MuzzleVelocity(Data.PropMass, Data.ProjMass, Data.Caliber)
+	GUIData.MaxFillerVol = math.Round(math.min(GUIData.ProjVolume, MaxVolume * 0.9), 2)
+	GUIData.FillerVol	 = math.Round(math.Clamp(ToolData.FillerMass, GUIData.MinFillerVol, GUIData.MaxFillerVol), 2)
 
-	local Energy = ACF_Kinetic(Data.MuzzleVel * 39.37, Data.ProjMass, Data.LimitVel)
-	local MaxVol = ACF_RoundShellCapacity(Energy.Momentum, Data.FrArea, Data.Caliber, Data.ProjLength)
+	Data.FillerMass	= GUIData.FillerVol * ACF.HEDensity * 0.005
+	Data.ProjMass	= math.max(GUIData.ProjVolume - GUIData.FillerVol, 0) * 0.0079 + Data.FillerMass
+	Data.MuzzleVel	= ACF_MuzzleVelocity(Data.PropMass, Data.ProjMass)
+	Data.DragCoef	= Data.FrArea * 0.0027 / Data.ProjMass
+	Data.BurnTime	= Data.FillerMass / Data.BurnRate
+
+	for K, V in pairs(self:GetDisplayData(Data)) do
+		GUIData[K] = V
+	end
+end
+
+function Ammo:BaseConvert(_, ToolData)
+	if not ToolData.Projectile then ToolData.Projectile = 0 end
+	if not ToolData.Propellant then ToolData.Propellant = 0 end
+	if not ToolData.FillerMass then ToolData.FillerMass = 0 end
+
+	local Data, GUIData = ACF.RoundBaseGunpowder(ToolData, {})
 
 	GUIData.MinFillerVol = 0
-	GUIData.MaxFillerVol = math.min(GUIData.ProjVolume, MaxVol * 0.9)
-	GUIData.FillerVol = math.min(PlayerData.Data5, GUIData.MaxFillerVol)
 
-	Data.FillerMass = GUIData.FillerVol * ACF.HEDensity / 200
-	Data.ProjMass = math.max(GUIData.ProjVolume-GUIData.FillerVol,0) * 7.9 / 1000 + Data.FillerMass
-	Data.MuzzleVel = ACF_MuzzleVelocity(Data.PropMass, Data.ProjMass, Data.Caliber)
-	Data.ShovePower = 0.1
-	Data.PenArea = Data.FrArea^ACF.PenAreaMod
-	Data.DragCoef = (Data.FrArea / 375) / Data.ProjMass
-	Data.LimitVel = 700										--Most efficient penetration speed in m/s
-	Data.KETransfert = 0.1									--Kinetic energy transfert to the target for movement purposes
-	Data.Ricochet = 75										--Base ricochet angle
-	Data.BurnRate = Data.FrArea * ACFM.FlareBurnMultiplier
-	Data.DistractChance = (2 / math.pi) * math.atan(Data.FrArea * ACFM.FlareDistractMultiplier)	* 0.5	--reduced effectiveness 50%--red
-	Data.BurnTime = Data.FillerMass / Data.BurnRate
-	Data.BoomPower = Data.PropMass + Data.FillerMass
+	Data.ShovePower		= 0.1
+	Data.PenArea		= Data.FrArea ^ ACF.PenAreaMod
+	Data.LimitVel		= 700 -- Most efficient penetration speed in m/s
+	Data.KETransfert	= 0.1 -- Kinetic energy transfert to the target for movement purposes
+	Data.Ricochet		= 75 -- Base ricochet angle
+	Data.BurnRate		= Data.FrArea * ACFM.FlareBurnMultiplier
+	Data.DistractChance	= (2 / math.pi) * math.atan(Data.FrArea * ACFM.FlareDistractMultiplier)	* 0.5 -- Reduced effectiveness 50% -red
 
-	if SERVER then --Only the crates need this part
-		ServerData.Id = PlayerData.Id
-		ServerData.Type = PlayerData.Type
+	self:UpdateRoundData(ToolData, Data, GUIData)
 
-		return table.Merge(Data, ServerData)
-	end
-
-	if CLIENT then --Only tthe GUI needs this part
-		GUIData = table.Merge(GUIData, Ammo.GetDisplayData(Data))
-
-		return table.Merge(Data, GUIData)
-	end
+	return Data, GUIData
 end
 
-function Ammo.Network(Crate, BulletData)
-	Crate:SetNWString("AmmoType", "FLR")
-	Crate:SetNWString("AmmoID", BulletData.Id)
-	Crate:SetNWFloat("Caliber", BulletData.Caliber)
-	Crate:SetNWFloat("ProjMass", BulletData.ProjMass)
-	Crate:SetNWFloat("FillerMass", BulletData.FillerMass)
-	Crate:SetNWFloat("PropMass", BulletData.PropMass)
-	Crate:SetNWFloat("DragCoef", BulletData.DragCoef)
-	Crate:SetNWFloat("MuzzleVel", BulletData.MuzzleVel)
-	Crate:SetNWFloat("Tracer", BulletData.Tracer)
+function Ammo:Network(Crate, BulletData)
+	Crate:SetNW2String("AmmoType", "FLR")
+	Crate:SetNW2String("AmmoID", BulletData.Id)
+	Crate:SetNW2Float("Caliber", BulletData.Caliber)
+	Crate:SetNW2Float("ProjMass", BulletData.ProjMass)
+	Crate:SetNW2Float("FillerMass", BulletData.FillerMass)
+	Crate:SetNW2Float("PropMass", BulletData.PropMass)
+	Crate:SetNW2Float("DragCoef", BulletData.DragCoef)
+	Crate:SetNW2Float("MuzzleVel", BulletData.MuzzleVel)
+	Crate:SetNW2Float("Tracer", BulletData.Tracer)
 end
 
-function Ammo.GetDisplayData(Data)
+function Ammo:GetDisplayData(Data)
 	return {
-		MaxPen = 0,
-		BurnRate = Data.BurnRate,
+		MaxPen		   = 0,
+		BurnRate	   = Data.BurnRate,
 		DistractChance = Data.DistractChance,
-		BurnTime = Data.BurnTime,
+		BurnTime	   = Data.BurnTime,
 	}
 end
 
-function Ammo.GetCrateText(BulletData)
+function Ammo:GetCrateText(BulletData)
 	local Text = "Muzzle Velocity: %s m/s\nBurn Rate: %s kg/s\nBurn Duration: %s s\nDistract Chance: %s %"
-	local Data = Ammo.GetDisplayData(BulletData)
+	local Data = self:GetDisplayData(BulletData)
 
 	return Text:format(math.Round(BulletData.MuzzleVel, 2), math.Round(Data.BurnRate, 2), math.Round(Data.BurnTime, 2), math.floor(Data.DistractChance * 100))
 end
 
-function Ammo.PropImpact(_, _, Target)
+function Ammo:GetToolData()
+	local Data		= Ammo.BaseClass.GetToolData(self)
+	Data.FillerMass	= ACF.ReadNumber("FillerMass")
+
+	return Data
+end
+
+function Ammo:PropImpact(_, _, Target)
 	if IgniteConVar:GetBool() then
 		local Type = ACF_Check(Target)
 
@@ -111,62 +114,72 @@ function Ammo.PropImpact(_, _, Target)
 	return false
 end
 
-function Ammo.WorldImpact()
+function Ammo:WorldImpact()
 	return false
 end
 
-function Ammo.ImpactEffect()
+function Ammo:ImpactEffect()
 end
 
-function Ammo.CreateMenu(Panel, Table)
-	acfmenupanel:AmmoSelect(Ammo.Blacklist)
+function Ammo:MenuAction(Menu, ToolData, Data)
+	local FillerMass = Menu:AddSlider("Flare Filler", 0, Data.MaxFillerVol, 2)
+	FillerMass:SetDataVar("FillerMass", "OnValueChanged")
+	FillerMass:TrackDataVar("Projectile")
+	FillerMass:SetValueFunction(function(Panel)
+		ToolData.FillerMass = math.Round(ACF.ReadNumber("FillerMass"), 2)
 
-	acfmenupanel:CPanelText("BonusDisplay", "")
-	acfmenupanel:CPanelText("Desc", "")	--Description (Name, Desc)
-	acfmenupanel:CPanelText("LengthDisplay", "")	--Total round length (Name, Desc)
-	acfmenupanel:AmmoSlider("PropLength", 0, 0, 1000, 3, "Propellant Length", "")	--Propellant Length Slider (Name, Value, Min, Max, Decimals, Title, Desc)
-	acfmenupanel:AmmoSlider("ProjLength", 0, 0, 1000, 3, "Projectile Length", "")	--Projectile Length Slider (Name, Value, Min, Max, Decimals, Title, Desc)
-	acfmenupanel:AmmoSlider("FillerVol", 0, 0, 1000, 3, "Dual Spectrum Filler", "") --Hollow Point Cavity Slider (Name, Value, Min, Max, Decimals, Title, Desc)
-	acfmenupanel:CPanelText("VelocityDisplay", "")	--Proj muzzle velocity (Name, Desc)
-	acfmenupanel:CPanelText("BurnRateDisplay", "")	--Proj muzzle penetration (Name, Desc)
-	acfmenupanel:CPanelText("BurnDurationDisplay", "")	--HE Blast data (Name, Desc)
-	acfmenupanel:CPanelText("DistractChanceDisplay", "")	--HE Fragmentation data (Name, Desc)
+		self:UpdateRoundData(ToolData, Data)
 
-	Ammo.UpdateMenu(Panel, Table)
-end
+		Panel:SetMax(Data.MaxFillerVol)
+		Panel:SetValue(Data.FillerVol)
 
-function Ammo.UpdateMenu(Panel)
-	local PlayerData = {
-		Id = acfmenupanel.AmmoData.Data.id,					--AmmoSelect GUI
-		Type = "FLR",										--Hardcoded, match ACFRoundTypes table index
-		PropLength = acfmenupanel.AmmoData.PropLength,		--PropLength slider
-		ProjLength = acfmenupanel.AmmoData.ProjLength,		--ProjLength slider
-		Data5 = acfmenupanel.AmmoData.FillerVol,
-		Data10 = acfmenupanel.AmmoData.Tracer and 1 or 0,	--Tracer
-	}
+		return Data.FillerVol
+	end)
 
-	local Data = Ammo.Convert(Panel, PlayerData)
+	local Tracer = Menu:AddCheckBox("Tracer")
+	Tracer:SetDataVar("Tracer", "OnChange")
+	Tracer:SetValueFunction(function(Panel)
+		ToolData.Tracer = ACF.ReadBool("Tracer")
 
-	RunConsoleCommand("acfmenu_data1", acfmenupanel.AmmoData.Data.id)
-	RunConsoleCommand("acfmenu_data2", PlayerData.Type)
-	RunConsoleCommand("acfmenu_data3", Data.PropLength)		--For Gun ammo, Data3 should always be Propellant
-	RunConsoleCommand("acfmenu_data4", Data.ProjLength)		--And Data4 total round mass
-	RunConsoleCommand("acfmenu_data5", Data.FillerVol)
-	RunConsoleCommand("acfmenu_data10", Data.Tracer)
+		self:UpdateRoundData(ToolData, Data)
 
-	acfmenupanel:AmmoSlider("PropLength", Data.PropLength, Data.MinPropLength, Data.MaxTotalLength, 3, "Propellant Length", "Propellant Mass : " .. math.floor(Data.PropMass * 1000) .. " g")	--Propellant Length Slider (Name, Min, Max, Decimals, Title, Desc)
-	acfmenupanel:AmmoSlider("ProjLength", Data.ProjLength, Data.MinProjLength, Data.MaxTotalLength, 3, "Projectile Length", "Projectile Mass : " .. math.floor(Data.ProjMass * 1000) .. " g")	--Projectile Length Slider (Name, Min, Max, Decimals, Title, Desc)
-	acfmenupanel:AmmoSlider("FillerVol", Data.FillerVol, Data.MinFillerVol, Data.MaxFillerVol, 3, "Dual Spectrum Filler", "Filler Mass : " .. math.floor(Data.FillerMass * 1000) .. " g")	--HE Filler Slider (Name, Min, Max, Decimals, Title, Desc)
-	acfmenupanel:CPanelText("Desc", Ammo.Description)	--Description (Name, Desc)
-	acfmenupanel:CPanelText("LengthDisplay", "Round Length : " .. math.floor((Data.PropLength + Data.ProjLength + Data.Tracer) * 100) / 100 .. "/" .. Data.MaxTotalLength .. " cm")	--Total round length (Name, Desc)
-	acfmenupanel:CPanelText("VelocityDisplay", "Muzzle Velocity : " .. math.floor(Data.MuzzleVel * ACF.Scale) .. " m/s")	--Proj muzzle velocity (Name, Desc)
-	acfmenupanel:CPanelText("BurnRateDisplay", "Burn Rate : " .. math.Round(Data.BurnRate, 1) .. " kg/s")
-	acfmenupanel:CPanelText("BurnDurationDisplay", "Burn Duration : " .. math.Round(Data.BurnTime, 1) .. " s")
-	acfmenupanel:CPanelText("DistractChanceDisplay", "Distraction Chance : " .. math.floor(Data.DistractChance * 100) .. " %")
-end
+		ACF.WriteValue("Projectile", Data.ProjLength)
+		ACF.WriteValue("Propellant", Data.PropLength)
 
-function Ammo.MenuAction(Menu)
-	Menu:AddParagraph("Testing FLR menu.")
+		Panel:SetText("Tracer : " .. Data.Tracer .. " cm")
+		Panel:SetValue(ToolData.Tracer)
+
+		return ToolData.Tracer
+	end)
+
+	local RoundStats = Menu:AddLabel()
+	RoundStats:TrackDataVar("Projectile", "SetText")
+	RoundStats:TrackDataVar("Propellant")
+	RoundStats:TrackDataVar("FillerMass")
+	RoundStats:SetValueFunction(function()
+		self:UpdateRoundData(ToolData, Data)
+
+		local Text		= "Muzzle Velocity : %s m/s\nProjectile Mass : %s\nPropellant Mass : %s\nFlare Filler Mass : %s"
+		local MuzzleVel	= math.Round(Data.MuzzleVel * ACF.Scale, 2)
+		local ProjMass	= ACF.GetProperMass(Data.ProjMass)
+		local PropMass	= ACF.GetProperMass(Data.PropMass)
+		local Filler	= ACF.GetProperMass(Data.FillerMass)
+
+		return Text:format(MuzzleVel, ProjMass, PropMass, Filler)
+	end)
+
+	local FillerStats = Menu:AddLabel()
+	FillerStats:TrackDataVar("FillerMass", "SetText")
+	FillerStats:SetValueFunction(function()
+		self:UpdateRoundData(ToolData, Data)
+
+		local Text		= "Burn Rate : %s/s\nBurn Duration : %s s\nDistraction Chance : %s"
+		local Rate		= ACF.GetProperMass(Data.BurnRate)
+		local Duration	= math.Round(Data.BurnTime, 2)
+		local Chance	= math.Round(Data.DistractChance * 100, 2) .. "%"
+
+		return Text:format(Rate, Duration, Chance)
+	end)
 end
 
 ACF.RegisterAmmoDecal("FLR", "damage/ap_pen", "damage/ap_rico")
