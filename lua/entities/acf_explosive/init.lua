@@ -182,47 +182,64 @@ function ENT:Think()
 	return true
 end
 
-function ENT:Detonate(overrideBData)
+function ENT:Detonate(BulletData)
 	if self.Detonated then return end
 
 	self.Detonated = true
 
-	local bdata = overrideBData or self.BulletData
-	local phys = self:GetPhysicsObject()
-	local pos = self:GetPos()
-	local phyvel = 	phys and phys:GetVelocity() or Vector(0, 0, 1000)
+	if not BulletData then BulletData = self.BulletData end
 
-	bdata.Flight = 	bdata.Flight or phyvel
+	local PhysObj = self:GetPhysicsObject()
 
-	timer.Simple(3, function() if IsValid(self) then if IsValid(self.FakeCrate) then self.FakeCrate:Remove() end self:Remove() end end)
+	if not BulletData.Flight then
+		BulletData.Flight = IsValid(PhysObj) and PhysObj:GetVelocity() or Vector(0, 0, 1000)
+	end
 
-	if not bdata.Entity.Fuse.Cluster then
-		bdata.Owner = 	bdata.Owner or self.Owner
-		bdata.Pos = 	pos + (self.DetonateOffset or bdata.Flight:GetNormalized())
-		bdata.NoOcc = 	self
-		bdata.Gun =     self
+	timer.Simple(3, function()
+		if not IsValid(self) then return end
 
-		debugoverlay.Line(bdata.Pos, bdata.Pos + bdata.Flight, 10, Color(255, 128, 0))
+		if IsValid(self.FakeCrate) then
+			self.FakeCrate:Remove()
+		end
 
-		if bdata.Filter then bdata.Filter[#bdata.Filter + 1] = self
-		else bdata.Filter = {self} end
+		self:Remove()
+	end)
 
-		bdata.RoundMass = bdata.RoundMass or bdata.ProjMass
-		bdata.ProjMass = bdata.ProjMass or bdata.RoundMass
+	self:SetNoDraw(true)
 
-		bdata.HandlesOwnIteration = nil
+	if not BulletData.Entity.Fuse.Cluster then
+		BulletData.Owner = BulletData.Owner or self.Owner
+		BulletData.Pos   = self:GetPos() + (self.DetonateOffset or BulletData.Flight:GetNormalized())
+		BulletData.NoOcc = self
+		BulletData.Gun	 = self
 
-		ACFM_BulletLaunch(bdata)
+		debugoverlay.Line(BulletData.Pos, BulletData.Pos + BulletData.Flight, 10, Color(255, 128, 0))
 
-		self:SetSolid(SOLID_NONE)
-		phys:EnableMotion(false)
+		if BulletData.Filter then BulletData.Filter[#BulletData.Filter + 1] = self
+		else BulletData.Filter = {self} end
 
-		self:DoReplicatedPropHit(bdata)
+		BulletData.RoundMass = BulletData.RoundMass or BulletData.ProjMass
+		BulletData.ProjMass = BulletData.ProjMass or BulletData.RoundMass
 
-		self:SetNoDraw(true)
+		function BulletData.OnPenetrated(_, Bullet)
+			ACFM_ResetVelocity(Bullet)
+		end
+
+		function BulletData.OnRicocheted(_, Bullet)
+			ACFM_ResetVelocity(Bullet)
+		end
+
+		local Bullet = ACF_CreateBullet(BulletData)
+
+		self:SetNotSolid(true)
+
+		if IsValid(PhysObj) then
+			PhysObj:EnableMotion(false)
+		end
+
+		self:DoReplicatedPropHit(Bullet)
 	else
-		self:SetNoDraw(true)
-		self:ClusterNew(bdata)
+		self:ClusterNew(BulletData)
 	end
 end
 
@@ -237,7 +254,6 @@ function ENT:ClusterNew(bdata)
 	self.BulletData = {}
 
 	self.BulletData["Accel"]			= Vector(0,0,-600)
-	self.BulletData["BoomPower"]		= bdata.BoomPower
 	self.BulletData["Caliber"]			= math.Clamp(bdata.Caliber / Bomblets * 10,0.05,bdata.Caliber * 0.8) --Controls visual size, does nothing else
 	self.BulletData["Crate"]			= bdata.Crate
 	self.BulletData["DragCoef"]			= bdata.DragCoef / Bomblets / 2
@@ -319,28 +335,27 @@ function ENT:DoReplicatedPropHit(Bullet)
 	local FlightRes = { Entity = self, HitNormal = Bullet.Flight, HitPos = Bullet.Pos, HitGroup = HITGROUP_GENERIC }
 	local Index = Bullet.Index
 
-	ACF_BulletPropImpact = ACF.RoundTypes[Bullet.Type]["propimpact"]
-	local Retry = ACF_BulletPropImpact( Index, Bullet, FlightRes.Entity , FlightRes.HitNormal , FlightRes.HitPos , FlightRes.HitGroup )				--If we hit stuff then send the resolution to the damage function
+	local BulletPropImpact = ACF.RoundTypes[Bullet.Type].propimpact
+	local Retry = BulletPropImpact(Index, Bullet, FlightRes.Entity, FlightRes.HitNormal, FlightRes.HitPos, FlightRes.HitGroup)				--If we hit stuff then send the resolution to the damage function
 
-	if Retry == "Penetrated" then		--If we should do the same trace again, then do so
-		ACFM_ResetVelocity(Bullet)
-
+	if Retry == "Penetrated" then
 		if Bullet.OnPenetrated then Bullet.OnPenetrated(Index, Bullet, FlightRes) end
-		ACF_BulletClient( Index, Bullet, "Update" , 2 , FlightRes.HitPos  )
-		ACF_CalcBulletFlight( Index, Bullet, true )
-	elseif Retry == "Ricochet"  then
-		ACFM_ResetVelocity(Bullet)
 
+		ACF_BulletClient(Index, Bullet, "Update", 2, FlightRes.HitPos)
+		ACF_CalcBulletFlight(Index, Bullet, true)
+	elseif Retry == "Ricochet" then
 		if Bullet.OnRicocheted then Bullet.OnRicocheted(Index, Bullet, FlightRes) end
-		ACF_BulletClient( Index, Bullet, "Update" , 3 , FlightRes.HitPos  )
-		ACF_CalcBulletFlight( Index, Bullet, true )
-	else						--Else end the flight here
-		if Bullet.OnEndFlight then Bullet.OnEndFlight(Index, Bullet, FlightRes) end
-		ACF_BulletClient( Index, Bullet, "Update" , 1 , FlightRes.HitPos  )
-		ACF_BulletEndFlight = ACF.RoundTypes[Bullet.Type]["endflight"]
-		ACF_BulletEndFlight( Index, Bullet, FlightRes.HitPos, FlightRes.HitNormal )
-	end
 
+		ACF_BulletClient(Index, Bullet, "Update", 3, FlightRes.HitPos)
+		ACF_CalcBulletFlight(Index, Bullet, true)
+	else
+		if Bullet.OnEndFlight then Bullet.OnEndFlight(Index, Bullet, FlightRes) end
+
+		local BulletEndFlight = ACF.RoundTypes[Bullet.Type].endflight
+
+		ACF_BulletClient(Index, Bullet, "Update", 1, FlightRes.HitPos)
+		BulletEndFlight(Index, Bullet, FlightRes.HitPos, FlightRes.HitNormal)
+	end
 end
 
 function ENT:OnTraceContact() end
