@@ -25,20 +25,22 @@ function ACF.SetupLaserSource(Entity, NetVar, Offset, Direction, Spread, Filter)
 	end)
 end
 
-function ACF.FilterLaserEntity(Source, Entity)
-	if not IsValid(Source) then return end
+function ACF.FilterLaserEntity(Entity)
 	if not IsValid(Entity) then return end
-	if not Sources[Source] then return end
 
-	local Data = Sources[Source]
-	local Filter = Data.Filter
+	for Source, Data in pairs(Sources) do
+		local Filter = Data.Filter
 
-	Filter[#Filter + 1] = Entity
+		Filter[#Filter + 1] = Entity
 
-	Data.Filter = Filter
+		Data.Filter = Filter
+
+		if Source.UpdateFilter then
+			Source:UpdateFilter(Filter)
+		end
+	end
 
 	net.Start("ACF_UpdateLaserFilter")
-		net.WriteEntity(Source)
 		net.WriteEntity(Entity)
 	net.Broadcast()
 end
@@ -54,9 +56,5 @@ hook.Add("PlayerInitialSpawn", "ACF Laser Setup", function(Player)
 end)
 
 hook.Add("OnMissileLaunched", "ACF Laser Filter Update", function(Missile)
-	local Source = IsValid(Missile.Launcher) and Missile.Launcher.Computer
-
-	if not IsValid(Source) then return end
-
-	ACF.FilterLaserEntity(Source, Missile)
+	ACF.FilterLaserEntity(Missile)
 end)

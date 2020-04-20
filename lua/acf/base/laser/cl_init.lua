@@ -19,20 +19,22 @@ net.Receive("ACF_SyncLaserSources", function()
 end)
 
 net.Receive("ACF_UpdateLaserFilter", function()
-	local Source = net.ReadEntity()
 	local Entity = net.ReadEntity()
 
 	timer.Simple(0.05, function()
-		if not IsValid(Source) then return end
 		if not IsValid(Entity) then return end
-		if not Sources[Source] then return end
 
-		local Data = Sources[Source]
-		local Filter = Data.Filter
+		for Source, Data in pairs(Sources) do
+			local Filter = Data.Filter
 
-		Filter[#Filter + 1] = Entity
+			Filter[#Filter + 1] = Entity
 
-		Data.Filter = Filter
+			Data.Filter = Filter
+
+			if Source.UpdateFilter then
+				Source:UpdateFilter(Filter)
+			end
+		end
 	end)
 end)
 

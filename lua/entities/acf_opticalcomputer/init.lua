@@ -315,6 +315,12 @@ function ENT:TriggerInput(Input, Value)
 	end
 end
 
+function ENT:UpdateFilter(Filter)
+	if not istable(Filter) then return end
+
+	self.Filter = Filter
+end
+
 function ENT:GetTrace()
 	TraceData.start = self:LocalToWorld(Vector())
 	TraceData.endpos = self:LocalToWorld(Vector(50000))
