@@ -131,7 +131,7 @@ ACF_defineGun("SS-40 RA", { --id
 
 	racks       = {["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true, ["6xUARRK"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
-	agility		= 0.03,
+	agility		= 0.04,
 	viewcone	= 180,
 
 	armdelay    = 0.6     -- minimum fuse arming delay

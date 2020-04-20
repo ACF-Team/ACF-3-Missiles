@@ -1,3 +1,5 @@
+local Sources = ACF.LaserSources
+
 net.Receive("ACF_SetupLaserSource", function()
 	local Entity = net.ReadEntity()
 	local NetVar = net.ReadString()
@@ -9,17 +11,36 @@ net.Receive("ACF_SetupLaserSource", function()
 end)
 
 net.Receive("ACF_SyncLaserSources", function()
-	local Sources = net.ReadTable()
+	local Message = net.ReadTable()
 
-	for Entity, Data in pairs(Sources) do
+	for Entity, Data in pairs(Message) do
 		ACF.AddLaserSource(Entity, Data.NetVar, Data.Offset, Data.Direction, nil, Data.Filter)
 	end
+end)
+
+net.Receive("ACF_UpdateLaserFilter", function()
+	local Entity = net.ReadEntity()
+
+	timer.Simple(0.05, function()
+		if not IsValid(Entity) then return end
+
+		for Source, Data in pairs(Sources) do
+			local Filter = Data.Filter
+
+			Filter[#Filter + 1] = Entity
+
+			Data.Filter = Filter
+
+			if Source.UpdateFilter then
+				Source:UpdateFilter(Filter)
+			end
+		end
+	end)
 end)
 
 hook.Add("Initialize", "ACF Wire FLIR Compatibility", function()
 	if FLIR then
 		local LaserMat = Material("cable/redlaser")
-		local Sources = ACF.LaserSources
 		local Lasers = ACF.ActiveLasers
 
 		local function DrawBeam(Entity, HitPos)

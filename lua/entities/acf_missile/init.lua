@@ -392,6 +392,8 @@ function ENT:Launch()
 
 	ACF.ActiveMissiles[self] = true
 
+	hook.Run("OnMissileLaunched", self)
+
 	self:Think()
 end
 

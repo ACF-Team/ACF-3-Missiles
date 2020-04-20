@@ -55,13 +55,6 @@ function ACF.AddLaserSource(Entity, NetVar, Offset, Direction, Spread, Filter)
 	end)
 end
 
-function ACF.UpdateLaserFilter(Entity, Filter)
-	if not IsValid(Entity) then return end
-	if not Sources[Entity] then return end
-
-	Sources[Entity].Filter = Filter
-end
-
 hook.Add("EntityNetworkedVarChanged", "ACF Laser Toggle", function(Entity, Name, Old, New)
 	local Data = Sources[Entity]
 
