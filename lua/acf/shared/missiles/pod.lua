@@ -374,11 +374,10 @@ ACF_DefineRack("1x Kornet", {
 	caliber = 15.2,
 
 	protectmissile = true,
-	hidemissile = true,
 	whitelistonly = true,
 
 	mountpoints = {
-		origin = {offset = Vector(), scaledir = Vector()}
+		missile1 = {offset = Vector(), scaledir = Vector()}
 	}
 } )
 
