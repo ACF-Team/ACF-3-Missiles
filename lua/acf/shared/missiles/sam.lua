@@ -24,7 +24,7 @@ ACF_defineGun("FIM-92 SAM", { --id
 	gunclass = "SAM",
 	rack = "1x FIM-92",  -- Which rack to spawn this missile on?
 	length = 66,
-	caliber = 5.9,
+	caliber = 7,
 	weight = 20,--15.1,    -- Don't scale down the weight though!
 	modeldiameter = 6.6, -- in cm
 	year = 1978,
@@ -67,7 +67,7 @@ ACF_defineGun("Strela-1 SAM", { --id
 	gunclass = "SAM",
 	rack = "1x Strela-1",  -- Which rack to spawn this missile on?
 	length = 60,
-	caliber = 8.0,
+	caliber = 12,
 	weight = 150,--15.1,    -- Don't scale down the weight though!
 	modeldiameter = 12, -- in cm
 	year = 1960,

@@ -331,7 +331,10 @@ end)
 function ENT:Initialize()
 	self.BaseClass.Initialize(self)
 
-	self.ExhaustPos = self:WorldToLocal(self:GetAttachment(self:LookupAttachment("exhaust")).Pos)
+	local Attachment = self:GetAttachment(self:LookupAttachment("exhaust"))
+	local Offset = self.ExhaustOffset or (Attachment and Attachment.Pos) or Vector()
+
+	self.ExhaustPos = self:WorldToLocal(Offset)
 
 	self:SetNWFloat("LightSize", 0)
 

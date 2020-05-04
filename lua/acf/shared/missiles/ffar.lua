@@ -81,7 +81,7 @@ ACF_defineGun("70mmFFAR", { --id
 		minspeed	= 4000,			-- minimum speed beyond which the fins work at 100% efficiency
 		dragcoef	= 0.001,		-- drag coefficient while falling
 		dragcoefflight  = 0.02,                 -- drag coefficient during flight
-	finmul		= 0.004,			-- fin multiplier (mostly used for unpropelled guidance)
+		finmul		= 0.015,			-- fin multiplier (mostly used for unpropelled guidance)
 		penmul      = math.sqrt(6)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
 	},
 
@@ -91,5 +91,8 @@ ACF_defineGun("70mmFFAR", { --id
 
 	racks       = {["70mm7xPOD"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
+	viewcone	= 20,
+
+	agility		= 0.05,
 	armdelay    = 0.3     -- minimum fuse arming delay
 } )

@@ -28,7 +28,7 @@ ACF_defineGun("AT-3 ASM", { --id
 	gunclass = "ASM",
 	rack = "1xAT3RK",  -- Which rack to spawn this missile on?
 	length = 43,		--Used for the physics calculations, NOT the acf ammo calculations
-	caliber = 13,
+	caliber = 12.5,
 	weight = 20,    -- Don't scale down the weight though!
 	year = 1969,
 	rofmod = 0.6,
@@ -68,7 +68,7 @@ ACF_defineGun("BGM-71E ASM", { --id
 	gunclass = "ASM",
 	rack = "1x BGM-71E",  -- Which rack to spawn this missile on?
 	length = 46,		--Used for the physics calculations, NOT the acf ammo calculations
-	caliber = 13,
+	caliber = 15.2,
 	weight = 20,    -- Don't scale down the weight though!
 	year = 1970,
 	rofmod = 0.8,
@@ -78,7 +78,7 @@ ACF_defineGun("BGM-71E ASM", { --id
 		casing		= 0.1,				-- thickness of missile casing, cm
 		armour		= 6,				-- effective armour thickness of casing, in mm
 		propweight	= 1.2,				-- motor mass - motor casing
-		thrust		= 10000,				-- average thrust - kg*in/s^2
+		thrust		= 13000,				-- average thrust - kg*in/s^2
 		burnrate	= 200,				-- cm^3/s at average chamber pressure
 		starterpct	= 0.2,				-- percentage of the propellant consumed in the starter motor.
 		minspeed	= 2000,				-- minimum speed beyond which the fins work at 100% efficiency
@@ -110,7 +110,7 @@ ACF_defineGun("AGM-114 ASM", { --id
 	gunclass = "ASM",
 	rack = "2x AGM-114",  -- Which rack to spawn this missile on?
 	length = 66,
-	caliber = 16,
+	caliber = 18,
 	weight = 80,    -- Don't scale down the weight though!
 	modeldiameter = 17.2 * 1.27, -- in cm
 	year = 1984,
@@ -205,7 +205,7 @@ ACF_defineGun("Ataka ASM", { --id
 
 --The 9M113, a very long range, very powerful, but hard to maneuver and fast antitank missile
 ACF_defineGun("9M113 ASM", { --id
-	name = "9M113 Missile",
+	name = "9M133 Missile",
 	desc = "The Kornet is an extremely powerful antitank missile, with excellent range and a very powerful warhead, but limited maneuverability.  Best used at long range or in an ambush role.",
 	model = "models/kali/weapons/kornet/parts/9m133 kornet missile.mdl",
 	gunclass = "ASM",
@@ -216,19 +216,19 @@ ACF_defineGun("9M113 ASM", { --id
 	modeldiameter = 15.2, -- in cm
 	year = 1994,
 	rofmod = 0.75,
+	ExhaustOffset = Vector(-29.1, 0, 0),
 	round = {
-		model		= "models/missiles/glatgm/9m112f.mdl", --shhh, don't look directly at the hacks, the attachments on the proper model are fucked up.
-		rackmdl		= "models/kali/weapons/kornet/parts/9m133 kornet missile.mdl",
+		model		= "models/kali/weapons/kornet/parts/9m133 kornet missile.mdl",
 		maxlength	= 70,
 		casing		= 0.2,			-- thickness of missile casing, cm
 		armour		= 5,			-- effective armour thickness of casing, in mm
 		propweight	= 3,			-- motor mass - motor casing
-		thrust		= 36000,		-- average thrust - kg*in/s^2
+		thrust		= 16000,		-- average thrust - kg*in/s^2
 		burnrate	= 300,			-- cm^3/s at average chamber pressure
 		starterpct	= 0.2,			-- percentage of the propellant consumed in the starter motor.
 		minspeed	= 6000,			-- minimum speed beyond which the fins work at 100% efficiency
-		dragcoef	= 0.001,		-- drag coefficient while falling
-				dragcoefflight  = 0.03,                 -- drag coefficient during flight
+		dragcoef	= 0.005,		-- drag coefficient while falling
+		dragcoefflight  = 0.05,		-- drag coefficient during flight
 		finmul		= 0.05,			-- fin multiplier (mostly used for unpropelled guidance)
 		penmul      = math.sqrt(3.9)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
 	},
@@ -241,7 +241,19 @@ ACF_defineGun("9M113 ASM", { --id
 
 	viewcone    = 20,   -- getting outside this cone will break the lock.  Divided by 2.
 
-	agility     = 0.021,		-- multiplier for missile turn-rate.
+	bodygroups	= {
+		fins = {
+			DataSource = function()
+				return "Fins"
+			end,
+			Fins = {
+				OnRack = "Fins_Stowed",
+				OnLaunch = "Fins_Deployed",
+			},
+		}
+	},
+
+	agility     = 0.06,		-- multiplier for missile turn-rate.
 	armdelay    = 0.1     -- minimum fuse arming delay
 } )
 
@@ -253,7 +265,7 @@ ACF_defineGun("AT-2 ASM", { --id
 	gunclass = "ASM",
 	rack = "1xRK",  -- Which rack to spawn this missile on?
 	length = 55,		--Used for the physics calculations
-	caliber = 16,
+	caliber = 14.8,
 	weight = 27,    -- Don't scale down the weight though!
 	year = 1969,
 	rofmod = 0.9,
@@ -294,7 +306,7 @@ ACF_defineGun("AGM-45 ASM", { --id
 	gunclass = "ASM",
 	rack = "1xRK",  -- Which rack to spawn this missile on?
 	length = 1000,
-	caliber = 12,
+	caliber = 20.3,
 	weight = 150,    -- Don't scale down the weight though!
 	modeldiameter = 7.1 * 2.54, -- in cm
 	year = 1969,
