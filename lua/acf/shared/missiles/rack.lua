@@ -103,7 +103,6 @@ ACF_DefineRack("2x AGM-114", {
 	year = 1984,
 	magsize = 2,
 	armour = 20,
-	caliber = 16,
 
 	mountpoints = {
 		missile1 = {offset = Vector(), scaledir = Vector(0, 0, -1)},
@@ -120,7 +119,6 @@ ACF_DefineRack("4x AGM-114", {
 	year = 1984,
 	magsize = 4,
 	armour = 20,
-	caliber = 16,
 
 	mountpoints = {
 		missile1 = {offset = Vector(), scaledir = Vector(0, 0, -1)},
