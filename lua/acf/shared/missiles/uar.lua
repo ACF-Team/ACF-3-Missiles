@@ -18,7 +18,7 @@ ACF_defineGun("RS82 ASR", { --id
 	name		= "RS-82 Rocket",
 	desc		= "A small, unguided rocket, often used in multiple-launch artillery as well as for attacking pinpoint ground targets.  It has a small amount of propellant, limiting its range, but is compact and light.",
 	model		= "models/missiles/rs82.mdl",
-	caliber		= 8,
+	caliber		= 8.2,
 	gunclass	= "UAR",
 	rack        = "1xRK_small",  -- Which rack to spawn this missile on?
 	weight		= 5,
@@ -70,7 +70,7 @@ ACF_defineGun("HVAR ASR", { --id
 	name		= "HVAR Rocket",
 	desc		= "A medium, unguided rocket. More bang than the RS82, at the cost of size and weight.",
 	model		= "models/missiles/hvar.mdl",
-	caliber		= 12,
+	caliber		= 12.7,
 	gunclass	= "UAR",
 	rack        = "1xRK",  -- Which rack to spawn this missile on?
 	weight		= 63,
@@ -109,7 +109,7 @@ ACF_defineGun("SPG-9 ASR", { --id
 	name		= "SPG-9 Rocket",
 	desc		= "A recoilless rocket launcher similar to an RPG or Grom.  The main charge ignites in the tube, while a rocket accelerates a small antitank grenade to the target, giving it a high initial velocity, smaller launch signature, and flatter trajectory than a conventional round but less accuracy.  A useful alternative to guided missiles, it is also quite capable as lightweight HE-slinging artillery for air-drop and expeditionary forces.",
 	model		= "models/munitions/round_100mm_mortar_shot.mdl",
-	caliber		= 9.0,  --73mm default, but artificial inflation to overcome ACFMissile's... issues.
+	caliber		= 7.3,
 	gunclass	= "UAR",
 	rack        = "1x SPG9",  -- Which rack to spawn this missile on?
 	weight		= 40,
@@ -204,19 +204,21 @@ ACF_defineGun("Zuni ASR", { --id
 		casing		= 0.2,
 		armor		= 12,
 		propweight	= 0.7,
-		thrust		= 24000,
-		burnrate	= 1000,
-		starterpct	= 0.2,
-		minspeed	= 8000,
-		dragcoef	= 0.0001,
-		dragcoefflight = 0.001,
-		finmul		= 0.0001,
+		thrust		= 18000,
+		burnrate	= 600,
+		starterpct	= 0.15,
+		minspeed	= 6000,
+		dragcoef	= 0.001,
+		dragcoefflight = 0.02,
+		finmul		= 0.015,
 		penmul		= math.sqrt(2)
 	},
 	ent			= "acf_rack",
 	guidance	= { "Dumb", "Laser" },
 	fuses		= { "Contact", "Timed", "Optical", "Radio" },
 	racks		= {["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true, ["127mm4xPOD"] = true},
+	viewcone	= 50,
+	agility		= 0.05,
 	armdelay	= 0.1
 
 })

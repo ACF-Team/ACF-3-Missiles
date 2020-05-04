@@ -209,6 +209,7 @@ local function AddMissile(Rack, Crate)
 	Missile.DisableDamage = Rack.ProtectMissile
 	Missile.Attachment = Attach
 
+	Missile.ExhaustOffset = ACF_GetGunValue(BulletData.Id, "ExhaustOffset")
 	Missile.Bodygroups = ACF_GetGunValue(BulletData.Id, "bodygroups")
 	Missile.RackModel = Rack.MissileModel or ACF_GetGunValue(BulletData.Id, "rackmdl")
 	Missile.RealModel = ACF_GetGunValue(BulletData.Id, "model")

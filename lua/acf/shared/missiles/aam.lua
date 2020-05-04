@@ -76,7 +76,7 @@ ACF_defineGun("AIM-9 AAM", { --id
 	gunclass = "AAM",
 	rack = "1xRK",  -- Which rack to spawn this missile on?
 	length = 200,
-	caliber = 9,
+	caliber = 12.7,
 	weight = 75,    -- Don't scale down the weight though!
 	rofmod = 0.5,
 	year = 1953,
@@ -118,7 +118,7 @@ ACF_defineGun("AIM-120 AAM", { --id
 	gunclass = "AAM",
 	rack = "1xRK",  -- Which rack to spawn this missile on?
 	length = 1000,
-	caliber = 12,
+	caliber = 18,
 	weight = 125,    -- Don't scale down the weight though! --was 152, I cut that down to 1/2 an AIM-7s weight
 	year = 1991,
 	modeldiameter = 7.1 * 2.54, -- in cm
@@ -160,7 +160,7 @@ ACF_defineGun("AIM-54 AAM", { --id
 	gunclass = "AAM",
 	rack = "1xRK",  -- Which rack to spawn this missile on?
 	length = 1000,
-	caliber = 18,
+	caliber = 38,
 	weight = 300,    -- Don't scale down the weight though!
 	year = 1974,
 	modeldiameter = 9.0 * 2.54, -- in cm
