@@ -50,14 +50,14 @@ ACF_defineGun("AT-3 ASM", { --id
 
 	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
 	guidance    = { "Dumb", "Wire (MCLOS)", "Wire (SACLOS)" },
-	fuses       = { "Contact", "Optical" },
+	fuzes       = { "Contact", "Optical" },
 
 	racks       = {["1xAT3RKS"] = true, ["1xAT3RK"] = true, ["1xRK_small"] = true, ["3xRK"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
 	skinindex   = {HEAT = 0, HE = 1},
 
 	agility     = 0.3,     -- multiplier for missile turn-rate.
-	armdelay    = 0.3     -- minimum fuse arming delay
+	armdelay    = 0.3     -- minimum fuze arming delay
 } )
 
 -- The BGM-71E, a wire guided missile with medium anti-tank effectiveness.
@@ -90,12 +90,12 @@ ACF_defineGun("BGM-71E ASM", { --id
 
 	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
 	guidance    = { "Dumb", "Wire (SACLOS)" },
-	fuses       = { "Contact", "Optical" },
+	fuzes       = { "Contact", "Optical" },
 
 	racks       = {["1x BGM-71E"] = true, ["2x BGM-71E"] = true, ["4x BGM-71E"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
 	agility     = 0.25,     -- multiplier for missile turn-rate.
-	armdelay    = 0.3     -- minimum fuse arming delay
+	armdelay    = 0.3     -- minimum fuze arming delay
 } )
 
 -------------------------------------------------------------------------------
@@ -133,7 +133,7 @@ ACF_defineGun("AGM-114 ASM", { --id
 
 	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
 	guidance    = { "Dumb", "Laser", "Active Radar" },
-	fuses       = { "Contact", "Optical" },
+	fuzes       = { "Contact", "Optical" },
 
 	racks       = {["2x AGM-114"] = true, ["4x AGM-114"] = true, ["1xRK"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
@@ -155,7 +155,7 @@ ACF_defineGun("AGM-114 ASM", { --id
 	},
 
 	agility     = 0.09,		-- multiplier for missile turn-rate.
-	armdelay    = 0.5     -- minimum fuse arming delay
+	armdelay    = 0.5     -- minimum fuze arming delay
 } )
 
 -- The 9M120 Ataka, a laser guided missile with high anti-tank effectiveness.
@@ -189,14 +189,14 @@ ACF_defineGun("Ataka ASM", { --id
 
 	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
 	guidance    = { "Dumb", "Radio (SACLOS)" },
-	fuses       = { "Contact", "Optical" },
+	fuzes       = { "Contact", "Optical" },
 
 	racks       = {["1x Ataka"] = true, ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
 	viewcone    = 40,   -- getting outside this cone will break the lock.  Divided by 2.
 
 	agility     = 0.06,		-- multiplier for missile turn-rate.
-	armdelay    = 0.4     -- minimum fuse arming delay
+	armdelay    = 0.4     -- minimum fuze arming delay
 } )
 
 -------------------------------------------------------------
@@ -235,7 +235,7 @@ ACF_defineGun("9M113 ASM", { --id
 
 	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
 	guidance    = { "Dumb", "Laser" },
-	fuses       = { "Contact", "Optical" },
+	fuzes       = { "Contact", "Optical" },
 
 	racks       = {["1x Kornet"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
@@ -254,7 +254,7 @@ ACF_defineGun("9M113 ASM", { --id
 	},
 
 	agility     = 0.06,		-- multiplier for missile turn-rate.
-	armdelay    = 0.1     -- minimum fuse arming delay
+	armdelay    = 0.1     -- minimum fuze arming delay
 } )
 
 -- The 9M17P, a very long range, very powerful but very slow antitank missile
@@ -287,11 +287,11 @@ ACF_defineGun("AT-2 ASM", { --id
 
 	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
 	guidance    = { "Dumb", "Radio (MCLOS)", "Radio (SACLOS)" },
-	fuses       = { "Contact", "Optical" },
+	fuzes       = { "Contact", "Optical" },
 	viewcone    = 90,   -- getting outside this cone will break the lock.  Divided by 2.
 	racks       = {["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true, ["2x AGM-114"] = true, ["4x AGM-114"] = true, ["1xRK_small"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 	agility     = 0.2,     -- multiplier for missile turn-rate.
-	armdelay    = 1     -- minimum fuse arming delay
+	armdelay    = 1     -- minimum fuze arming delay
 } )
 
 -----------------------------
@@ -329,7 +329,7 @@ ACF_defineGun("AGM-45 ASM", { --id
 
 	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
 	guidance    = { "Dumb", "Anti-radiation" },
-	fuses       = { "Contact", "Timed" },
+	fuzes       = { "Contact", "Timed" },
 
 	racks       = {["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true, ["6xUARRK"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
@@ -337,7 +337,7 @@ ACF_defineGun("AGM-45 ASM", { --id
 	viewcone = 10,		--I don't think a fucking SAM site should have to dodge much >_>
 
 	agility     = 0.08,		-- multiplier for missile turn-rate.
-	armdelay    = 0.3     -- minimum fuse arming delay
+	armdelay    = 0.3     -- minimum fuze arming delay
 } )
 
 --Sidearm, a lightweight anti-radar missile used by helicopters in the 80s
@@ -369,7 +369,7 @@ ACF_defineGun("AGM-122 ASM", { --id
 
 	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
 	guidance    = { "Dumb", "Anti-radiation" },
-	fuses       = { "Contact", "Optical" },
+	fuzes       = { "Contact", "Optical" },
 
 	racks       = {["1xRK"] = true,  ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true, ["1xRK_small"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
@@ -377,7 +377,7 @@ ACF_defineGun("AGM-122 ASM", { --id
 	viewcone    = 20,   -- getting outside this cone will break the lock.  Divided by 2.
 
 	agility     = 0.3,  -- multiplier for missile turn-rate.
-	armdelay    = 0.2     -- minimum fuse arming delay		--was 0.4
+	armdelay    = 0.2     -- minimum fuze arming delay		--was 0.4
 } )
 
 -- The AGM-119, a heavy antiship missile
@@ -411,13 +411,13 @@ ACF_defineGun("AGM-119 ASM", { --id
 
 	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
 	guidance    = {"Dumb", "Laser", "Radar"},
-	fuses       = ACF_GetAllFuseNamesExcept( {"Radio"} ),
+	fuzes       = ACF_GetAllFuzeNamesExcept( {"Radio"} ),
 
 	racks       = {["1xRK"] = true, ["2xRK"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 	seekcone = 1,
 	viewcone = 1,		--I don't think a fucking SAM site should have to dodge much >_>
 
 	agility     = 0.1,		-- multiplier for missile turn-rate.
-	armdelay    = 0.3     -- minimum fuse arming delay
+	armdelay    = 0.3     -- minimum fuze arming delay
 } )
 ]]--

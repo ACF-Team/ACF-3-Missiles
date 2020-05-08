@@ -1,11 +1,11 @@
 
-local Fuse = ACF.RegisterFuse("Radio", "Contact")
+local Fuze = ACF.RegisterFuze("Radio", "Contact")
 
-Fuse.desc = "This fuse tracks the Guidance module's target and detonates when the distance becomes low enough.\nDistance in inches."
-Fuse.Distance = 2000
+Fuze.desc = "This fuze tracks the Guidance module's target and detonates when the distance becomes low enough.\nDistance in inches."
+Fuze.Distance = 2000
 
-function Fuse:OnLoaded()
-	Fuse.BaseClass.OnLoaded(self)
+function Fuze:OnLoaded()
+	Fuze.BaseClass.OnLoaded(self)
 
 	local Config = self.Configurable
 
@@ -19,7 +19,7 @@ function Fuse:OnLoaded()
 	}
 end
 
-function Fuse:GetDetonate(Missile, Guidance)
+function Fuze:GetDetonate(Missile, Guidance)
 	if not self:IsArmed() then return false end
 
 	local Target = Guidance.TargetPos or Guidance:GetGuidance(Missile).TargetPos
@@ -29,7 +29,7 @@ function Fuse:GetDetonate(Missile, Guidance)
 	return (Missile.CurPos + Missile.LastVel):Distance(Target) <= self.Distance
 end
 
-function Fuse:GetDisplayConfig()
+function Fuze:GetDisplayConfig()
 	return
 	{
 		Primer = math.Round(self.Primer, 1) .. " s",

@@ -72,12 +72,12 @@ local function ModifyCrateTextFuncs()
 
 				local Crate = Entity(BulletData.Crate)
 				local Guidance = IsValid(Crate) and Crate.RoundData7 or BulletData.Data7
-				local Fuse = IsValid(Crate) and Crate.RoundData8 or BulletData.Data8
+				local Fuze = IsValid(Crate) and Crate.RoundData8 or BulletData.Data8
 				local Display = "\n\n%s %s\n%s"
 				local Text
 
 				if Guidance then
-					Guidance = ACFM_CreateConfigurable(Guidance, ACF.Guidance, nil, "Guidance")
+					Guidance = ACFM_CreateConfigurable(Guidance, ACF.Classes.Guidances, nil, "Guidance")
 
 					if Guidance and Guidance.Name ~= "Dumb" then
 						Guidance:Configure(Crate)
@@ -87,14 +87,14 @@ local function ModifyCrateTextFuncs()
 					end
 				end
 
-				if Fuse then
-					Fuse = ACFM_CreateConfigurable(Fuse, ACF.Fuse, nil, "fuses")
+				if Fuze then
+					Fuze = ACFM_CreateConfigurable(Fuze, ACF.Classes.Fuzes, nil, "fuzes")
 
-					if Fuse then
-						Fuse:Configure(Crate)
+					if Fuze then
+						Fuze:Configure(Crate)
 
-						Text = configConcat(Fuse:GetDisplayConfig())
-						CrateText = CrateText .. Display:format(Fuse.Name, "fuse", Text)
+						Text = configConcat(Fuze:GetDisplayConfig())
+						CrateText = CrateText .. Display:format(Fuze.Name, "fuze", Text)
 					end
 				end
 

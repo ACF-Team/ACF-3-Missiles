@@ -45,14 +45,14 @@ ACF_defineGun("Type 63 RA", { --id
 
 	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
 	guidance    = { "Dumb" },
-	fuses       = { "Contact", "Timed", "Optical", "Cluster" },
+	fuzes       = { "Contact", "Timed", "Optical", "Cluster" },
 
 	racks       = {["1xRK_small"] = true, ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true, ["6xUARRK"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 	viewcone	= 180, -- cone radius, 180 = full 360 tracking
 	agility		= 0.08,
 
 
-	armdelay    = 0.2     -- minimum fuse arming delay
+	armdelay    = 0.2     -- minimum fuze arming delay
 } )
 
 ACF_defineGun("SAKR-10 RA", { --id
@@ -86,14 +86,14 @@ ACF_defineGun("SAKR-10 RA", { --id
 
 	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
 	guidance    = { "Dumb", "Laser", "GPS Guided" },
-	fuses       = { "Contact", "Timed", "Optical", "Cluster" },
+	fuzes       = { "Contact", "Timed", "Optical", "Cluster" },
 
 	racks       = {["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true, ["6xUARRK"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
 	agility		= 0.07,
 	viewcone	= 180,
 
-	armdelay    = 0.4     -- minimum fuse arming delay
+	armdelay    = 0.4     -- minimum fuze arming delay
 } )
 
 ACF_defineGun("SS-40 RA", { --id
@@ -127,12 +127,12 @@ ACF_defineGun("SS-40 RA", { --id
 
 	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
 	guidance    = { "Dumb", "Laser", "GPS Guided" },
-	fuses       = { "Contact", "Timed", "Optical", "Cluster" },
+	fuzes       = { "Contact", "Timed", "Optical", "Cluster" },
 
 	racks       = {["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true, ["6xUARRK"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
 	agility		= 0.04,
 	viewcone	= 180,
 
-	armdelay    = 0.6     -- minimum fuse arming delay
+	armdelay    = 0.6     -- minimum fuze arming delay
 } )

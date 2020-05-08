@@ -1,11 +1,11 @@
 
-local Fuse = ACF.RegisterFuse("Timed", "Contact")
+local Fuze = ACF.RegisterFuze("Timed", "Contact")
 
-Fuse.desc = "This fuse triggers upon direct contact, or when the timer ends.\nDelay in seconds."
-Fuse.Timer = 10 -- Time to explode, begins ticking after configuration.
+Fuze.desc = "This fuze triggers upon direct contact, or when the timer ends.\nDelay in seconds."
+Fuze.Timer = 10 -- Time to explode, begins ticking after configuration.
 
-function Fuse:OnLoaded()
-	Fuse.BaseClass.OnLoaded(self)
+function Fuze:OnLoaded()
+	Fuze.BaseClass.OnLoaded(self)
 
 	local Config = self.Configurable
 
@@ -19,11 +19,11 @@ function Fuse:OnLoaded()
 	}
 end
 
-function Fuse:GetDetonate()
+function Fuze:GetDetonate()
 	return self:IsArmed() and self.TimeStarted + self.Timer <= CurTime()
 end
 
-function Fuse:GetDisplayConfig()
+function Fuze:GetDisplayConfig()
 	return
 	{
 		Primer = math.Round(self.Primer, 1) .. " s",

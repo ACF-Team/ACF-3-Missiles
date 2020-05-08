@@ -19,7 +19,7 @@ function Ammo:Create(Gun, BulletData)
 		ACF_CreateBullet(BulletData)
 	else
 		local GLATGM 		  = ents.Create("acf_glatgm")
-		GLATGM.Distance		  = BulletData.MuzzleVel * 4 * 39.37 -- optical fuse distance
+		GLATGM.Distance		  = BulletData.MuzzleVel * 4 * 39.37 -- optical fuze distance
 		GLATGM.BulletData	  = BulletData
 		GLATGM.DoNotDuplicate = true
 		GLATGM.Owner		  = Gun.Owner
@@ -126,7 +126,7 @@ function Ammo:Detonate(_, Bullet, HitPos)
 
 	Bullet.Detonated  = true
 	Bullet.InitTime	  = ACF.CurTime
-	Bullet.FuseLength = 0.005 + 40 / ((Bullet.Flight + Bullet.Flight:GetNormalized() * Bullet.SlugMV * 39.37):Length() * 0.0254)
+	Bullet.FuzeLength = 0.005 + 40 / ((Bullet.Flight + Bullet.Flight:GetNormalized() * Bullet.SlugMV * 39.37):Length() * 0.0254)
 	Bullet.Pos		  = HitPos
 	Bullet.Flight	  = Bullet.Flight + Bullet.Flight:GetNormalized() * Bullet.SlugMV * 39.37
 	Bullet.DragCoef	  = Bullet.SlugDragCoef

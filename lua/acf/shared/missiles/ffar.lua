@@ -47,11 +47,11 @@ ACF_defineGun("40mmFFAR", { --id
 
 	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
 	guidance    = {"Dumb"},
-	fuses       = {"Contact", "Timed"},
+	fuzes       = {"Contact", "Timed"},
 
 	racks       = {["40mm7xPOD"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
-	armdelay    = 0.3     -- minimum fuse arming delay
+	armdelay    = 0.3     -- minimum fuze arming delay
 } )
 
 ACF_defineGun("70mmFFAR", { --id
@@ -87,12 +87,12 @@ ACF_defineGun("70mmFFAR", { --id
 
 	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
 	guidance    = { "Dumb", "Laser" },
-	fuses       = { "Contact", "Timed" },
+	fuzes       = { "Contact", "Timed" },
 
 	racks       = {["70mm7xPOD"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
 	viewcone	= 20,
 
 	agility		= 0.05,
-	armdelay    = 0.3     -- minimum fuse arming delay
+	armdelay    = 0.3     -- minimum fuze arming delay
 } )

@@ -48,7 +48,7 @@ ACF_defineGun("FIM-92 SAM", { --id
 
 	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
 	guidance    = { "Dumb", "Infrared", "Anti-missile" },
-	fuses       = { "Contact", "Radio" },
+	fuzes       = { "Contact", "Radio" },
 
 	racks       = {["1x FIM-92"] = true,  ["2x FIM-92"] = true,  ["4x FIM-92"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
@@ -56,7 +56,7 @@ ACF_defineGun("FIM-92 SAM", { --id
 	viewcone    = 30,   -- getting outside this cone will break the lock.  Divided by 2.	--was 55
 
 	agility     = 3.0,     -- multiplier for missile turn-rate.		--was 1
-	armdelay    = 0.2     -- minimum fuse arming delay		-was 0.3
+	armdelay    = 0.2     -- minimum fuze arming delay		-was 0.3
 } )
 
 -- The 9M31 Strela-1, a bulky, slow medium-range anti-air missile.
@@ -90,7 +90,7 @@ ACF_defineGun("Strela-1 SAM", { --id
 
 	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
 	guidance    = { "Dumb", "Infrared", "Anti-missile" },
-	fuses       = { "Contact", "Radio" },
+	fuzes       = { "Contact", "Radio" },
 
 	racks       = {["1x Strela-1"] = true,  ["2x Strela-1"] = true,  ["4x Strela-1"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
@@ -98,7 +98,7 @@ ACF_defineGun("Strela-1 SAM", { --id
 	viewcone    = 40,   -- getting outside this cone will break the lock.  Divided by 2.	
 
 	agility     = 2,     -- multiplier for missile turn-rate.	
-	armdelay    = 0.2     -- minimum fuse arming delay	
+	armdelay    = 0.2     -- minimum fuze arming delay	
 } )
 
 -- The SIMBAD-RC is a 2-tube point-defense missile system taht's basicaly like 2 stingers shooting missiles 
@@ -133,7 +133,7 @@ ACF_defineGun("SIMBAD-RC SAM", { --id
 
 	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
 	guidance    = { "Anti-missile" },
-	fuses       = { "Contact" },
+	fuzes       = { "Contact" },
 
 	racks       = {["2x FIM-92"] = true,  ["4x FIM-92"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
@@ -141,6 +141,6 @@ ACF_defineGun("SIMBAD-RC SAM", { --id
 	viewcone    = 90,   -- getting outside this cone will break the lock.  Divided by 2.	--was 55
 
 	agility     = 5,     -- multiplier for missile turn-rate.		--was 1
-	armdelay    = 0.1     -- minimum fuse arming delay		-was 0.3
+	armdelay    = 0.1     -- minimum fuze arming delay		-was 0.3
 } )
 ]]--

@@ -19,7 +19,7 @@ function Round.create(Gun, BulletData)
 		GLATGM:SetAngles(Gun:GetAngles())
 		GLATGM:SetPos(Gun:GetAttachment(1).Pos) -- + Gun:GetForward()*24)
 		GLATGM.BulletData = BulletData
-		GLATGM.Distance = BulletData.MuzzleVel * 4 * 39.37 -- optical fuse distance
+		GLATGM.Distance = BulletData.MuzzleVel * 4 * 39.37 -- optical fuze distance
 		GLATGM:Spawn()
 	end
 end
@@ -149,7 +149,7 @@ function Round.detonate(_, Bullet, HitPos)
 
 	Bullet.Detonated = true
 	Bullet.InitTime = CurTime()
-	Bullet.FuseLength = 0.005 + 40 / ((Bullet.Flight + Bullet.Flight:GetNormalized() * Bullet.SlugMV * 39.37):Length() * 0.0254)
+	Bullet.FuzeLength = 0.005 + 40 / ((Bullet.Flight + Bullet.Flight:GetNormalized() * Bullet.SlugMV * 39.37):Length() * 0.0254)
 	Bullet.Pos = HitPos
 	Bullet.Flight = Bullet.Flight + Bullet.Flight:GetNormalized() * Bullet.SlugMV * 39.37
 	Bullet.DragCoef = Bullet.SlugDragCoef

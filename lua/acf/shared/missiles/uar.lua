@@ -45,7 +45,7 @@ ACF_defineGun("RS82 ASR", { --id
 
 	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
 	guidance    = {"Dumb"},
-	fuses       = {"Contact", "Timed"},
+	fuzes       = {"Contact", "Timed"},
 
 	racks       = {["1xRK_small"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
@@ -63,7 +63,7 @@ ACF_defineGun("RS82 ASR", { --id
 		}
 	},
 
-	armdelay    = 0.3     -- minimum fuse arming delay
+	armdelay    = 0.3     -- minimum fuze arming delay
 } )
 
 ACF_defineGun("HVAR ASR", { --id
@@ -98,11 +98,11 @@ ACF_defineGun("HVAR ASR", { --id
 
 	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
 	guidance    = {"Dumb"},
-	fuses       = {"Contact", "Timed"},
+	fuzes       = {"Contact", "Timed"},
 
 	racks       = {["1xRK"] = true, ["1xRK_small"] = true, ["3xUARRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
-	armdelay    = 0.3     -- minimum fuse arming delay
+	armdelay    = 0.3     -- minimum fuze arming delay
 } )
 
 ACF_defineGun("SPG-9 ASR", { --id
@@ -137,11 +137,11 @@ ACF_defineGun("SPG-9 ASR", { --id
 
 	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
 	guidance    = {"Dumb"},
-	fuses       = {"Contact", "Optical"},
+	fuzes       = {"Contact", "Optical"},
 
 	racks       = {["1x SPG9"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
-	armdelay    = 0.05     -- minimum fuse arming delay, very short since we have a high muzzle velocity
+	armdelay    = 0.05     -- minimum fuze arming delay, very short since we have a high muzzle velocity
 } )
 
 ACF_defineGun("S-24 ASR", { --id
@@ -176,12 +176,12 @@ ACF_defineGun("S-24 ASR", { --id
 
 	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
 	guidance    = {"Dumb"},
-	fuses       = {"Contact", "Timed"},
+	fuzes       = {"Contact", "Timed"},
 
 	racks       = {["1xRK"] = true, ["3xRK"] = true, ["2xRK"] = true, ["6xUARRK"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
 	skinindex   = {HEAT = 0, HE = 1},
-	armdelay    = 0.3     -- minimum fuse arming delay
+	armdelay    = 0.3     -- minimum fuze arming delay
 } )
 
 ACF_defineGun("Zuni ASR", { --id
@@ -215,7 +215,7 @@ ACF_defineGun("Zuni ASR", { --id
 	},
 	ent			= "acf_rack",
 	guidance	= { "Dumb", "Laser" },
-	fuses		= { "Contact", "Timed", "Optical", "Radio" },
+	fuzes		= { "Contact", "Timed", "Optical", "Radio" },
 	racks		= {["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true, ["127mm4xPOD"] = true},
 	viewcone	= 50,
 	agility		= 0.05,
@@ -254,7 +254,7 @@ ACF_defineGun("RW61 ASR", { --id
 
 	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
 	guidance    = {"Dumb"},
-	fuses       = {"Contact", "Optical"},
+	fuzes       = {"Contact", "Optical"},
 
 	racks       = {["380mmRW61"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
@@ -262,7 +262,7 @@ ACF_defineGun("RW61 ASR", { --id
 	viewcone    = 55,   -- getting outside this cone will break the lock.  Divided by 2.
 
 	agility     = 1,     -- multiplier for missile turn-rate.
-	armdelay    = 0.5     -- minimum fuse arming delay
+	armdelay    = 0.5     -- minimum fuze arming delay
 } )
 
 --[[
@@ -297,7 +297,7 @@ ACF_defineGun("298mmDUMB", { --id placeholder for tinytim
 
 	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
 	guidance    = {"Dumb"},
-	fuses       = {"Contact", "Timed"},
+	fuzes       = {"Contact", "Timed"},
 
 	racks       = {["1xRK"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
@@ -305,6 +305,6 @@ ACF_defineGun("298mmDUMB", { --id placeholder for tinytim
 	viewcone    = 55,   -- getting outside this cone will break the lock.  Divided by 2.
 
 	agility     = 1,     -- multiplier for missile turn-rate.
-	armdelay    = 0.3     -- minimum fuse arming delay
+	armdelay    = 0.3     -- minimum fuze arming delay
 } )
 ]]--

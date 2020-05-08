@@ -1,4 +1,5 @@
-
+local Guidances = ACF.Classes.Guidances
+local Fuzes = ACF.Classes.Fuzes
 
 function SetMissileGUIEnabled(_, enabled, gundata)
 	if enabled then
@@ -30,7 +31,7 @@ function SetMissileGUIEnabled(_, enabled, gundata)
 					gun = guns[gunId]
 				end
 
-				local guidance = ACF.Guidance[data]
+				local guidance = Guidances[data]
 
 				if guidance and guidance.desc then
 					acfmenupanel:CPanelText("GuidanceDesc", guidance.desc .. "\n")
@@ -61,14 +62,14 @@ function SetMissileGUIEnabled(_, enabled, gundata)
 			acfmenupanel.CData.GuidanceSelect:AddChoice( Value, Value, Value == default )
 		end
 
-		-- Create fuse selection combobox + description label
+		-- Create fuze selection combobox + description label
 
 		default = "Contact"  -- Contact is the only acceptable default
-		if not acfmenupanel.CData.FuseSelect then
-			acfmenupanel.CData.FuseSelect = vgui.Create( "DComboBox", acfmenupanel.CustomDisplay )	--Every display and slider is placed in the Round table so it gets trashed when selecting a new round type
-			acfmenupanel.CData.FuseSelect:SetSize(100, 30)
+		if not acfmenupanel.CData.FuzeSelect then
+			acfmenupanel.CData.FuzeSelect = vgui.Create( "DComboBox", acfmenupanel.CustomDisplay )	--Every display and slider is placed in the Round table so it gets trashed when selecting a new round type
+			acfmenupanel.CData.FuzeSelect:SetSize(100, 30)
 
-			acfmenupanel.CData.FuseSelect.OnSelect = function(_, _, data)
+			acfmenupanel.CData.FuzeSelect.OnSelect = function(_, _, data)
 				local gun = {}
 
 				local gunId = acfmenupanel.CData.CaliberSelect:GetValue()
@@ -78,37 +79,37 @@ function SetMissileGUIEnabled(_, enabled, gundata)
 					gun = guns[gunId]
 				end
 
-				local fuse = ACF.Fuse[data]
+				local fuze = Fuzes[data]
 
-				if fuse and fuse.desc then
-					acfmenupanel:CPanelText("FuseDesc", fuse.desc .. "\n")
+				if fuze and fuze.desc then
+					acfmenupanel:CPanelText("FuzeDesc", fuze.desc .. "\n")
 
-					local configPanel = ACFMissiles_CreateMenuConfiguration(fuse, acfmenupanel.CData.FuseSelect, "acfmenu_data8", acfmenupanel.CData.FuseSelect.ConfigPanel, gun)
-					acfmenupanel.CData.FuseSelect.ConfigPanel = configPanel
+					local configPanel = ACFMissiles_CreateMenuConfiguration(fuze, acfmenupanel.CData.FuzeSelect, "acfmenu_data8", acfmenupanel.CData.FuzeSelect.ConfigPanel, gun)
+					acfmenupanel.CData.FuzeSelect.ConfigPanel = configPanel
 				else
-					acfmenupanel:CPanelText("FuseDesc", "Missiles and bombs can be given a fuse to control when they detonate.\n")
+					acfmenupanel:CPanelText("FuzeDesc", "Missiles and bombs can be given a fuze to control when they detonate.\n")
 				end
 
-				ACFMissiles_SetCommand(acfmenupanel.CData.FuseSelect, acfmenupanel.CData.FuseSelect.ControlGroup, "acfmenu_data8")
+				ACFMissiles_SetCommand(acfmenupanel.CData.FuzeSelect, acfmenupanel.CData.FuzeSelect.ControlGroup, "acfmenu_data8")
 			end
 
-			acfmenupanel.CustomDisplay:AddItem( acfmenupanel.CData.FuseSelect )
+			acfmenupanel.CustomDisplay:AddItem( acfmenupanel.CData.FuzeSelect )
 
-			acfmenupanel:CPanelText("FuseDesc", "Missiles and bombs can be given a fuse to control when they detonate.\n")
+			acfmenupanel:CPanelText("FuzeDesc", "Missiles and bombs can be given a fuze to control when they detonate.\n")
 
 			local configPanel = vgui.Create("DScrollPanel")
 			configPanel:SetTall(0)
-			acfmenupanel.CData.FuseSelect.ConfigPanel = configPanel
+			acfmenupanel.CData.FuzeSelect.ConfigPanel = configPanel
 			acfmenupanel.CustomDisplay:AddItem( configPanel )
 		else
-			default = acfmenupanel.CData.FuseSelect:GetValue()
-			acfmenupanel.CData.FuseSelect:SetVisible(true)
+			default = acfmenupanel.CData.FuzeSelect:GetValue()
+			acfmenupanel.CData.FuzeSelect:SetVisible(true)
 		end
 
-		acfmenupanel.CData.FuseSelect:Clear()
+		acfmenupanel.CData.FuzeSelect:Clear()
 
-		for _, Value in pairs( gundata.fuses or {} ) do
-			acfmenupanel.CData.FuseSelect:AddChoice( Value, Value, Value == default ) -- Contact is the only acceptable default
+		for _, Value in pairs( gundata.fuzes or {} ) do
+			acfmenupanel.CData.FuzeSelect:AddChoice( Value, Value, Value == default ) -- Contact is the only acceptable default
 		end
 	else
 		-- Delete everything!  Tried just making them invisible but they seem to break.
@@ -133,19 +134,19 @@ function SetMissileGUIEnabled(_, enabled, gundata)
 			acfmenupanel.CData.GuidanceDesc_text = nil
 		end
 
-		if acfmenupanel.CData.FuseSelect then
-			if acfmenupanel.CData.FuseSelect.ConfigPanel then
-				acfmenupanel.CData.FuseSelect.ConfigPanel:Remove()
-				acfmenupanel.CData.FuseSelect.ConfigPanel = nil
+		if acfmenupanel.CData.FuzeSelect then
+			if acfmenupanel.CData.FuzeSelect.ConfigPanel then
+				acfmenupanel.CData.FuzeSelect.ConfigPanel:Remove()
+				acfmenupanel.CData.FuzeSelect.ConfigPanel = nil
 			end
 
-			acfmenupanel.CData.FuseSelect:Remove()
-			acfmenupanel.CData.FuseSelect = nil
+			acfmenupanel.CData.FuzeSelect:Remove()
+			acfmenupanel.CData.FuzeSelect = nil
 		end
 
-		if acfmenupanel.CData.FuseDesc_text then
-			acfmenupanel.CData.FuseDesc_text:Remove()
-			acfmenupanel.CData.FuseDesc_text = nil
+		if acfmenupanel.CData.FuzeDesc_text then
+			acfmenupanel.CData.FuzeDesc_text:Remove()
+			acfmenupanel.CData.FuzeDesc_text = nil
 		end
 	end
 end

@@ -59,7 +59,7 @@ ACF_defineGun("40mmAAM", { --id
 
 	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
 	guidance    = ACF_GetAllGuidanceNames(),
-	fuses       = ACF_GetAllFuseNames(),
+	fuzes       = ACF_GetAllFuzeNames(),
 
 	seekcone    = 40,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
 	viewcone    = 60,   -- getting outside this cone will break the lock.  Divided by 2.
@@ -97,7 +97,7 @@ ACF_defineGun("AIM-9 AAM", { --id
 
 	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
 	guidance    = { "Dumb", "Infrared", "Semi-Active Radar" },
-	fuses       = { "Contact", "Radio" },
+	fuzes       = { "Contact", "Radio" },
 
 	racks       = {["1xRK"] = true,  ["2xRK"] = true, ["3xRK"] = true, ["1xRK_small"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
@@ -105,7 +105,7 @@ ACF_defineGun("AIM-9 AAM", { --id
 	viewcone    = 30,   -- getting outside this cone will break the lock.  Divided by 2.		--was 30
 
 	agility     = 5,  -- multiplier for missile turn-rate.
-	armdelay    = 0.2     -- minimum fuse arming delay		--was 0.4
+	armdelay    = 0.2     -- minimum fuze arming delay		--was 0.4
 } )
 
 -- Sparrow analog.  We have to scale it down because acf is scaled down.  It's also short-range due to AAM guidelines.
@@ -139,7 +139,7 @@ ACF_defineGun("AIM-120 AAM", { --id
 
 	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
 	guidance    = { "Dumb", "Semi-Active Radar", "Active Radar" },
-	fuses       = { "Contact", "Radio" },
+	fuzes       = { "Contact", "Radio" },
 
 	racks       = {["1xRK"] = true, ["2xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
@@ -147,7 +147,7 @@ ACF_defineGun("AIM-120 AAM", { --id
 	viewcone    = 20,   -- getting outside this cone will break the lock.  Divided by 2.	--was 25
 
 	agility     = 0.173,    -- multiplier for missile turn-rate.
-	armdelay    = 0.2     -- minimum fuse arming delay --was 0.3
+	armdelay    = 0.2     -- minimum fuze arming delay --was 0.3
 } )
 
 --Phoenix.  Since we've rebalanced missile, and since we're making this a SPECIALIST weapon and scaling it to gmod, we can do it.
@@ -181,7 +181,7 @@ ACF_defineGun("AIM-54 AAM", { --id
 
 	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
 	guidance    = { "Dumb", "Semi-Active Radar", "Active Radar" },
-	fuses       = { "Contact", "Radio" },
+	fuzes       = { "Contact", "Radio" },
 
 	racks       = {["1xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
@@ -189,5 +189,5 @@ ACF_defineGun("AIM-54 AAM", { --id
 	viewcone    = 20,   -- getting outside this cone will break the lock.  Divided by 2.
 
 	agility     = 0.05,    -- multiplier for missile turn-rate.
-	armdelay    = 0.4     -- minimum fuse arming delay --was 0.3
+	armdelay    = 0.4     -- minimum fuze arming delay --was 0.3
 } )

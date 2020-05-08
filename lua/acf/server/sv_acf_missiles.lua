@@ -31,7 +31,7 @@ function ACFM_BulletLaunch(BData)
 	BData.LastThink = BData.LastThink or CurTime()
 	BData["FlightTime"] = 0
 
-	if BData["FuseLength"] then
+	if BData["FuzeLength"] then
 		BData["InitTime"] = CurTime()
 	end
 

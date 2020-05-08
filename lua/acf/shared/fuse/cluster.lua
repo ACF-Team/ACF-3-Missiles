@@ -1,12 +1,12 @@
 
-local Fuse = ACF.RegisterFuse("Cluster", "Contact")
+local Fuze = ACF.RegisterFuze("Cluster", "Contact")
 local TraceData = { start = true, endpos = true, filter = true }
 
-Fuse.desc = "This fuse fires a beam directly ahead and releases bomblets when the beam hits something close-by.\nDistance in inches."
-Fuse.Cluster = 2000
+Fuze.desc = "This fuze fires a beam directly ahead and releases bomblets when the beam hits something close-by.\nDistance in inches."
+Fuze.Cluster = 2000
 
-function Fuse:OnLoaded()
-	Fuse.BaseClass.OnLoaded(self)
+function Fuze:OnLoaded()
+	Fuze.BaseClass.OnLoaded(self)
 
 	local Config = self.Configurable
 
@@ -20,7 +20,7 @@ function Fuse:OnLoaded()
 	}
 end
 
-function Fuse:GetDetonate(Missile)
+function Fuze:GetDetonate(Missile)
 	if not self:IsArmed() then return false end
 
 	local Position = Missile:GetPos()
@@ -32,7 +32,7 @@ function Fuse:GetDetonate(Missile)
 	return util.TraceLine(TraceData).Hit
 end
 
-function Fuse:GetDisplayConfig()
+function Fuze:GetDisplayConfig()
 	return
 	{
 		Primer = math.Round(self.Primer, 1) .. " s",

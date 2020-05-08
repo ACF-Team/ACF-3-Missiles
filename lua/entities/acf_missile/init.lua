@@ -11,6 +11,8 @@ ENT.DisableDuplicator	= true
 
 local Gravity = GetConVar("sv_gravity")
 local GhostPeriod = GetConVar("ACFM_GhostPeriod")
+local Guidances = ACF.Classes.Guidances
+local Fuzes = ACF.Classes.Fuzes
 
 local function SetGuidance(Missile, Guidance)
 	Missile.Guidance = Guidance
@@ -19,11 +21,11 @@ local function SetGuidance(Missile, Guidance)
 	return Guidance
 end
 
-local function SetFuse(Missile, Fuse)
-	Missile.Fuse = Fuse
-	Fuse:Configure(Missile, Missile.Guidance or SetGuidance(Missile, ACF.Guidance.Dumb()))
+local function SetFuze(Missile, Fuze)
+	Missile.Fuze = Fuze
+	Fuze:Configure(Missile, Missile.Guidance or SetGuidance(Missile, Guidances.Dumb()))
 
-	return Fuse
+	return Fuze
 end
 
 local function ApplyBodySubgroup(Missile, Group, Source, Phase)
@@ -73,21 +75,21 @@ end
 
 local function ParseBulletData(Missile, BulletData)
 	local BulletGuidance = BulletData.Data7
-	local BulletFuse = BulletData.Data8
+	local BulletFuze = BulletData.Data8
 
 	if BulletGuidance then
-		local Guidance = ACFM_CreateConfigurable(BulletGuidance, ACF.Guidance, BulletData, "guidance")
+		local Guidance = ACFM_CreateConfigurable(BulletGuidance, Guidances, BulletData, "guidance")
 
 		if Guidance then
 			SetGuidance(Missile, Guidance)
 		end
 	end
 
-	if BulletFuse then
-		local Fuse = ACFM_CreateConfigurable(BulletFuse, ACF.Fuse, BulletData, "fuses")
+	if BulletFuze then
+		local Fuze = ACFM_CreateConfigurable(BulletFuze, Fuzes, BulletData, "fuzes")
 
-		if Fuse then
-			SetFuse(Missile, Fuse)
+		if Fuze then
+			SetFuze(Missile, Fuze)
 		end
 	end
 end
@@ -303,7 +305,7 @@ local function CalcFlight(Missile)
 		return
 	end
 
-	if Missile.Fuse:GetDetonate(Missile, Missile.Guidance) then
+	if Missile.Fuze:GetDetonate(Missile, Missile.Guidance) then
 		Missile.LastVel = Vel / DeltaTime
 		Missile:Detonate()
 
@@ -368,15 +370,15 @@ end
 
 function ENT:Launch()
 	if not self.Guidance then
-		SetGuidance(self, ACF.Guidance.Dumb())
+		SetGuidance(self, Guidances.Dumb())
 	end
 
-	if not self.Fuse then
-		SetFuse(self, ACF.Fuse.Contact())
+	if not self.Fuze then
+		SetFuze(self, Fuzes.Contact())
 	end
 
 	self.Guidance:Configure(self)
-	self.Fuse:Configure(self, self.Guidance)
+	self.Fuze:Configure(self, self.Guidance)
 	self.Launched = true
 	self.ThinkDelay = engine.TickInterval()
 	self.GhostPeriod = CurTime() + GhostPeriod:GetFloat()
@@ -413,7 +415,7 @@ end
 function ENT:Detonate()
 	self.Motor = 0
 	self.Exploded = true
-	self.Disabled = self.Disabled or self.Fuse and (CurTime() - self.Fuse.TimeStarted < self.MinArmingDelay or not self.Fuse:IsArmed())
+	self.Disabled = self.Disabled or self.Fuze and (CurTime() - self.Fuze.TimeStarted < self.MinArmingDelay or not self.Fuze:IsArmed())
 
 	self:StopParticles()
 	self:SetNWFloat("LightSize", 0)

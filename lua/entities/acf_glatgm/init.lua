@@ -120,14 +120,14 @@ function ENT:Detonate()
 		BulletData.Gun			= self
 		BulletData.LimitVel		= 100
 		BulletData.Flight		= self:GetForward():GetNormalized() * self.velocity -- initial vel from glatgm
-		BulletData.FuseLength	= 0
+		BulletData.FuzeLength	= 0
 		BulletData.Pos			= self:GetPos()
 
 		-- manual detonation
 		BulletData.Detonated	= true
 		BulletData.InitTime		= CurTime()
 		BulletData.Flight		= BulletData.Flight + BulletData.Flight:GetNormalized() * BulletData.SlugMV * 39.37
-		BulletData.FuseLength	= 0.005 + 40 / ((BulletData.Flight + BulletData.Flight:GetNormalized() * BulletData.SlugMV * 39.37):Length() * 0.0254)
+		BulletData.FuzeLength	= 0.005 + 40 / ((BulletData.Flight + BulletData.Flight:GetNormalized() * BulletData.SlugMV * 39.37):Length() * 0.0254)
 		BulletData.DragCoef		= BulletData.SlugDragCoef
 		BulletData.ProjMass		= BulletData.SlugMass
 		BulletData.Caliber		= BulletData.SlugCaliber

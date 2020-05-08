@@ -207,7 +207,7 @@ function ENT:Detonate(BulletData)
 
 	self:SetNoDraw(true)
 
-	if not BulletData.Entity.Fuse.Cluster then
+	if not BulletData.Entity.Fuze.Cluster then
 		BulletData.Owner = BulletData.Owner or self.Owner
 		BulletData.Pos   = self:GetPos() + (self.DetonateOffset or BulletData.Flight:GetNormalized())
 		BulletData.NoOcc = self
@@ -262,7 +262,7 @@ function ENT:ClusterNew(bdata)
 	self.BulletData["Flight"]			= bdata.Flight
 	self.BulletData["FlightTime"]		= 0
 	self.BulletData["FrArea"]			= bdata.FrArea
-	self.BulletData["FuseLength"]		= 0
+	self.BulletData["FuzeLength"]		= 0
 	self.BulletData["Gun"]				= self
 	self.BulletData["Id"]				= bdata.Id
 	--self.BulletData["Index"]			=

@@ -1,10 +1,10 @@
 
-local Fuse = ACF.RegisterFuse("Contact")
+local Fuze = ACF.RegisterFuze("Contact")
 
-Fuse.desc = "This fuse triggers upon direct contact against solid surfaces."
-Fuse.Primer = 0
+Fuze.desc = "This fuze triggers upon direct contact against solid surfaces."
+Fuze.Primer = 0
 
-function Fuse:OnLoaded()
+function Fuze:OnLoaded()
 	self.Name = self.ID -- Workaround
 
 	-- Configuration information for things like acfmenu.
@@ -22,19 +22,19 @@ function Fuse:OnLoaded()
 	}
 end
 
-function Fuse:IsArmed()
+function Fuze:IsArmed()
 	return self.TimeStarted + self.Primer <= CurTime()
 end
 
-function Fuse:Configure()
+function Fuze:Configure()
 	self.TimeStarted = CurTime()
 end
 
 -- Do nothing, projectiles auto-detonate on contact anyway.
-function Fuse:GetDetonate()
+function Fuze:GetDetonate()
 	return false
 end
 
-function Fuse:GetDisplayConfig()
+function Fuze:GetDisplayConfig()
 	return { Primer = math.Round(self.Primer, 1) .. " s" }
 end

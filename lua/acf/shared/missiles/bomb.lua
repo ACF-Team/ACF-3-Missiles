@@ -46,7 +46,7 @@ ACF_defineGun("BarrelBOMB", { --id
 
 	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
 	guidance    = {"Dumb"}, --no shit.
-	fuses       = {"Contact"},
+	fuzes       = {"Contact"},
 
 	racks       = {["1xRK_small"] = true,  ["1xRK"] = true, ["2xRK"] = true,  ["3xRK"] = true, ["4xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
@@ -87,7 +87,7 @@ ACF_defineGun("50kgBOMB", { --id
 
 	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
 	guidance    = {"Dumb"},
-	fuses       = {"Contact", "Optical", "Cluster"},
+	fuzes       = {"Contact", "Optical", "Cluster"},
 
 	racks       = {["1xRK_small"] = true,  ["1xRK"] = true, ["2xRK"] = true,  ["3xRK"] = true, ["4xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
@@ -96,7 +96,7 @@ ACF_defineGun("50kgBOMB", { --id
 	viewcone    = 60,   -- getting outside this cone will break the lock.  Divided by 2. 
 
 	agility     = 1,     -- multiplier for missile turn-rate.
-	armdelay    = 0.5     -- minimum fuse arming delay
+	armdelay    = 0.5     -- minimum fuze arming delay
 } )
 
 ACF_defineGun("100kgBOMB", { --id
@@ -127,7 +127,7 @@ ACF_defineGun("100kgBOMB", { --id
 
 	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
 	guidance    = {"Dumb"},
-	fuses       = {"Contact", "Optical", "Cluster"},
+	fuzes       = {"Contact", "Optical", "Cluster"},
 
 	racks       = {["1xRK_small"] = true, ["1xRK"] = true, ["2xRK"] = true,  ["3xRK"] = true, ["4xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
@@ -135,7 +135,7 @@ ACF_defineGun("100kgBOMB", { --id
 	viewcone    = 60,   -- getting outside this cone will break the lock.  Divided by 2. 
 
 	agility     = 1,     -- multiplier for missile turn-rate.
-	armdelay    = 1     -- minimum fuse arming delay
+	armdelay    = 1     -- minimum fuze arming delay
 } )
 
 ACF_defineGun("250kgBOMB", { --id
@@ -166,7 +166,7 @@ ACF_defineGun("250kgBOMB", { --id
 
 	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
 	guidance    = {"Dumb"},
-	fuses       = {"Contact", "Optical", "Cluster"},
+	fuzes       = {"Contact", "Optical", "Cluster"},
 
 	racks       = {["1xRK"] = true,  ["2xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
@@ -175,7 +175,7 @@ ACF_defineGun("250kgBOMB", { --id
 	viewcone    = 60,   -- getting outside this cone will break the lock.  Divided by 2. 
 
 	agility     = 1,     -- multiplier for missile turn-rate.
-	armdelay    = 1     -- minimum fuse arming delay
+	armdelay    = 1     -- minimum fuze arming delay
 } )
 
 ACF_defineGun("500kgBOMB", { --id
@@ -206,7 +206,7 @@ ACF_defineGun("500kgBOMB", { --id
 
 	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
 	guidance    = {"Dumb"},
-	fuses       = {"Contact", "Optical", "Cluster"},
+	fuzes       = {"Contact", "Optical", "Cluster"},
 
 	racks       = {["1xRK"] = true,  ["2xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
@@ -214,7 +214,7 @@ ACF_defineGun("500kgBOMB", { --id
 	viewcone    = 60,   -- getting outside this cone will break the lock.  Divided by 2. 
 
 	agility     = 1,     -- multiplier for missile turn-rate.
-	armdelay    = 2     -- minimum fuse arming delay
+	armdelay    = 2     -- minimum fuze arming delay
 } )
 
 ACF_defineGun("1000kgBOMB", { --id
@@ -245,7 +245,7 @@ ACF_defineGun("1000kgBOMB", { --id
 
 	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
 	guidance    = {"Dumb"},
-	fuses       = {"Contact", "Optical", "Cluster"},
+	fuzes       = {"Contact", "Optical", "Cluster"},
 
 	racks       = {["1xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
@@ -253,7 +253,7 @@ ACF_defineGun("1000kgBOMB", { --id
 	viewcone    = 60,   -- getting outside this cone will break the lock.  Divided by 2. 
 
 	agility     = 1,     -- multiplier for missile turn-rate.
-	armdelay    = 3     -- minimum fuse arming delay
+	armdelay    = 3     -- minimum fuze arming delay
 } )
 
 ACF_defineGun("100kgGBOMB", { --id
@@ -284,10 +284,10 @@ ACF_defineGun("100kgGBOMB", { --id
 
 	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
 	guidance    = {"Dumb"},
-	fuses       = {"Contact", "Optical", "Cluster"},
+	fuzes       = {"Contact", "Optical", "Cluster"},
 	racks       = {["1xRK_small"] = true, ["1xRK"] = true, ["2xRK"] = true,  ["3xRK"] = true, ["4xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
-	armdelay    = 1     -- minimum fuse arming delay
+	armdelay    = 1     -- minimum fuze arming delay
 })
 
 ACF_defineGun("250kgGBOMB", { --id
@@ -318,8 +318,8 @@ ACF_defineGun("250kgGBOMB", { --id
 
 	ent         = "acf_rack", -- A workaround ent which spawns an appropriate rack for the missile.
 	guidance    = {"Dumb"},
-	fuses       = {"Contact", "Optical", "Cluster"},
+	fuzes       = {"Contact", "Optical", "Cluster"},
 
 	racks       = {["1xRK"] = true,  ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
-	armdelay    = 1     -- minimum fuse arming delay
+	armdelay    = 1     -- minimum fuze arming delay
 } )

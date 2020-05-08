@@ -130,7 +130,7 @@ end
 function ACF_GetAllGuidanceNames()
 	local Result = {}
 
-	for K in pairs(ACF.Guidance) do
+	for K in pairs(ACF.Classes.Guidances) do
 		Result[#Result + 1] = K
 	end
 
@@ -138,23 +138,23 @@ function ACF_GetAllGuidanceNames()
 end
 
 function ACF_GetAllGuidanceNamesExcept(List)
-	return GetAllInTableExcept(ACF.Guidance, List)
+	return GetAllInTableExcept(ACF.Classes.Guidances, List)
 end
 
--- Getters for fuse names, for use in missile definitions.
+-- Getters for fuze names, for use in missile definitions.
 
-function ACF_GetAllFuseNames()
+function ACF_GetAllFuzeNames()
 	local Result = {}
 
-	for K, _ in pairs(ACF.Fuse) do
+	for K, _ in pairs(ACF.Classes.Fuzes) do
 		Result[#Result + 1] = K
 	end
 
 	return Result
 end
 
-function ACF_GetAllFuseNamesExcept(List)
-	return GetAllInTableExcept(ACF.Fuse, List)
+function ACF_GetAllFuzeNamesExcept(List)
+	return GetAllInTableExcept(ACF.Classes.Fuzes, List)
 end
 
 game.AddParticles("particles/flares_fx.pcf")
