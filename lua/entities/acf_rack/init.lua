@@ -366,7 +366,7 @@ function MakeACF_Rack(Owner, Pos, Angle, Id, MissileId)
 
 	Rack:SetNWString("Class", Rack.Class)
 	Rack:SetNWString("Sound", Rack.SoundPath)
-	Rack:SetNWString("WireName", GunData.name)
+	Rack:SetNWString("WireName", "ACF " .. GunData.name)
 
 	WireLib.TriggerOutput(Rack, "Entity", Rack)
 	WireLib.TriggerOutput(Rack, "Ready", 1)

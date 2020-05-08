@@ -1,8 +1,8 @@
 
 DEFINE_BASECLASS("base_wire_entity")
 
-ENT.PrintName		= "Guidance Computer"
+ENT.PrintName		= "ACF Guidance Computer"
 ENT.Author			= "Polymorphic Turtle"
 ENT.Category		= "ACF"
 ENT.Spawnable		= true
-ENT.WireDebugName	= "Guidance Computer"
+ENT.WireDebugName	= "ACF Guidance Computer"
