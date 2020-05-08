@@ -274,7 +274,7 @@ function MakeACF_Radar(Owner, Pos, Angle, Id)
 	Radar.GetDetected	= RadarClass.detect
 	Radar.Origin		= AttachData and Radar:WorldToLocal(AttachData.Pos) or Vector()
 
-	Radar:SetNWString("WireName", Radar.Name)
+	Radar:SetNWString("WireName", "ACF " .. Radar.Name)
 
 	local PhysObj = Radar:GetPhysicsObject()
 

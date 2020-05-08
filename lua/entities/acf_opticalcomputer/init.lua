@@ -160,6 +160,8 @@ function ENT:Initialize()
 
 	WireLib.TriggerOutput(self, "Entity", self)
 
+	self:SetNWString("WireName", "ACF Guidance Computer")
+
 	local PhysObj = self:GetPhysicsObject()
 
 	if IsValid(PhysObj) then
