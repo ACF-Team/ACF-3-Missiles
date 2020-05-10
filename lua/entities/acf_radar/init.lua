@@ -39,6 +39,7 @@ local Radars	  = ACF.ActiveRadars
 local CheckLegal  = ACF_CheckLegal
 local ClassLink	  = ACF.GetClassLink
 local ClassUnlink = ACF.GetClassUnlink
+local Sensors	  = ACF.Classes.Sensors
 local UnlinkSound = "physics/metal/metal_box_impact_bullet%s.wav"
 local MaxDistance = ACF.RefillDistance * ACF.RefillDistance
 local TraceData	  = { start = true, endpos = true, mask = MASK_SOLID_BRUSHONLY }
@@ -221,137 +222,139 @@ end
 
 --===============================================================================================--
 
-function MakeACF_Radar(Owner, Pos, Angle, Id)
-	if not Owner:CheckLimit("_acf_radar") then return false end
+do -- Spawn and Update functions
+	local function VerifyData(Data)
+		if Data.Sensor then -- Entity was created via menu tool
+			Data.Id = Data.Sensor
+		end
 
-	local RadarData = ACF.Weapons.Radar[Id]
+		local Class = ACF.GetClassGroup(Sensors, Data.Id)
 
-	if not RadarData then return end
-
-	local Radar = ents.Create("acf_radar")
-
-	if not IsValid(Radar) then return end
-
-	local RadarClass = ACF.Classes.Radar[RadarData.class]
-	local OriginAttach = Radar:LookupAttachment(RadarData.origin)
-	local AttachData = Radar:GetAttachment(OriginAttach)
-
-	Radar:SetModel(RadarData.model)
-	Radar:SetPlayer(Owner)
-	Radar:SetAngles(Angle)
-	Radar:SetPos(Pos)
-	Radar:Spawn()
-
-	Radar:PhysicsInit(SOLID_VPHYSICS)
-	Radar:SetMoveType(MOVETYPE_VPHYSICS)
-
-	Owner:AddCount("_acf_radar", Radar)
-	Owner:AddCleanup("acfmenu", Radar)
-
-	Radar.Id			= Id
-	Radar.Owner			= Owner
-	Radar.Model			= RadarData.model
-	Radar.Mass			= RadarData.weight
-	Radar.Name			= RadarData.name
-	Radar.ShortName		= Radar.Name
-	Radar.EntType 		= RadarClass.name
-	Radar.ClassType		= RadarClass.type
-	Radar.ConeDegs		= RadarData.viewcone
-	Radar.Range 		= RadarData.range
-	Radar.Armor			= 20
-
-	Radar.Active		= false
-	Radar.Scanning		= false
-	Radar.SwitchDelay	= RadarData.delay
-	Radar.ThinkDelay	= 0.1
-	Radar.TargetCount	= 0
-	Radar.Spread		= 0
-	Radar.Weapons		= {}
-	Radar.Targets		= {}
-
-	Radar.Inputs		= WireLib.CreateInputs(Radar, { "Active" })
-	Radar.Outputs		= WireLib.CreateOutputs(Radar, { "Scanning", "Detected", "ClosestDistance", "Entities [ARRAY]", "Position [ARRAY]", "Velocity [ARRAY]" })
-	Radar.GetDetected	= RadarClass.detect
-	Radar.Origin		= AttachData and Radar:WorldToLocal(AttachData.Pos) or Vector()
-
-	Radar:SetNWString("WireName", "ACF " .. Radar.Name)
-
-	local PhysObj = Radar:GetPhysicsObject()
-
-	if IsValid(PhysObj) then
-		PhysObj:SetMass(Radar.Mass)
+		if not Class or Class.Entity ~= "acf_radar" then
+			Data.Id = "SmallDIR-TGT"
+		end
 	end
 
-	ACF_Activate(Radar)
+	local function UpdateRadar(Entity, Data, Class, Radar)
+		Entity:SetModel(Radar.Model)
 
-	Radar.ACF.Model		= Radar.Model
-	Radar.ACF.LegalMass	= Radar.Mass
+		Entity:PhysicsInit(SOLID_VPHYSICS)
+		Entity:SetMoveType(MOVETYPE_VPHYSICS)
 
-	Radar:UpdateOverlay(true)
+		local OriginAttach = Entity:LookupAttachment(Radar.Origin)
+		local AttachData = Entity:GetAttachment(OriginAttach)
 
-	CheckLegal(Radar)
-
-	TimerCreate("ACF Radar Clock " .. Radar:EntIndex(), 3, 0, function()
-		if IsValid(Radar) then
-			CheckDistantLinks(Radar, "Weapons")
-		else
-			timer.Remove("ACF Radar Clock " .. Radar:EntIndex())
+		-- Storing all the relevant information on the entity for duping
+		for _, V in ipairs(Entity.DataStore) do
+			Entity[V] = Data[V]
 		end
-	end)
 
-	return Radar
+		Entity.Name			= Radar.Name
+		Entity.ShortName	= Radar.Name
+		Entity.EntType 		= Class.Name
+		Entity.ClassType	= Class.ID
+		Entity.ConeDegs		= Radar.ViewCone
+		Entity.Range 		= Radar.Range
+		Entity.SwitchDelay	= Radar.SwitchDelay
+		Entity.ThinkDelay	= Radar.ThinkDelay
+		Entity.GetDetected	= Radar.Detect or Class.Detect
+		Entity.Origin		= AttachData and Entity:WorldToLocal(AttachData.Pos) or Vector()
+
+		Entity:SetNWString("WireName", "ACF " .. Entity.Name)
+
+		ACF_Activate(Entity, true)
+
+		Entity.ACF.Model		= Radar.Model
+		Entity.ACF.LegalMass	= Radar.Mass
+
+		local Phys = Entity:GetPhysicsObject()
+		if IsValid(Phys) then Phys:SetMass(Radar.Mass) end
+
+		Entity:UpdateOverlay(true)
+	end
+
+	function MakeACF_Radar(Player, Pos, Angle, Data)
+		VerifyData(Data)
+
+		local Class = ACF.GetClassGroup(Sensors, Data.Id)
+		local RadarData = Class.Lookup[Data.Id]
+		local Limit = Class.LimitConVar.Name
+
+		if not Player:CheckLimit(Limit) then return false end
+
+		local Radar = ents.Create("acf_radar")
+
+		if not IsValid(Radar) then return end
+
+		Radar:SetPlayer(Player)
+		Radar:SetAngles(Angle)
+		Radar:SetPos(Pos)
+		Radar:Spawn()
+
+		Player:AddCleanup("acfmenu", Radar)
+		Player:AddCount(Limit, Radar)
+
+		Radar.Owner			= Player -- MUST be stored on ent for PP
+		Radar.Active		= false
+		Radar.Scanning		= false
+		Radar.TargetCount	= 0
+		Radar.Spread		= 0
+		Radar.Weapons		= {}
+		Radar.Targets		= {}
+		Radar.Inputs		= WireLib.CreateInputs(Radar, { "Active" })
+		Radar.Outputs		= WireLib.CreateOutputs(Radar, { "Scanning", "Detected", "ClosestDistance", "Entities [ARRAY]", "Position [ARRAY]", "Velocity [ARRAY]" })
+		Radar.DataStore		= ACF.GetEntClassVars("acf_radar")
+
+		UpdateRadar(Radar, Data, Class, RadarData)
+
+		if Class.OnSpawn then
+			Class.OnSpawn(Radar, Data, Class, RadarData)
+		end
+
+		CheckLegal(Radar)
+
+		TimerCreate("ACF Radar Clock " .. Radar:EntIndex(), 3, 0, function()
+			if IsValid(Radar) then
+				CheckDistantLinks(Radar, "Weapons")
+			else
+				timer.Remove("ACF Radar Clock " .. Radar:EntIndex())
+			end
+		end)
+
+		return Radar
+	end
+
+	ACF.RegisterEntityClass("acf_missileradar", MakeACF_Radar, "Id") -- Backwards compatibility
+	ACF.RegisterEntityClass("acf_radar", MakeACF_Radar, "Id")
+	ACF.RegisterLinkSource("acf_radar", "Weapons")
+
+	------------------- Updating ---------------------
+
+	function ENT:Update(Data)
+		if self.Active then return false, "Turn off the radar before updating it!" end
+
+		VerifyData(Data)
+
+		local Class = ACF.GetClassGroup(Sensors, Data.Id)
+		local Radar = Class.Lookup[Data.Id]
+
+		ACF.SaveEntity(self)
+
+		UpdateRadar(self, Data, Class, Radar)
+
+		ACF.RestoreEntity(self)
+
+		if Class.OnUpdate then
+			Class.OnUpdate(self, Data, Class, Radar)
+		end
+
+		return true, "Radar updated successfully!"
+	end
 end
-
--- Backwards compatibility
-list.Set("ACFCvars", "acf_missileradar", {"id"})
-duplicator.RegisterEntityClass("acf_missileradar", MakeACF_Radar, "Pos", "Angle", "Id")
-
-list.Set("ACFCvars", "acf_radar", {"id"})
-duplicator.RegisterEntityClass("acf_radar", MakeACF_Radar, "Pos", "Angle", "Id")
-ACF.RegisterLinkSource("acf_radar", "Weapons")
 
 --===============================================================================================--
 -- Meta Funcs
 --===============================================================================================--
-
-function ENT:ACF_Activate(Recalc)
-	local PhysObj = self.ACF.PhysObj
-	local Count
-
-	if PhysObj:GetMesh() then
-		Count = #PhysObj:GetMesh()
-	end
-
-	if IsValid(PhysObj) and Count and Count > 100 then
-		if not self.ACF.Area then
-			self.ACF.Area = PhysObj:GetSurfaceArea() * 6.45
-		end
-	else
-		local Size = self:OBBMaxs() - self:OBBMins()
-
-		if not self.ACF.Area then
-			self.ACF.Area = ((Size.x * Size.y) + (Size.x * Size.z) + (Size.y * Size.z)) * 6.45
-		end
-	end
-
-	self.ACF.Ductility = self.ACF.Ductility or 0
-
-	local Area = self.ACF.Area
-	local Armour = self.Armor
-	local Health = Area / ACF.Threshold
-	local Percent = 1
-
-	if Recalc and self.ACF.Health and self.ACF.MaxHealth then
-		Percent = self.ACF.Health / self.ACF.MaxHealth
-	end
-
-	self.ACF.Health = Health * Percent
-	self.ACF.MaxHealth = Health
-	self.ACF.Armour = Armour * (0.5 + Percent / 2)
-	self.ACF.MaxArmour = Armour * ACF.ArmorMod
-	self.ACF.Mass = self.Mass
-	self.ACF.Type = "Prop"
-end
 
 function ENT:ACF_OnDamage(Entity, Energy, FrArea, Angle, Inflictor)
 	local HitRes = ACF.PropDamage(Entity, Energy, FrArea, Angle, Inflictor)
