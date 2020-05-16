@@ -233,7 +233,7 @@ local function AddMissile(Rack, Crate)
 		Missile:SetNoDraw(true)
 	end
 
-	Rack:EmitSound("acf_extra/tankfx/resupply_single.mp3", 500, 100)
+	Rack:EmitSound("acf_missiles/fx/bomb_reload.mp3", 500, 100)
 	Rack:UpdateAmmoCount(Attach, Missile)
 
 	Rack.CurrentCrate = Crate
