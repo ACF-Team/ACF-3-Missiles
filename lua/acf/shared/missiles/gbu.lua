@@ -6,7 +6,7 @@ ACF_defineGunClass("GBU", {
 	desc            = "Guided Bomb Unit.  Similar to a regular bomb, but able to be guided in flight to a vector coordinate.  Most useful versus hard, unmoving targets.",
 	muzzleflash     = "gl_muzzleflash_noscale",
 	rofmod          = 0.1,
-	sound           = "acf_extra/tankfx/clunk.mp3",
+	sound           = "acf_missiles/fx/clunk.mp3",
 	soundDistance   = " ",
 	soundNormal     = " ",
 	nothrust		= true,
