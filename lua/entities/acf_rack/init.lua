@@ -68,23 +68,21 @@ local WireTable = {
 	end
 }
 
-WireTable.gmod_wire_adv_pod = WireTable.gmod_wire_pod
-WireTable.gmod_wire_joystick = WireTable.gmod_wire_pod
-WireTable.gmod_wire_joystick_multi = WireTable.gmod_wire_pod
-WireTable.gmod_wire_expression2 = function(Input, This)
-	if Input.Inputs.Fire then
-		return This:GetUser(Input.Inputs.Fire.Src)
-	elseif Input.Inputs.Shoot then
-		return This:GetUser(Input.Inputs.Shoot.Src)
-	elseif Input.Inputs then
-		for _, V in pairs(Input.Inputs) do
-			if not IsValid(V.Src) then
-				return Input.Owner or Input:GetOwner()
-			end
+local function FindUser(Entity, Input, Checked)
+	local Function = WireTable[Input:GetClass()]
 
-			if WireTable[V.Src:GetClass()] then
-				return This:GetUser(V.Src)
-			end
+	return Function and Function(Entity, Input, Checked or {})
+end
+
+WireTable.gmod_wire_adv_pod			= WireTable.gmod_wire_pod
+WireTable.gmod_wire_joystick		= WireTable.gmod_wire_pod
+WireTable.gmod_wire_joystick_multi	= WireTable.gmod_wire_pod
+WireTable.gmod_wire_expression2		= function(This, Input, Checked)
+	for _, V in pairs(Input.Inputs) do
+		if V.Src and not Checked[V.Src] and WireTable[V.Src:GetClass()] then
+			Checked[V.Src] = true -- We don't want to start an infinite loop
+
+			return FindUser(This, V.Src, Checked)
 		end
 	end
 end
@@ -587,11 +585,7 @@ end
 function ENT:GetUser(Input)
 	if not Input then return end
 
-	if WireTable[Input:GetClass()] then
-		WireTable[Input:GetClass()](Input, self)
-	end
-
-	return Input.Owner or Input:GetOwner()
+	return FindUser(self, Input) or self.Owner
 end
 
 function ENT:TriggerInput(Input, Value)
