@@ -20,67 +20,22 @@ ACF.MaxDamageInaccuracy = 250
 ACFM.DefaultRadarSound = "buttons/button16.wav"
 
 local cvarGrav = GetConVar("sv_gravity")
-
-function ACFM_BulletLaunch(BData)
-	ACF.CurBulletIndex = ACF.CurBulletIndex + 1        --Increment the index
-	if ACF.CurBulletIndex > ACF.BulletIndexLimit then
-		ACF.CurBulletIndex = 1
-	end
-
-	BData.Accel = Vector(0, 0, cvarGrav:GetInt() * -1)            --Those are BData settings that are global and shouldn't change round to round
-	BData.LastThink = BData.LastThink or CurTime()
-	BData["FlightTime"] = 0
-
-	if BData["FuzeLength"] then
-		BData["InitTime"] = CurTime()
-	end
-
-	if not BData.TraceBackComp then                                            --Check the Gun's velocity and add a modifier to the flighttime so the traceback system doesn't hit the originating contraption if it's moving along the shell path
-		if IsValid(BData.Gun) then
-			BData["TraceBackComp"] = BData.Gun:GetPhysicsObject():GetVelocity():Dot(BData.Flight:GetNormalized())
-		else
-			BData["TraceBackComp"] = 0
-		end
-	end
-
-	BData.Filter = BData.Filter or { BData["Gun"] }
-
-	if XCF and XCF.Ballistics then
-		BData = XCF.Ballistics.Launch(BData)
-		--XCF.Ballistics.CalcFlight( BulletData.Index, BulletData )
-	else
-		BData.Index = ACF.CurBulletIndex
-		ACF.Bullet[ACF.CurBulletIndex] = BData        --Place the bullet at the current index pos
-		ACF_BulletClient( ACF.CurBulletIndex, ACF.Bullet[ACF.CurBulletIndex], "Init" , 0 )
-		--ACF_CalcBulletFlight( ACF.CurBulletIndex, ACF.Bullet[ACF.CurBulletIndex] )
-	end
-
-end
-
-
-
+local toconvert = {}
 
 function ACFM_ExpandBulletData(bullet)
+	toconvert.Id =			bullet.Id or "12.7mmMG"
+	toconvert.Type =		bullet.Type or "AP"
+	toconvert.PropLength =	bullet.PropLength or 0
+	toconvert.ProjLength =	bullet.ProjLength or 0
+	toconvert.Data5 =		bullet.FillerVol or bullet.Flechettes or bullet.Data5 or 0
+	toconvert.Data6 =		bullet.ConeAng or bullet.FlechetteSpread or bullet.Data6 or 0
+	toconvert.Data7 =		bullet.Data7 or 0
+	toconvert.Data8 =		bullet.Data8 or 0
+	toconvert.Data9 =		bullet.Data9 or 0
+	toconvert.Data10 =		bullet.Tracer or bullet.Data10 or 0
+	toconvert.Colour =		bullet.Colour or Color(255, 255, 255)
 
-	-- print("==== ACFM_ExpandBulletData")
-	-- pbn(bullet)
-
-
-	local toconvert = {}
-	toconvert["Id"] =             bullet["Id"] or "12.7mmMG"
-	toconvert["Type"] =         bullet["Type"] or "AP"
-	toconvert["PropLength"] =     bullet["PropLength"] or 0
-	toconvert["ProjLength"] =     bullet["ProjLength"] or 0
-	toconvert["Data5"] =         bullet["FillerVol"] or bullet["Flechettes"] or bullet["Data5"] or 0
-	toconvert["Data6"] =         bullet["ConeAng"] or bullet["FlechetteSpread"] or bullet["Data6"] or 0
-	toconvert["Data7"] =         bullet["Data7"] or 0
-	toconvert["Data8"] =         bullet["Data8"] or 0
-	toconvert["Data9"] =         bullet["Data9"] or 0
-	toconvert["Data10"] =         bullet["Tracer"] or bullet["Data10"] or 0
-	toconvert["Colour"] =         bullet["Colour"] or Color(255, 255, 255)
-
-
-	local rounddef = ACF.RoundTypes[bullet.Type] or error("No definition for the shell-type", bullet.Type)
+	local rounddef = ACF.RoundTypes[toconvert.Type] or error("No definition for the shell-type", toconvert.Type)
 	local conversion = rounddef.convert
 
 	if not conversion then error("No conversion available for this shell!") end
@@ -91,8 +46,8 @@ function ACFM_ExpandBulletData(bullet)
 	ret.Type = ret.Type or bullet.Type
 
 	ret.Accel = Vector(0, 0, cvarGrav:GetInt() * -1)
-	if ret.Tracer == 0 and bullet["Tracer"] and bullet["Tracer"] > 0 then ret.Tracer = bullet["Tracer"] end
-	ret.Colour = toconvert["Colour"]
+	if ret.Tracer == 0 and bullet.Tracer and bullet.Tracer > 0 then ret.Tracer = bullet.Tracer end
+	ret.Colour = toconvert.Colour
 
 	ret.Sound = bullet.Sound
 
@@ -175,7 +130,7 @@ function ResetVelocity.HEAT(bdata)
 	if not bdata.MuzzleVel then return end
 
 	if not bdata.SlugMV then -- heat needs to calculate slug mv on the fly
-		bdata.SlugMV = ACF.RoundTypes["HEAT"].CalcSlugMV( bdata, bdata.FillerMass )
+		bdata.SlugMV = ACF.RoundTypes.HEAT.CalcSlugMV( bdata, bdata.FillerMass )
 	end
 
 	bdata.Flight:Normalize()
@@ -199,7 +154,7 @@ end
 hook.Add("InitPostEntity", "ACFMissiles_AddSoundSupport", function()
 	timer.Simple(1, function()
 
-		ACF.SoundToolSupport["acf_rack"] = {
+		ACF.SoundToolSupport.acf_rack = {
 			GetSound = function(ent) return { Sound = ent.SoundPath } end,
 
 			SetSound = function(ent, soundData)
@@ -213,13 +168,13 @@ hook.Add("InitPostEntity", "ACFMissiles_AddSoundSupport", function()
 
 				local soundData = { Sound = Classes.GunClass[Class].sound }
 
-				local setSound = ACF.SoundToolSupport["acf_gun"].SetSound
+				local setSound = ACF.SoundToolSupport.acf_gun.SetSound
 
 				setSound(ent, soundData)
 			end
 		}
 
-		ACF.SoundToolSupport["acf_radar"] = {
+		ACF.SoundToolSupport.acf_radar = {
 			GetSound = function(ent) return {Sound = ent.Sound} end,
 
 			SetSound = function(ent, soundData)
@@ -230,7 +185,7 @@ hook.Add("InitPostEntity", "ACFMissiles_AddSoundSupport", function()
 			ResetSound = function(ent)
 				local soundData = { Sound = ACFM.DefaultRadarSound }
 
-				local setSound = ACF.SoundToolSupport["acf_gun"].SetSound
+				local setSound = ACF.SoundToolSupport.acf_gun.SetSound
 				setSound( ent, soundData )
 			end
 		}

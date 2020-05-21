@@ -197,65 +197,6 @@ function Ammo:WorldImpact(_, Bullet, HitPos, HitNormal)
 	end
 end
 
-function Ammo.CreateMenu(Panel, Table)
-	acfmenupanel:AmmoSelect(Ammo.Blacklist)
-
-	acfmenupanel:CPanelText("BonusDisplay", "")
-	acfmenupanel:CPanelText("Desc", "")	--Description (Name, Desc)
-	acfmenupanel:CPanelText("LengthDisplay", "") --Total round length (Name, Desc)
-	acfmenupanel:AmmoSlider("PropLength", 0, 0, 1000, 3, "Propellant Length", "")
-	acfmenupanel:AmmoSlider("ProjLength", 0, 0, 1000, 3, "Projectile Length", "")
-	acfmenupanel:AmmoSlider("ConeAng", 0, 0, 1000, 3, "HEAT Cone Angle", "")
-	acfmenupanel:AmmoSlider("FillerVol", 0, 0, 1000, 3, "Total HEAT Warhead volume", "")
-	acfmenupanel:AmmoCheckbox("Tracer", "Tracer", "") --Tracer checkbox (Name, Title, Desc)
-	acfmenupanel:CPanelText("VelocityDisplay", "") --Proj muzzle velocity (Name, Desc)
-	acfmenupanel:CPanelText("BlastDisplay", "") --HE Blast data (Name, Desc)
-	acfmenupanel:CPanelText("FragDisplay", "") --HE Fragmentation data (Name, Desc)
-	acfmenupanel:CPanelText("SlugDisplay", "") --HEAT Slug data (Name, Desc)
-
-	Ammo.UpdateMenu(Panel, Table)
-end
-
-function Ammo.UpdateMenu(Panel)
-	local PlayerData = {
-		Id = acfmenupanel.AmmoData.Data.id,					--AmmoSelect GUI
-		Type = "GLATGM",									--Hardcoded, match ACFRoundTypes table index
-		PropLength = acfmenupanel.AmmoData.PropLength,		--PropLength slider
-		ProjLength = acfmenupanel.AmmoData.ProjLength,		--ProjLength slider
-		Data5 = acfmenupanel.AmmoData.FillerVol,
-		Data6 = acfmenupanel.AmmoData.ConeAng,
-		Data10 = acfmenupanel.AmmoData.Tracer and 1 or 0,	--Tracer
-	}
-
-	local Data = Ammo.Convert(Panel, PlayerData)
-
-	RunConsoleCommand("acfmenu_data1", acfmenupanel.AmmoData.Data.id)
-	RunConsoleCommand("acfmenu_data2", PlayerData.Type)
-	RunConsoleCommand("acfmenu_data3", Data.PropLength)		--For Gun ammo, Data3 should always be Propellant
-	RunConsoleCommand("acfmenu_data4", Data.ProjLength)
-	RunConsoleCommand("acfmenu_data5", Data.FillerVol)
-	RunConsoleCommand("acfmenu_data6", Data.ConeAng)
-	RunConsoleCommand("acfmenu_data10", Data.Tracer)
-
-	acfmenupanel:AmmoSlider("PropLength", Data.PropLength, Data.MinPropLength, Data.MaxTotalLength, 3, "Propellant Length", "Propellant Mass : " .. math.floor(Data.PropMass * 1000) .. " g")	--Propellant Length Slider (Name, Min, Max, Decimals, Title, Desc)
-	acfmenupanel:AmmoSlider("ProjLength", Data.ProjLength, Data.MinProjLength, Data.MaxTotalLength, 3, "Projectile Length", "Projectile Mass : " .. math.floor(Data.ProjMass * 1000) .. " g")	--Projectile Length Slider (Name, Min, Max, Decimals, Title, Desc)
-	acfmenupanel:AmmoSlider("ConeAng", Data.ConeAng, Data.MinConeAng, Data.MaxConeAng, 0, "Crush Cone Angle", "")	--HE Filler Slider (Name, Min, Max, Decimals, Title, Desc)
-	acfmenupanel:AmmoSlider("FillerVol", Data.FillerVol, Data.MinFillerVol, Data.MaxFillerVol, 3, "HE Filler Volume", "HE Filler Mass : " .. math.floor(Data.FillerMass * 1000) .. " g")	--HE Filler Slider (Name, Min, Max, Decimals, Title, Desc)
-	acfmenupanel:AmmoCheckbox("Tracer", "Tracer : " .. math.floor(Data.Tracer * 10) / 10 .. "cm\n", "")			--Tracer checkbox (Name, Title, Desc)
-	acfmenupanel:CPanelText("Desc", Ammo.Description)	--Description (Name, Desc)
-	acfmenupanel:CPanelText("LengthDisplay", "Round Length : " .. math.floor((Data.PropLength + Data.ProjLength + Data.Tracer) * 100) / 100 .. "/" .. Data.MaxTotalLength .. " cm")	--Total round length (Name, Desc)
-	acfmenupanel:CPanelText("VelocityDisplay", "Command Link: " .. math.floor(Data.MuzzleVel * ACF.Scale * 4) .. " m")	--Proj muzzle velocity (Name, Desc)
-	acfmenupanel:CPanelText("BlastDisplay", "Blast Radius : " .. math.floor(Data.BlastRadius * 100) / 100 .. " m")	--Proj muzzle velocity (Name, Desc)
-	acfmenupanel:CPanelText("FragDisplay", "Fragments : " .. Data.Fragments .. "\n Average Fragment Weight : " .. math.floor(Data.FragMass * 10000) / 10 .. " g \n Average Fragment Velocity : " .. math.floor(Data.FragVel) .. " m/s")	--Proj muzzle penetration (Name, Desc)
-
-	local R1V, R1P = ACF_PenRanging(Data.MuzzleVel, Data.DragCoef, Data.ProjMass, Data.PenArea, Data.LimitVel, 300)
-	R1P = (ACF_Kinetic((R1V + Data.SlugMV) * 39.37, Data.SlugMass, 999999).Penetration / Data.SlugPenArea) * ACF.KEtoRHA
-	local R2V, R2P = ACF_PenRanging( Data.MuzzleVel, Data.DragCoef, Data.ProjMass, Data.PenArea, Data.LimitVel, 800)
-	R2P = (ACF_Kinetic((R2V + Data.SlugMV) * 39.37, Data.SlugMass, 999999).Penetration / Data.SlugPenArea) * ACF.KEtoRHA
-
-	acfmenupanel:CPanelText("SlugDisplay", "Penetrator Mass : " .. math.floor(Data.SlugMass * 10000) / 10 .. " g \n Penetrator Caliber : " .. math.floor(Data.SlugCaliber * 100) / 10 .. " mm \n Penetrator Velocity : " .. math.floor(Data.MuzzleVel + Data.SlugMV) .. " m/s \n Penetrator Maximum Penetration : " .. math.floor(Data.MaxPen) .. " mm RHA\n\n300m pen: " .. math.Round(R1P,0) .. "mm @ " .. math.Round(R1V,0) .. " m\\s\n800m pen: " .. math.Round(R2P,0) .. "mm @ " .. math.Round(R2V,0) .. " m\\s\n\nThe range data is an approximation and may not be entirely accurate.")	--Proj muzzle penetration (Name, Desc)
-end
-
 function Ammo:MenuAction(Menu, ToolData, Data)
 	local LinerAngle = Menu:AddSlider("Liner Angle", Data.MinConeAng, Data.MaxConeAng, 2)
 	LinerAngle:SetDataVar("LinerAngle", "OnValueChanged")
