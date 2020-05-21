@@ -40,6 +40,7 @@ local CheckLegal  = ACF_CheckLegal
 local ClassLink	  = ACF.GetClassLink
 local ClassUnlink = ACF.GetClassUnlink
 local Sensors	  = ACF.Classes.Sensors
+local Inputs	  = ACF.GetInputActions("acf_radar")
 local UnlinkSound = "physics/metal/metal_box_impact_bullet%s.wav"
 local MaxDistance = ACF.RefillDistance * ACF.RefillDistance
 local TraceData	  = { start = true, endpos = true, mask = MASK_SOLID_BRUSHONLY }
@@ -220,6 +221,10 @@ local function CheckDistantLinks(Entity, Source)
 	end
 end
 
+ACF.AddInputAction("acf_radar", "Active", function(Entity, Value)
+	SetActive(Entity, tobool(Value))
+end)
+
 --===============================================================================================--
 
 do -- Spawn and Update functions
@@ -390,10 +395,16 @@ function ENT:Unlink(Target)
 	return false, "Radars can't be unlinked from '" .. Target:GetClass() .. "'."
 end
 
-function ENT:TriggerInput(_, Value)
+function ENT:TriggerInput(Name, Value)
 	if self.Disabled then return end
 
-	SetActive(self, tobool(Value))
+	local Action = Inputs[Name]
+
+	if Action then
+		Action(self, Value)
+
+		self:UpdateOverlay()
+	end
 end
 
 function ENT:Enable()

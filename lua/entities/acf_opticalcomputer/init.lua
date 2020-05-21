@@ -43,6 +43,7 @@ local CheckLegal = ACF_CheckLegal
 local ClassLink = ACF.GetClassLink
 local ClassUnlink = ACF.GetClassUnlink
 local SetupLaser = ACF.SetupLaserSource
+local Inputs = ACF.GetInputActions("acf_rack")
 local UnlinkSound = "physics/metal/metal_box_impact_bullet%s.wav"
 local MaxDistance = ACF.RefillDistance * ACF.RefillDistance
 local ZeroHitPos = { 0, 0, 0 }
@@ -90,36 +91,39 @@ local function CheckDistantLinks(Entity, Source)
 	end
 end
 
-local Inputs = {
-	Active = function(Entity, Bool)
-		if Entity.Active == Bool then return end
+ACF.AddInputAction("acf_rack", "Active", function(Entity, Value)
+	local Bool = tobool(Value)
 
-		Entity.Active = Bool
+	if Entity.Active == Bool then return end
 
-		if Bool then
-			timer.Create("ACF Outputs Update" .. Entity:EntIndex(), 0.15, 0, function()
-				if not IsValid(Entity) then return end
+	Entity.Active = Bool
 
-				UpdateOutputs(Entity)
-			end)
-		else
-			ResetOutputs(Entity)
-		end
+	if Bool then
+		timer.Create("ACF Outputs Update" .. Entity:EntIndex(), 0.15, 0, function()
+			if not IsValid(Entity) then return end
 
-		Entity:TriggerInput("Lase", Entity.LaserOn and Bool)
-	end,
-	Lase = function(Entity, Bool)
-		if Entity.Lasing == Bool then return end
-		if Entity.OnCooldown then return end
-
-		Entity.LaserOn = Bool
-		Entity.Lasing = Entity.Active and Bool
-
-		Entity:SetNW2Bool("Lasing", Entity.Lasing)
-
-		WireLib.TriggerOutput(Entity, "Lasing", Entity.Lasing and 1 or 0)
+			UpdateOutputs(Entity)
+		end)
+	else
+		ResetOutputs(Entity)
 	end
-}
+
+	Entity:TriggerInput("Lase", Entity.LaserOn and Bool)
+end)
+
+ACF.AddInputAction("acf_rack", "Lase", function(Entity, Value)
+	local Bool = tobool(Value)
+
+	if Entity.Lasing == Bool then return end
+	if Entity.OnCooldown then return end
+
+	Entity.LaserOn = Bool
+	Entity.Lasing = Entity.Active and Bool
+
+	Entity:SetNW2Bool("Lasing", Entity.Lasing)
+
+	WireLib.TriggerOutput(Entity, "Lasing", Entity.Lasing and 1 or 0)
+end)
 
 --===============================================================================================--
 -- Meta Funcs
@@ -307,11 +311,13 @@ function ENT:UpdateOverlay()
 	end)
 end
 
-function ENT:TriggerInput(Input, Value)
+function ENT:TriggerInput(Name, Value)
 	if self.Disabled then return end
 
-	if Inputs[Input] then
-		Inputs[Input](self, tobool(Value))
+	local Action = Inputs[Name]
+
+	if Action then
+		Action(self, Value)
 
 		self:UpdateOverlay()
 	end

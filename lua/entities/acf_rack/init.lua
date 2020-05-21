@@ -49,6 +49,7 @@ end)
 local CheckLegal  = ACF_CheckLegal
 local ClassLink	  = ACF.GetClassLink
 local ClassUnlink = ACF.GetClassUnlink
+local Inputs	  = ACF.GetInputActions("acf_rack")
 local UnlinkSound = "physics/metal/metal_box_impact_bullet%s.wav"
 
 local WireTable = {
@@ -87,40 +88,39 @@ WireTable.gmod_wire_expression2		= function(This, Input, Checked)
 	end
 end
 
-local Inputs = {
-	Fire = function(Rack, Value)
-		Rack.Firing = ACF.GunfireEnabled and tobool(Value)
+ACF.AddInputAction("acf_rack", "Fire", function(Entity, Value)
+	Entity.Firing = ACF.GunfireEnabled and tobool(Value)
 
-		if Rack.Firing and Rack.NextFire >= 1 then
-			Rack.User = Rack:GetUser(Rack.Inputs.Fire.Src)
+	if Entity.Firing and Entity.NextFire >= 1 then
+		Entity.User = Entity:GetUser(Entity.Inputs.Fire.Src)
 
-			if not IsValid(Rack.User) then
-				Rack.User = Rack.Owner
-			end
+		Entity:FireMissile()
+	end
+end)
 
-			Rack:FireMissile()
-		end
-	end,
-	["Fire Delay"] = function(Rack, Value)
-		Rack.FireDelay = math.Clamp(Value, 0, 1)
-	end,
-	Reload = function(Rack, Value)
-		if tobool(Value) then
-			Rack:Reload()
-		end
-	end,
-	["Target Pos"] = function(Rack, Value)
-		Rack.TargetPos = Vector(Value[1], Value[2], Value[3])
+ACF.AddInputAction("acf_rack", "Fire Delay", function(Entity, Value)
+	Entity.FireDelay = math.Clamp(Value, 0, 1)
+end)
 
-		WireLib.TriggerOutput(Rack, "Position", Value)
-	end,
-	Elevation = function(Rack, Value)
-		Rack.Elevation = -Value
-	end,
-	Azimuth = function(Rack, Value)
-		Rack.Azimuth = -Value
-	end,
-}
+ACF.AddInputAction("acf_rack", "Reload", function(Entity, Value)
+	if tobool(Value) then
+		Entity:Reload()
+	end
+end)
+
+ACF.AddInputAction("acf_rack", "Target Pos", function(Entity, Value)
+	Entity.TargetPos = Vector(Value[1], Value[2], Value[3])
+
+	WireLib.TriggerOutput(Entity, "Position", Value)
+end)
+
+ACF.AddInputAction("acf_rack", "Elevation", function(Entity, Value)
+	Entity.Elevation = -Value
+end)
+
+ACF.AddInputAction("acf_rack", "Azimuth", function(Entity, Value)
+	Entity.Azimuth = -Value
+end)
 
 local function CheckRackID(ID, MissileID)
 	local Weapons = ACF.Weapons
@@ -281,7 +281,7 @@ end
 -------------------------------[[ Global Functions ]]-------------------------------
 
 function MakeACF_Rack(Owner, Pos, Angle, Id, MissileId)
-	if not Owner:CheckLimit("_acf_gun") then return end
+	if not Owner:CheckLimit("_acf_weapon") then return end
 
 	Id = CheckRackID(Id, MissileId)
 
@@ -303,7 +303,7 @@ function MakeACF_Rack(Owner, Pos, Angle, Id, MissileId)
 	Rack:PhysicsInit(SOLID_VPHYSICS)
 	Rack:SetMoveType(MOVETYPE_VPHYSICS)
 
-	Owner:AddCount("_acf_gun", Rack)
+	Owner:AddCount("_acf_weapon", Rack)
 	Owner:AddCleanup("acfmenu", Rack)
 
 	Rack.Id					= Id
@@ -588,11 +588,13 @@ function ENT:GetUser(Input)
 	return FindUser(self, Input) or self.Owner
 end
 
-function ENT:TriggerInput(Input, Value)
+function ENT:TriggerInput(Name, Value)
 	if self.Disabled then return end
 
-	if Inputs[Input] then
-		Inputs[Input](self, Value)
+	local Action = Inputs[Name]
+
+	if Action then
+		Action(self, Value)
 
 		self:UpdateOverlay()
 	end
