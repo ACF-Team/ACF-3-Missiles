@@ -18,5 +18,4 @@ elseif SERVER then
 	CreateConVar("ACFM_GhostPeriod", 0.1, FCVAR_ARCHIVE + FCVAR_NOTIFY)
 
 	CreateConVar("sbox_max_acf_explosive", 20, FCVAR_ARCHIVE + FCVAR_NOTIFY)
-	CreateConVar("sbox_max_acf_radar", 6, FCVAR_ARCHIVE + FCVAR_NOTIFY)
 end

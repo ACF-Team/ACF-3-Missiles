@@ -4,7 +4,7 @@ ACF.RegisterSensorClass("TGT-Radar", {
 	CreateMenu	= ACF.CreateRadarMenu,
 	LimitConVar	= {
 		Name = "_acf_radar",
-		Amount = 16,
+		Amount = 4,
 		Text = "Maximum amount of ACF radars a player can create."
 	},
 })
