@@ -22,6 +22,18 @@ function Guidance:GetComputer()
 	return Source.Computer
 end
 
+function Guidance:CheckComputer()
+	local Computer = self:GetComputer()
+
+	if not Computer then return end
+	if not Computer.IsJoystick then return end
+
+	local Pitch = Computer.Pitch or 0
+	local Yaw = Computer.Yaw or 0
+
+	return -Pitch, -Yaw
+end
+
 function Guidance:CheckLOS(Missile)
 	TraceData.start = self.Source:LocalToWorld(self.InPos)
 	TraceData.endpos = Missile:LocalToWorld(self.OutPos)
@@ -30,19 +42,13 @@ function Guidance:CheckLOS(Missile)
 end
 
 function Guidance:GetGuidance(Missile)
-	local Computer = self:GetComputer()
-
-	if not IsValid(Computer) then return {} end
-	if not Computer.Active then return {} end
 	if not self:CheckLOS(Missile) then return {} end
 
-	local Source = self.Source
-	local Elevation = Source.Elevation
-	local Azimuth = Source.Azimuth
+	local Pitch, Yaw = self:CheckComputer()
 
-	if Elevation == 0 and Azimuth == 0 then return {} end
+	if Pitch == 0 and Yaw == 0 then return {} end
 
-	local Direction = Angle(Elevation, Azimuth):Forward() * 12000
+	local Direction = Angle(Pitch, Yaw):Forward() * 12000
 
 	return { TargetPos = Missile:LocalToWorld(Direction) }
 end

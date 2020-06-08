@@ -5,19 +5,25 @@ Guidance.desc = "This guidance package allows you to guide the munition to a des
 function Guidance:OnLaunched(Missile)
 	Guidance.BaseClass.OnLaunched(self, Missile)
 
-	self.NextUpdate = ACF.CurTime
+	self.NextUpdate = 0
 end
 
-function Guidance:GetGuidance()
+function Guidance:CheckComputer()
 	local Computer = self:GetComputer()
 
-	if not IsValid(Computer) then return {} end
-	if not Computer.Active then return {} end
+	if not Computer then return end
+	if not Computer.IsGPS then return end
+	if Computer.InputCoords == Vector() then return end
+	if Computer.IsJammed then return end
 
 	if ACF.CurTime >= self.NextUpdate then
 		self.NextUpdate = ACF.CurTime + 5
-		self.LastPos = self.Source.TargetPos
+		self.LastPos = Computer.Coordinates
 	end
+end
+
+function Guidance:GetGuidance()
+	self:CheckComputer()
 
 	return { TargetPos = self.LastPos }
 end

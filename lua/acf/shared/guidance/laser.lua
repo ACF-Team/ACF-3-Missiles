@@ -33,7 +33,8 @@ end
 function Guidance:CheckComputer(Missile)
 	local Computer = self:GetComputer()
 
-	if not IsValid(Computer) then return end
+	if not Computer then return end
+	if not Computer.IsLaserSource then return end
 	if not Computer.Lasing then return end
 
 	local Position = Missile:GetPos()
@@ -56,12 +57,14 @@ function Guidance:GetGuidance(Missile)
 	local CurrentDot
 
 	for _, Laser in pairs(Lasers) do
-		if self:CheckConeLOS(Missile, Position, Laser, self.ViewConeCos) then
-			CurrentDot = self.GetDirectionDot(Missile, Laser)
+		local LaserPos = Laser.HitPos
+
+		if self:CheckConeLOS(Missile, Position, LaserPos, self.ViewConeCos) then
+			CurrentDot = self.GetDirectionDot(Missile, LaserPos)
 
 			if CurrentDot > HighestDot then
 				HighestDot = CurrentDot
-				HitPos = Laser
+				HitPos = LaserPos
 			end
 		end
 	end
