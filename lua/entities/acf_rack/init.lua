@@ -108,20 +108,6 @@ ACF.AddInputAction("acf_rack", "Reload", function(Entity, Value)
 	end
 end)
 
-ACF.AddInputAction("acf_rack", "Target Pos", function(Entity, Value)
-	Entity.TargetPos = Vector(Value[1], Value[2], Value[3])
-
-	WireLib.TriggerOutput(Entity, "Position", Value)
-end)
-
-ACF.AddInputAction("acf_rack", "Elevation", function(Entity, Value)
-	Entity.Elevation = -Value
-end)
-
-ACF.AddInputAction("acf_rack", "Azimuth", function(Entity, Value)
-	Entity.Azimuth = -Value
-end)
-
 local function CheckRackID(ID, MissileID)
 	local Weapons = ACF.Weapons
 
@@ -342,9 +328,6 @@ function MakeACF_Rack(Owner, Pos, Angle, Id, MissileId)
 	Rack.PostReloadWait		= CurTime()
 	Rack.WaitFunction		= Rack.GetFireDelay
 	Rack.LastSend			= 0
-	Rack.TargetPos			= Vector()
-	Rack.Elevation			= 0
-	Rack.Azimuth			= 0
 
 	Rack.AmmoCount			= 0
 	Rack.LastThink			= CurTime()
@@ -353,8 +336,8 @@ function MakeACF_Rack(Owner, Pos, Angle, Id, MissileId)
 	Rack.Crates				= {}
 	Rack.AttachPoints		= {}
 
-	Rack.Inputs = WireLib.CreateInputs(Rack, { "Fire", "Reload", "Elevation", "Azimuth", "Target Pos [VECTOR]" })
-	Rack.Outputs = WireLib.CreateOutputs(Rack, { "Ready", "Entity [ENTITY]", "Shots Left", "Position [VECTOR]", "Target [ENTITY]" })
+	Rack.Inputs = WireLib.CreateInputs(Rack, { "Fire", "Reload" })
+	Rack.Outputs = WireLib.CreateOutputs(Rack, { "Ready", "Entity [ENTITY]", "Shots Left", "Target [ENTITY]" })
 
 	Rack.BulletData	= {
 		Type = "Empty",
@@ -406,26 +389,10 @@ function ENT:Enable()
 	self.Disabled	   = nil
 	self.DisableReason = nil
 
-	if self.Inputs["Target Pos"].Path then
-		self:TriggerInput("Target Pos", self.Inputs["Target Pos"].Value)
-	end
-
-	if self.Inputs.Elevation.Path then
-		self:TriggerInput("Elevation", self.Inputs.Elevation.Value)
-	end
-
-	if self.Inputs.Azimuth.Path then
-		self:TriggerInput("Azimuth", self.Inputs.Azimuth.Value)
-	end
-
 	self:UpdateOverlay()
 end
 
 function ENT:Disable()
-	self:TriggerInput("Target Pos", Vector())
-	self:TriggerInput("Elevation", 0)
-	self:TriggerInput("Azimuth", 0)
-
 	self.Disabled = true
 
 	self:UpdateOverlay()
