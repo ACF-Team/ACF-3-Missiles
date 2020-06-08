@@ -35,7 +35,7 @@ function ENT:Initialize()
 	self.Filter = {self, self.Guidance}
 
 	for _, v in pairs( ents.FindInSphere( self.Guidance:GetPos(), 250 )   ) do
-		if v:GetClass() == "acf_opticalcomputer" and (not v.CPPIGetOwner or v:CPPIGetOwner() == self.Owner) then
+		if v:GetClass() == "acf_computer" and (not v.CPPIGetOwner or v:CPPIGetOwner() == self.Owner) then
 			self.Guidance = v
 			self.Optic = true
 			break

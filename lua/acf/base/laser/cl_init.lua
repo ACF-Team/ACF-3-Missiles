@@ -2,19 +2,22 @@ local Sources = ACF.LaserSources
 
 net.Receive("ACF_SetupLaserSource", function()
 	local Entity = net.ReadEntity()
-	local NetVar = net.ReadString()
-	local Offset = net.ReadVector()
-	local Direction = net.ReadVector()
-	local Filter = net.WriteType()
+	local Data = net.ReadTable()
 
-	ACF.AddLaserSource(Entity, NetVar, Offset, Direction, nil, Filter)
+	ACF.AddLaserSource(Entity, Data)
+end)
+
+net.Receive("ACF_ClearLaserSource", function()
+	local Entity = net.ReadEntity()
+
+	ACF.RemoveLaserSource(Entity)
 end)
 
 net.Receive("ACF_SyncLaserSources", function()
 	local Message = net.ReadTable()
 
 	for Entity, Data in pairs(Message) do
-		ACF.AddLaserSource(Entity, Data.NetVar, Data.Offset, Data.Direction, nil, Data.Filter)
+		ACF.AddLaserSource(Entity, Data)
 	end
 end)
 
@@ -29,8 +32,6 @@ net.Receive("ACF_UpdateLaserFilter", function()
 
 			Filter[#Filter + 1] = Entity
 
-			Data.Filter = Filter
-
 			if Source.UpdateFilter then
 				Source:UpdateFilter(Filter)
 			end
@@ -43,18 +44,13 @@ hook.Add("Initialize", "ACF Wire FLIR Compatibility", function()
 		local LaserMat = Material("cable/redlaser")
 		local Lasers = ACF.ActiveLasers
 
-		local function DrawBeam(Entity, HitPos)
-			local Data = Sources[Entity]
+		hook.Add("PostDrawOpaqueRenderables", "ACF Active Lasers", function()
+			if not FLIR.enabled then return end
 
 			render.SetMaterial(LaserMat)
-			render.DrawBeam(Entity:LocalToWorld(Data.Offset), HitPos, 15, 0, 12.5)
-		end
 
-		hook.Add("PostDrawOpaqueRenderables", "ACF Active Lasers", function()
-			if FLIR.enabled and next(Lasers) then
-				for Entity, HitPos in pairs(Lasers) do
-					DrawBeam(Entity, HitPos)
-				end
+			for _, Data in pairs(Lasers) do
+				render.DrawBeam(Data.Origin, Data.HitPos, 10, 0, 0)
 			end
 		end)
 	end
