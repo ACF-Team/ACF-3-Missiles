@@ -42,7 +42,7 @@ ACF.RegisterWeaponClass("FGL", {
 	},
 })
 
-ACF.RegisterWeapon("40mmGL", "FGL", {
+ACF.RegisterWeapon("40mmFGL", "FGL", {
 	Name		= "40mm Flare Launcher",
 	Description	= "Put on an all-American fireworks show with this flare launcher: high fire rate, low distraction rate. Fill the air with flare. Careful of your reload time.",
 	Model		= "models/missiles/blackjellypod.mdl",
@@ -51,6 +51,7 @@ ACF.RegisterWeapon("40mmGL", "FGL", {
 	Year		= 1970,
 	MagSize		= 30,
 	MagReload	= 20,
+	Cyclic		= 125,
 	Round = {
 		MaxLength = 9,
 		PropMass  = 0.007,
