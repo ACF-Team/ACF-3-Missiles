@@ -15,7 +15,7 @@
 ACF.ActiveMissiles = ACF.ActiveMissiles or {}
 ACF.ActiveRadars = ACF.ActiveRadars or {}
 
-ACF.MaxDamageInaccuracy = 250
+ACF.MaxDamageInaccuracy = 1000
 
 ACFM.DefaultRadarSound = "buttons/button16.wav"
 
