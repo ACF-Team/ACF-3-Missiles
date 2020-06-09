@@ -41,16 +41,19 @@ end)
 
 hook.Add("Initialize", "ACF Wire FLIR Compatibility", function()
 	if FLIR then
+		local FlareMat = Material("sprites/orangeflare1")
 		local LaserMat = Material("cable/redlaser")
 		local Lasers = ACF.ActiveLasers
 
 		hook.Add("PostDrawOpaqueRenderables", "ACF Active Lasers", function()
 			if not FLIR.enabled then return end
 
-			render.SetMaterial(LaserMat)
-
 			for _, Data in pairs(Lasers) do
+				render.SetMaterial(LaserMat)
 				render.DrawBeam(Data.Origin, Data.HitPos, 10, 0, 0)
+
+				render.SetMaterial(FlareMat)
+				render.DrawSprite(Data.HitPos, 100, 100, Color(255, 255, 255))
 			end
 		end)
 	end
