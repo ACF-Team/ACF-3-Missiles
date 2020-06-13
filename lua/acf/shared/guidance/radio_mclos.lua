@@ -17,9 +17,13 @@ function Guidance:GetComputer()
 	local Source = self.Source
 
 	if not IsValid(Source) then return end
-	if not IsValid(Source.Computer) then return end
 
-	return Source.Computer
+	local Computer = Source.Computer
+
+	if not IsValid(Computer) then return end
+	if Computer.Disabled then return end
+
+	return Computer
 end
 
 function Guidance:CheckComputer()

@@ -17,6 +17,8 @@ function Guidance:OnLaunched(Missile)
 end
 
 function Guidance:OnRange(Missile)
+	if not IsValid(self.Source) then return false end
+
 	local From = self.Source:LocalToWorld(self.InPos)
 	local To = Missile:LocalToWorld(self.OutPos)
 
