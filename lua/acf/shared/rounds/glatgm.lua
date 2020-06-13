@@ -12,15 +12,7 @@ function Round.create(Gun, BulletData)
 	if Gun:GetClass() == "acf_ammo" then
 		ACF_CreateBullet( BulletData )
 	else
-		local GLATGM = ents.Create("acf_glatgm")
-		GLATGM.Owner = Gun.Owner
-		GLATGM.DoNotDuplicate = true
-		GLATGM.Guidance = Gun
-		GLATGM:SetAngles(Gun:GetAngles())
-		GLATGM:SetPos(Gun:GetAttachment(1).Pos) -- + Gun:GetForward()*24)
-		GLATGM.BulletData = BulletData
-		GLATGM.Distance = BulletData.MuzzleVel * 4 * 39.37 -- optical fuze distance
-		GLATGM:Spawn()
+		MakeACF_GLATGM(Gun, BulletData)
 	end
 end
 
