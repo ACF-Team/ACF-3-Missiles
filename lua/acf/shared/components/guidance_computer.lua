@@ -253,19 +253,9 @@ do -- Optical guidance computer
 		return Entity:LocalToWorld(Entity.Offset + Entity.Direction * Distance)
 	end
 
-	-- Floors the value to intervals of 1 meter
+	-- Floors the value to intervals of 10 meters
 	local function FloorMeters(Value)
-		return math.floor(Value * 0.0254) * 39.37
-	end
-
-	local function FloorVecMeters(Value)
-		local X, Y, Z = Value:Unpack()
-
-		X = FloorMeters(X)
-		Y = FloorMeters(Y)
-		Z = FloorMeters(Z)
-
-		return Vector(X, Y, Z)
+		return math.floor(Value * 0.00254) * 393.7
 	end
 
 	hook.Add("OnMissileLaunched", "ACF Optical Computer Filter", function(Missile)
@@ -358,14 +348,14 @@ do -- Optical guidance computer
 			Computers[Entity] = nil
 		end,
 		OnOverlayTitle = function(Entity)
-			if Entity.HitPos ~= Entity.TracePos then return "Ranging" end
+			if Entity.Distance ~= Entity.TraceDist then return "Ranging" end
 			if Entity.InputPitch ~= 0 or Entity.InputYaw ~= 0 then
 				return "In use"
 			end
 		end,
 		OnOverlayBody = function(Entity)
 			local Text = "Distance: %s m\nPitch: %s degree(s)\nYaw: %s degree(s)"
-			local Distance = math.Round(Entity.Distance * 0.0254)
+			local Distance = math.Round(FloorMeters(Entity.Distance) * 0.0254)
 			local Pitch = math.Round(Entity.Pitch, 2)
 			local Yaw = math.Round(Entity.Yaw, 2)
 
@@ -434,10 +424,13 @@ do -- Optical guidance computer
 				local Delta = math.Clamp(Entity.TraceDist - Entity.Distance, -Focus, Focus)
 
 				Entity.Distance = Entity.Distance + Delta
-				Entity.HitPos = GetTraceEndPos(Entity, Entity.Distance)
 
-				WireLib.TriggerOutput(Entity, "HitPos", FloorVecMeters(Entity.HitPos))
-				WireLib.TriggerOutput(Entity, "Distance", FloorMeters(Entity.Distance))
+				local MeterDistance = FloorMeters(Entity.Distance)
+
+				Entity.HitPos = GetTraceEndPos(Entity, MeterDistance)
+
+				WireLib.TriggerOutput(Entity, "HitPos", Entity.HitPos)
+				WireLib.TriggerOutput(Entity, "Distance", MeterDistance)
 
 				Entity:UpdateOverlay()
 			end
@@ -615,7 +608,7 @@ do -- Laser guidance computer
 
 				Entity.Direction = Direction
 
-				if not Changed and Entity.NextSpread <= ACF.CurTime then
+				if Entity.NextSpread <= ACF.CurTime then
 					Entity:SetNW2Vector("Direction", Direction)
 
 					Entity.NextSpread = ACF.CurTime + 0.1
