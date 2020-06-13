@@ -31,6 +31,33 @@ ACF.RegisterClassUnlink("acf_computer", "acf_rack", function(Computer, Target)
 	return false, "This rack is not linked to this computer."
 end)
 
+ACF.RegisterClassLink("acf_computer", "acf_gun", function(Computer, Target)
+	if Computer.Weapons[Target] then return false, "This computer is already linked to this weapon!" end
+	if Target.Computer == Computer then return false, "This computer is already linked to this weapon!" end
+
+	Computer.Weapons[Target] = true
+	Target.Computer = Computer
+
+	Computer:UpdateOverlay()
+	Target:UpdateOverlay()
+
+	return true, "Computer linked successfully!"
+end)
+
+ACF.RegisterClassUnlink("acf_computer", "acf_gun", function(Computer, Target)
+	if Computer.Weapons[Target] or Target.Computer == Computer then
+		Computer.Weapons[Target] = nil
+		Target.Computer = nil
+
+		Computer:UpdateOverlay()
+		Target:UpdateOverlay()
+
+		return true, "Computer unlinked successfully!"
+	end
+
+	return false, "This computer is not linked to this weapon."
+end)
+
 --===============================================================================================--
 -- Local Funcs and Vars
 --===============================================================================================--
