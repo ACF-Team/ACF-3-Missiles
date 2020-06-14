@@ -198,8 +198,7 @@ end
 
 hook.Add("InitPostEntity", "ACFMissiles_AddSoundSupport", function()
 	timer.Simple(1, function()
-
-		ACF.SoundToolSupport["acf_rack"] = {
+		ACF.SoundToolSupport.acf_rack = {
 			GetSound = function(ent) return { Sound = ent.SoundPath } end,
 
 			SetSound = function(ent, soundData)
@@ -213,13 +212,13 @@ hook.Add("InitPostEntity", "ACFMissiles_AddSoundSupport", function()
 
 				local soundData = { Sound = Classes.GunClass[Class].sound }
 
-				local setSound = ACF.SoundToolSupport["acf_gun"].SetSound
+				local setSound = ACF.SoundToolSupport.acf_rack.SetSound
 
 				setSound(ent, soundData)
 			end
 		}
 
-		ACF.SoundToolSupport["acf_radar"] = {
+		ACF.SoundToolSupport.acf_radar = {
 			GetSound = function(ent) return {Sound = ent.Sound} end,
 
 			SetSound = function(ent, soundData)
@@ -230,7 +229,7 @@ hook.Add("InitPostEntity", "ACFMissiles_AddSoundSupport", function()
 			ResetSound = function(ent)
 				local soundData = { Sound = ACFM.DefaultRadarSound }
 
-				local setSound = ACF.SoundToolSupport["acf_gun"].SetSound
+				local setSound = ACF.SoundToolSupport.acf_radar.SetSound
 				setSound( ent, soundData )
 			end
 		}
