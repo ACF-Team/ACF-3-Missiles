@@ -608,12 +608,12 @@ function ENT:FireMissile()
 				PhysMissile:SetMass(Missile.RoundWeight)
 			end
 
-			Missile:DoFlight(self:LocalToWorld(Pos), ShootVec)
-			Missile:Launch()
-
 			if self.SoundPath and self.SoundPath ~= "" then
 				Missile.BulletData.Sound = self.SoundPath
 			end
+
+			Missile:DoFlight(self:LocalToWorld(Pos), ShootVec)
+			Missile:Launch()
 
 			self:UpdateAmmoCount(Attachment)
 
