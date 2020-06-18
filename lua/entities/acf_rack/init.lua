@@ -9,7 +9,6 @@ ACF.RegisterClassLink("acf_rack", "acf_ammo", function(Weapon, Target)
 	if Target.RoundType == "Refill" then return false, "Refill crates cannot be linked!" end
 	if Weapon.Crates[Target] then return false, "This rack is already linked to this crate." end
 	if Target.Weapons[Weapon] then return false, "This rack is already linked to this crate." end
-	if Weapon.MissileId ~= Target.BulletData.Id then return false, "Wrong ammo type for this rack." end
 
 	local BulletData = Target.BulletData
 	local GunClass = ACF_GetGunValue(BulletData, "gunclass")
@@ -50,6 +49,7 @@ local CheckLegal  = ACF_CheckLegal
 local ClassLink	  = ACF.GetClassLink
 local ClassUnlink = ACF.GetClassUnlink
 local UnlinkSound = "physics/metal/metal_box_impact_bullet%s.wav"
+local EMPTY = { Type = "Empty", PropMass = 0, ProjMass = 0, Tracer = 0 }
 
 local WireTable = {
 	gmod_wire_adv_pod = true,
@@ -122,21 +122,13 @@ local Inputs = {
 	end,
 }
 
-local function CheckRackID(ID, MissileID)
+local function CheckRackID(ID)
 	local Weapons = ACF.Weapons
 
-	if not (ID and Weapons.Rack[ID]) then
-		local GunClass = Weapons.Guns[MissileID]
+	ID = ID or "1xRK"
 
-		if not GunClass then
-			error("Couldn't spawn the missile rack: can't find the gun-class '" .. tostring(MissileID) .. "'.")
-		end
-
-		if not GunClass.rack then
-			error("Couldn't spawn the missile rack: '" .. tostring(MissileID) .. "' doesn't have a preferred missile rack.")
-		end
-
-		ID = GunClass.rack
+	if not Weapons.Rack[ID] then
+		ID = "1xRK"
 	end
 
 	return ID
@@ -280,10 +272,10 @@ end
 
 -------------------------------[[ Global Functions ]]-------------------------------
 
-function MakeACF_Rack(Owner, Pos, Angle, Id, MissileId)
+function MakeACF_Rack(Owner, Pos, Angle, Id)
 	if not Owner:CheckLimit("_acf_gun") then return end
 
-	Id = CheckRackID(Id, MissileId)
+	Id = CheckRackID(Id)
 
 	local List = ACF.Weapons.Rack
 	local Classes = ACF.Classes.Rack
@@ -307,7 +299,6 @@ function MakeACF_Rack(Owner, Pos, Angle, Id, MissileId)
 	Owner:AddCleanup("acfmenu", Rack)
 
 	Rack.Id					= Id
-	Rack.MissileId			= MissileId
 	Rack.MinCaliber			= GunData.mincaliber
 	Rack.MaxCaliber			= GunData.maxcaliber
 	Rack.Caliber			= GunData.caliber
@@ -316,7 +307,7 @@ function MakeACF_Rack(Owner, Pos, Angle, Id, MissileId)
 	Rack.LegalMass			= Rack.Mass
 	Rack.Class				= GunData.gunclass
 	Rack.Owner				= Owner
-	Rack.EntType			= MissileId or Id
+	Rack.EntType			= Id
 
 	-- Custom BS for karbine: Per Rack ROF, Magazine Size, Mag reload Time
 	Rack.PGRoFmod			= GunData.rofmod and math.max(0, GunData.rofmod) or 1
@@ -356,11 +347,7 @@ function MakeACF_Rack(Owner, Pos, Angle, Id, MissileId)
 	Rack.Inputs = WireLib.CreateInputs(Rack, { "Fire", "Reload", "Elevation", "Azimuth", "Target Pos [VECTOR]" })
 	Rack.Outputs = WireLib.CreateOutputs(Rack, { "Ready", "Entity [ENTITY]", "Shots Left", "Position [VECTOR]", "Target [ENTITY]" })
 
-	Rack.BulletData	= {
-		Type = "Empty",
-		PropMass = 0,
-		ProjMass = 0,
-	}
+	Rack.BulletData	= EMPTY
 
 	Rack:SetNWString("Class", Rack.Class)
 	Rack:SetNWString("Sound", Rack.SoundPath)
@@ -395,7 +382,7 @@ function MakeACF_Rack(Owner, Pos, Angle, Id, MissileId)
 end
 
 list.Set("ACFCvars", "acf_rack" , {"data9", "id"})
-duplicator.RegisterEntityClass("acf_rack", MakeACF_Rack, "Pos", "Angle", "Id", "MissileId")
+duplicator.RegisterEntityClass("acf_rack", MakeACF_Rack, "Pos", "Angle", "Id")
 ACF.RegisterLinkSource("acf_rack", "Crates")
 ACF.RegisterLinkSource("acf_rack", "Computer", true)
 ACF.RegisterLinkSource("acf_rack", "Radar", true)
@@ -736,6 +723,10 @@ function ENT:Think()
 		end
 	end
 
+	self.BulletData = IsValid(Missile) and Missile.BulletData or EMPTY
+
+	self:UpdateOverlay()
+
 	self:NextThink(Time + 0.5)
 	self.LastThink = Time
 
@@ -791,11 +782,6 @@ function ENT:PostEntityPaste(Player, Ent, CreatedEntities)
 
 		for _, EntID in pairs(Entities) do
 			Entity = CreatedEntities[EntID]
-
-			-- Old racks don't have this
-			if not self.MissileId and IsValid(Entity) then
-				self.MissileId = Entity.RoundId
-			end
 
 			self:Link(Entity)
 		end
