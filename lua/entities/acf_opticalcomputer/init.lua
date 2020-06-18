@@ -285,25 +285,35 @@ function ENT:Unlink(Target)
 	return false, "Computers can't be unlinked from '" .. Target:GetClass() .. "'."
 end
 
-function ENT:UpdateOverlay()
+local function Overlay(Ent)
+	if Ent.Disabled then
+		Ent:SetOverlayText("Disabled: " .. Ent.DisableReason .. "\n" .. Ent.DisableDescription)
+	else
+		local Text = "%s\n\nLaser: %s\nDistance: %s m"
+		local Distance = math.Round(Ent.Distance * 0.0254, 2)
+		local Status
+
+		if Ent.OnCooldown then
+			Status = "Cooling down"
+		else
+			Status = Ent.Active and "Active" or "Idle"
+		end
+
+		Ent:SetOverlayText(Text:format(Status, Ent.Lasing and "ON" or "OFF", Distance))
+	end
+end
+
+function ENT:UpdateOverlay(Instant)
+	if Instant then
+		return Overlay(self)
+	end
+
 	if timer.Exists("ACF Overlay Buffer" .. self:EntIndex()) then return end
 
 	timer.Create("ACF Overlay Buffer" .. self:EntIndex(), 0.5, 1, function()
 		if not IsValid(self) then return end
 
-		local Text = "%s\n\nLaser: %s\nDistance: %s m"
-		local Distance = math.Round(self.Distance * 0.0254, 2)
-		local Status
-
-		if self.DisableReason then
-			Status = "Disabled: " .. self.DisableReason
-		elseif self.OnCooldown then
-			Status = "Cooling down"
-		else
-			Status = self.Active and "Active" or "Idle"
-		end
-
-		self:SetOverlayText(string.format(Text, Status, self.Lasing and "ON" or "OFF", Distance))
+		Overlay(self)
 	end)
 end
 

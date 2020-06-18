@@ -555,26 +555,38 @@ function ENT:Unlink(Target)
 	return false, "Racks can't be unlinked from '" .. Target:GetClass() .. "'."
 end
 
-function ENT:UpdateOverlay()
-	if timer.Exists("ACF Overlay Buffer" .. self:EntIndex()) then return end
-
-	timer.Create("ACF Overlay Buffer" .. self:EntIndex(), 1, 1, function()
-		if not IsValid(self) then return end
-
-		local Text = "%s\n\nAmmo type: %s\nRounds remaining: %s\nFire delay: %s second(s)\nReload time: %s second(s)"
-		local FireRate = math.Round(self.LastValidFireDelay or 1, 2)
-		local Reload = math.Round(self.ReloadTime or 0, 2)
+local function Overlay(Ent)
+	if Ent.Disabled then
+		Ent:SetOverlayText("Disabled: " .. Ent.DisableReason .. "\n" .. Ent.DisableDescription)
+	else
+		local Text = "%s\n\nLoaded ammo: %s\nRounds remaining: %s\nFire delay: %s second(s)\nReload time: %s second(s)"
+		local FireRate = math.Round(Ent.LastValidFireDelay or 1, 2)
+		local Reload = math.Round(Ent.ReloadTime or 0, 2)
+		local Bullet = Ent.BulletData
+		local Ammo = (Bullet.Id and (Bullet.Id .. " ") or "") .. Bullet.Type
 		local Status
 
-		if self.DisableReason then
-			Status = "Disabled: " .. self.DisableReason
-		elseif not next(self.Crates) then
+		if not next(Ent.Crates) then
 			Status = "Not linked to an ammo crate!"
 		else
-			Status = self.State or "Ok"
+			Status = Ent.Ready and "Ready" or "Loading"
 		end
 
-		self:SetOverlayText(string.format(Text, Status, self.EntType, self.AmmoCount, FireRate, Reload))
+		Ent:SetOverlayText(Text:format(Status, Ammo, Ent.AmmoCount, FireRate, Reload))
+	end
+end
+
+function ENT:UpdateOverlay(Instant)
+	if Instant then
+		return Overlay(self)
+	end
+
+	if timer.Exists("ACF Overlay Buffer" .. self:EntIndex()) then return end
+
+	timer.Create("ACF Overlay Buffer" .. self:EntIndex(), 0.5, 1, function()
+		if not IsValid(self) then return end
+
+		Overlay(self)
 	end)
 end
 
