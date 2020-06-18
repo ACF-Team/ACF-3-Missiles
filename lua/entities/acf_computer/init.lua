@@ -321,19 +321,17 @@ function ENT:Unlink(Target)
 	return false, "Computers can't be unlinked from '" .. Target:GetClass() .. "'."
 end
 
-local function Overlay(Entity)
-	local Title = Entity.OverlayTitle and Entity:OverlayTitle()
-	local Body = Entity.OverlayBody and Entity:OverlayBody()
+local function Overlay(Ent)
+	if Ent.Disabled then
+		Ent:SetOverlayText("Disabled: " .. Ent.DisableReason .. "\n" .. Ent.DisableDescription)
+	else
+		local Title = Ent.OverlayTitle and Ent:OverlayTitle() or "Idle"
+		local Body = Ent.OverlayBody and Ent:OverlayBody()
 
-	if Entity.Disabled then
-		Title = "Disabled: " .. Entity.DisableReason
-	elseif not Title then
-		Title = "Idle"
+		Body = Body and ("\n\n" .. Body) or ""
+
+		Ent:SetOverlayText(Title .. Body)
 	end
-
-	Body = Body and ("\n\n" .. Body) or ""
-
-	Entity:SetOverlayText(Title .. Body)
 end
 
 function ENT:UpdateOverlay(Instant)
@@ -344,9 +342,9 @@ function ENT:UpdateOverlay(Instant)
 	if timer.Exists("ACF Overlay Buffer" .. self:EntIndex()) then return end
 
 	timer.Create("ACF Overlay Buffer" .. self:EntIndex(), 0.5, 1, function()
-		if IsValid(self) then
-			Overlay(self)
-		end
+		if not IsValid(self) then return end
+
+		Overlay(self)
 	end)
 end
 
