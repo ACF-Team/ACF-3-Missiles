@@ -49,24 +49,26 @@ local TimerExists = timer.Exists
 local TimerCreate = timer.Create
 local TimerRemove = timer.Remove
 
-local function Overlay(Entity)
-	local Text = "%s\n\n%s\nDetection range: %s\nScanning angle: %s degrees"
-	local Status, Range, Cone
-
-	if Entity.DisableReason then
-		Status = "Disabled: " .. Entity.DisableReason
-	elseif Entity.TargetCount > 0 then
-		Status = Entity.TargetCount .. " target(s) detected"
-	elseif not Entity.Active then
-		Status = "Idle"
+local function Overlay(Ent)
+	if Ent.Disabled then
+		Ent:SetOverlayText("Disabled: " .. Ent.DisableReason .. "\n" .. Ent.DisableDescription)
 	else
-		Status = Entity.Scanning and "Active" or "Activating"
+		local Text = "%s\n\n%s\nDetection range: %s\nScanning angle: %s degrees"
+		local Status, Range, Cone
+
+		if Ent.TargetCount > 0 then
+			Status = Ent.TargetCount .. " target(s) detected"
+		elseif not Ent.Active then
+			Status = "Idle"
+		else
+			Status = Ent.Scanning and "Active" or "Activating"
+		end
+
+		Range = Ent.Range and math.Round(Ent.Range / 39.37 , 2) .. " meters" or "Infinite"
+		Cone = Ent.ConeDegs and math.Round(Ent.ConeDegs, 2) or 360
+
+		Ent:SetOverlayText(Text:format(Status, Ent.EntType, Range, Cone))
 	end
-
-	Range = Entity.Range and math.Round(Entity.Range / 39.37 , 2) .. " meters" or "Infinite"
-	Cone = Entity.ConeDegs and math.Round(Entity.ConeDegs, 2) or 360
-
-	Entity:SetOverlayText(string.format(Text, Status, Entity.EntType, Range, Cone))
 end
 
 local function ClearTargets(Entity)

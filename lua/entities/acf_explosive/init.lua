@@ -229,13 +229,13 @@ function ENT:Detonate(BulletData)
 			ACFM_ResetVelocity(Bullet)
 		end
 
-		local Bullet = ACF_CreateBullet(BulletData)
-
 		self:SetNotSolid(true)
 
 		if IsValid(PhysObj) then
 			PhysObj:EnableMotion(false)
 		end
+
+		local Bullet = ACF_CreateBullet(BulletData)
 
 		self:DoReplicatedPropHit(Bullet)
 	else

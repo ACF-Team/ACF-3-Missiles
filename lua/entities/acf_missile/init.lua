@@ -9,6 +9,8 @@ ENT.DisableDuplicator	= true
 
 -------------------------------[[ Local Functions ]]-------------------------------
 
+local Trace = ACF.Trace
+local TraceData = { start = true, endpos = true, filter = true }
 local Gravity = GetConVar("sv_gravity")
 local GhostPeriod = GetConVar("ACFM_GhostPeriod")
 local Guidances = ACF.Classes.Guidances
@@ -287,19 +289,17 @@ local function CalcFlight(Missile)
 	local EndPos = Pos + Vel
 
 	--Hit detection
-	local TraceData = {
-		start = Pos,
-		endpos = EndPos,
-		filter = Missile.Filter
-	}
+	TraceData.start = Pos
+	TraceData.endpos = EndPos
+	TraceData.filter = Missile.Filter
 
-	local Trace = util.TraceLine(TraceData)
+	local Result = Trace(TraceData, true)
 
-	if Trace.Hit and Time >= Missile.GhostPeriod then
-		Missile.HitNorm = Trace.HitNormal
+	if Result.Hit and Time >= Missile.GhostPeriod then
+		Missile.HitNorm = Result.HitNormal
 		Missile.LastVel = Vel / DeltaTime
 
-		Missile:DoFlight(Trace.HitPos)
+		Missile:DoFlight(Result.HitPos)
 		Missile:Detonate()
 
 		return
@@ -412,7 +412,7 @@ function ENT:DoFlight(ToPos, ToDir)
 	self.BulletData.Pos = NewPos
 end
 
-function ENT:Detonate()
+function ENT:Detonate(Destroyed)
 	self.Motor = 0
 	self.Exploded = true
 	self.Disabled = self.Disabled or self.Fuze and (CurTime() - self.Fuze.TimeStarted < self.MinArmingDelay or not self.Fuze:IsArmed())
@@ -425,6 +425,13 @@ function ENT:Detonate()
 	if self.Disabled then
 		Dud(self)
 		return
+	end
+
+	-- Workaround for HEAT jets that can travel the entire map on destroyed missiles
+	if Destroyed and self.BulletData.Type == "HEAT" then
+		self.BulletData.Type = "HE"
+
+		self:SetNWString("AmmoType", "HE")
 	end
 
 	self.BulletData.Flight = self:GetForward() * (self.BulletData.MuzzleVel or 10)
@@ -539,7 +546,7 @@ function ENT:ACF_OnDamage(Entity, Energy, FrArea, Angle, Inflictor)
 			self.Inflictor = Inflictor
 		end
 
-		self:Detonate()
+		self:Detonate(true)
 	end
 
 	return HitRes -- This function needs to return HitRes

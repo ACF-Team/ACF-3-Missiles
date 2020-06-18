@@ -9,7 +9,6 @@ ACF.RegisterClassLink("acf_rack", "acf_ammo", function(Weapon, Target)
 	if Target.RoundType == "Refill" then return false, "Refill crates cannot be linked!" end
 	if Weapon.Crates[Target] then return false, "This rack is already linked to this crate." end
 	if Target.Weapons[Weapon] then return false, "This rack is already linked to this crate." end
-	if Weapon.MissileId ~= Target.BulletData.Id then return false, "Wrong ammo type for this rack." end
 
 	local BulletData = Target.BulletData
 	local GunClass = ACF_GetGunValue(BulletData, "gunclass")
@@ -51,6 +50,7 @@ local ClassLink	  = ACF.GetClassLink
 local ClassUnlink = ACF.GetClassUnlink
 local Inputs	  = ACF.GetInputActions("acf_rack")
 local UnlinkSound = "physics/metal/metal_box_impact_bullet%s.wav"
+local EMPTY = { Type = "Empty", PropMass = 0, ProjMass = 0, Tracer = 0 }
 
 local WireTable = {
 	gmod_wire_adv_pod = true,
@@ -108,21 +108,13 @@ ACF.AddInputAction("acf_rack", "Reload", function(Entity, Value)
 	end
 end)
 
-local function CheckRackID(ID, MissileID)
+local function CheckRackID(ID)
 	local Weapons = ACF.Weapons
 
-	if not (ID and Weapons.Rack[ID]) then
-		local GunClass = Weapons.Guns[MissileID]
+	ID = ID or "1xRK"
 
-		if not GunClass then
-			error("Couldn't spawn the missile rack: can't find the gun-class '" .. tostring(MissileID) .. "'.")
-		end
-
-		if not GunClass.rack then
-			error("Couldn't spawn the missile rack: '" .. tostring(MissileID) .. "' doesn't have a preferred missile rack.")
-		end
-
-		ID = GunClass.rack
+	if not Weapons.Rack[ID] then
+		ID = "1xRK"
 	end
 
 	return ID
@@ -266,10 +258,10 @@ end
 
 -------------------------------[[ Global Functions ]]-------------------------------
 
-function MakeACF_Rack(Owner, Pos, Angle, Id, MissileId)
+function MakeACF_Rack(Owner, Pos, Angle, Id)
 	if not Owner:CheckLimit("_acf_weapon") then return end
 
-	Id = CheckRackID(Id, MissileId)
+	Id = CheckRackID(Id)
 
 	local List = ACF.Weapons.Rack
 	local Classes = ACF.Classes.Rack
@@ -293,7 +285,6 @@ function MakeACF_Rack(Owner, Pos, Angle, Id, MissileId)
 	Owner:AddCleanup("acfmenu", Rack)
 
 	Rack.Id					= Id
-	Rack.MissileId			= MissileId
 	Rack.MinCaliber			= GunData.mincaliber
 	Rack.MaxCaliber			= GunData.maxcaliber
 	Rack.Caliber			= GunData.caliber
@@ -302,7 +293,7 @@ function MakeACF_Rack(Owner, Pos, Angle, Id, MissileId)
 	Rack.LegalMass			= Rack.Mass
 	Rack.Class				= GunData.gunclass
 	Rack.Owner				= Owner
-	Rack.EntType			= MissileId or Id
+	Rack.EntType			= Id
 
 	-- Custom BS for karbine: Per Rack ROF, Magazine Size, Mag reload Time
 	Rack.PGRoFmod			= GunData.rofmod and math.max(0, GunData.rofmod) or 1
@@ -339,11 +330,7 @@ function MakeACF_Rack(Owner, Pos, Angle, Id, MissileId)
 	Rack.Inputs = WireLib.CreateInputs(Rack, { "Fire", "Reload" })
 	Rack.Outputs = WireLib.CreateOutputs(Rack, { "Ready", "Entity [ENTITY]", "Shots Left", "Target [ENTITY]" })
 
-	Rack.BulletData	= {
-		Type = "Empty",
-		PropMass = 0,
-		ProjMass = 0,
-	}
+	Rack.BulletData	= EMPTY
 
 	Rack:SetNWString("Class", Rack.Class)
 	Rack:SetNWString("Sound", Rack.SoundPath)
@@ -378,7 +365,7 @@ function MakeACF_Rack(Owner, Pos, Angle, Id, MissileId)
 end
 
 list.Set("ACFCvars", "acf_rack" , {"data9", "id"})
-duplicator.RegisterEntityClass("acf_rack", MakeACF_Rack, "Pos", "Angle", "Id", "MissileId")
+duplicator.RegisterEntityClass("acf_rack", MakeACF_Rack, "Pos", "Angle", "Id")
 ACF.RegisterLinkSource("acf_rack", "Crates")
 ACF.RegisterLinkSource("acf_rack", "Computer", true)
 ACF.RegisterLinkSource("acf_rack", "Radar", true)
@@ -483,8 +470,8 @@ function ENT:ACF_OnDamage(Entity, Energy, FrArea, Angle, Inflictor)
 
 		if next(self.Missiles) then
 			for _, Missile in pairs(self.Missiles) do
-				Missile:SetParent()
-				Missile:Detonate()
+				Missile:SetParent(nil)
+				Missile:Detonate(true)
 			end
 		end
 	end
@@ -522,26 +509,38 @@ function ENT:Unlink(Target)
 	return false, "Racks can't be unlinked from '" .. Target:GetClass() .. "'."
 end
 
-function ENT:UpdateOverlay()
-	if timer.Exists("ACF Overlay Buffer" .. self:EntIndex()) then return end
-
-	timer.Create("ACF Overlay Buffer" .. self:EntIndex(), 1, 1, function()
-		if not IsValid(self) then return end
-
-		local Text = "%s\n\nAmmo type: %s\nRounds remaining: %s\nFire delay: %s second(s)\nReload time: %s second(s)"
-		local FireRate = math.Round(self.LastValidFireDelay or 1, 2)
-		local Reload = math.Round(self.ReloadTime or 0, 2)
+local function Overlay(Ent)
+	if Ent.Disabled then
+		Ent:SetOverlayText("Disabled: " .. Ent.DisableReason .. "\n" .. Ent.DisableDescription)
+	else
+		local Text = "%s\n\nLoaded ammo: %s\nRounds remaining: %s\nFire delay: %s second(s)\nReload time: %s second(s)"
+		local FireRate = math.Round(Ent.LastValidFireDelay or 1, 2)
+		local Reload = math.Round(Ent.ReloadTime or 0, 2)
+		local Bullet = Ent.BulletData
+		local Ammo = (Bullet.Id and (Bullet.Id .. " ") or "") .. Bullet.Type
 		local Status
 
-		if self.DisableReason then
-			Status = "Disabled: " .. self.DisableReason
-		elseif not next(self.Crates) then
+		if not next(Ent.Crates) then
 			Status = "Not linked to an ammo crate!"
 		else
-			Status = self.State or "Ok"
+			Status = Ent.Ready and "Ready" or "Loading"
 		end
 
-		self:SetOverlayText(string.format(Text, Status, self.EntType, self.AmmoCount, FireRate, Reload))
+		Ent:SetOverlayText(Text:format(Status, Ammo, Ent.AmmoCount, FireRate, Reload))
+	end
+end
+
+function ENT:UpdateOverlay(Instant)
+	if Instant then
+		return Overlay(self)
+	end
+
+	if timer.Exists("ACF Overlay Buffer" .. self:EntIndex()) then return end
+
+	timer.Create("ACF Overlay Buffer" .. self:EntIndex(), 0.5, 1, function()
+		if not IsValid(self) then return end
+
+		Overlay(self)
 	end)
 end
 
@@ -693,6 +692,10 @@ function ENT:Think()
 		end
 	end
 
+	self.BulletData = IsValid(Missile) and Missile.BulletData or EMPTY
+
+	self:UpdateOverlay()
+
 	self:NextThink(Time + 0.5)
 	self.LastThink = Time
 
@@ -748,11 +751,6 @@ function ENT:PostEntityPaste(Player, Ent, CreatedEntities)
 
 		for _, EntID in pairs(Entities) do
 			Entity = CreatedEntities[EntID]
-
-			-- Old racks don't have this
-			if not self.MissileId and IsValid(Entity) then
-				self.MissileId = Entity.RoundId
-			end
 
 			self:Link(Entity)
 		end
