@@ -9,6 +9,8 @@ ENT.DisableDuplicator	= true
 
 -------------------------------[[ Local Functions ]]-------------------------------
 
+local Trace = ACF.Trace
+local TraceData = { start = true, endpos = true, filter = true }
 local Gravity = GetConVar("sv_gravity")
 local GhostPeriod = GetConVar("ACFM_GhostPeriod")
 
@@ -285,19 +287,17 @@ local function CalcFlight(Missile)
 	local EndPos = Pos + Vel
 
 	--Hit detection
-	local TraceData = {
-		start = Pos,
-		endpos = EndPos,
-		filter = Missile.Filter
-	}
+	TraceData.start = Pos
+	TraceData.endpos = EndPos
+	TraceData.filter = Missile.Filter
 
-	local Trace = util.TraceLine(TraceData)
+	local Result = Trace(TraceData, true)
 
-	if Trace.Hit and Time >= Missile.GhostPeriod then
-		Missile.HitNorm = Trace.HitNormal
+	if Result.Hit and Time >= Missile.GhostPeriod then
+		Missile.HitNorm = Result.HitNormal
 		Missile.LastVel = Vel / DeltaTime
 
-		Missile:DoFlight(Trace.HitPos)
+		Missile:DoFlight(Result.HitPos)
 		Missile:Detonate()
 
 		return
