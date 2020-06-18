@@ -410,7 +410,7 @@ function ENT:DoFlight(ToPos, ToDir)
 	self.BulletData.Pos = NewPos
 end
 
-function ENT:Detonate()
+function ENT:Detonate(Destroyed)
 	self.Motor = 0
 	self.Exploded = true
 	self.Disabled = self.Disabled or self.Fuse and (CurTime() - self.Fuse.TimeStarted < self.MinArmingDelay or not self.Fuse:IsArmed())
@@ -423,6 +423,13 @@ function ENT:Detonate()
 	if self.Disabled then
 		Dud(self)
 		return
+	end
+
+	-- Workaround for HEAT jets that can travel the entire map on destroyed missiles
+	if Destroyed and self.BulletData.Type == "HEAT" then
+		self.BulletData.Type = "HE"
+
+		self:SetNWString("AmmoType", "HE")
 	end
 
 	self.BulletData.Flight = self:GetForward() * (self.BulletData.MuzzleVel or 10)
@@ -537,7 +544,7 @@ function ENT:ACF_OnDamage(Entity, Energy, FrArea, Angle, Inflictor)
 			self.Inflictor = Inflictor
 		end
 
-		self:Detonate()
+		self:Detonate(true)
 	end
 
 	return HitRes -- This function needs to return HitRes

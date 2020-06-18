@@ -516,8 +516,8 @@ function ENT:ACF_OnDamage(Entity, Energy, FrArea, Angle, Inflictor)
 
 		if next(self.Missiles) then
 			for _, Missile in pairs(self.Missiles) do
-				Missile:SetParent()
-				Missile:Detonate()
+				Missile:SetParent(nil)
+				Missile:Detonate(true)
 			end
 		end
 	end
