@@ -85,6 +85,7 @@ local function ResetOutputs(Entity)
 	WireLib.TriggerOutput(Entity, "Detected", 0)
 	WireLib.TriggerOutput(Entity, "ClosestDistance", 0)
 	WireLib.TriggerOutput(Entity, "IDs", {})
+	WireLib.TriggerOutput(Entity, "Owner", {})
 	WireLib.TriggerOutput(Entity, "Position", {})
 	WireLib.TriggerOutput(Entity, "Velocity", {})
 end
@@ -112,6 +113,7 @@ local function ScanForEntities(Entity)
 
 	local Detected = Entity:GetDetected()
 	local IDs = {}
+	local Own = {}
 	local Position = {}
 	local Velocity = {}
 
@@ -133,9 +135,9 @@ local function ScanForEntities(Entity)
 			Count = Count + 1
 
 			IDs[Count] = Ent:EntIndex()
+			Own[Count] = Ent:CPPIGetOwner():GetName() or ""
 			Position[Count] = EntPos
 			Velocity[Count] = EntVel
-
 			Entity.Targets[Ent] = Spread
 
 			if EntDist < Closest then
@@ -149,6 +151,7 @@ local function ScanForEntities(Entity)
 	WireLib.TriggerOutput(Entity, "Detected", Count)
 	WireLib.TriggerOutput(Entity, "ClosestDistance", Closest)
 	WireLib.TriggerOutput(Entity, "IDs", IDs)
+	WireLib.TriggerOutput(Entity, "Owner", Own)
 	WireLib.TriggerOutput(Entity, "Position", Position)
 	WireLib.TriggerOutput(Entity, "Velocity", Velocity)
 
@@ -272,7 +275,7 @@ function MakeACF_Radar(Owner, Pos, Angle, Id)
 	Radar.Targets		= {}
 
 	Radar.Inputs		= WireLib.CreateInputs(Radar, { "Active" })
-	Radar.Outputs		= WireLib.CreateOutputs(Radar, { "Scanning", "Detected", "ClosestDistance", "IDs [ARRAY]", "Position [ARRAY]", "Velocity [ARRAY]" })
+	Radar.Outputs		= WireLib.CreateOutputs(Radar, { "Scanning", "Detected", "ClosestDistance", "IDs [ARRAY]", "Owner [ARRAY]", "Position [ARRAY]", "Velocity [ARRAY]" })
 	Radar.GetDetected	= RadarClass.detect
 	Radar.Origin		= AttachData and Radar:WorldToLocal(AttachData.Pos) or Vector()
 
