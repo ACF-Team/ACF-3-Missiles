@@ -86,7 +86,8 @@ local function ResetOutputs(Entity)
 
 	WireLib.TriggerOutput(Entity, "Detected", 0)
 	WireLib.TriggerOutput(Entity, "ClosestDistance", 0)
-	WireLib.TriggerOutput(Entity, "Entities", {})
+	WireLib.TriggerOutput(Entity, "IDs", {})
+	WireLib.TriggerOutput(Entity, "Owner", {})
 	WireLib.TriggerOutput(Entity, "Position", {})
 	WireLib.TriggerOutput(Entity, "Velocity", {})
 end
@@ -113,7 +114,8 @@ local function ScanForEntities(Entity)
 	if not Entity.GetDetected then return end
 
 	local Detected = Entity:GetDetected()
-	local Entities = {}
+	local IDs = {}
+	local Own = {}
 	local Position = {}
 	local Velocity = {}
 
@@ -134,10 +136,10 @@ local function ScanForEntities(Entity)
 
 			Count = Count + 1
 
-			Entities[Count] = Ent
+			IDs[Count] = Ent:EntIndex()
+			Own[Count] = Ent:CPPIGetOwner():GetName() or ""
 			Position[Count] = EntPos
 			Velocity[Count] = EntVel
-
 			Entity.Targets[Ent] = Spread
 
 			if EntDist < Closest then
@@ -150,7 +152,8 @@ local function ScanForEntities(Entity)
 
 	WireLib.TriggerOutput(Entity, "Detected", Count)
 	WireLib.TriggerOutput(Entity, "ClosestDistance", Closest)
-	WireLib.TriggerOutput(Entity, "Entities", Entities)
+	WireLib.TriggerOutput(Entity, "IDs", IDs)
+	WireLib.TriggerOutput(Entity, "Owner", Own)
 	WireLib.TriggerOutput(Entity, "Position", Position)
 	WireLib.TriggerOutput(Entity, "Velocity", Velocity)
 
