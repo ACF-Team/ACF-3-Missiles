@@ -312,7 +312,7 @@ do -- Spawn and Update functions
 		Radar.Weapons		= {}
 		Radar.Targets		= {}
 		Radar.Inputs		= WireLib.CreateInputs(Radar, { "Active" })
-		Radar.Outputs		= WireLib.CreateOutputs(Radar, { "Scanning", "Detected", "ClosestDistance", "Entities [ARRAY]", "Position [ARRAY]", "Velocity [ARRAY]" })
+		Radar.Outputs		= WireLib.CreateOutputs(Radar, { "Scanning", "Detected", "ClosestDistance", "IDs [ARRAY]", "Owner [ARRAY]", "Position [ARRAY]", "Velocity [ARRAY]" })
 		Radar.DataStore		= ACF.GetEntClassVars("acf_radar")
 
 		UpdateRadar(Radar, Data, Class, RadarData)
