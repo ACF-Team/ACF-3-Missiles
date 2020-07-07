@@ -72,10 +72,13 @@ do -- Joystick
 		Offset		= Vector(0, -1.5, -0.25),
 		Inputs		= { "Pitch", "Yaw" },
 		Outputs		= { "Current Pitch", "Current Yaw" },
+		Preview = {
+			FOV = 20,
+		},
 		Stick = {
-			Model	= "models/props_c17/trappropeller_lever.mdl",
-			Scale	= 0.5,
-			Offset	= 1.5,
+			Model = "models/props_c17/trappropeller_lever.mdl",
+			Scale = 0.5,
+			Offset = 1.5,
 		},
 		CreateMenu = function(Data, Menu)
 			local Angle = Data.MaxAngle
@@ -268,18 +271,21 @@ do -- Optical guidance computer
 
 	ACF.RegisterComponent("CPR-OPT", "GD-CPR", {
 		Name		= "Optical Guidance Computer",
-		Description	= "",
+		Description	= "Fully analog guidance computer. Unlike the laser guidance computer, it takes a few seconds for it to aim and focus properly.",
 		Model		= "models/props_lab/monitor01b.mdl",
 		Mass		= 43,
 		Offset		= Vector(6, -1, 0),
 		Speed		= 10, -- Degrees per second
 		FocusSpeed	= 300, -- Meters per second
-		Bounds		= {
-			Pitch	= 15,
-			Yaw		= 20,
-		},
 		Inputs		= { "Pitch", "Yaw" },
 		Outputs		= { "Ranging", "Distance", "HitPos [VECTOR]", "Current Pitch", "Current Yaw" },
+		Bounds = {
+			Pitch = 15,
+			Yaw = 20,
+		},
+		Preview = {
+			FOV = 35,
+		},
 		CreateMenu = function(Data, Menu)
 			local Pitch = Data.Bounds.Pitch
 			local Yaw = Data.Bounds.Yaw
@@ -451,12 +457,15 @@ do -- Laser guidance computer
 		Cooldown	= 10,
 		Offset		= Vector(6, -1, 0),
 		Speed		= 45, -- Degrees per second
-		Bounds		= {
-			Pitch	= 10,
-			Yaw		= 15,
-		},
 		Inputs		= { "Lase", "Pitch", "Yaw" },
 		Outputs		= { "Lasing", "Lase Time", "Cooling Down", "Distance", "HitPos [VECTOR]", "Current Pitch", "Current Yaw" },
+		Bounds = {
+			Pitch = 10,
+			Yaw = 15,
+		},
+		Preview = {
+			FOV = 35,
+		},
 		CreateMenu = function(Data, Menu)
 			local Pitch = Data.Bounds.Pitch
 			local Yaw = Data.Bounds.Yaw
@@ -673,6 +682,9 @@ do -- GPS transmitter
 		Mass		= 15,
 		Inputs		= { "Coordinates [VECTOR]" },
 		Outputs		= { "Transmitting", "Jammed", "Current Coordinates [VECTOR]" },
+		Preview = {
+			FOV = 35,
+		},
 		CreateMenu = function(Data, Menu)
 			Menu:AddLabel("Mass : " .. Data.Mass .. " kg")
 			--Menu:AddLabel("This entity can be jammed.") -- Not yet
