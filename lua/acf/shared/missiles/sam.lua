@@ -144,3 +144,81 @@ ACF_defineGun("SIMBAD-RC SAM", { --id
 	armdelay    = 0.1     -- minimum fuze arming delay		-was 0.3
 } )
 ]]--
+
+ACF.RegisterMissileClass("SAM", {
+	Name		= "Surface-To-Air Missile",
+	Description	= "Missiles specialized for surface-to-air operation, and well suited to lower altitude operation against ground attack aircraft.",
+	Sound		= "acf_missiles/missiles/missile_rocket.mp3",
+	Effect		= "Rocket Motor",
+	ReloadMul	= 8,
+	RoFMod		= 1,
+	Spread		= 1,
+	Blacklist	= { "AP", "APHE", "FL", "HEAT" }
+})
+
+ACF.RegisterMissile("FIM-92 SAM", "SAM", {
+	Name		= "FIM-92 Missile",
+	Description	= "The FIM-92 Stinger is a lightweight and versatile close-range air defense missile.\nWith a seek cone of 15 degrees and a sharply limited range that makes it useless versus high-flying targets, it is best to aim before firing and choose shots carefully.",
+	Model		= "models/missiles/fim_92.mdl",
+	Rack		= "1x FIM-92",
+	Length		= 66,
+	Caliber		= 70,
+	Mass		= 10,
+	Diameter	= 6.6, -- in cm
+	Year		= 1978,
+	RoFMod		= 1.2,
+	Guidance	= { "Dumb", "Infrared", "Anti-missile" },
+	Fuzes		= { "Contact", "Radio" },
+	Racks		= { ["1x FIM-92"] = true, ["2x FIM-92"] = true, ["4x FIM-92"] = true },
+	SeekCone	= 7.5,
+	ViewCone	= 30,
+	Agility		= 3,
+	ArmDelay	= 0.2,
+	Round = {
+		Model			= "models/missiles/fim_92.mdl",
+		RackModel		= "models/missiles/fim_92_folded.mdl",
+		MaxLength		= 100,
+		Armor			= 3,
+		PropMass		= 1.5,
+		Thrust			= 7000, -- in kg*in/s^2
+		BurnRate		= 1000, -- in cm^3/s
+		StarterPercent	= 0.3,
+		MinSpeed		= 3000,
+		DragCoef		= 0.001,
+		DragCoefFlight	= 0.0001,
+		FinMul			= 0.02
+	},
+})
+
+ACF.RegisterMissile("Strela-1 SAM", "SAM", {
+	Name		= "9M31 Strela-1",
+	Description	= "The 9M31 Strela-1 is a medium-range homing SAM with a much bigger payload than the FIM-92. Bulk, it is best suited to ground vehicles or stationary units.\nWith its 20 degree seek cone, the strela is fast-reacting, while its missiles are surprisingly deadly and able to defend an acceptable area.",
+	Model		= "models/missiles/9m31.mdl",
+	Rack		= "1x Strela-1",
+	Length		= 60,
+	Caliber		= 120,
+	Mass		= 30,
+	Diameter	= 12, -- in cm
+	Year		= 1960,
+	Guidance	= { "Dumb", "Infrared", "Anti-missile" },
+	Fuzes		= { "Contact", "Radio" },
+	Racks		= { ["1x Strela-1"] = true, ["2x Strela-1"] = true, ["4x Strela-1"] = true },
+	SeekCone	= 20,
+	ViewCone	= 40,
+	Agility		= 2,
+	ArmDelay	= 0.2,
+	Round = {
+		Model			= "models/missiles/9m31.mdl",
+		RackModel		= "models/missiles/9m31f.mdl",
+		MaxLength		= 105,
+		Armor			= 5,
+		PropMass		= 1,
+		Thrust			= 4000, -- in kg*in/s^2		
+		BurnRate		= 400, -- in cm^3/s
+		StarterPercent	= 0.1,
+		MinSpeed		= 4000,
+		DragCoef		= 0.003,
+		DragCoefFlight	= 0,
+		FinMul			= 0.03
+	},
+})

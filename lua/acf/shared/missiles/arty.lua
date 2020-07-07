@@ -136,3 +136,109 @@ ACF_defineGun("SS-40 RA", { --id
 
 	armdelay    = 0.6     -- minimum fuze arming delay
 } )
+
+ACF.RegisterMissileClass("ARTY", {
+	Name		= "Artillery Rockets",
+	Description	= "Artillery rockets provide massive HE delivery over a broad area, with arcing ballistic trajectories and limited guidance. Best equipped with a seeker head, fired up at an angle, then guided toward a stationary target.",
+	Sound		= "acf_missiles/missiles/missile_rocket.mp3",
+	Effect		= "Rocket Motor",
+	RoFMod		= 1,
+	Spread		= 1,
+	Blacklist	= { "AP", "APHE", "FL", "SM" }
+})
+
+ACF.RegisterMissile("Type 63 RA", "ARTY", {
+	Name		= "Type 63 Rocket",
+	Description	= "A common artillery rocket in the third world, able to be launched from a variety of platforms with a painful whallop and a very arced trajectory.",
+	Model		= "models/missiles/glatgm/mgm51.mdl",
+	Caliber		= 107,
+	Rack		= "1xRK_small",
+	Mass		= 19,
+	Length		= 80,
+	Year		= 1960,
+	RoFMod		= 0.6,
+	Guidance	= { "Dumb", "Laser", "GPS Guided" },
+	Fuzes		= { "Contact", "Timed", "Optical", "Cluster" },
+	Racks		= { ["1xRK_small"] = true, ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true, ["6xUARRK"] = true },
+	ViewCone	= 180,
+	Agility		= 0.08,
+	ArmDelay	= 0.2,
+	Round = {
+		Model			= "models/missiles/glatgm/mgm51.mdl",
+		MaxLength		= 50,
+		Armor			= 8,
+		PropMass		= 0.7,
+		Thrust			= 2400, -- in kg*in/s^2
+		BurnRate		= 400, -- in cm^3/s
+		StarterPercent	= 0.1,
+		MinSpeed		= 200,
+		DragCoef		= 0.002,
+		DragCoefFlight	= 0.001,
+		FinMul			= 0.02,
+		PenMul			= math.sqrt(2)
+	},
+})
+
+ACF.RegisterMissile("SAKR-10 RA", "ARTY", {
+	Name		= "SAKR-10 Rocket",
+	Description	= "A short-range but formidable artillery rocket, based upon the Grad. Well suited to the backs of trucks.",
+	Model		= "models/missiles/9m31.mdl",
+	Caliber		= 122,
+	Rack		= "1xRK",
+	Mass		= 56,
+	Length		= 320,
+	Year		= 1980,
+	RoFMod		= 0.75,
+	Guidance	= { "Dumb", "Laser", "GPS Guided" },
+	Fuzes		= { "Contact", "Timed", "Optical", "Cluster" },
+	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true, ["6xUARRK"] = true },
+	Agility		= 0.07,
+	ViewCone	= 180,
+	ArmDelay	= 0.4,
+	Round = {
+		Model		= "models/missiles/9m31.mdl",
+		MaxLength		= 140,
+		Armor			= 12,
+		PropMass		= 1.2,
+		Thrust			= 1300, -- in kg*in/s^2
+		BurnRate		= 120, -- in cm^3/s
+		StarterPercent	= 0.1,
+		MinSpeed		= 300,
+		DragCoef		= 0.002,
+		DragCoefFlight	= 0.010,
+		FinMul			= 0.03,
+		PenMul			= math.sqrt(1.1)
+	},
+})
+
+ACF.RegisterMissile("SS-40 RA", "ARTY", {
+	Name		= "SS-40 Rocket",
+	Description	= "A large, heavy, guided artillery rocket for taking out stationary or dug-in targets. Slow to load, slow to fire, slow to guide, and slow to arrive.",
+	Model		= "models/missiles/aim120.mdl",
+	Caliber		= 180,
+	Rack		= "1xRK",
+	Mass		= 152,
+	Length		= 420,
+	Year		= 1983,
+	RoFMod		= 1.1,
+	Guidance	= { "Dumb", "Laser", "GPS Guided" },
+	Fuzes		= { "Contact", "Timed", "Optical", "Cluster" },
+	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true, ["6xUARRK"] = true },
+	Agility		= 0.04,
+	ViewCone	= 180,
+	ArmDelay	= 0.6,
+	Round = {
+		Model		= "models/missiles/aim120.mdl",
+		MaxLength		= 115,
+		Armor			= 12,
+		PropMass		= 4.0,
+		Thrust			= 850, -- in kg*in/s^2
+		BurnRate		= 200, -- in cm^3/s
+		StarterPercent	= 0.075,
+		MinSpeed		= 300,
+		DragCoef		= 0.002,
+		DragCoefFlight	= 0.009,
+		FinMul			= 0.05,
+		PenMul			= math.sqrt(2)
+	},
+})

@@ -96,3 +96,110 @@ ACF_defineGun("70mmFFAR", { --id
 	agility		= 0.05,
 	armdelay    = 0.3     -- minimum fuze arming delay
 } )
+
+ACF.RegisterMissileClass("FFAR", {
+	Name		= "Folding-Fin Aerial Rockets",
+	Description	= "Small rockets which fit in tubes or pods. Rapid-firing and versatile.",
+	Sound		= "acf_missiles/missiles/missile_rocket.mp3",
+	Effect		= "Rocket Motor",
+	RoFMod		= 0.5,
+	Spread		= 1,
+	Blacklist	= { "AP", "APHE", "FL" }
+})
+
+ACF.RegisterMissile("40mmFFAR", "FFAR", {
+	Name		= "40mm Pod Rocket",
+	Description	= "A tiny, unguided rocket. Useful for anti-infantry, smoke and suppression. Folding fins allow the rocket to be stored in pods, which defend them from damage.",
+	Model		= "models/missiles/launcher7_40mm.mdl",
+	Caliber		= 40,
+	Rack		= "40mm7xPOD",
+	Mass		= 4,
+	Length		= 2,
+	RoFMod		= 0.8,
+	Year		= 1960,
+	Guidance	= { "Dumb" },
+	Fuzes		= { "Contact", "Timed" },
+	Racks		= { ["40mm7xPOD"] = true },
+	ArmDelay	= 0.3,
+	Round = {
+		Model			= "models/missiles/ffar_40mm.mdl",
+		RackModel		= "models/missiles/ffar_40mm_closed.mdl",
+		MaxLength		= 25,
+		Armor			= 4,
+		PropMass		= 0.2,
+		Thrust			= 10000, -- in kg*in/s^2
+		BurnRate		= 120, -- in cm^3/s
+		StarterPercent	= 0.15,
+		MinSpeed		= 5000,
+		DragCoef		= 0.001,
+		DragCoefFlight	= 0.02,
+		FinMul			= 0.003,
+		PenMul			= math.sqrt(4)
+	},
+})
+
+ACF.RegisterMissile("70mmFFAR", "FFAR", {
+	Name		= "70mm Pod Rocket",
+	Description	= "A small, unguided rocket. Useful against light vehicles and infantry. Folding fins allow the rocket to be stored in pods, which defend them from damage.",
+	Model		= "models/missiles/launcher7_70mm.mdl",
+	Caliber		= 70,
+	Rack		= "70mm7xPOD",
+	Mass		= 6,
+	Length		= 15,
+	Year		= 1960,
+	RoFMod		= 0.6,
+	Guidance	= { "Dumb", "Laser" },
+	Fuzes		= { "Contact", "Timed" },
+	Racks		= { ["70mm7xPOD"] = true },
+	ViewCone	= 20,
+	Agility		= 0.05,
+	ArmDelay	= 0.3,
+	Round = {
+		Model			= "models/missiles/ffar_70mm.mdl",
+		RackModel		= "models/missiles/ffar_70mm_closed.mdl",
+		MaxLength		= 25,
+		Armor			= 6,
+		PropMass		= 0.7,
+		Thrust			= 15000, -- in kg*in/s^2
+		BurnRate		= 300, -- in cm^3/s
+		StarterPercent	= 0.15,
+		MinSpeed		= 4000,
+		DragCoef		= 0.001,
+		DragCoefFlight	= 0.02,
+		FinMul			= 0.015,
+		PenMul			= math.sqrt(6)
+	},
+})
+
+ACF.RegisterMissile("Zuni ASR", "FFAR", {
+	Name		= "127mm Pod Rocket",
+	Description	= "A heavy 5in air to surface unguided rocket, able to provide heavy suppressive fire in a single pass.",
+	Model		= "models/ghosteh/zuni.mdl",
+	Caliber		= 127,
+	Rack		= "127mm4xPOD",
+	Mass		= 45,
+	Length		= 80,
+	Year		= 1957,
+	RoFMod		= 0.5,
+	Guidance	= { "Dumb", "Laser" },
+	Fuzes		= { "Contact", "Timed", "Optical", "Radio" },
+	Racks		= { ["127mm4xPOD"] = true },
+	ViewCone	= 50,
+	Agility		= 0.05,
+	Armdelay	= 0.1,
+	Round = {
+		Model			= "models/ghosteh/zuni.mdl",
+		RackModel		= "models/ghosteh/zuni_folded.mdl",
+		MaxLength		= 60,
+		Armor			= 12,
+		PropMass		= 0.7,
+		Thrust			= 18000, -- in kg*in/s^2
+		BurnRate		= 600, -- in cm^3/s
+		StarterPercent	= 0.15,
+		MinSpeed		= 6000,
+		DragCoef		= 0.001,
+		DragCoefFlight	= 0.02,
+		FinMul			= 0.015,
+		PenMul			= math.sqrt(2)
+	},
+})

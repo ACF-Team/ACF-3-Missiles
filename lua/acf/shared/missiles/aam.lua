@@ -191,3 +191,110 @@ ACF_defineGun("AIM-54 AAM", { --id
 	agility     = 0.05,    -- multiplier for missile turn-rate.
 	armdelay    = 0.4     -- minimum fuze arming delay --was 0.3
 } )
+
+ACF.RegisterMissileClass("AAM", {
+	Name		= "Air-To-Air Missile",
+	Description	= "Missiles specialized for air-to-air flight. They have varying range, but are agile, can be radar-guided, and withstand difficult launch angles well.",
+	Sound		= "acf_missiles/missiles/missile_rocket.mp3",
+	Effect		= "Rocket Motor",
+	ReloadMul	= 8,
+	RoFMod		= 1,
+	Spread		= 1,
+	Blacklist	= { "AP", "APHE", "FL", "HEAT" }
+})
+
+ACF.RegisterMissile("AIM-9 AAM", "AAM", {
+	Name		= "AIM-9 Missile",
+	Description	= "The gold standard in airborne jousting sticks. Agile and reliable with a rather underwhelming effective range, this homing missile is the weapon of choice for dogfights.\nSeeks 20 degrees, so well suited to dogfights.",
+	Model		= "models/missiles/aim9m.mdl",
+	Rack		= "1xRK",
+	Length		= 200,
+	Caliber		= 127,
+	Mass		= 85,
+	RoFMod		= 0.5,
+	Year		= 1953,
+	Guidance	= { "Dumb", "Infrared", "Semi-Active Radar" },
+	Fuzes		= { "Contact", "Radio" },
+	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["1xRK_small"] = true },
+	SeekCone	= 10,
+	ViewCone	= 30,
+	Agility		= 5,
+	ArmDelay	= 0.2,
+	Round = {
+		Model			= "models/missiles/aim9m.mdl",
+		MaxLength		= 35,
+		Armor			= 5,
+		PropMass		= 1,
+		Thrust			= 20000, -- in kg*in/s^2
+		BurnRate		= 500, -- in cm^3/s
+		StarterPercent	= 0.1,
+		MinSpeed		= 3000,
+		DragCoef		= 0.002,
+		DragCoefFlight	= 0.03,
+		FinMul			= 0.025
+	},
+})
+
+ACF.RegisterMissile("AIM-120 AAM", "AAM", {
+	Name		= "AIM-120 Missile",
+	Description	= "Faster than the AIM-9, but also a lot heavier. Burns hot and fast, with a good reach, but harder to lock with. This long-range missile is sure to deliver one heck of a blast upon impact.\nSeeks only 10 degrees and less agile than its smaller stablemate, so choose your shots carefully.",
+	Model		= "models/missiles/aim120c.mdl",
+	Rack		= "1xRK",
+	Length		= 1000,
+	Caliber		= 180,
+	Mass		= 152,
+	Year		= 1991,
+	Diameter	= 18.034, -- in cm
+	Guidance	= { "Dumb", "Semi-Active Radar", "Active Radar" },
+	Fuzes		= { "Contact", "Radio" },
+	Racks		= { ["1xRK"] = true, ["2xRK"] = true },
+	SeekCone	= 5,
+	ViewCone	= 20,
+	Agility		= 0.173,
+	ArmDelay	= 0.2,
+	Round = {
+		Model			= "models/missiles/aim120c.mdl",
+		MaxLength		= 50,
+		Armor			= 5,
+		PropMass		= 2,
+		Thrust			= 24000, -- in kg*in/s^2
+		BurnRate		= 2200, -- in cm^3/s
+		StarterPercent	= 0.3,
+		MinSpeed		= 2000,
+		DragCoef		= 0.002,
+		DragCoefFlight	= 0.0013,
+		FinMul			= 0.027
+	},
+})
+
+ACF.RegisterMissile("AIM-54 AAM", "AAM", {
+	Name		= "AIM-54 Missile",
+	Description	= "A BEEFY god-tier anti-bomber weapon, made with Jimmy Carter's repressed rage. Getting hit with one of these is a significant emotional event that is hard to avoid if you're flying high, but with a very narrow 10 degree seeker, a thin casing, and a laughable speed, don't expect to be using it vs MIGs.",
+	Model		= "models/missiles/aim54.mdl",
+	Rack		= "1xRK",
+	Length		= 1000,
+	Caliber		= 380,
+	Mass		= 453,
+	Year		= 1974,
+	Diameter	= 22.86, -- in cm
+	Guidance	= { "Dumb", "Semi-Active Radar", "Active Radar" },
+	Fuzes		= { "Contact", "Radio" },
+	Racks		= { ["1xRK"] = true },
+	SeekCone	= 5,
+	ViewCone	= 20,
+	Agility		= 0.05,
+	ArmDelay	= 0.4,
+	Round = {
+		Model			= "models/missiles/aim54.mdl",
+		MaxLength		= 60,
+		Armor			= 5,
+		PropMass		= 5,
+		Thrust			= 45000, -- in kg*in/s^2
+		BurnRate		= 1500, -- in cm^3/s
+		StarterPercent	= 0.1,
+		MinSpeed		= 4000,
+		DragCoef		= 0.005,
+		DragCoefFlight	= 0.05,
+		FinMul			= 0.02
+	},
+})

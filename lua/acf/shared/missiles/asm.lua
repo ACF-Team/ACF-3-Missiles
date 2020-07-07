@@ -421,3 +421,300 @@ ACF_defineGun("AGM-119 ASM", { --id
 	armdelay    = 0.3     -- minimum fuze arming delay
 } )
 ]]--
+
+ACF.RegisterMissileClass("ASM", {
+	Name		= "Air-To-Surface Missile",
+	Description	= "Missiles specialized for air-to-surface operation or antitank. These missiles are heavier than air-to-air missiles and may only be wire or laser guided.",
+	Sound		= "acf_missiles/missiles/missile_rocket.mp3",
+	Effect		= "Rocket Motor ATGM",
+	ReloadMul	= 8,
+	RoFMod		= 1,
+	Spread		= 1,
+	Blacklist	= { "AP", "APHE", "FL", "SM" }
+})
+
+ACF.RegisterMissile("AT-3 ASM", "ASM", {
+	Name		= "AT-3 Missile",
+	Description	= "The AT-3 missile (9M14P) is a short-range wire-guided anti-tank missile. It can be mounted on both helicopters and ground vehicles conveniently due to its light weight and high maneuverability.",
+	Model		= "models/missiles/at3.mdl",
+	Rack		= "1xAT3RK",
+	Length		= 43,
+	Caliber		= 125,
+	Mass		= 11,
+	Year		= 1969,
+	RoFMod		= 0.6,
+	Guidance	= { "Dumb", "Wire (MCLOS)", "Wire (SACLOS)" },
+	Fuzes		= { "Contact", "Optical" },
+	Racks		= { ["1xAT3RKS"] = true, ["1xAT3RK"] = true, ["1xRK_small"] = true, ["3xRK"] = true },
+	SkinIndex	= { HEAT = 0, HE = 1 },
+	Agility		= 0.3,
+	ArmDelay	= 0.3,
+	Round = {
+		Model			= "models/missiles/at3.mdl",
+		MaxLength		= 35,
+		Armor			= 5,
+		PropMass		= 1.2,
+		Thrust			= 7000, -- in kg*in/s^2
+		BurnRate		= 150, -- in cm^3/s
+		StarterPercent	= 0.2,
+		MinSpeed		= 1500,
+		DragCoef		= 0.005,
+		DragCoefFlight	= 0.1,
+		FinMul			= 0.1,
+		PenMul			= math.sqrt(5.5)
+	},
+})
+
+ACF.RegisterMissile("BGM-71E ASM", "ASM", {
+	Name		= "BGM-71E Missile",
+	Description	= "The BGM-71E missile is a short-range wire guided anti-tank missile. It is faster than the AT-3 but has less maneuverability.",
+	Model		= "models/missiles/bgm_71e.mdl",
+	Rack		= "1x BGM-71E",
+	Length		= 46,
+	Caliber		= 152,
+	Mass		= 23,
+	Year		= 1970,
+	RoFMod		= 0.8,
+	Guidance	= { "Dumb", "Wire (SACLOS)" },
+	Fuzes		= { "Contact", "Optical" },
+	Racks		= { ["1x BGM-71E"] = true, ["2x BGM-71E"] = true, ["4x BGM-71E"] = true },
+	Agility		= 0.25,
+	ArmDelay	= 0.3,
+	Round = {
+		Model			= "models/missiles/bgm_71e.mdl",
+		MaxLength		= 35,
+		Armor			= 6,
+		PropMass		= 1.2,
+		Thrust			= 13000, -- in kg*in/s^2
+		BurnRate		= 200, -- in cm^3/s
+		StarterPercent	= 0.2,
+		MinSpeed		= 2000,
+		DragCoef		= 0.005,
+		DragCoefFlight	= 0.05,
+		FinMul			= 0.05,
+		PenMul			= math.sqrt(6)
+	},
+})
+
+ACF.RegisterMissile("AGM-114 ASM", "ASM", {
+	Name		= "AGM-114 Missile",
+	Description	= "The AGM-114 Hellfire is a heavy air-to-surface missile, used often by American aircraft, which is well-suited to both antitank and antimateriel precision strikes.",
+	Model		= "models/missiles/agm_114.mdl",
+	Rack		= "2x AGM-114",
+	Length		= 66,
+	Caliber		= 180,
+	Mass		= 45,
+	Diameter	= 17.2 * 1.27, -- in cm
+	Year		= 1984,
+	RoFMod		= 1,
+	Guidance	= { "Dumb", "Laser", "Active Radar" },
+	Fuzes		= { "Contact", "Optical" },
+	Racks		= { ["2x AGM-114"] = true, ["4x AGM-114"] = true, ["1xRK"] = true },
+	ViewCone	= 40,
+	SeekCone	= 10,
+	Agility		= 0.09,
+	ArmDelay	= 0.5,
+	 Bodygroups = {
+		guidance = {
+			DataSource = function(Entity)
+				return Entity.Guidance and Entity.Guidance.Name
+			end,
+			Laser = {
+				OnRack = "laser.smd",
+			},
+			["Active Radar"] = {
+				OnRack = "radar.smd",
+			}
+		}
+	},
+	Round = {
+		Model			= "models/missiles/agm_114.mdl",
+		MaxLength		= 46,
+		Armor			= 5,
+		PropMass		= 1,
+		Thrust			= 12000, -- in kg*in/s^2
+		BurnRate		= 150, -- in cm^3/s
+		StarterPercent	= 0.1,
+		MinSpeed		= 4000,
+		DragCoef		= 0.001,
+		DragCoefFlight	= 0.05,
+		FinMul			= 0.1,
+		PenMul			= math.sqrt(5)
+	},
+})
+
+ACF.RegisterMissile("Ataka ASM", "ASM", {
+	Name		= "9M120 Ataka Missile",
+	Description	= "The 9M120 Ataka is a heavy air-to-surface missile, used often by soviet helicopters and ground vehicles, which is well suited to antitank use at range. It is lighter and faster than the hellfire, but less maneuverable and with a slightly lighter warhead.",
+	Model		= "models/missiles/9m120.mdl",
+	Rack		= "1x Ataka",
+	Length		= 85,
+	Caliber		= 130,
+	Mass		= 50,
+	Diameter	= 17.2 * 1.27, -- in cm
+	Year		= 1984,
+	RoFMod		= 0.8,
+	Guidance	= { "Dumb", "Radio (SACLOS)" },
+	Fuzes		= { "Contact", "Optical" },
+	Racks		= { ["1x Ataka"] = true, ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true },
+	ViewCone	= 40,
+	Agility		= 0.06,
+	ArmDelay	= 0.4,
+	Round = {
+		Model			= "models/missiles/9m120.mdl",
+		MaxLength		= 60,
+		Armor			= 5,
+		PropMass		= 2.4,
+		Thrust			= 14000, -- in kg*in/s^2
+		BurnRate		= 400, -- in cm^3/s
+		StarterPercent	= 0.2,
+		MinSpeed		= 5000,
+		DragCoef		= 0.001,
+		DragCoefFlight	= 0.04,
+		FinMul			= 0.05,
+		PenMul			= math.sqrt(4.5)
+	},
+})
+
+ACF.RegisterMissile("9M113 ASM", "ASM", {
+	Name		= "9M133 Missile",
+	Description	= "The Kornet is an extremely powerful antitank missile, with excellent range and a very powerful warhead, but limited maneuverability. Best used at long range or in an ambush role.",
+	Model		= "models/kali/weapons/kornet/parts/9m133 kornet missile.mdl",
+	Rack		= "1x Kornet",
+	Length		= 80,
+	Caliber		= 152,
+	Mass		= 27,
+	Diameter	= 15.2, -- in cm
+	Year		= 1994,
+	RoFMod		= 0.75,
+	ExhaustOffset = Vector(-29.1, 0, 0),
+	Guidance	= { "Dumb", "Laser" },
+	Fuzes		= { "Contact", "Optical" },
+	Racks		= { ["1x Kornet"] = true },
+	ViewCone	= 20,
+	Agility		= 0.06,
+	ArmDelay	= 0.1,
+	 Bodygroups = {
+		fins = {
+			DataSource = function()
+				return "Fins"
+			end,
+			Fins = {
+				OnRack = "Fins_Stowed",
+				OnLaunch = "Fins_Deployed",
+			},
+		}
+	},
+	Round = {
+		Model			= "models/kali/weapons/kornet/parts/9m133 kornet missile.mdl",
+		MaxLength		= 70,
+		Armor			= 5,
+		PropMass		= 3,
+		Thrust			= 16000, -- in kg*in/s^2
+		BurnRate		= 300, -- in cm^3/s
+		StarterPercent	= 0.2,
+		MinSpeed		= 6000,
+		DragCoef		= 0.005,
+		DragCoefFlight	= 0.05,
+		FinMul			= 0.05,
+		PenMul			= math.sqrt(3.9)
+	},
+})
+
+ACF.RegisterMissile("AT-2 ASM", "ASM", {
+	Name		= "AT-2 Missile",
+	Description	= "The 9M17P is a VERY powerful long-range antitank missile, which sacrifices flight speed for killing power.\nIt is an excellent long-range missile for heavy antitank work, and its size gives it good multipurpose capability.",
+	Model		= "models/missiles/at2.mdl",
+	Rack		= "1xRK",
+	Length		= 55,
+	Caliber		= 148,
+	Mass		= 27,
+	Year		= 1969,
+	RoFMod		= 0.9,
+	Guidance	= { "Dumb", "Radio (MCLOS)", "Radio (SACLOS)" },
+	Fuzes		= { "Contact", "Optical" },
+	ViewCone	= 90,
+	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true, ["2x AGM-114"] = true, ["4x AGM-114"] = true, ["1xRK_small"] = true },
+	Agility		= 0.2,
+	ArmDelay	= 1,
+	Round = {
+		Model			= "models/missiles/at2.mdl",
+		MaxLength		= 55,
+		Armor			= 5,
+		PropMass		= 1,
+		Thrust			= 1500, -- in kg*in/s^2
+		BurnRate		= 50, -- in cm^3/s
+		StarterPercent	= 0.2,
+		MinSpeed		= 500,
+		DragCoef		= 0.001,
+		DragCoefFlight	= 0.01,
+		FinMul			= 0.1,
+		PenMul			= math.sqrt(5.4)
+	},
+})
+
+ACF.RegisterMissile("AGM-45 ASM", "ASM", {
+	Name		= "AGM-45 Shrike Missile",
+	Description	= "The body of an AIM-7 sparrow, an air-to-ground seeker kit, and a far larger warhead than its ancestor.\nWith its homing radar seeker option, thicker skin, and long range, it is a great weapon for long-range, precision standoff attack versus squishy things, like those pesky sam sites.",
+	Model		= "models/missiles/aim120.mdl",
+	Rack		= "1xRK",
+	Length		= 1000,
+	Caliber		= 203,
+	Mass		= 68,
+	Diameter	= 7.1 * 2.54, -- in cm
+	Year		= 1969,
+	RoFMod		= 0.6,
+	Guidance	= { "Dumb", "Anti-radiation" },
+	Fuzes		= { "Contact", "Timed" },
+	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true, ["6xUARRK"] = true },
+	seekcone = 5,
+	viewcone = 10,
+	Agility		= 0.08,
+	ArmDelay	= 0.3,
+	Round = {
+		Model			= "models/missiles/aim120.mdl",
+		MaxLength		= 120,
+		Armor			= 10,
+		PropMass		= 3,
+		Thrust			= 800, -- in kg*in/s^2
+		BurnRate		= 300, -- in cm^3/s
+		StarterPercent	= 0.05,
+		MinSpeed		= 4000,
+		DragCoef		= 0.001,
+		DragCoefFlight	= 0,
+		FinMul			= 0.2,
+		PenMul			= math.sqrt(0.5)
+	},
+})
+
+ACF.RegisterMissile("AGM-122 ASM", "ASM", {
+	Name		= "AGM-122 Sidearm Missile",
+	Description	= "A refurbished early-model AIM-9, for attacking ground targets. Less well-known than the bigger Shrike, it provides easy-to-use blind-fire anti-SAM performance for helicopters and light aircraft, with far heavier a punch than its ancestor.",
+	Model		= "models/missiles/aim9.mdl",
+	Rack		= "1xRK",
+	Length		= 205,
+	Caliber		= 127,
+	Mass		= 89,
+	RoFMod		= 0.3,
+	Year		= 1986,
+	Guidance	= { "Dumb", "Anti-radiation" },
+	Fuzes		= { "Contact", "Optical" },
+	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true, ["1xRK_small"] = true },
+	SeekCone	= 10,
+	ViewCone	= 20,
+	Agility		= 0.3,
+	ArmDelay	= 0.2,
+	Round = {
+		Model			= "models/missiles/aim9.mdl",
+		MaxLength		= 70,
+		Armor			= 8,
+		PropMass		= 4,
+		Thrust			= 4500, -- in kg*in/s^2
+		BurnRate		= 1400, -- in cm^3/s
+		StarterPercent	= 0.4,
+		MinSpeed		= 5000,
+		DragCoef		= 0.001,
+		DragCoefFlight	= 0.001,
+		FinMul			= 0.03
+	},
+})
