@@ -95,13 +95,6 @@ function Ammo:GetCrateText(BulletData)
 	return Text:format(math.Round(BulletData.MuzzleVel, 2), math.Round(Data.BurnRate, 2), math.Round(Data.BurnTime, 2), math.floor(Data.DistractChance * 100))
 end
 
-function Ammo:GetToolData()
-	local Data		= Ammo.BaseClass.GetToolData(self)
-	Data.FillerMass	= ACF.ReadNumber("FillerMass")
-
-	return Data
-end
-
 function Ammo:PropImpact(_, _, Target)
 	if IgniteConVar:GetBool() then
 		local Type = ACF_Check(Target)
