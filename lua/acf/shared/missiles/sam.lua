@@ -153,12 +153,12 @@ ACF.RegisterMissileClass("SAM", {
 	ReloadMul	= 8,
 	RoFMod		= 1,
 	Spread		= 1,
-	Blacklist	= { "AP", "APHE", "FL", "HEAT" }
+	Blacklist	= { "AP", "APHE", "HEAT", "HP", "FL", "SM" }
 })
 
 ACF.RegisterMissile("FIM-92 SAM", "SAM", {
 	Name		= "FIM-92 Missile",
-	Description	= "The FIM-92 Stinger is a lightweight and versatile close-range air defense missile.\nWith a seek cone of 15 degrees and a sharply limited range that makes it useless versus high-flying targets, it is best to aim before firing and choose shots carefully.",
+	Description	= "The FIM-92 Stinger is a lightweight and versatile close-range air defense missile.",
 	Model		= "models/missiles/fim_92.mdl",
 	Rack		= "1x FIM-92",
 	Length		= 66,
@@ -192,7 +192,7 @@ ACF.RegisterMissile("FIM-92 SAM", "SAM", {
 
 ACF.RegisterMissile("Strela-1 SAM", "SAM", {
 	Name		= "9M31 Strela-1",
-	Description	= "The 9M31 Strela-1 is a medium-range homing SAM with a much bigger payload than the FIM-92. Bulk, it is best suited to ground vehicles or stationary units.\nWith its 20 degree seek cone, the strela is fast-reacting, while its missiles are surprisingly deadly and able to defend an acceptable area.",
+	Description	= "The 9M31 Strela-1 is a medium-range homing SAM, best suited to ground vehicles or stationary units.",
 	Model		= "models/missiles/9m31.mdl",
 	Rack		= "1x Strela-1",
 	Length		= 60,

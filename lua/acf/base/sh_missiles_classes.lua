@@ -69,6 +69,23 @@ do -- Missile registration functions
 	ACF.Classes.Missiles = ACF.Classes.Missiles or {}
 
 	local Missiles = ACF.Classes.Missiles
+	local Blacklist = {}
+
+	local function SaveBlacklist(Group)
+		if not Group.Blacklist then return end
+
+		for _, V in pairs(Group.Blacklist) do
+			local Current = Blacklist[V]
+
+			if not Current then
+				Blacklist[V] = {
+					[Group.ID] = true
+				}
+			else
+				Current[Group.ID] = true
+			end
+		end
+	end
 
 	function ACF.RegisterMissileClass(ID, Data)
 		local Group = AddClassGroup(ID, Missiles, Data)
@@ -77,14 +94,28 @@ do -- Missile registration functions
 			Group.Entity = "acf_rack"
 		end
 
-		if not Group.Type then
-			Group.Type = "missile"
-		end
+		SaveBlacklist(Group)
 
 		return Group
 	end
 
 	function ACF.RegisterMissile(ID, ClassID, Data)
-		return AddGroupedClass(ID, ClassID, Missiles, Data)
+		local Class = AddGroupedClass(ID, ClassID, Missiles, Data)
+
+		Class.Destiny = "Missiles"
+
+		return Class
 	end
+
+	hook.Add("OnClassLoaded", "ACF Missiles Ammo Blacklist", function(ID, Class)
+		if not Blacklist[ID] then return end
+		if not Class.Blacklist then return end
+
+		local ClassList = Class.Blacklist
+		local List = Blacklist[ID]
+
+		for K in pairs(List) do
+			ClassList[K] = true
+		end
+	end)
 end

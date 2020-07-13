@@ -139,12 +139,12 @@ ACF_defineGun("SS-40 RA", { --id
 
 ACF.RegisterMissileClass("ARTY", {
 	Name		= "Artillery Rockets",
-	Description	= "Artillery rockets provide massive HE delivery over a broad area, with arcing ballistic trajectories and limited guidance. Best equipped with a seeker head, fired up at an angle, then guided toward a stationary target.",
+	Description	= "Artillery rockets provide massive HE delivery over a broad area, with arcing ballistic trajectories and limited guidance.",
 	Sound		= "acf_missiles/missiles/missile_rocket.mp3",
 	Effect		= "Rocket Motor",
 	RoFMod		= 1,
 	Spread		= 1,
-	Blacklist	= { "AP", "APHE", "FL", "SM" }
+	Blacklist	= { "AP", "APHE", "HP", "FL", "SM" }
 })
 
 ACF.RegisterMissile("Type 63 RA", "ARTY", {

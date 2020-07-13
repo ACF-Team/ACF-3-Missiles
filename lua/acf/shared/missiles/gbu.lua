@@ -234,12 +234,12 @@ ACF.RegisterMissileClass("GBU", {
 	ReloadMul	= 2,
 	RoFMod		= 0.1,
 	Spread		= 1,
-	Blacklist	= {"AP", "APHE", "FL"}
+	Blacklist	= {"AP", "APHE", "HP", "FL"}
 })
 
 ACF.RegisterMissile("WalleyeGBU", "GBU", {
 	Name		= "Guided Weapon Mk 1 Walleye",
-	Description	= "An early guided bomb of yield roughly between the 454kg and 227kg, used over Vietnam by American strike aircraft. Unlike other GBUs, the larger fins let it glide more like an unpowered missile, allowing drops at far greater distances in a more stand-off role.",
+	Description	= "An early guided bomb of yield roughly between the 454kg and 227kg, used over Vietnam by American strike aircraft.",
 	Model		= "models/bombs/gbu/agm62.mdl",
 	Rack		= "1xRK",
 	Length		= 3450,

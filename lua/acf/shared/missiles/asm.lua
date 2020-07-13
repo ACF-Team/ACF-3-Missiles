@@ -422,20 +422,20 @@ ACF_defineGun("AGM-119 ASM", { --id
 } )
 ]]--
 
-ACF.RegisterMissileClass("ASM", {
-	Name		= "Air-To-Surface Missile",
-	Description	= "Missiles specialized for air-to-surface operation or antitank. These missiles are heavier than air-to-air missiles and may only be wire or laser guided.",
+ACF.RegisterMissileClass("ATGM", {
+	Name		= "Anti-Tank Guided Missile",
+	Description	= "Missiles specialized on destroying heavily armored vehicles.",
 	Sound		= "acf_missiles/missiles/missile_rocket.mp3",
 	Effect		= "Rocket Motor ATGM",
 	ReloadMul	= 8,
 	RoFMod		= 1,
 	Spread		= 1,
-	Blacklist	= { "AP", "APHE", "FL", "SM" }
+	Blacklist	= { "AP", "APHE", "HP", "FL", "SM" }
 })
 
-ACF.RegisterMissile("AT-3 ASM", "ASM", {
+ACF.RegisterMissile("AT-3 ASM", "ATGM", {
 	Name		= "AT-3 Missile",
-	Description	= "The AT-3 missile (9M14P) is a short-range wire-guided anti-tank missile. It can be mounted on both helicopters and ground vehicles conveniently due to its light weight and high maneuverability.",
+	Description	= "The AT-3 missile (9M14P) is a short-range wire-guided anti-tank missile.",
 	Model		= "models/missiles/at3.mdl",
 	Rack		= "1xAT3RK",
 	Length		= 43,
@@ -465,9 +465,9 @@ ACF.RegisterMissile("AT-3 ASM", "ASM", {
 	},
 })
 
-ACF.RegisterMissile("BGM-71E ASM", "ASM", {
+ACF.RegisterMissile("BGM-71E ASM", "ATGM", {
 	Name		= "BGM-71E Missile",
-	Description	= "The BGM-71E missile is a short-range wire guided anti-tank missile. It is faster than the AT-3 but has less maneuverability.",
+	Description	= "The BGM-71E missile is a short-range wire guided anti-tank missile.",
 	Model		= "models/missiles/bgm_71e.mdl",
 	Rack		= "1x BGM-71E",
 	Length		= 46,
@@ -496,9 +496,9 @@ ACF.RegisterMissile("BGM-71E ASM", "ASM", {
 	},
 })
 
-ACF.RegisterMissile("AGM-114 ASM", "ASM", {
+ACF.RegisterMissile("AGM-114 ASM", "ATGM", {
 	Name		= "AGM-114 Missile",
-	Description	= "The AGM-114 Hellfire is a heavy air-to-surface missile, used often by American aircraft, which is well-suited to both antitank and antimateriel precision strikes.",
+	Description	= "The AGM-114 Hellfire is a heavy air-to-surface missile, used often by American aircraft.",
 	Model		= "models/missiles/agm_114.mdl",
 	Rack		= "2x AGM-114",
 	Length		= 66,
@@ -543,9 +543,9 @@ ACF.RegisterMissile("AGM-114 ASM", "ASM", {
 	},
 })
 
-ACF.RegisterMissile("Ataka ASM", "ASM", {
+ACF.RegisterMissile("Ataka ASM", "ATGM", {
 	Name		= "9M120 Ataka Missile",
-	Description	= "The 9M120 Ataka is a heavy air-to-surface missile, used often by soviet helicopters and ground vehicles, which is well suited to antitank use at range. It is lighter and faster than the hellfire, but less maneuverable and with a slightly lighter warhead.",
+	Description	= "The 9M120 Ataka is a heavy air-to-surface missile, used often by soviet helicopters and ground vehicles.",
 	Model		= "models/missiles/9m120.mdl",
 	Rack		= "1x Ataka",
 	Length		= 85,
@@ -556,7 +556,7 @@ ACF.RegisterMissile("Ataka ASM", "ASM", {
 	RoFMod		= 0.8,
 	Guidance	= { "Dumb", "Radio (SACLOS)" },
 	Fuzes		= { "Contact", "Optical" },
-	Racks		= { ["1x Ataka"] = true, ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true },
+	Racks		= { ["1x Ataka"] = true },
 	ViewCone	= 40,
 	Agility		= 0.06,
 	ArmDelay	= 0.4,
@@ -576,9 +576,9 @@ ACF.RegisterMissile("Ataka ASM", "ASM", {
 	},
 })
 
-ACF.RegisterMissile("9M113 ASM", "ASM", {
+ACF.RegisterMissile("9M113 ASM", "ATGM", {
 	Name		= "9M133 Missile",
-	Description	= "The Kornet is an extremely powerful antitank missile, with excellent range and a very powerful warhead, but limited maneuverability. Best used at long range or in an ambush role.",
+	Description	= "The Kornet is an extremely powerful antitank missile.",
 	Model		= "models/kali/weapons/kornet/parts/9m133 kornet missile.mdl",
 	Rack		= "1x Kornet",
 	Length		= 80,
@@ -621,9 +621,9 @@ ACF.RegisterMissile("9M113 ASM", "ASM", {
 	},
 })
 
-ACF.RegisterMissile("AT-2 ASM", "ASM", {
+ACF.RegisterMissile("AT-2 ASM", "ATGM", {
 	Name		= "AT-2 Missile",
-	Description	= "The 9M17P is a VERY powerful long-range antitank missile, which sacrifices flight speed for killing power.\nIt is an excellent long-range missile for heavy antitank work, and its size gives it good multipurpose capability.",
+	Description	= "The 9M17P is a VERY powerful long-range antitank missile.",
 	Model		= "models/missiles/at2.mdl",
 	Rack		= "1xRK",
 	Length		= 55,
@@ -634,7 +634,7 @@ ACF.RegisterMissile("AT-2 ASM", "ASM", {
 	Guidance	= { "Dumb", "Radio (MCLOS)", "Radio (SACLOS)" },
 	Fuzes		= { "Contact", "Optical" },
 	ViewCone	= 90,
-	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true, ["2x AGM-114"] = true, ["4x AGM-114"] = true, ["1xRK_small"] = true },
+	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true, ["1xRK_small"] = true },
 	Agility		= 0.2,
 	ArmDelay	= 1,
 	Round = {
@@ -650,71 +650,5 @@ ACF.RegisterMissile("AT-2 ASM", "ASM", {
 		DragCoefFlight	= 0.01,
 		FinMul			= 0.1,
 		PenMul			= math.sqrt(5.4)
-	},
-})
-
-ACF.RegisterMissile("AGM-45 ASM", "ASM", {
-	Name		= "AGM-45 Shrike Missile",
-	Description	= "The body of an AIM-7 sparrow, an air-to-ground seeker kit, and a far larger warhead than its ancestor.\nWith its homing radar seeker option, thicker skin, and long range, it is a great weapon for long-range, precision standoff attack versus squishy things, like those pesky sam sites.",
-	Model		= "models/missiles/aim120.mdl",
-	Rack		= "1xRK",
-	Length		= 1000,
-	Caliber		= 203,
-	Mass		= 68,
-	Diameter	= 7.1 * 2.54, -- in cm
-	Year		= 1969,
-	RoFMod		= 0.6,
-	Guidance	= { "Dumb", "Anti-radiation" },
-	Fuzes		= { "Contact", "Timed" },
-	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true, ["6xUARRK"] = true },
-	seekcone = 5,
-	viewcone = 10,
-	Agility		= 0.08,
-	ArmDelay	= 0.3,
-	Round = {
-		Model			= "models/missiles/aim120.mdl",
-		MaxLength		= 120,
-		Armor			= 10,
-		PropMass		= 3,
-		Thrust			= 800, -- in kg*in/s^2
-		BurnRate		= 300, -- in cm^3/s
-		StarterPercent	= 0.05,
-		MinSpeed		= 4000,
-		DragCoef		= 0.001,
-		DragCoefFlight	= 0,
-		FinMul			= 0.2,
-		PenMul			= math.sqrt(0.5)
-	},
-})
-
-ACF.RegisterMissile("AGM-122 ASM", "ASM", {
-	Name		= "AGM-122 Sidearm Missile",
-	Description	= "A refurbished early-model AIM-9, for attacking ground targets. Less well-known than the bigger Shrike, it provides easy-to-use blind-fire anti-SAM performance for helicopters and light aircraft, with far heavier a punch than its ancestor.",
-	Model		= "models/missiles/aim9.mdl",
-	Rack		= "1xRK",
-	Length		= 205,
-	Caliber		= 127,
-	Mass		= 89,
-	RoFMod		= 0.3,
-	Year		= 1986,
-	Guidance	= { "Dumb", "Anti-radiation" },
-	Fuzes		= { "Contact", "Optical" },
-	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true, ["1xRK_small"] = true },
-	SeekCone	= 10,
-	ViewCone	= 20,
-	Agility		= 0.3,
-	ArmDelay	= 0.2,
-	Round = {
-		Model			= "models/missiles/aim9.mdl",
-		MaxLength		= 70,
-		Armor			= 8,
-		PropMass		= 4,
-		Thrust			= 4500, -- in kg*in/s^2
-		BurnRate		= 1400, -- in cm^3/s
-		StarterPercent	= 0.4,
-		MinSpeed		= 5000,
-		DragCoef		= 0.001,
-		DragCoefFlight	= 0.001,
-		FinMul			= 0.03
 	},
 })

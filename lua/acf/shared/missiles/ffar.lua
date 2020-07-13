@@ -104,13 +104,13 @@ ACF.RegisterMissileClass("FFAR", {
 	Effect		= "Rocket Motor",
 	RoFMod		= 0.5,
 	Spread		= 1,
-	Blacklist	= { "AP", "APHE", "FL" }
+	Blacklist	= { "AP", "APHE", "HP", "FL" }
 })
 
 ACF.RegisterMissile("40mmFFAR", "FFAR", {
 	Name		= "40mm Pod Rocket",
 	Description	= "A tiny, unguided rocket. Useful for anti-infantry, smoke and suppression. Folding fins allow the rocket to be stored in pods, which defend them from damage.",
-	Model		= "models/missiles/launcher7_40mm.mdl",
+	Model		= "models/missiles/ffar_40mm.mdl",
 	Caliber		= 40,
 	Rack		= "40mm7xPOD",
 	Mass		= 4,
@@ -141,7 +141,7 @@ ACF.RegisterMissile("40mmFFAR", "FFAR", {
 ACF.RegisterMissile("70mmFFAR", "FFAR", {
 	Name		= "70mm Pod Rocket",
 	Description	= "A small, unguided rocket. Useful against light vehicles and infantry. Folding fins allow the rocket to be stored in pods, which defend them from damage.",
-	Model		= "models/missiles/launcher7_70mm.mdl",
+	Model		= "models/missiles/ffar_70mm.mdl",
 	Caliber		= 70,
 	Rack		= "70mm7xPOD",
 	Mass		= 6,
@@ -186,7 +186,7 @@ ACF.RegisterMissile("Zuni ASR", "FFAR", {
 	Racks		= { ["127mm4xPOD"] = true },
 	ViewCone	= 50,
 	Agility		= 0.05,
-	Armdelay	= 0.1,
+	ArmDelay	= 0.1,
 	Round = {
 		Model			= "models/ghosteh/zuni.mdl",
 		RackModel		= "models/ghosteh/zuni_folded.mdl",

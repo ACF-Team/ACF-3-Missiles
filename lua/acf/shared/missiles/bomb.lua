@@ -332,7 +332,7 @@ ACF.RegisterMissileClass("BOMB", {
 	ReloadMul	= 8,
 	RoFMod		= 0.1,
 	Spread		= 1,
-	Blacklist	= { "AP", "APHE", "FL" }
+	Blacklist	= { "AP", "APHE", "HP", "FL" }
 })
 
 ACF.RegisterMissile("50kgBOMB", "BOMB", {
@@ -491,64 +491,6 @@ ACF.RegisterMissile("1000kgBOMB", "BOMB", {
 		MinSpeed		= 1,
 		DragCoef		= 0.002,
 		FinMul			= 0.004,
-		PenMul			= math.sqrt(0.6)
-	},
-})
-
-ACF.RegisterMissile("100kgGBOMB", "BOMB", {
-	Name		= "100kg Glide Bomb",
-	Description	= "A 250-pound bomb, fitted with fins for a longer reach. Well suited to dive bombing, but bulkier and heavier from its fins.",
-	Model		= "models/missiles/micro.mdl",
-	Rack		= "1xRK",
-	Length		= 75,
-	Caliber		= 100,
-	Mass		= 100,
-	Year		= 1939,
-	Diameter	= 21.2 * 1.4, -- in cm
-	Guidance	= { "Dumb" },
-	Fuzes		= { "Contact", "Optical", "Cluster" },
-	Racks		= { ["1xRK_small"] = true, ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true },
-	ArmDelay	= 1,
-	Round = {
-		Model			= "models/missiles/micro.mdl",
-		MaxLength		= 100,
-		Armor			= 25,
-		PropMass		= 0,
-		Thrust			= 1, -- in kg*in/s^2
-		BurnRate		= 1, -- in cm^3/s
-		StarterPercent	= 0.005,
-		MinSpeed		= 500,
-		DragCoef		= 0.0001,
-		FinMul			= 0.05,
-		PenMul			= math.sqrt(0.6)
-	},
-})
-
-ACF.RegisterMissile("250kgGBOMB", "BOMB", {
-	Name		= "250kg Glide Bomb",
-	Description	= "A heavy 500lb bomb, fitted with fins for a gliding trajectory better suited to striking point targets.",
-	Model		= "models/missiles/fab250.mdl",
-	Rack		= "1xRK",
-	Length		= 150,
-	Caliber		= 125,
-	Mass		= 250,
-	Year		= 1941,
-	Diameter	= 16.3 * 1.9, -- in cm
-	Guidance	= { "Dumb" },
-	Fuzes		= { "Contact", "Optical", "Cluster" },
-	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true },
-	ArmDelay	= 1,
-	Round = {
-		Model			= "models/missiles/fab250.mdl",
-		MaxLength		= 250,
-		Armor			= 25,
-		PropMass		= 0,
-		Thrust			= 1, -- in kg*in/s^2
-		BurnRate		= 1, -- in cm^3/s
-		StarterPercent	= 0.005,
-		MinSpeed		= 500,
-		DragCoef		= 0.001,
-		FinMul			= 0.05,
 		PenMul			= math.sqrt(0.6)
 	},
 })

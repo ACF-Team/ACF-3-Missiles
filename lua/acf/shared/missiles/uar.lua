@@ -316,12 +316,12 @@ ACF.RegisterMissileClass("UAR", {
 	Effect		= "Rocket Motor",
 	RoFMod		= 0.5,
 	Spread		= 0.2,
-	Blacklist	= { "AP", "APHE", "FL", "SM" }
+	Blacklist	= { "AP", "APHE", "HP", "FL", "SM" }
 })
 
 ACF.RegisterMissile("RS82 ASR", "UAR", {
 	Name		= "RS-82 Rocket",
-	Description	= "A small, unguided rocket, often used in multiple-launch artillery as well as for attacking pinpoint ground targets. It has a small amount of propellant, limiting its range, but is compact and light.",
+	Description	= "A small, unguided rocket, often used in multiple-launch artillery as well as for attacking pinpoint ground targets.",
 	Model		= "models/missiles/rs82.mdl",
 	Caliber		= 82,
 	Rack		= "1xRK_small",
@@ -394,7 +394,7 @@ ACF.RegisterMissile("HVAR ASR", "UAR", {
 
 ACF.RegisterMissile("SPG-9 ASR", "UAR", {
 	Name		= "SPG-9 Rocket",
-	Description	= "A recoilless rocket launcher similar to an RPG or Grom. The main charge ignites in the tube, while a rocket accelerates a small antitank grenade to the target, giving it a high initial velocity, smaller launch signature, and flatter trajectory than a conventional round but less accuracy. A useful alternative to guided missiles, it is also quite capable as lightweight HE-slinging artillery for air-drop and expeditionary forces.",
+	Description	= "A recoilless rocket launcher similar to an RPG or Grom.",
 	Model		= "models/munitions/round_100mm_mortar_shot.mdl",
 	Caliber		= 73,
 	Rack		= "1x SPG9",
@@ -456,7 +456,7 @@ ACF.RegisterMissile("S-24 ASR", "UAR", {
 
 ACF.RegisterMissile("RW61 ASR", "UAR", {
 	Name		= "Raketwerfer-61",
-	Description	= "A heavy, demolition-oriented rocket-assisted mortar, devastating against field works but takes a very, VERY long time to load.\n\n\nDon't miss.",
+	Description	= "A heavy, demolition-oriented rocket-assisted mortar, devastating against field works but takes a very long time to load.",
 	Model		= "models/missiles/RW61M.mdl",
 	Caliber		= 380,
 	Rack		= "380mmRW61",

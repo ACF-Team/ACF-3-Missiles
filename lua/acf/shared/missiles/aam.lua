@@ -200,12 +200,12 @@ ACF.RegisterMissileClass("AAM", {
 	ReloadMul	= 8,
 	RoFMod		= 1,
 	Spread		= 1,
-	Blacklist	= { "AP", "APHE", "FL", "HEAT" }
+	Blacklist	= { "AP", "APHE", "HEAT", "HP", "FL", "SM" }
 })
 
 ACF.RegisterMissile("AIM-9 AAM", "AAM", {
 	Name		= "AIM-9 Missile",
-	Description	= "The gold standard in airborne jousting sticks. Agile and reliable with a rather underwhelming effective range, this homing missile is the weapon of choice for dogfights.\nSeeks 20 degrees, so well suited to dogfights.",
+	Description	= "Agile and reliable with a rather underwhelming effective range, this homing missile is the weapon of choice for dogfights.",
 	Model		= "models/missiles/aim9m.mdl",
 	Rack		= "1xRK",
 	Length		= 200,
@@ -237,7 +237,7 @@ ACF.RegisterMissile("AIM-9 AAM", "AAM", {
 
 ACF.RegisterMissile("AIM-120 AAM", "AAM", {
 	Name		= "AIM-120 Missile",
-	Description	= "Faster than the AIM-9, but also a lot heavier. Burns hot and fast, with a good reach, but harder to lock with. This long-range missile is sure to deliver one heck of a blast upon impact.\nSeeks only 10 degrees and less agile than its smaller stablemate, so choose your shots carefully.",
+	Description	= "Burns hot and fast, with a good reach, but harder to lock with. This long-range missile is sure to deliver one heck of a blast upon impact.",
 	Model		= "models/missiles/aim120c.mdl",
 	Rack		= "1xRK",
 	Length		= 1000,
@@ -269,7 +269,7 @@ ACF.RegisterMissile("AIM-120 AAM", "AAM", {
 
 ACF.RegisterMissile("AIM-54 AAM", "AAM", {
 	Name		= "AIM-54 Missile",
-	Description	= "A BEEFY god-tier anti-bomber weapon, made with Jimmy Carter's repressed rage. Getting hit with one of these is a significant emotional event that is hard to avoid if you're flying high, but with a very narrow 10 degree seeker, a thin casing, and a laughable speed, don't expect to be using it vs MIGs.",
+	Description	= "A BEEFY god-tier anti-bomber weapon, made with Jimmy Carter's repressed rage. Getting hit with one of these is a significant emotional event that is hard to avoid if you're flying high.",
 	Model		= "models/missiles/aim54.mdl",
 	Rack		= "1xRK",
 	Length		= 1000,
