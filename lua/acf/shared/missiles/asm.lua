@@ -253,8 +253,8 @@ ACF_defineGun("9M113 ASM", { --id
 		}
 	},
 
-	agility     = 0.06,		-- multiplier for missile turn-rate.
-	armdelay    = 0.1     -- minimum fuze arming delay
+	agility     = 0.2,		-- multiplier for missile turn-rate.
+	armdelay    = 0.1     -- minimum fuse arming delay
 } )
 
 -- The 9M17P, a very long range, very powerful but very slow antitank missile
