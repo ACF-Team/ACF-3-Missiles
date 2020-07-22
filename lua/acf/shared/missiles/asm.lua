@@ -253,7 +253,7 @@ ACF_defineGun("9M113 ASM", { --id
 		}
 	},
 
-	agility     = 0.06,		-- multiplier for missile turn-rate.
+	agility     = 0.2,		-- multiplier for missile turn-rate.
 	armdelay    = 0.1     -- minimum fuse arming delay
 } )
 
