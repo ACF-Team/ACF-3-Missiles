@@ -57,7 +57,7 @@ ACF_defineGun("AT-3 ASM", {
 	skinindex   = {HEAT = 0, HE = 1},
 
 	agility     = 0.2,
-	armdelay    = 0.1 
+	armdelay    = 0.1
 } )
 
 -- The BGM-71E, a wire guided missile with high anti-tank effectiveness.
@@ -82,7 +82,7 @@ ACF_defineGun("BGM-71E ASM", {
 		burnrate	= 31,
 		starterpct	= 0.2,
 		minspeed	= 2000,
-		dragcoef	= 0.005,	
+		dragcoef	= 0.005,
 		dragcoefflight  = 0.05,
 		finmul		= 0.05,
 		penmul      = math.sqrt(3.97)
@@ -130,7 +130,7 @@ ACF_defineGun("AGM-114 ASM", {
 		finmul		= 0.05,
 		penmul      = math.sqrt(4.175)
 	},
-	
+
 	ent         = "acf_rack",
 	guidance    = { "Dumb", "Laser", "Active Radar" },
 	fuses       = { "Contact", "Optical" },
