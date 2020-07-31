@@ -423,7 +423,7 @@ ACF_defineGun("AGM-119 ASM", { --id
 ]]--
 
 ACF.RegisterMissileClass("ATGM", {
-	Name		= "Anti-Tank Guided Missile",
+	Name		= "Anti-Tank Guided Missiles",
 	Description	= "Missiles specialized on destroying heavily armored vehicles.",
 	Sound		= "acf_missiles/missiles/missile_rocket.mp3",
 	Effect		= "Rocket Motor ATGM",
@@ -434,10 +434,9 @@ ACF.RegisterMissileClass("ATGM", {
 })
 
 ACF.RegisterMissile("AT-3 ASM", "ATGM", {
-	Name		= "AT-3 Missile",
-	Description	= "The AT-3 missile (9M14P) is a short-range wire-guided anti-tank missile.",
+	Name		= "9M14 Malyutka",
+	Description	= "The 9M14 Malyutka (AT-3 Sagger) is a short-range wire-guided anti-tank missile.",
 	Model		= "models/missiles/at3.mdl",
-	Rack		= "1xAT3RK",
 	Length		= 43,
 	Caliber		= 125,
 	Mass		= 11,
@@ -445,7 +444,7 @@ ACF.RegisterMissile("AT-3 ASM", "ATGM", {
 	RoFMod		= 0.6,
 	Guidance	= { "Dumb", "Wire (MCLOS)", "Wire (SACLOS)" },
 	Fuzes		= { "Contact", "Optical" },
-	Racks		= { ["1xAT3RKS"] = true, ["1xAT3RK"] = true, ["1xRK_small"] = true, ["3xRK"] = true },
+	Racks		= { ["1xAT3RKS"] = true, ["1xAT3RK"] = true, ["1xRK_small"] = true, ["3xRK"] = true, ["4xRK"] = true },
 	SkinIndex	= { HEAT = 0, HE = 1 },
 	Agility		= 0.3,
 	ArmDelay	= 0.3,
@@ -466,10 +465,9 @@ ACF.RegisterMissile("AT-3 ASM", "ATGM", {
 })
 
 ACF.RegisterMissile("BGM-71E ASM", "ATGM", {
-	Name		= "BGM-71E Missile",
-	Description	= "The BGM-71E missile is a short-range wire guided anti-tank missile.",
+	Name		= "BGM-71E TOW",
+	Description	= "The BGM-71E TOW is a short-range wire guided anti-tank missile.",
 	Model		= "models/missiles/bgm_71e.mdl",
-	Rack		= "1x BGM-71E",
 	Length		= 46,
 	Caliber		= 152,
 	Mass		= 23,
@@ -497,24 +495,23 @@ ACF.RegisterMissile("BGM-71E ASM", "ATGM", {
 })
 
 ACF.RegisterMissile("AGM-114 ASM", "ATGM", {
-	Name		= "AGM-114 Missile",
+	Name		= "AGM-114 Hellfire",
 	Description	= "The AGM-114 Hellfire is a heavy air-to-surface missile, used often by American aircraft.",
 	Model		= "models/missiles/agm_114.mdl",
-	Rack		= "2x AGM-114",
 	Length		= 66,
 	Caliber		= 180,
 	Mass		= 45,
-	Diameter	= 17.2 * 1.27, -- in cm
+	Diameter	= 17.2 * 12.7, -- in mm
 	Year		= 1984,
 	RoFMod		= 1,
 	Guidance	= { "Dumb", "Laser", "Active Radar" },
 	Fuzes		= { "Contact", "Optical" },
-	Racks		= { ["2x AGM-114"] = true, ["4x AGM-114"] = true, ["1xRK"] = true },
+	Racks		= { ["2x AGM-114"] = true, ["4x AGM-114"] = true },
 	ViewCone	= 40,
 	SeekCone	= 10,
 	Agility		= 0.09,
 	ArmDelay	= 0.5,
-	 Bodygroups = {
+	Bodygroups = {
 		guidance = {
 			DataSource = function(Entity)
 				return Entity.Guidance and Entity.Guidance.Name
@@ -544,14 +541,13 @@ ACF.RegisterMissile("AGM-114 ASM", "ATGM", {
 })
 
 ACF.RegisterMissile("Ataka ASM", "ATGM", {
-	Name		= "9M120 Ataka Missile",
-	Description	= "The 9M120 Ataka is a heavy air-to-surface missile, used often by soviet helicopters and ground vehicles.",
+	Name		= "9M120 Ataka",
+	Description	= "The 9M120 Ataka (AT-9 Spiral-2) is a heavy air-to-surface missile, used often by soviet helicopters and ground vehicles.",
 	Model		= "models/missiles/9m120.mdl",
-	Rack		= "1x Ataka",
 	Length		= 85,
 	Caliber		= 130,
 	Mass		= 50,
-	Diameter	= 17.2 * 1.27, -- in cm
+	Diameter	= 17.2 * 12.7, -- in mm
 	Year		= 1984,
 	RoFMod		= 0.8,
 	Guidance	= { "Dumb", "Radio (SACLOS)" },
@@ -577,14 +573,12 @@ ACF.RegisterMissile("Ataka ASM", "ATGM", {
 })
 
 ACF.RegisterMissile("9M113 ASM", "ATGM", {
-	Name		= "9M133 Missile",
-	Description	= "The Kornet is an extremely powerful antitank missile.",
+	Name		= "9M133 Kornet",
+	Description	= "The 9M133 Kornet (AT-14 Spriggan) is an extremely powerful antitank missile.",
 	Model		= "models/kali/weapons/kornet/parts/9m133 kornet missile.mdl",
-	Rack		= "1x Kornet",
 	Length		= 80,
 	Caliber		= 152,
 	Mass		= 27,
-	Diameter	= 15.2, -- in cm
 	Year		= 1994,
 	RoFMod		= 0.75,
 	ExhaustOffset = Vector(-29.1, 0, 0),
@@ -594,7 +588,7 @@ ACF.RegisterMissile("9M113 ASM", "ATGM", {
 	ViewCone	= 20,
 	Agility		= 0.06,
 	ArmDelay	= 0.1,
-	 Bodygroups = {
+	Bodygroups = {
 		fins = {
 			DataSource = function()
 				return "Fins"
@@ -622,10 +616,9 @@ ACF.RegisterMissile("9M113 ASM", "ATGM", {
 })
 
 ACF.RegisterMissile("AT-2 ASM", "ATGM", {
-	Name		= "AT-2 Missile",
-	Description	= "The 9M17P is a VERY powerful long-range antitank missile.",
+	Name		= "9M17 Fleyta",
+	Description	= "The 9M17 Fleyta (AT-2 Sagger) is a VERY powerful long-range antitank missile.",
 	Model		= "models/missiles/at2.mdl",
-	Rack		= "1xRK",
 	Length		= 55,
 	Caliber		= 148,
 	Mass		= 27,
@@ -634,7 +627,7 @@ ACF.RegisterMissile("AT-2 ASM", "ATGM", {
 	Guidance	= { "Dumb", "Radio (MCLOS)", "Radio (SACLOS)" },
 	Fuzes		= { "Contact", "Optical" },
 	ViewCone	= 90,
-	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true, ["1xRK_small"] = true },
+	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true },
 	Agility		= 0.2,
 	ArmDelay	= 1,
 	Round = {

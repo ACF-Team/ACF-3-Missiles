@@ -146,7 +146,7 @@ ACF_defineGun("SIMBAD-RC SAM", { --id
 ]]--
 
 ACF.RegisterMissileClass("SAM", {
-	Name		= "Surface-To-Air Missile",
+	Name		= "Surface-To-Air Missiles",
 	Description	= "Missiles specialized for surface-to-air operation, and well suited to lower altitude operation against ground attack aircraft.",
 	Sound		= "acf_missiles/missiles/missile_rocket.mp3",
 	Effect		= "Rocket Motor",
@@ -157,14 +157,13 @@ ACF.RegisterMissileClass("SAM", {
 })
 
 ACF.RegisterMissile("FIM-92 SAM", "SAM", {
-	Name		= "FIM-92 Missile",
+	Name		= "FIM-92 Stinger",
 	Description	= "The FIM-92 Stinger is a lightweight and versatile close-range air defense missile.",
 	Model		= "models/missiles/fim_92.mdl",
-	Rack		= "1x FIM-92",
 	Length		= 66,
 	Caliber		= 70,
 	Mass		= 10,
-	Diameter	= 6.6, -- in cm
+	Diameter	= 66, -- in mm
 	Year		= 1978,
 	RoFMod		= 1.2,
 	Guidance	= { "Dumb", "Infrared", "Anti-missile" },
@@ -192,13 +191,11 @@ ACF.RegisterMissile("FIM-92 SAM", "SAM", {
 
 ACF.RegisterMissile("Strela-1 SAM", "SAM", {
 	Name		= "9M31 Strela-1",
-	Description	= "The 9M31 Strela-1 is a medium-range homing SAM, best suited to ground vehicles or stationary units.",
+	Description	= "The 9M31 Strela-1 (SA-9 Gaskin) is a medium-range homing SAM, best suited to ground vehicles or stationary units.",
 	Model		= "models/missiles/9m31.mdl",
-	Rack		= "1x Strela-1",
 	Length		= 60,
 	Caliber		= 120,
 	Mass		= 30,
-	Diameter	= 12, -- in cm
 	Year		= 1960,
 	Guidance	= { "Dumb", "Infrared", "Anti-missile" },
 	Fuzes		= { "Contact", "Radio" },

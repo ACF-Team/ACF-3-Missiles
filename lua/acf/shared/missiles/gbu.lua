@@ -227,7 +227,7 @@ ACF_defineGun("909kgGBU", { --id
 } )
 
 ACF.RegisterMissileClass("GBU", {
-	Name		= "Guided Bomb Unit",
+	Name		= "Guided Bomb Units",
 	Description	= "Similar to a regular bomb, but able to be guided in flight to a vector coordinate. Most useful versus hard, unmoving targets.",
 	Sound		= "acf_missiles/fx/clunk.mp3",
 	NoThrust	= true,
@@ -238,15 +238,14 @@ ACF.RegisterMissileClass("GBU", {
 })
 
 ACF.RegisterMissile("WalleyeGBU", "GBU", {
-	Name		= "Guided Weapon Mk 1 Walleye",
+	Name		= "AGM-62 Walleye",
 	Description	= "An early guided bomb of yield roughly between the 454kg and 227kg, used over Vietnam by American strike aircraft.",
 	Model		= "models/bombs/gbu/agm62.mdl",
-	Rack		= "1xRK",
 	Length		= 3450,
 	Caliber		= 318,
 	Mass		= 510,
 	Year		= 1967,
-	Diameter	= 21.2 * 1.4, -- in cm
+	Diameter	= 21.2 * 14, -- in mm
 	Guidance	= { "Dumb", "Radio (MCLOS)" },
 	Fuzes		= { "Contact", "Timed", "Optical" },
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true },
@@ -273,12 +272,11 @@ ACF.RegisterMissile("227kgGBU", "GBU", {
 	Name		= "227kg GBU-12 Paveway II",
 	Description	= "Based on the Mk 82 500-pound general-purpose bomb, but with the addition of a nose-mounted laser seeker and fins for guidance.",
 	Model		= "models/bombs/gbu/gbu12.mdl",
-	Rack		= "1xRK",
 	Length		= 5000,
 	Caliber		= 105,
 	Mass		= 227,
 	Year		= 1976,
-	Diameter	= 16.3 * 1.9, -- in cm
+	Diameter	= 16.3 * 19, -- in mm
 	Guidance	= { "Dumb", "Laser", "GPS Guided" },
 	Fuzes		= { "Contact", "Timed", "Optical", "Cluster" },
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true },
@@ -321,12 +319,11 @@ ACF.RegisterMissile("454kgGBU", "GBU", {
 	Name		= "454kg GBU-16 Paveway II",
 	Description	= "Based on the Mk 83 general-purpose bomb, but with laser seeker and wings for guidance.",
 	Model		= "models/bombs/gbu/gbu16.mdl",
-	Rack		= "1xRK",
 	Length		= 15000,
 	Caliber		= 170,
 	Mass		= 454,
 	Year		= 1976,
-	Diameter	= 16.3 * 1.9, -- in cm
+	Diameter	= 16.3 * 19, -- in mm
 	Guidance	= { "Dumb", "Laser", "GPS Guided" },
 	Fuzes		= { "Contact", "Timed", "Optical", "Cluster" },
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true },
@@ -369,12 +366,11 @@ ACF.RegisterMissile("909kgGBU", "GBU", {
 	Name		= "909kg GBU-10 Paveway II",
 	Description	= "Based on the Mk 84 general-purpose bomb, but with laser seeker and wings for guidance.",
 	Model		= "models/bombs/gbu/gbu10.mdl",
-	Rack		= "1xRK",
 	Length		= 30000,
 	Caliber		= 200,
 	Mass		= 909,
 	Year		= 1976,
-	Diameter	= 16.3 * 4.5, -- in cm
+	Diameter	= 16.3 * 45, -- in mm
 	Guidance	= { "Dumb", "Laser", "GPS Guided" },
 	Fuzes		= {"Contact", "Timed", "Optical", "Cluster"},
 	Racks		= {["1xRK"] = true},

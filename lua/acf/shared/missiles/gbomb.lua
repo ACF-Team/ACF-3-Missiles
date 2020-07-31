@@ -1,5 +1,5 @@
 ACF.RegisterMissileClass("GBOMB", {
-	Name		= "Gliding Bomb",
+	Name		= "Gliding Bombs",
 	Description	= "Similar to regular free falling bombs, gliding bombs are capable of travelling longer distances.",
 	Sound		= "acf_missiles/fx/clunk.mp3",
 	NoThrust	= true,
@@ -13,12 +13,11 @@ ACF.RegisterMissile("100kgGBOMB", "GBOMB", {
 	Name		= "100kg Glide Bomb",
 	Description	= "A 250-pound bomb, fitted with fins for a longer reach. Well suited to dive bombing, but bulkier and heavier from its fins.",
 	Model		= "models/missiles/micro.mdl",
-	Rack		= "1xRK",
 	Length		= 75,
 	Caliber		= 100,
 	Mass		= 100,
 	Year		= 1939,
-	Diameter	= 21.2 * 1.4, -- in cm
+	Diameter	= 21.2 * 14, -- in mm
 	Guidance	= { "Dumb" },
 	Fuzes		= { "Contact", "Optical", "Cluster" },
 	Racks		= { ["1xRK_small"] = true, ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true },
@@ -42,15 +41,14 @@ ACF.RegisterMissile("250kgGBOMB", "GBOMB", {
 	Name		= "250kg Glide Bomb",
 	Description	= "A heavy 500lb bomb, fitted with fins for a gliding trajectory better suited to striking point targets.",
 	Model		= "models/missiles/fab250.mdl",
-	Rack		= "1xRK",
 	Length		= 150,
 	Caliber		= 125,
 	Mass		= 250,
 	Year		= 1941,
-	Diameter	= 16.3 * 1.9, -- in cm
+	Diameter	= 16.3 * 19, -- in mm
 	Guidance	= { "Dumb" },
 	Fuzes		= { "Contact", "Optical", "Cluster" },
-	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true },
+	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true },
 	ArmDelay	= 1,
 	Round = {
 		Model			= "models/missiles/fab250.mdl",

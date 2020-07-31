@@ -1,5 +1,5 @@
 ACF.RegisterMissileClass("ARM", {
-	Name		= "Anti-Radiation Missile",
+	Name		= "Anti-Radiation Missiles",
 	Description	= "Missiles specialized for Suppression of Enemy Air Defenses.",
 	Sound		= "acf_missiles/missiles/missile_rocket.mp3",
 	Effect		= "Rocket Motor ATGM",
@@ -10,10 +10,9 @@ ACF.RegisterMissileClass("ARM", {
 })
 
 ACF.RegisterMissile("AGM-122 ARM", "ARM", {
-	Name		= "AGM-122 Sidearm Missile",
+	Name		= "AGM-122 Sidearm",
 	Description	= "A refurbished early-model AIM-9, for attacking ground targets.",
 	Model		= "models/missiles/aim9.mdl",
-	Rack		= "1xRK",
 	Length		= 205,
 	Caliber		= 127,
 	Mass		= 89,
@@ -42,14 +41,13 @@ ACF.RegisterMissile("AGM-122 ARM", "ARM", {
 })
 
 ACF.RegisterMissile("AGM-45 ASM", "ARM", {
-	Name		= "AGM-45 Shrike Missile",
+	Name		= "AGM-45 Shrike",
 	Description	= "Long range anti-SAM missile, built on the body of an AIM-7 Sparrow.",
 	Model		= "models/missiles/aim120.mdl",
-	Rack		= "1xRK",
 	Length		= 1000,
 	Caliber		= 203,
 	Mass		= 177,
-	Diameter	= 7.1 * 2.54, -- in cm
+	Diameter	= 7.1 * 25.4, -- in mm
 	Year		= 1969,
 	RoFMod		= 0.6,
 	Guidance	= { "Dumb", "Anti-radiation" },

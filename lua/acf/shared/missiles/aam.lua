@@ -193,7 +193,7 @@ ACF_defineGun("AIM-54 AAM", { --id
 } )
 
 ACF.RegisterMissileClass("AAM", {
-	Name		= "Air-To-Air Missile",
+	Name		= "Air-To-Air Missiles",
 	Description	= "Missiles specialized for air-to-air flight. They have varying range, but are agile, can be radar-guided, and withstand difficult launch angles well.",
 	Sound		= "acf_missiles/missiles/missile_rocket.mp3",
 	Effect		= "Rocket Motor",
@@ -204,10 +204,9 @@ ACF.RegisterMissileClass("AAM", {
 })
 
 ACF.RegisterMissile("AIM-9 AAM", "AAM", {
-	Name		= "AIM-9 Missile",
+	Name		= "AIM-9 Sidewinder",
 	Description	= "Agile and reliable with a rather underwhelming effective range, this homing missile is the weapon of choice for dogfights.",
 	Model		= "models/missiles/aim9m.mdl",
-	Rack		= "1xRK",
 	Length		= 200,
 	Caliber		= 127,
 	Mass		= 85,
@@ -236,15 +235,14 @@ ACF.RegisterMissile("AIM-9 AAM", "AAM", {
 })
 
 ACF.RegisterMissile("AIM-120 AAM", "AAM", {
-	Name		= "AIM-120 Missile",
+	Name		= "AIM-120 AMRAAM",
 	Description	= "Burns hot and fast, with a good reach, but harder to lock with. This long-range missile is sure to deliver one heck of a blast upon impact.",
 	Model		= "models/missiles/aim120c.mdl",
-	Rack		= "1xRK",
 	Length		= 1000,
 	Caliber		= 180,
 	Mass		= 152,
 	Year		= 1991,
-	Diameter	= 18.034, -- in cm
+	Diameter	= 130, -- in mm
 	Guidance	= { "Dumb", "Semi-Active Radar", "Active Radar" },
 	Fuzes		= { "Contact", "Radio" },
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true },
@@ -268,15 +266,14 @@ ACF.RegisterMissile("AIM-120 AAM", "AAM", {
 })
 
 ACF.RegisterMissile("AIM-54 AAM", "AAM", {
-	Name		= "AIM-54 Missile",
+	Name		= "AIM-54 Phoenix",
 	Description	= "A BEEFY god-tier anti-bomber weapon, made with Jimmy Carter's repressed rage. Getting hit with one of these is a significant emotional event that is hard to avoid if you're flying high.",
 	Model		= "models/missiles/aim54.mdl",
-	Rack		= "1xRK",
 	Length		= 1000,
 	Caliber		= 380,
 	Mass		= 453,
 	Year		= 1974,
-	Diameter	= 22.86, -- in cm
+	Diameter	= 300, -- in mm
 	Guidance	= { "Dumb", "Semi-Active Radar", "Active Radar" },
 	Fuzes		= { "Contact", "Radio" },
 	Racks		= { ["1xRK"] = true },
