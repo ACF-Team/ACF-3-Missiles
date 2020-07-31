@@ -170,7 +170,7 @@ local function CreateMenu(Menu)
 		ACF.WriteValue("Weapon", Data.ID)
 		ACF.WriteValue("Destiny", Data.Destiny)
 
-		LoadSortedList(RackList, GetRackList(Data), "Mass")
+		LoadSortedList(RackList, GetRackList(Data), "MagSize")
 
 		MissileDesc:SetText(Data.Description)
 

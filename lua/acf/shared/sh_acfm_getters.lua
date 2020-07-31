@@ -1,35 +1,17 @@
+local Missiles = ACF.Classes.Missiles
 
 function ACF_GetGunValue(BulletData, Value)
 	BulletData = istable(BulletData) and BulletData.Id or BulletData
 
-	local Class = ACF.Weapons.Guns[BulletData]
+	local Class = ACF.GetClassGroup(Missiles, BulletData)
 
 	if Class then
-		local Result = Class.round and Class.round[Value] or Class[Value]
+		local Data = Class.Lookup[BulletData]
+		local Result = Data.Round and Data.Round[Value] or Data[Value]
 
 		if Result ~= nil then return Result end
 
-		local GunClass = ACF.Classes.GunClass[Class.gunclass]
-
-		return GunClass and GunClass[Value]
-	end
-end
-
-function ACF_GetRackValue(RackData, Value)
-	RackData = istable(RackData) and RackData.Id or RackData
-
-	local Class = ACF.Weapons.Rack[RackData]
-
-	if Class then
-		if Class[Value] then
-			return Class[Value]
-		end
-
-		Class = ACF.Classes.Rack[Class.gunclass]
-
-		if Class then
-			return Class[Value]
-		end
+		return Class and Class[Value]
 	end
 end
 
@@ -70,7 +52,7 @@ function ACF_CanLinkRack(RackID, AmmoID, BulletData)
 		return false, "Ammo '" .. tostring(AmmoID) .. "' does not exist."
 	end
 
-	local AllowedRacks = ACF_GetGunValue(AmmoID, "racks")
+	local AllowedRacks = ACF_GetGunValue(AmmoID, "Racks")
 	local AllowedType = type(AllowedRacks)
 	local IsAllowed
 

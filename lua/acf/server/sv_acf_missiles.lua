@@ -135,7 +135,7 @@ function ResetVelocity.HEAT(bdata)
 
 	bdata.Flight:Normalize()
 
-	local penmul = bdata.penmul or ACF_GetGunValue(bdata, "penmul") or 1
+	local penmul = bdata.penmul or ACF_GetGunValue(bdata, "PenMul") or 1
 
 	bdata.Flight = bdata.Flight * (bdata.SlugMV * penmul) * 39.37
 	bdata.NotFirstPen = false

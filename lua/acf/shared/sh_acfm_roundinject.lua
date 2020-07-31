@@ -41,7 +41,7 @@ local function ModifyRoundDisplayFuncs()
 				local MuzzleVel = BulletData.MuzzleVel
 
 				BulletData.MuzzleVel = 0
-				BulletData.SlugPenMul = ACF_GetGunValue(BulletData.Id, "penmul")
+				BulletData.SlugPenMul = ACF_GetGunValue(BulletData.Id, "PenMul")
 
 				local DisplayData = OldDisplayData(BulletData)
 

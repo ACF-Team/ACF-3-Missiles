@@ -7,7 +7,7 @@ Guidance.MinDistance = 38750 -- Squared, ~5 meters
 function Guidance:Configure(Missile)
 	Guidance.BaseClass.Configure(self, Missile)
 
-	self.SeekCone = ACF_GetGunValue(Missile.BulletData, "seekcone") or 10
+	self.SeekCone = Missile.SeekCone or 10
 	self.SeekConeCos = math.cos(math.rad(self.SeekCone))
 end
 

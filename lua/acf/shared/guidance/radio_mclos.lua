@@ -9,7 +9,7 @@ function Guidance:Configure(Missile)
 end
 
 function Guidance:OnLaunched(Missile)
-	self.InPos = Missile.AttachPos
+	self.InPos = Missile.MountPoint.Position
 	self.OutPos = Missile.ExhaustPos
 end
 

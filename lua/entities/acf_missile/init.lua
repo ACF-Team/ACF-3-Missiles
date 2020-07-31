@@ -13,6 +13,7 @@ local Trace = ACF.Trace
 local TraceData = { start = true, endpos = true, filter = true }
 local Gravity = GetConVar("sv_gravity")
 local GhostPeriod = GetConVar("ACFM_GhostPeriod")
+local Missiles = ACF.Classes.Missiles
 local Guidances = ACF.Classes.Guidances
 local Fuzes = ACF.Classes.Fuzes
 
@@ -65,11 +66,9 @@ end
 
 local function UpdateSkin(Missile)
 	local BulletData = Missile.BulletData
+	local Skins = Missile.SkinIndex
 
 	if not BulletData then return end
-
-	local Skins = ACF_GetGunValue(BulletData, "skinindex")
-
 	if not Skins then return end
 
 	Missile:SetSkin(Skins[BulletData.Type] or 0)
@@ -102,7 +101,7 @@ local function ConfigureFlight(Missile, Phase)
 	local Round = GunData.round
 	local Length = GunData.length
 
-	if ACF_GetGunValue(BulletData, "nothrust") then
+	if Missile.NoThrust then
 		Missile.MotorLength = 0
 		Missile.Motor = 0
 	else
@@ -116,7 +115,7 @@ local function ConfigureFlight(Missile, Phase)
 	Missile.FlightTime = 0
 	Missile.FinMultiplier = Round.finmul
 	Missile.Agility = GunData.agility or 1
-	Missile.CutoutTime = CurTime() + Missile.MotorLength
+	Missile.CutoutTime = ACF.CurTime + Missile.MotorLength
 	Missile.CurPos = BulletData.Pos
 	Missile.CurDir = BulletData.Flight:GetNormalized()
 	Missile.LastPos = Missile.CurPos
@@ -127,21 +126,31 @@ local function ConfigureFlight(Missile, Phase)
 	Missile.TorqueMul = Length * 25
 	Missile.RotAxis = Vector()
 
+	local PhysObj = Missile:GetPhysicsObject()
+
+	if IsValid(PhysObj) then
+		PhysObj:SetMass(Missile.ForcedMass)
+		PhysObj:EnableGravity(false)
+		PhysObj:EnableMotion(false)
+	end
+
 	UpdateBodygroups(Missile, Phase)
 	UpdateSkin(Missile)
 end
 
 local function LaunchEffect(Missile)
 	local BulletData = Missile.BulletData
-	local SoundString = BulletData.Sound or ACF_GetGunValue(BulletData, "sound")
+	local SoundString = BulletData.Sound or Missile.Sound
 
 	if SoundString then
 		if ACF_SOUND_EXT then
 			hook.Call("ACF_SOUND_MISSILE", nil, Missile, SoundString)
 		else
-			Missile:EmitSound(SoundString, 511, 100)
+			Missile:EmitSound(SoundString, 511, math.random(98, 102))
 		end
 	end
+
+	Missile:EmitSound("phx/epicmetal_hard.wav", 500, math.random(98, 102))
 end
 
 local function Dud(Missile)
@@ -174,7 +183,7 @@ end
 local function CalcFlight(Missile)
 	if Missile.Exploded then return end
 
-	local Time = CurTime()
+	local Time = ACF.CurTime
 	local DeltaTime = Time - Missile.LastThink
 
 	if DeltaTime <= 0 then return end
@@ -330,41 +339,63 @@ end)
 
 -------------------------------[[ Global Functions ]]-------------------------------
 
-function ENT:Initialize()
-	self.BaseClass.Initialize(self)
+-- TODO: Make ACF Missiles compliant with ACF legal checks
+function MakeACF_Missile(Player, Pos, Ang, Rack, MountPoint, BulletData)
+	local Missile = ents.Create("acf_missile")
 
-	local Attachment = self:GetAttachment(self:LookupAttachment("exhaust"))
-	local Offset = self.ExhaustOffset or (Attachment and Attachment.Pos) or Vector()
+	if not IsValid(Missile) then return end
 
-	self.ExhaustPos = self:WorldToLocal(Offset)
+	local Class = ACF.GetClassGroup(Missiles, BulletData.Id)
+	local Data = Class.Lookup[BulletData.Id]
 
-	self:SetNWFloat("LightSize", 0)
+	Missile:SetAngles(Rack:LocalToWorldAngles(Ang))
+	Missile:SetPos(Rack:LocalToWorld(Pos))
+	Missile:SetPlayer(Player)
+	Missile:SetParent(Rack)
+	Missile:Spawn()
 
-	if CPPI then
-		self:CPPISetOwner(self.Owner)
+	Missile.Owner = Player
+	Missile.Launcher = Rack
+	Missile.MountPoint = MountPoint
+	Missile.Filter = { Rack }
+	Missile.SeekCone = Data.SeekCone
+	Missile.ViewCone = Data.ViewCone
+	Missile.SkinIndex = Data.SkinIndex
+	Missile.NoThrust = Data.NoThrust or Class.NoThrust
+	Missile.Sound = Data.Sound or Class.Sound or "acf_missiles/missiles/missile_rocket.mp3"
+	Missile.ForcedMass = Data.Mass or 10
+	Missile.ForcedArmor = Data.Round.Armor
+	Missile.Effect = Data.Effect or Class.Effect
+	Missile.DisableDamage = Rack.ProtectMissile
+	Missile.ExhaustOffset = Data.ExhaustOffset
+	Missile.Bodygroups = Data.Bodygroups
+	Missile.RackModel = Rack.MissileModel or Data.Round.RackModel
+	Missile.RealModel = Data.Round.Model
+	Missile.RackModelApplied = Missile.RackModel and true
+
+	Missile:SetModelEasy(Missile.RackModel or Missile.RealModel)
+	Missile:SetBulletData(BulletData)
+
+	if Rack.HideMissile then
+		Missile:SetNoDraw(true)
 	end
 
-	local PhysObj = self:GetPhysicsObject()
+	do -- Exhaust pos
+		local Attachment = Missile:GetAttachment(Missile:LookupAttachment("exhaust"))
+		local Offset = Missile.ExhaustOffset or (Attachment and Attachment.Pos) or Vector()
 
-	if IsValid(PhysObj) then
-		PhysObj:EnableGravity(false)
-		PhysObj:EnableMotion(false)
+		Missile.ExhaustPos = Missile:WorldToLocal(Offset)
 	end
+
+	Missile:SetNWFloat("LightSize", 0)
+
+	return Missile
 end
 
 function ENT:SetBulletData(BulletData)
 	self.BaseClass.SetBulletData(self, BulletData)
 
 	ParseBulletData(self, BulletData)
-
-	self.RoundWeight = ACF_GetGunValue(BulletData, "weight") or 10
-
-	local PhysObj = self:GetPhysicsObject()
-
-	if IsValid(PhysObj) then
-		PhysObj:SetMass(self.RoundWeight)
-	end
-
 	ConfigureFlight(self, "OnRack")
 end
 
@@ -381,13 +412,13 @@ function ENT:Launch()
 	self.Fuze:Configure(self, self.Guidance)
 	self.Launched = true
 	self.ThinkDelay = engine.TickInterval()
-	self.GhostPeriod = CurTime() + GhostPeriod:GetFloat()
+	self.GhostPeriod = ACF.CurTime + GhostPeriod:GetFloat()
 	self.DisableDamage = nil
 
 	ConfigureFlight(self, "OnLaunch")
 
 	if self.Motor > 0 or self.MotorLength > 0.1 then
-		self.CacheParticleEffect = CurTime() + 0.01
+		self.CacheParticleEffect = ACF.CurTime + 0.01
 		self:SetNWFloat("LightSize", self.BulletData.Caliber)
 	end
 
@@ -415,7 +446,7 @@ end
 function ENT:Detonate(Destroyed)
 	self.Motor = 0
 	self.Exploded = true
-	self.Disabled = self.Disabled or self.Fuze and (CurTime() - self.Fuze.TimeStarted < self.MinArmingDelay or not self.Fuze:IsArmed())
+	self.Disabled = self.Disabled or self.Fuze and (ACF.CurTime - self.Fuze.TimeStarted < self.MinArmingDelay or not self.Fuze:IsArmed())
 
 	self:StopParticles()
 	self:SetNWFloat("LightSize", 0)
@@ -447,7 +478,7 @@ function ENT:Think()
 			return false
 		end
 
-		local Time = CurTime()
+		local Time = ACF.CurTime
 
 		if self.FirstThink then
 			self.FirstThink = nil
@@ -458,10 +489,8 @@ function ENT:Think()
 		CalcFlight(self)
 
 		if self.CacheParticleEffect and self.CacheParticleEffect <= Time and Time < self.CutoutTime then
-			local Effect = ACF_GetGunValue(self.BulletData, "effect")
-
-			if Effect then
-				ParticleEffectAttach(Effect, PATTACH_POINT_FOLLOW, self, self:LookupAttachment("exhaust") or 0)
+			if self.Effect then
+				ParticleEffectAttach(self.Effect, PATTACH_POINT_FOLLOW, self, self:LookupAttachment("exhaust") or 0)
 			end
 
 			self.CacheParticleEffect = nil
@@ -488,17 +517,14 @@ function ENT:OnRemove()
 	end
 
 	if IsValid(self.Launcher) and not self.Launched then
-		self.Launcher:UpdateAmmoCount(self.Attachment)
+		self.Launcher:UpdateLoad(self.MountPoint)
 	end
 
 	WireLib.Remove(self)
 end
 
 function ENT:ACF_Activate(Recalc)
-	local ForceArmour = ACF_GetGunValue(self.BulletData, "armour")
-	local EmptyMass = self.RoundWeight or self.Mass or 10
 	local PhysObj = self:GetPhysicsObject()
-	self.ACF = self.ACF or {}
 
 	if not self.ACF.Area then
 		self.ACF.Area = PhysObj:GetSurfaceArea() * 6.45
@@ -508,7 +534,7 @@ function ENT:ACF_Activate(Recalc)
 		self.ACF.Volume = PhysObj:GetVolume() * 16.38
 	end
 
-	local Armour = ForceArmour or EmptyMass * 1000 / self.ACF.Area / 0.78	--So we get the equivalent thickness of that prop in mm if all it's weight was a steel plate
+	local Armour = self.ForcedArmor or self.ForcedMass * 1000 / self.ACF.Area / 0.78	--So we get the equivalent thickness of that prop in mm if all it's weight was a steel plate
 	local Health = self.ACF.Volume / ACF.Threshold							--Setting the threshold of the prop aera gone
 	local Percent = 1
 
@@ -520,8 +546,7 @@ function ENT:ACF_Activate(Recalc)
 	self.ACF.MaxHealth = Health
 	self.ACF.Armour = Armour * (0.5 + Percent / 2)
 	self.ACF.MaxArmour = Armour
-	self.ACF.Type = nil
-	self.ACF.Mass = self.Mass
+	self.ACF.Mass = self.ForcedMass
 	self.ACF.Density = PhysObj:GetMass() * 1000 / self.ACF.Volume
 	self.ACF.Type = "Prop"
 end

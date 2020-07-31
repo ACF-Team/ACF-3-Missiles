@@ -9,7 +9,7 @@ Guidance.desc = "This guidance package reads a target-position from the launcher
 function Guidance:Configure(Missile)
 	Guidance.BaseClass.Configure(self, Missile)
 
-	self.ViewCone = ACF_GetGunValue(Missile.BulletData, "viewcone") or 20
+	self.ViewCone = Missile.ViewCone or 20
 	self.ViewConeCos = math.cos(math.rad(self.ViewCone))
 end
 

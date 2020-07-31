@@ -324,11 +324,9 @@ do -- Spawn and Update functions
 		CheckLegal(Radar)
 
 		TimerCreate("ACF Radar Clock " .. Radar:EntIndex(), 3, 0, function()
-			if IsValid(Radar) then
-				CheckDistantLinks(Radar, "Weapons")
-			else
-				timer.Remove("ACF Radar Clock " .. Radar:EntIndex())
-			end
+			if not IsValid(Radar) then return end
+
+			CheckDistantLinks(Radar, "Weapons")
 		end)
 
 		return Radar
@@ -451,6 +449,8 @@ function ENT:OnRemove()
 	if Radars[self] then
 		Radars[self] = nil
 	end
+
+	timer.Remove("ACF Radar Clock " .. self:EntIndex())
 
 	WireLib.Remove(self)
 end
