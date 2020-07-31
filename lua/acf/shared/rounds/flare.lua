@@ -39,7 +39,7 @@ function Round.convert(_, PlayerData)
 	GUIData.MinFillerVol = 0
 	GUIData.MaxFillerVol = math.min(GUIData.ProjVolume, MaxVol * 0.9)
 	GUIData.FillerVol = math.min(PlayerData.Data5, GUIData.MaxFillerVol)
-	Data.FillerMass = GUIData.FillerVol * ACF.HEDensity / 200
+	Data.FillerMass = GUIData.FillerVol * ACF.HEDensity / 1000
 
 	Data.ProjMass = math.max(GUIData.ProjVolume-GUIData.FillerVol,0) * 7.9 / 1000 + Data.FillerMass
 	Data.MuzzleVel = ACF_MuzzleVelocity(Data.PropMass, Data.ProjMass, Data.Caliber)
