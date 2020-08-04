@@ -16,7 +16,7 @@ function Fuze:OnLoaded()
 
 			Type = "number",            -- lua type of the configurable variable
 			Min = 0,                    -- number specific: minimum value
-			MinConfig = "armdelay",     -- round specific override for minimum value
+			MinConfig = "ArmDelay",     -- round specific override for minimum value
 			Max = 10                    -- number specific: maximum value
 		}
 	}

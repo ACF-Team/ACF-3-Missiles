@@ -2,6 +2,7 @@ local Guidance = ACF.RegisterGuidance("Wire (MCLOS)", "Radio (MCLOS)")
 local SnapSound = "physics/metal/sawblade_stick%s.wav"
 
 Guidance.desc = "This guidance package allows you to manually control the direction of the missile."
+Guidance.IsWire = true
 
 function Guidance:Configure(Missile)
 	Guidance.BaseClass.Configure(self, Missile)
@@ -11,6 +12,12 @@ end
 
 function Guidance:OnLaunched(Missile)
 	Guidance.BaseClass.OnLaunched(self, Missile)
+
+	local LastFired = self.Source.LastFired
+
+	if IsValid(LastFired) and LastFired.Guidance.IsWire then
+		LastFired.Guidance:SnapRope(LastFired)
+	end
 
 	self.Rope = constraint.CreateKeyframeRope(Vector(), 0.1, "cable/cable2", nil, self.Source, self.InPos, 0, Missile, self.OutPos, 0)
 	self.Rope:SetKeyValue("Width", 0.1)
@@ -37,7 +44,7 @@ function Guidance:SnapRope(Missile)
 	end
 
 	if IsValid(self.Source) then
-		self.Source:EmitSound(string.format(SnapSound, math.random(3)))
+		self.Source:EmitSound(SnapSound:format(math.random(3)))
 	end
 end
 
