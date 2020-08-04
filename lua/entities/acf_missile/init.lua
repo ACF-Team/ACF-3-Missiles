@@ -13,6 +13,7 @@ local Trace = ACF.Trace
 local TraceData = { start = true, endpos = true, filter = true }
 local Gravity = GetConVar("sv_gravity")
 local GhostPeriod = GetConVar("ACFM_GhostPeriod")
+local ActiveMissiles = ACF.ActiveMissiles
 local Missiles = ACF.Classes.Missiles
 local Guidances = ACF.Classes.Guidances
 local Fuzes = ACF.Classes.Fuzes
@@ -26,7 +27,7 @@ end
 
 local function SetFuze(Missile, Fuze)
 	Missile.Fuze = Fuze
-	Fuze:Configure(Missile, Missile.Guidance or SetGuidance(Missile, Guidances.Dumb()))
+	Fuze:Configure(Missile, Missile.Guidance)
 
 	return Fuze
 end
@@ -75,67 +76,14 @@ local function UpdateSkin(Missile)
 end
 
 local function ParseBulletData(Missile, BulletData)
-	local BulletGuidance = BulletData.Data7
-	local BulletFuze = BulletData.Data8
+	local GuidanceData = BulletData.Data7 or "Dumb"
+	local FuzeData = BulletData.Data8 or "Contact"
 
-	if BulletGuidance then
-		local Guidance = ACFM_CreateConfigurable(BulletGuidance, Guidances, BulletData, "guidance")
+	local Guidance = ACFM_CreateConfigurable(GuidanceData, Guidances, BulletData, "Guidance")
+	local Fuze = ACFM_CreateConfigurable(FuzeData, Fuzes, BulletData, "Fuzes")
 
-		if Guidance then
-			SetGuidance(Missile, Guidance)
-		end
-	end
-
-	if BulletFuze then
-		local Fuze = ACFM_CreateConfigurable(BulletFuze, Fuzes, BulletData, "fuzes")
-
-		if Fuze then
-			SetFuze(Missile, Fuze)
-		end
-	end
-end
-
-local function ConfigureFlight(Missile, Phase)
-	local BulletData = Missile.BulletData
-	local GunData = ACF.Weapons.Guns[BulletData.Id]
-	local Round = GunData.round
-	local Length = GunData.length
-
-	if Missile.NoThrust then
-		Missile.MotorLength = 0
-		Missile.Motor = 0
-	else
-		Missile.MotorLength = BulletData.PropMass / (Round.burnrate / 1000) * (1 - Round.starterpct)
-		Missile.Motor = Round.thrust
-	end
-
-	Missile.DragCoef = Round.dragcoef
-	Missile.DragCoefFlight = (Round.dragcoefflight or Round.dragcoef)
-	Missile.MinimumSpeed = Round.minspeed
-	Missile.FlightTime = 0
-	Missile.FinMultiplier = Round.finmul
-	Missile.Agility = GunData.agility or 1
-	Missile.CutoutTime = ACF.CurTime + Missile.MotorLength
-	Missile.CurPos = BulletData.Pos
-	Missile.CurDir = BulletData.Flight:GetNormalized()
-	Missile.LastPos = Missile.CurPos
-	Missile.HitNorm = Vector()
-	Missile.FirstThink = true
-	Missile.MinArmingDelay = math.max(Round.armdelay or GunData.armdelay, GunData.armdelay)
-	Missile.Inertia = 0.08333 * GunData.weight * (3.1416 * (GunData.caliber / 2) ^ 2 + Length)
-	Missile.TorqueMul = Length * 25
-	Missile.RotAxis = Vector()
-
-	local PhysObj = Missile:GetPhysicsObject()
-
-	if IsValid(PhysObj) then
-		PhysObj:SetMass(Missile.ForcedMass)
-		PhysObj:EnableGravity(false)
-		PhysObj:EnableMotion(false)
-	end
-
-	UpdateBodygroups(Missile, Phase)
-	UpdateSkin(Missile)
+	SetGuidance(Missile, Guidance or Guidances.Dumb())
+	SetFuze(Missile, Fuze or Fuzes.Contact())
 end
 
 local function LaunchEffect(Missile)
@@ -149,19 +97,72 @@ local function LaunchEffect(Missile)
 			Missile:EmitSound(SoundString, 511, math.random(98, 102))
 		end
 	end
+end
 
-	Missile:EmitSound("phx/epicmetal_hard.wav", 500, math.random(98, 102))
+local function SetMotorState(Missile, Enabled)
+	if Missile.MotorEnabled == Enabled then return end
+
+	if Enabled then
+		if Missile.NoThrust then return end
+		if Missile.Exploded then return end
+
+		Missile.Thrust = Missile.MaxThrust
+
+		Missile:SetNW2Float("LightSize", Missile.BulletData.Caliber)
+
+		LaunchEffect(Missile)
+
+		if Missile.Effect then
+			timer.Simple(0, function()
+				if not IsValid(Missile) then return end
+				if not Missile.MotorEnabled then return end
+
+				ParticleEffectAttach(Missile.Effect, PATTACH_POINT_FOLLOW, Missile, Missile:LookupAttachment("exhaust") or 0)
+			end)
+		end
+	else
+		Missile.Thrust = 0
+		Missile:StopParticles()
+		Missile:SetNW2Float("LightSize", 0)
+	end
+
+	Missile.MotorEnabled = Enabled
+end
+
+local function ConfigureFlight(Missile, Phase)
+	local BulletData = Missile.BulletData
+
+	if Missile.NoThrust then
+		Missile.MotorLength = 0
+	else
+		Missile.MotorLength = BulletData.PropMass / Missile.BurnRate * (1 - Missile.StarterPercent)
+	end
+
+	Missile.CurPos = BulletData.Pos
+	Missile.CurDir = BulletData.Flight:GetNormalized()
+	Missile.LastPos = Missile.CurPos
+
+	local PhysObj = Missile:GetPhysicsObject()
+
+	if IsValid(PhysObj) then
+		PhysObj:SetMass(Missile.ForcedMass)
+		PhysObj:EnableGravity(false)
+		PhysObj:EnableMotion(false)
+	end
+
+	UpdateBodygroups(Missile, Phase)
+	UpdateSkin(Missile)
 end
 
 local function Dud(Missile)
 	local PhysObj = Missile:GetPhysicsObject()
+	local HitNormal = Missile.HitNormal
 	local LastVel = Missile.LastVel
 	local CurDir = Missile.CurDir
-	local HitNorm = Missile.HitNorm
 
-	if HitNorm ~= Vector() then
-		local Dot = CurDir:Dot(HitNorm)
-		local NewDir = CurDir - 2 * Dot * HitNorm
+	if HitNormal then
+		local Dot = CurDir:Dot(HitNormal)
+		local NewDir = CurDir - 2 * Dot * HitNormal
 		local VelMul = (0.8 + Dot * 0.7) * LastVel:Length()
 
 		LastVel = NewDir * VelMul
@@ -190,7 +191,6 @@ local function CalcFlight(Missile)
 
 	local Pos = Missile.CurPos
 	local Dir = Missile.CurDir
-	local Flight = Missile.FlightTime + DeltaTime
 	local LastVel = Missile.LastVel
 	local LastSpeed = LastVel:Length()
 
@@ -272,17 +272,16 @@ local function CalcFlight(Missile)
 	end
 
 	--Motor cutout
-	local CutoutTime = Time > Missile.CutoutTime
-	local DragCoef = CutoutTime and Missile.DragCoef or Missile.DragCoefFlight
+	if Missile.MotorEnabled then
+		Missile.MotorLength = Missile.MotorLength - DeltaTime
 
-	if CutoutTime and Missile.Motor ~= 0 then
-		Missile.Motor = 0
-		Missile:StopParticles()
-		Missile:SetNWFloat("LightSize", 0)
+		if Missile.MotorLength <= 0 then
+			SetMotorState(Missile, false)
+		end
 	end
 
 	--Physics calculations
-	local Vel = LastVel + (Dir * Missile.Motor - Vector(0, 0, Gravity:GetFloat())) * ACF.Scale * DeltaTime ^ 2
+	local Vel = LastVel + (Dir * Missile.Thrust - Vector(0, 0, Gravity:GetFloat())) * ACF.Scale * DeltaTime ^ 2
 	local Up = Dir:Cross(Vel):Cross(Dir):GetNormalized()
 	local Speed = Vel:Length()
 	local VelNorm = Vel / Speed
@@ -290,8 +289,8 @@ local function CalcFlight(Missile)
 
 	Vel = Vel - Up * Speed * DotSimple * Missile.FinMultiplier
 
-	local SpeedSq = Vel:LengthSqr()
-	local Drag = Vel:GetNormalized() * (DragCoef * SpeedSq) / ACF.DragDiv * ACF.Scale
+	local DragCoef = Missile.MotorEnabled and Missile.DragCoefFlight or Missile.DragCoef
+	local Drag = Vel:GetNormalized() * (DragCoef * Vel:LengthSqr()) / ACF.DragDiv * ACF.Scale
 
 	Vel = Vel - Drag
 
@@ -305,7 +304,7 @@ local function CalcFlight(Missile)
 	local Result = Trace(TraceData, true)
 
 	if Result.Hit and Time >= Missile.GhostPeriod then
-		Missile.HitNorm = Result.HitNormal
+		Missile.HitNormal = Result.HitNormal
 		Missile.LastVel = Vel / DeltaTime
 
 		Missile:DoFlight(Result.HitPos)
@@ -325,7 +324,6 @@ local function CalcFlight(Missile)
 	Missile.LastPos = Pos
 	Missile.CurPos = EndPos
 	Missile.CurDir = Dir
-	Missile.FlightTime = Flight
 
 	--Missile trajectory debugging
 	debugoverlay.Line(Pos, EndPos, 10, Color(0, 255, 0))
@@ -347,6 +345,8 @@ function MakeACF_Missile(Player, Pos, Ang, Rack, MountPoint, BulletData)
 
 	local Class = ACF.GetClassGroup(Missiles, BulletData.Id)
 	local Data = Class.Lookup[BulletData.Id]
+	local Round = Data.Round
+	local Length = Round.MaxLength
 
 	Missile:SetAngles(Rack:LocalToWorldAngles(Ang))
 	Missile:SetPos(Rack:LocalToWorld(Pos))
@@ -354,24 +354,38 @@ function MakeACF_Missile(Player, Pos, Ang, Rack, MountPoint, BulletData)
 	Missile:SetParent(Rack)
 	Missile:Spawn()
 
-	Missile.Owner = Player
-	Missile.Launcher = Rack
-	Missile.MountPoint = MountPoint
-	Missile.Filter = { Rack }
-	Missile.SeekCone = Data.SeekCone
-	Missile.ViewCone = Data.ViewCone
-	Missile.SkinIndex = Data.SkinIndex
-	Missile.NoThrust = Data.NoThrust or Class.NoThrust
-	Missile.Sound = Data.Sound or Class.Sound or "acf_missiles/missiles/missile_rocket.mp3"
-	Missile.ForcedMass = Data.Mass or 10
-	Missile.ForcedArmor = Data.Round.Armor
-	Missile.Effect = Data.Effect or Class.Effect
-	Missile.DisableDamage = Rack.ProtectMissile
-	Missile.ExhaustOffset = Data.ExhaustOffset
-	Missile.Bodygroups = Data.Bodygroups
-	Missile.RackModel = Rack.MissileModel or Data.Round.RackModel
-	Missile.RealModel = Data.Round.Model
-	Missile.RackModelApplied = Missile.RackModel and true
+	Missile.Owner				= Player
+	Missile.Launcher			= Rack
+	Missile.MountPoint			= MountPoint
+	Missile.Filter				= { Rack }
+	Missile.SeekCone			= Data.SeekCone
+	Missile.ViewCone			= Data.ViewCone
+	Missile.SkinIndex			= Data.SkinIndex
+	Missile.NoThrust			= Data.NoThrust or Class.NoThrust
+	Missile.Sound				= Data.Sound or Class.Sound or "acf_missiles/missiles/missile_rocket.mp3"
+	Missile.ForcedMass			= Data.Mass or 10
+	Missile.ForcedArmor			= Round.Armor
+	Missile.Effect				= Data.Effect or Class.Effect
+	Missile.DisableDamage		= Rack.ProtectMissile
+	Missile.ExhaustOffset		= Data.ExhaustOffset
+	Missile.Bodygroups			= Data.Bodygroups
+	Missile.RackModel			= Rack.MissileModel or Round.RackModel
+	Missile.RealModel			= Round.Model
+	Missile.DragCoef			= Round.DragCoef
+	Missile.DragCoefFlight		= Round.DragCoefFlight or Round.DragCoef
+	Missile.MinimumSpeed		= Round.MinSpeed
+	Missile.MaxThrust			= Round.Thrust
+	Missile.BurnRate			= Round.BurnRate * 0.001
+	Missile.StarterPercent		= Round.StarterPercent
+	Missile.FinMultiplier		= Round.FinMul
+	Missile.CanDelay			= Round.CanDelayLaunch
+	Missile.Agility				= Data.Agility or 1
+	Missile.ArmingDelay			= Data.ArmDelay
+	Missile.Inertia				= 0.08333 * Data.Mass * (3.1416 * (Data.Caliber * 0.05) ^ 2 + Length)
+	Missile.TorqueMul			= Length * 25
+	Missile.RotAxis				= Vector()
+	Missile.MotorEnabled		= false
+	Missile.Thrust				= 0
 
 	Missile:SetModelEasy(Missile.RackModel or Missile.RealModel)
 	Missile:SetBulletData(BulletData)
@@ -387,8 +401,6 @@ function MakeACF_Missile(Player, Pos, Ang, Rack, MountPoint, BulletData)
 		Missile.ExhaustPos = Missile:WorldToLocal(Offset)
 	end
 
-	Missile:SetNWFloat("LightSize", 0)
-
 	return Missile
 end
 
@@ -399,38 +411,38 @@ function ENT:SetBulletData(BulletData)
 	ConfigureFlight(self, "OnRack")
 end
 
-function ENT:Launch()
-	if not self.Guidance then
-		SetGuidance(self, Guidances.Dumb())
-	end
-
-	if not self.Fuze then
-		SetFuze(self, Fuzes.Contact())
-	end
-
-	self.Guidance:Configure(self)
-	self.Fuze:Configure(self, self.Guidance)
+function ENT:Launch(Delay)
 	self.Launched = true
 	self.ThinkDelay = engine.TickInterval()
 	self.GhostPeriod = ACF.CurTime + GhostPeriod:GetFloat()
 	self.DisableDamage = nil
+	self.LastThink = ACF.CurTime - self.ThinkDelay
+	self.LastVel = ACF_GetAncestor(self.Launcher):GetVelocity() * self.ThinkDelay
+
+	self.Guidance:Configure(self)
+	self.Guidance:OnLaunched(self)
+
+	self.Fuze:Configure(self, self.Guidance)
+
+	ActiveMissiles[self] = true
 
 	ConfigureFlight(self, "OnLaunch")
 
-	if self.Motor > 0 or self.MotorLength > 0.1 then
-		self.CacheParticleEffect = ACF.CurTime + 0.01
-		self:SetNWFloat("LightSize", self.BulletData.Caliber)
+	self:EmitSound("phx/epicmetal_hard.wav", 500, math.random(98, 102))
+
+	if Delay and self.CanDelay then
+		self.GhostPeriod = self.GhostPeriod + Delay
+
+		timer.Simple(Delay, function()
+			if not IsValid(self) then return end
+
+			SetMotorState(self, true)
+		end)
+	else
+		SetMotorState(self, true)
 	end
 
-	LaunchEffect(self)
-
-	self.Guidance:OnLaunched(self)
-
-	ACF.ActiveMissiles[self] = true
-
 	hook.Run("OnMissileLaunched", self)
-
-	self:Think()
 end
 
 function ENT:DoFlight(ToPos, ToDir)
@@ -444,18 +456,18 @@ function ENT:DoFlight(ToPos, ToDir)
 end
 
 function ENT:Detonate(Destroyed)
-	self.Motor = 0
 	self.Exploded = true
-	self.Disabled = self.Disabled or self.Fuze and (ACF.CurTime - self.Fuze.TimeStarted < self.MinArmingDelay or not self.Fuze:IsArmed())
 
-	self:StopParticles()
-	self:SetNWFloat("LightSize", 0)
+	SetMotorState(self, false)
 
-	ACF.ActiveMissiles[self] = nil
+	ActiveMissiles[self] = nil
+
+	if not self.Disabled then
+		self.Disabled = self.Fuze and (ACF.CurTime - self.Fuze.TimeStarted < self.ArmingDelay or not self.Fuze:IsArmed())
+	end
 
 	if self.Disabled then
-		Dud(self)
-		return
+		return Dud(self)
 	end
 
 	-- Workaround for HEAT jets that can travel the entire map on destroyed missiles
@@ -473,28 +485,7 @@ end
 
 function ENT:Think()
 	if self.Launched and not self.Exploded then
-		if self.Hit then
-			self:Detonate()
-			return false
-		end
-
-		local Time = ACF.CurTime
-
-		if self.FirstThink then
-			self.FirstThink = nil
-			self.LastThink = Time - self.ThinkDelay
-			self.LastVel = ACF_GetAncestor(self.Launcher):GetVelocity() * self.ThinkDelay
-		end
-
 		CalcFlight(self)
-
-		if self.CacheParticleEffect and self.CacheParticleEffect <= Time and Time < self.CutoutTime then
-			if self.Effect then
-				ParticleEffectAttach(self.Effect, PATTACH_POINT_FOLLOW, self, self:LookupAttachment("exhaust") or 0)
-			end
-
-			self.CacheParticleEffect = nil
-		end
 	end
 
 	return self.BaseClass.Think(self)
@@ -510,7 +501,7 @@ function ENT:PhysicsCollide(Data)
 end
 
 function ENT:OnRemove()
-	ACF.ActiveMissiles[self] = nil
+	ActiveMissiles[self] = nil
 
 	if self.Guidance then
 		self.Guidance:OnRemoved(self)

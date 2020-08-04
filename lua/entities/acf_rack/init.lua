@@ -389,7 +389,6 @@ do -- Entity Inputs ----------------------------
 		Entity.FireDelay = math.Clamp(Value, 0.1, 1)
 	end)
 
-	-- TODO: Implement launch delay
 	ACF.AddInputAction("acf_rack", "Launch Delay", function(Entity, Value)
 		Entity.LaunchDelay = Value > 0 and math.max(Value, 1) or nil
 	end)
@@ -446,6 +445,7 @@ do -- Firing -----------------------------------
 
 		BulletData.Owner = Rack:GetUser(Rack.Inputs.Fire.Src)
 		BulletData.Flight = ShootDir * Speed
+		BulletData.Pos = Pos
 
 		if Rack.SoundPath and Rack.SoundPath ~= "" then
 			BulletData.Sound = Rack.SoundPath
@@ -455,27 +455,26 @@ do -- Firing -----------------------------------
 			Missile.Filter[#Missile.Filter + 1] = Load
 		end
 
-		if Missile.RackModelApplied then
+		if Missile.RackModel then
 			Missile:SetModelEasy(Missile.RealModel)
-			Missile.RackModelApplied = nil
 		end
 
 		Missile:SetNoDraw(false)
 		Missile:SetParent()
 
-		Missile:DoFlight(Pos, ShootDir)
-		Missile:Launch()
+		Missile:Launch(Rack.LaunchDelay)
 
+		Rack.LastFired = Missile
 		Rack:UpdateLoad(Point)
 	end
 
 	-------------------------------------------------------------------------------
 
 	function ENT:CanShoot()
+		if self.RetryShoot then return false end
 		if not self.Firing then return false end
 		if self.Disabled then return false end
 		if not ACF.GunfireEnabled then return false end
-		if self.RetryShoot then return false end
 
 		return true
 	end
@@ -558,10 +557,10 @@ do -- Loading ----------------------------------
 	-------------------------------------------------------------------------------
 
 	function ENT:CanReload()
+		if self.RetryReload then return false end
 		if not self.Reloading then return false end
 		if self.Disabled then return false end
 		if not ACF.GunfireEnabled then return false end
-		if self.RetryReload then return false end
 
 		return true
 	end
