@@ -51,6 +51,7 @@ function Guidance:GetGuidance(Missile)
 
 	local Pitch, Yaw = self:CheckComputer()
 
+	if not Pitch then return {} end
 	if Pitch == 0 and Yaw == 0 then return {} end
 
 	local Direction = Angle(Pitch, Yaw):Forward() * 12000
