@@ -376,7 +376,7 @@ do -- Entity Inputs ----------------------------
 	end)
 
 	ACF.AddInputAction("acf_rack", "Missile Index", function(Entity, Value)
-		Entity.ForcedIndex = Value > 0 and math.max(Value, Entity.MagSize) or nil
+		Entity.ForcedIndex = Value > 0 and math.min(Value, Entity.MagSize) or nil
 
 		Entity:UpdatePoint()
 
@@ -390,7 +390,7 @@ do -- Entity Inputs ----------------------------
 	end)
 
 	ACF.AddInputAction("acf_rack", "Launch Delay", function(Entity, Value)
-		Entity.LaunchDelay = Value > 0 and math.max(Value, 1) or nil
+		Entity.LaunchDelay = Value > 0 and math.min(Value, 1) or nil
 	end)
 end ---------------------------------------------
 
