@@ -18,20 +18,6 @@ local Missiles = ACF.Classes.Missiles
 local Guidances = ACF.Classes.Guidances
 local Fuzes = ACF.Classes.Fuzes
 
-local function SetGuidance(Missile, Guidance)
-	Missile.Guidance = Guidance
-	Guidance:Configure(Missile)
-
-	return Guidance
-end
-
-local function SetFuze(Missile, Fuze)
-	Missile.Fuze = Fuze
-	Fuze:Configure(Missile, Missile.Guidance)
-
-	return Fuze
-end
-
 local function ApplyBodySubgroup(Missile, Group, Source, Phase)
 	local Target = Source.DataSource(Missile)
 
@@ -73,17 +59,6 @@ local function UpdateSkin(Missile)
 	if not Skins then return end
 
 	Missile:SetSkin(Skins[BulletData.Type] or 0)
-end
-
-local function ParseBulletData(Missile, BulletData)
-	local GuidanceData = BulletData.Data7 or "Dumb"
-	local FuzeData = BulletData.Data8 or "Contact"
-
-	local Guidance = ACFM_CreateConfigurable(GuidanceData, Guidances, BulletData, "Guidance")
-	local Fuze = ACFM_CreateConfigurable(FuzeData, Fuzes, BulletData, "Fuzes")
-
-	SetGuidance(Missile, Guidance or Guidances.Dumb())
-	SetFuze(Missile, Fuze or Fuzes.Contact())
 end
 
 local function LaunchEffect(Missile)
@@ -182,6 +157,7 @@ local function Dud(Missile)
 end
 
 local function CalcFlight(Missile)
+	if not Missile.Launched then return end
 	if Missile.Exploded then return end
 
 	local Time = ACF.CurTime
@@ -302,10 +278,13 @@ local function CalcFlight(Missile)
 	TraceData.filter = Missile.Filter
 
 	local Result = Trace(TraceData, true)
+	local Ghosted = Time < Missile.GhostPeriod
+	local GhostHit = Ghosted and Result.HitWorld
 
-	if Result.Hit and Time >= Missile.GhostPeriod then
+	if Result.Hit and (GhostHit or not Ghosted) then
 		Missile.HitNormal = Result.HitNormal
 		Missile.LastVel = Vel / DeltaTime
+		Missile.Disabled = GhostHit
 
 		Missile:DoFlight(Result.HitPos)
 		Missile:Detonate()
@@ -335,9 +314,22 @@ hook.Add("CanDrive", "acf_missile_CanDrive", function(_, Entity)
 	if Entity:GetClass() == "acf_missile" then return false end
 end)
 
+hook.Add("OnMissileLaunched", "ACF Missile Rack Filter", function(Missile)
+	local Count = #Missile.Filter
+
+	for K in pairs(ActiveMissiles) do
+		if Missile ~= K and Missile.Launcher == K.Launcher then
+			Count = Count + 1
+
+			K.Filter[#K.Filter + 1] = Missile
+			Missile.Filter[Count] = K
+		end
+	end
+end)
+
 -------------------------------[[ Global Functions ]]-------------------------------
 
--- TODO: Make ACF Missiles compliant with ACF legal checks
+-- TODO: Make ACF Missiles compliant with ACF legal checks. How to deal with SetNoDraw and SetNotSolid tho
 function MakeACF_Missile(Player, Pos, Ang, Rack, MountPoint, BulletData)
 	local Missile = ents.Create("acf_missile")
 
@@ -380,7 +372,6 @@ function MakeACF_Missile(Player, Pos, Ang, Rack, MountPoint, BulletData)
 	Missile.FinMultiplier		= Round.FinMul
 	Missile.CanDelay			= Round.CanDelayLaunch
 	Missile.Agility				= Data.Agility or 1
-	Missile.ArmingDelay			= Data.ArmDelay
 	Missile.Inertia				= 0.08333 * Data.Mass * (3.1416 * (Data.Caliber * 0.05) ^ 2 + Length)
 	Missile.TorqueMul			= Length * 25
 	Missile.RotAxis				= Vector()
@@ -407,7 +398,18 @@ end
 function ENT:SetBulletData(BulletData)
 	self.BaseClass.SetBulletData(self, BulletData)
 
-	ParseBulletData(self, BulletData)
+	local GuidanceData = BulletData.Data7 or "Dumb"
+	local FuzeData = BulletData.Data8 or "Contact"
+
+	local Guidance = ACFM_CreateConfigurable(GuidanceData, Guidances, BulletData, "Guidance")
+	local Fuze = ACFM_CreateConfigurable(FuzeData, Fuzes, BulletData, "Fuzes")
+
+	self.Guidance = Guidance or Guidances.Dumb()
+	self.Guidance:Configure(self)
+
+	self.Fuze = Fuze or Fuzes.Contact()
+	self.Fuze:Configure()
+
 	ConfigureFlight(self, "OnRack")
 end
 
@@ -419,20 +421,11 @@ function ENT:Launch(Delay)
 	self.LastThink = ACF.CurTime - self.ThinkDelay
 	self.LastVel = ACF_GetAncestor(self.Launcher):GetVelocity() * self.ThinkDelay
 
-	self.Guidance:Configure(self)
-	self.Guidance:OnLaunched(self)
-
-	self.Fuze:Configure(self, self.Guidance)
+	self:EmitSound("phx/epicmetal_hard.wav", 500, math.random(98, 102))
 
 	ActiveMissiles[self] = true
 
-	ConfigureFlight(self, "OnLaunch")
-
-	self:EmitSound("phx/epicmetal_hard.wav", 500, math.random(98, 102))
-
 	if Delay and self.CanDelay then
-		self.GhostPeriod = self.GhostPeriod + Delay
-
 		timer.Simple(Delay, function()
 			if not IsValid(self) then return end
 
@@ -441,6 +434,13 @@ function ENT:Launch(Delay)
 	else
 		SetMotorState(self, true)
 	end
+
+	self.Guidance:Configure(self)
+	self.Guidance:OnLaunched(self)
+
+	self.Fuze:Configure()
+
+	ConfigureFlight(self, "OnLaunch")
 
 	hook.Run("OnMissileLaunched", self)
 end
@@ -462,12 +462,12 @@ function ENT:Detonate(Destroyed)
 
 	ActiveMissiles[self] = nil
 
-	if not self.Disabled then
-		self.Disabled = self.Fuze and (ACF.CurTime - self.Fuze.TimeStarted < self.ArmingDelay or not self.Fuze:IsArmed())
-	end
+	if not Destroyed then
+		self.Disabled = self.Disabled or self.Fuze and not self.Fuze:IsArmed()
 
-	if self.Disabled then
-		return Dud(self)
+		if self.Disabled then
+			return Dud(self)
+		end
 	end
 
 	-- Workaround for HEAT jets that can travel the entire map on destroyed missiles
@@ -484,20 +484,9 @@ function ENT:Detonate(Destroyed)
 end
 
 function ENT:Think()
-	if self.Launched and not self.Exploded then
-		CalcFlight(self)
-	end
+	CalcFlight(self)
 
 	return self.BaseClass.Think(self)
-end
-
-function ENT:PhysicsCollide(Data)
-	if not self.Disabled and not self.Launched then
-		self.Disabled = true
-		self.LastVel = Data.OurOldVelocity
-
-		self:Detonate()
-	end
 end
 
 function ENT:OnRemove()
