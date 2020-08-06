@@ -19,14 +19,18 @@ function Fuze:OnLoaded()
 	}
 end
 
+function Fuze:IsOnTime()
+	return ACF.CurTime - self.TimeStarted >= self.Timer
+end
+
 function Fuze:GetDetonate()
-	return self:IsArmed() and self.TimeStarted + self.Timer <= CurTime()
+	return self:IsArmed() and self:IsOnTime()
 end
 
 function Fuze:GetDisplayConfig()
-	return
-	{
-		Primer = math.Round(self.Primer, 1) .. " s",
-		Timer = math.Round(self.Timer, 1) .. " s"
-	}
+	local Config = Fuze.BaseClass.GetDisplayConfig(self)
+
+	Config.Timer = math.Round(self.Timer, 2) .. " second(s)"
+
+	return Config
 end

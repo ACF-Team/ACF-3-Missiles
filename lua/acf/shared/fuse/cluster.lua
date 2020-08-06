@@ -3,7 +3,7 @@ local Fuze = ACF.RegisterFuze("Cluster", "Contact")
 local TraceData = { start = true, endpos = true, filter = true }
 
 Fuze.desc = "This fuze fires a beam directly ahead and releases bomblets when the beam hits something close-by.\nDistance in inches."
-Fuze.Cluster = 2000
+Fuze.Cluster = 1000
 
 function Fuze:OnLoaded()
 	Fuze.BaseClass.OnLoaded(self)
@@ -16,7 +16,7 @@ function Fuze:OnLoaded()
 		CommandName = "Ds",			-- shorthand name used in console commands
 		Type = "number",			-- lua type of the configurable variable
 		Min = 0,					-- number specific: minimum value
-		Max = 10000					-- number specific: maximum value
+		Max = 2500					-- number specific: maximum value
 	}
 end
 
@@ -33,9 +33,9 @@ function Fuze:GetDetonate(Missile)
 end
 
 function Fuze:GetDisplayConfig()
-	return
-	{
-		Primer = math.Round(self.Primer, 1) .. " s",
-		Distance = math.Round(self.Cluster / 39.37, 1) .. " m"
-	}
+	local Config = Fuze.BaseClass.GetDisplayConfig(self)
+
+	Config.Distance = math.Round(self.Cluster * 0.0254, 2) .. " meter(s)"
+
+	return Config
 end

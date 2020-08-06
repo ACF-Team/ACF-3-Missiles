@@ -23,11 +23,11 @@ function Fuze:OnLoaded()
 end
 
 function Fuze:IsArmed()
-	return self.TimeStarted + self.Primer <= CurTime()
+	return ACF.CurTime - self.TimeStarted >= self.Primer
 end
 
 function Fuze:Configure()
-	self.TimeStarted = CurTime()
+	self.TimeStarted = ACF.CurTime
 end
 
 -- Do nothing, projectiles auto-detonate on contact anyway.
@@ -36,5 +36,5 @@ function Fuze:GetDetonate()
 end
 
 function Fuze:GetDisplayConfig()
-	return { Primer = math.Round(self.Primer, 1) .. " s" }
+	return { Primer = math.Round(self.Primer, 2) .. " second(s)" }
 end
