@@ -56,7 +56,7 @@ function Round.convert(_, PlayerData)
 	Data.DistractChance = (2 / math.pi) * math.atan(Data.FrArea * ACFM.FlareDistractMultiplier)	* 0.5	--reduced effectiveness 50%--red
 	Data.BurnTime = Data.FillerMass / Data.BurnRate
 
-	Data.BoomPower = Data.PropMass + Data.FillerMass
+	Data.CartMass = Data.ProjMass + Data.PropMass
 
 	if SERVER then --Only the crates need this part
 		ServerData.Id = PlayerData.Id
