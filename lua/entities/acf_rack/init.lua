@@ -498,20 +498,22 @@ do -- Firing -----------------------------------
 		else
 			self:EmitSound("weapons/pistol/pistol_empty.wav", 500, math.random(98, 102))
 
-			self.RetryShoot = true
-
 			Delay = 1
 		end
 
-		timer.Simple(Delay, function()
-			if not IsValid(self) then return end
+		if not self.RetryShoot then
+			self.RetryShoot = true
 
-			self.RetryShoot = nil
+			timer.Simple(Delay, function()
+				if not IsValid(self) then return end
 
-			if self:CanShoot() then
-				self:Shoot()
-			end
-		end)
+				self.RetryShoot = nil
+
+				if self:CanShoot() then
+					self:Shoot()
+				end
+			end)
+		end
 	end
 end ---------------------------------------------
 
