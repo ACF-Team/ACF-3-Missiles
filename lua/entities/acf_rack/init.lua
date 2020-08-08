@@ -102,8 +102,10 @@ do -- Spawning and Updating --------------------
 
 		for Link in pairs(Entity[Source]) do
 			if Position:DistToSqr(Link:GetPos()) > MaxDistance then
-				Entity:EmitSound(UnlinkSound:format(math.random(1, 3)), 500, math.random(98, 102))
-				Link:EmitSound(UnlinkSound:format(math.random(1, 3)), 500, math.random(98, 102))
+				local Sound = UnlinkSound:format(math.random(1, 3))
+
+				Entity:EmitSound(Sound, 500, math.random(99, 109))
+				Link:EmitSound(Sound, 500, math.random(99, 109))
 
 				Entity:Unlink(Link)
 			end
@@ -369,7 +371,9 @@ do -- Entity Inputs ----------------------------
 
 		Entity.Reloading = tobool(Value)
 
-		Entity:Reload()
+		if Entity:CanReload() then
+			Entity:Reload()
+		end
 	end)
 
 	ACF.AddInputAction("acf_rack", "Unload", function(Entity, Value)
@@ -384,7 +388,7 @@ do -- Entity Inputs ----------------------------
 		Entity:UpdatePoint()
 
 		if Entity.ForcedIndex then
-			Entity:EmitSound("buttons/blip2.wav", 500, math.random(98, 102))
+			Entity:EmitSound("buttons/blip2.wav", 500, math.random(99, 101))
 		end
 	end)
 
@@ -496,7 +500,7 @@ do -- Firing -----------------------------------
 
 			self:UpdatePoint()
 		else
-			self:EmitSound("weapons/pistol/pistol_empty.wav", 500, math.random(98, 102))
+			self:EmitSound("weapons/pistol/pistol_empty.wav", 500, math.random(99, 101))
 
 			Delay = 1
 		end
@@ -554,7 +558,7 @@ do -- Loading ----------------------------------
 		local Pos, Ang = GetMissileAngPos(BulletData, Point)
 		local Missile = MakeACF_Missile(Rack.Owner, Pos, Ang, Rack, Point, BulletData)
 
-		Rack:EmitSound("acf_missiles/fx/bomb_reload.mp3", 500, math.random(98, 102))
+		Rack:EmitSound("acf_missiles/fx/bomb_reload.mp3", 500, math.random(99, 101))
 		Rack:UpdateLoad(Point, Missile)
 
 		return Missile
@@ -564,19 +568,17 @@ do -- Loading ----------------------------------
 
 	function ENT:CanReload()
 		if self.RetryReload then return false end
-		if self.Firing then return false end
 		if not self.Reloading then return false end
+		if not ACF.GunfireEnabled then return false end
 
 		return true
 	end
 
 	function ENT:Reload()
-		if not ACF.GunfireEnabled then return end
-
 		local Index, Point = self:GetNextMountPoint("Empty")
 		local Crate = GetNextCrate(self)
 
-		if self:CanReload() and Index and Crate then
+		if not self.Firing and Index and Crate then
 			local Bullet = Crate.BulletData
 			local Time = ACF.BaseReload + 2 + (Bullet.ProjMass + Bullet.PropMass) * ACF.MassToTime * 3 -- TODO: Not final, keep tweaking this
 
@@ -602,7 +604,7 @@ do -- Loading ----------------------------------
 
 					Missile = nil
 				else
-					self:EmitSound("acf_missiles/fx/weapon_select.mp3", 500, math.random(98, 102))
+					self:EmitSound("acf_missiles/fx/weapon_select.mp3", 500, math.random(99, 101))
 
 					Point.State = "Loaded"
 					Point.NextFire = nil
@@ -612,17 +614,17 @@ do -- Loading ----------------------------------
 			end)
 		end
 
-		if not self.RetryReload then
-			self.RetryReload = true
+		self.RetryReload = true
 
-			timer.Simple(1, function()
-				if not IsValid(self) then return end
+		timer.Simple(1, function()
+			if not IsValid(self) then return end
 
-				self.RetryReload = nil
+			self.RetryReload = nil
 
+			if self:CanReload() then
 				self:Reload()
-			end)
-		end
+			end
+		end)
 	end
 end ---------------------------------------------
 
@@ -711,7 +713,9 @@ do -- Misc -------------------------------------
 			self:Shoot()
 		end
 
-		self:Reload()
+		if self:CanReload() then
+			self:Reload()
+		end
 	end
 
 	function ENT:Disable()
