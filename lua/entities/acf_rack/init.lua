@@ -278,7 +278,7 @@ do -- Entity Link/Unlink -----------------------
 	ACF.RegisterClassUnlink("acf_rack", "acf_ammo", function(Weapon, Target)
 		if Weapon.Crates[Target] or Target.Weapons[Weapon] then
 			if Weapon.CurrentCrate == Target then
-				Weapon.CurrentCrate = next(Weapon.Crates, Target) or next(Weapon.Crates)
+				Weapon.CurrentCrate = next(Weapon.Crates, Target)
 			end
 
 			Target.Weapons[Weapon] = nil
@@ -792,6 +792,10 @@ do -- Misc -------------------------------------
 
 		self:Unlink(self.Radar)
 		self:Unlink(self.Computer)
+
+		for _, Missile in pairs(self.Missiles) do
+			Missile:Remove()
+		end
 
 		timer.Remove("ACF Rack Clock " .. self:EntIndex())
 
