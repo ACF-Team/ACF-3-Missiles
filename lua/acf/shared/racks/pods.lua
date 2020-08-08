@@ -12,13 +12,13 @@ ACF.RegisterRack("40mm7xPOD", {
 	WhitelistOnly = true,
 
 	MountPoints = {
-		{ Name = "missile1", Offset = Vector(), ScaleDir = Vector() },
-		{ Name = "missile2", Offset = Vector(0, -2, 0), ScaleDir = Vector() },
-		{ Name = "missile3", Offset = Vector(0, -1, -1.73), ScaleDir = Vector() },
-		{ Name = "missile4", Offset = Vector(0, 1, -1.73), ScaleDir = Vector() },
-		{ Name = "missile5", Offset = Vector(0, 2, 0), ScaleDir = Vector() },
-		{ Name = "missile6", Offset = Vector(0, 1, 1.74), ScaleDir = Vector() },
-		{ Name = "missile7", Offset = Vector(0, -1, 1.74), ScaleDir = Vector() }
+		{ Name = "missile1", Position = Vector() },
+		{ Name = "missile2", Position = Vector(0, -2, 0) },
+		{ Name = "missile3", Position = Vector(0, -1, -1.73) },
+		{ Name = "missile4", Position = Vector(0, 1, -1.73) },
+		{ Name = "missile5", Position = Vector(0, 2, 0) },
+		{ Name = "missile6", Position = Vector(0, 1, 1.74) },
+		{ Name = "missile7", Position = Vector(0, -1, 1.74) }
 	}
 })
 
@@ -36,13 +36,13 @@ ACF.RegisterRack("70mm7xPOD", {
 	WhitelistOnly = true,
 
 	MountPoints = {
-		{ Name = "missile1", Offset = Vector(), ScaleDir = Vector() },
-		{ Name = "missile2", Offset = Vector(0, -3.5, 0), ScaleDir = Vector() },
-		{ Name = "missile3", Offset = Vector(0, -1.75, -3.03), ScaleDir = Vector() },
-		{ Name = "missile4", Offset = Vector(0, 1.75, -3.03), ScaleDir = Vector() },
-		{ Name = "missile5", Offset = Vector(0, 3.5, 0), ScaleDir = Vector() },
-		{ Name = "missile6", Offset = Vector(0, 1.75, 3.04), ScaleDir = Vector() },
-		{ Name = "missile7", Offset = Vector(0, -1.75, 3.04), ScaleDir = Vector() }
+		{ Name = "missile1", Position = Vector() },
+		{ Name = "missile2", Position = Vector(0, -3.5, 0) },
+		{ Name = "missile3", Position = Vector(0, -1.75, -3.03) },
+		{ Name = "missile4", Position = Vector(0, 1.75, -3.03) },
+		{ Name = "missile5", Position = Vector(0, 3.5, 0) },
+		{ Name = "missile6", Position = Vector(0, 1.75, 3.04) },
+		{ Name = "missile7", Position = Vector(0, -1.75, 3.04) }
 	}
 })
 
@@ -61,7 +61,7 @@ ACF.RegisterRack("1x BGM-71E", {
 	HideMissile = true,
 
 	MountPoints = {
-		{ Name = "missile1", Offset = Vector(15.76, 0, 0), ScaleDir = Vector() }
+		{ Name = "missile1", Position = Vector(15.76, 0, 0) }
 	}
 })
 
@@ -80,8 +80,8 @@ ACF.RegisterRack("2x BGM-71E", {
 	HideMissile = true,
 
 	MountPoints = {
-		{ Name = "missile1", Offset = Vector(23.64, 4.73, 0), ScaleDir = Vector() },
-		{ Name = "missile2", Offset = Vector(23.64, -4.73, 0), ScaleDir = Vector() }
+		{ Name = "missile1", Position = Vector(23.64, 4.73, 0) },
+		{ Name = "missile2", Position = Vector(23.64, -4.73, 0) }
 	}
 })
 
@@ -100,10 +100,10 @@ ACF.RegisterRack("4x BGM-71E", {
 	HideMissile = true,
 
 	MountPoints = {
-		{ Name = "missile1", Offset = Vector(23.64, 4.73, 0), ScaleDir = Vector() },
-		{ Name = "missile2", Offset = Vector(23.64, -4.73, 0), ScaleDir = Vector() },
-		{ Name = "missile3", Offset = Vector(23.64, 4.73, -11.43), ScaleDir = Vector() },
-		{ Name = "missile4", Offset = Vector(23.64, -4.73, -11.43), ScaleDir = Vector() }
+		{ Name = "missile1", Position = Vector(23.64, 4.73, 0) },
+		{ Name = "missile2", Position = Vector(23.64, -4.73, 0) },
+		{ Name = "missile3", Position = Vector(23.64, 4.73, -11.43) },
+		{ Name = "missile4", Position = Vector(23.64, -4.73, -11.43) }
 	}
 })
 
@@ -121,7 +121,7 @@ ACF.RegisterRack("380mmRW61", {
 	WhitelistOnly = true,
 
 	MountPoints = {
-		{ Name = "missile1", Offset = Vector(8.39, -0.01, 0), ScaleDir = Vector() },
+		{ Name = "missile1", Position = Vector(8.39, -0.01, 0) },
 	}
 })
 
@@ -138,9 +138,9 @@ ACF.RegisterRack("3xUARRK", {
 	WhitelistOnly = true,
 
 	MountPoints = {
-		{ Name = "missile1", Offset = Vector(-6.76, 0, 9.09), ScaleDir = Vector() },
-		{ Name = "missile2", Offset = Vector(-6.76, 3.19, 3.48), ScaleDir = Vector() },
-		{ Name = "missile3", Offset = Vector(-6.76, -3.21, 3.48), ScaleDir = Vector() },
+		{ Name = "missile1", Position = Vector(-4.5, 0, 9.09) },
+		{ Name = "missile2", Position = Vector(-4.5, 3.19, 3.48) },
+		{ Name = "missile3", Position = Vector(-4.5, -3.21, 3.48) },
 	}
 })
 
@@ -158,12 +158,12 @@ ACF.RegisterRack("6xUARRK", {
 	WhitelistOnly = true,
 
 	MountPoints = {
-		{ Name = "missile1", Offset = Vector(0.035, -11.26, 5.58), ScaleDir = Vector() },
-		{ Name = "missile2", Offset = Vector(0.025, 0.03, 5.58), ScaleDir = Vector() },
-		{ Name = "missile3", Offset = Vector(0.025, 11.18, 5.58), ScaleDir = Vector() },
-		{ Name = "missile4", Offset = Vector(0.025, -11.26, -5.51), ScaleDir = Vector() },
-		{ Name = "missile5", Offset = Vector(0.025, 0.03, -5.51), ScaleDir = Vector() },
-		{ Name = "missile6", Offset = Vector(0.025, 11.18, -5.51), ScaleDir = Vector() },
+		{ Name = "missile1", Position = Vector(0.035, -11.26, 5.58) },
+		{ Name = "missile2", Position = Vector(0.025, 0.03, 5.58) },
+		{ Name = "missile3", Position = Vector(0.025, 11.18, 5.58) },
+		{ Name = "missile4", Position = Vector(0.025, -11.26, -5.51) },
+		{ Name = "missile5", Position = Vector(0.025, 0.03, -5.51) },
+		{ Name = "missile6", Position = Vector(0.025, 11.18, -5.51) },
 	}
 })
 
@@ -181,7 +181,7 @@ ACF.RegisterRack("1x FIM-92", {
 	WhitelistOnly = true,
 
 	MountPoints = {
-		{ Name = "missile1", Offset = Vector(), ScaleDir = Vector() }
+		{ Name = "missile1", Position = Vector() }
 	}
 })
 
@@ -200,8 +200,8 @@ ACF.RegisterRack("2x FIM-92", {
 	WhitelistOnly = true,
 
 	MountPoints = {
-		{ Name = "missile1", Offset = Vector(0, 3.35, 0.45), ScaleDir = Vector() },
-		{ Name = "missile2", Offset = Vector(0, -3.35, 0.45), ScaleDir = Vector() }
+		{ Name = "missile1", Position = Vector(0, 3.35, 0.45) },
+		{ Name = "missile2", Position = Vector(0, -3.35, 0.45) }
 	}
 })
 
@@ -219,10 +219,10 @@ ACF.RegisterRack("4x FIM-92", {
 	WhitelistOnly = true,
 
 	MountPoints = {
-		{ Name = "missile1", Offset = Vector(0, 2.6, 2.65), ScaleDir = Vector() },
-		{ Name = "missile2", Offset = Vector(0, -2.6, 2.65), ScaleDir = Vector() },
-		{ Name = "missile3", Offset = Vector(0, 2.6, -2.3), ScaleDir = Vector(0, 0, -1) },
-		{ Name = "missile4", Offset = Vector(0, -2.6, -2.3), ScaleDir = Vector(0, 0, -1) }
+		{ Name = "missile1", Position = Vector(0, 2.6, 2.65) },
+		{ Name = "missile2", Position = Vector(0, -2.6, 2.65) },
+		{ Name = "missile3", Position = Vector(0, 2.6, -3.6) },
+		{ Name = "missile4", Position = Vector(0, -2.6, -3.6) }
 	}
 })
 
@@ -240,7 +240,7 @@ ACF.RegisterRack("1x Strela-1", {
 	WhitelistOnly = true,
 
 	MountPoints = {
-		{ Name = "missile1", Offset = Vector(44.12, 2.65, 0.13), ScaleDir = Vector() }
+		{ Name = "missile1", Position = Vector(44.12, 2.65, 0.13) }
 	}
 })
 
@@ -258,8 +258,8 @@ ACF.RegisterRack("2x Strela-1", {
 	WhitelistOnly = true,
 
 	MountPoints = {
-		{ Name = "missile1", Offset = Vector(44.12, -5.59, 0.13), ScaleDir = Vector() },
-		{ Name = "missile2", Offset = Vector(44.12, 10.97, 0.13), ScaleDir = Vector() }
+		{ Name = "missile1", Position = Vector(44.12, -5.59, 0.13) },
+		{ Name = "missile2", Position = Vector(44.12, 10.97, 0.13) }
 	}
 })
 
@@ -277,10 +277,10 @@ ACF.RegisterRack("4x Strela-1", {
 	WhitelistOnly = true,
 
 	MountPoints = {
-		{ Name = "missile1", Offset = Vector(44.17, -42.66, 3.74), ScaleDir = Vector() },
-		{ Name = "missile2", Offset = Vector(44.17, -26.1, 3.74), ScaleDir = Vector() },
-		{ Name = "missile3", Offset = Vector(44.17, 25.98, 3.74), ScaleDir = Vector() },
-		{ Name = "missile4", Offset = Vector(44.17, 42.54, 3.74), ScaleDir = Vector() }
+		{ Name = "missile1", Position = Vector(44.17, -42.66, 3.74) },
+		{ Name = "missile2", Position = Vector(44.17, -26.1, 3.74) },
+		{ Name = "missile3", Position = Vector(44.17, 25.98, 3.74) },
+		{ Name = "missile4", Position = Vector(44.17, 42.54, 3.74) }
 	}
 })
 
@@ -299,7 +299,7 @@ ACF.RegisterRack("1x Ataka", {
 	HideMissile = true,
 
 	MountPoints = {
-		{ Name = "missile1", Offset = Vector(0, 0, 3), ScaleDir = Vector() }
+		{ Name = "missile1", Position = Vector(0, 0, 3) }
 	}
 })
 
@@ -318,7 +318,7 @@ ACF.RegisterRack("1x SPG9", {
 	HideMissile = true,
 
 	MountPoints = {
-		{ Name = "missile1", Offset = Vector(), ScaleDir = Vector() }
+		{ Name = "missile1", Position = Vector() }
 	}
 })
 
@@ -336,7 +336,7 @@ ACF.RegisterRack("1x Kornet", {
 	WhitelistOnly = true,
 
 	MountPoints = {
-		{ Name = "missile1", Offset = Vector(), ScaleDir = Vector() }
+		{ Name = "missile1", Position = Vector() }
 	}
 })
 
@@ -354,9 +354,9 @@ ACF.RegisterRack("127mm4xPOD", {
 	WhitelistOnly = true,
 
 	MountPoints = {
-		{ Name = "missile1", Offset = Vector(5.2, 2.75, 2.65), ScaleDir = Vector() },
-		{ Name = "missile2", Offset = Vector(5.2, -2.75, 2.65), ScaleDir = Vector() },
-		{ Name = "missile3", Offset = Vector(5.2, 2.75, -2.83), ScaleDir = Vector() },
-		{ Name = "missile4", Offset = Vector(5.2, -2.75, -2.83), ScaleDir = Vector() }
+		{ Name = "missile1", Position = Vector(5.2, 2.75, 2.65) },
+		{ Name = "missile2", Position = Vector(5.2, -2.75, 2.65) },
+		{ Name = "missile3", Position = Vector(5.2, 2.75, -2.83) },
+		{ Name = "missile4", Position = Vector(5.2, -2.75, -2.83) }
 	}
 })

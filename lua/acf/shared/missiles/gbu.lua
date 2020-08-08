@@ -245,10 +245,10 @@ ACF.RegisterMissile("WalleyeGBU", "GBU", {
 	Caliber		= 318,
 	Mass		= 510,
 	Year		= 1967,
-	Diameter	= 21.2 * 14, -- in mm
+	Diameter	= 16.4 * 25.4, -- in mm
 	Guidance	= { "Dumb", "Radio (MCLOS)" },
 	Fuzes		= { "Contact", "Timed", "Optical" },
-	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true },
+	Racks		= { ["1xRK"] = true, ["2xRK"] = true },
 	SeekCone	= 90,
 	ViewCone	= 120,
 	Agility		= 2,
@@ -276,10 +276,11 @@ ACF.RegisterMissile("227kgGBU", "GBU", {
 	Caliber		= 105,
 	Mass		= 227,
 	Year		= 1976,
-	Diameter	= 16.3 * 19, -- in mm
+	Diameter	= 10 * 25.4, -- in mm
+	Offset		= Vector(12, 0, 0),
 	Guidance	= { "Dumb", "Laser", "GPS Guided" },
 	Fuzes		= { "Contact", "Timed", "Optical", "Cluster" },
-	Racks		= { ["1xRK"] = true, ["2xRK"] = true },
+	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true },
 	SeekCone	= 60,
 	ViewCone	= 80,
 	Agility		= 1,
@@ -323,10 +324,10 @@ ACF.RegisterMissile("454kgGBU", "GBU", {
 	Caliber		= 170,
 	Mass		= 454,
 	Year		= 1976,
-	Diameter	= 16.3 * 19, -- in mm
+	Diameter	= 11.5 * 25.4, -- in mm
 	Guidance	= { "Dumb", "Laser", "GPS Guided" },
 	Fuzes		= { "Contact", "Timed", "Optical", "Cluster" },
-	Racks		= { ["1xRK"] = true, ["2xRK"] = true },
+	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true },
 	SeekCone	= 60,
 	ViewCone	= 80,
 	Agility		= 1,
@@ -370,10 +371,11 @@ ACF.RegisterMissile("909kgGBU", "GBU", {
 	Caliber		= 200,
 	Mass		= 909,
 	Year		= 1976,
-	Diameter	= 16.3 * 45, -- in mm
+	Diameter	= 17 * 25.4, -- in mm
+	Offset		= Vector(15, 0, 0),
 	Guidance	= { "Dumb", "Laser", "GPS Guided" },
 	Fuzes		= {"Contact", "Timed", "Optical", "Cluster"},
-	Racks		= {["1xRK"] = true},
+	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true },
 	SeekCone	= 60,
 	ViewCone	= 80,
 	Agility		= 1,

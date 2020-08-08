@@ -343,10 +343,11 @@ ACF.RegisterMissile("50kgBOMB", "BOMB", {
 	Caliber		= 50,
 	Mass		= 50,
 	Year		= 1936,
-	Diameter	= 2.4 * 27, -- in mm
+	Diameter	= 8.35 * 25.4, -- in mm
+	Offset		= Vector(-6, 0, 0),
 	Guidance	= { "Dumb" },
 	Fuzes		= { "Contact", "Optical", "Cluster" },
-	Racks		= { ["1xRK_small"] = true, ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true },
+	Racks		= { ["1xRK_small"] = true, ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true },
 	SeekCone	= 40,
 	ViewCone	= 60,
 	Agility		= 1,
@@ -374,10 +375,11 @@ ACF.RegisterMissile("100kgBOMB", "BOMB", {
 	Caliber		= 100,
 	Mass		= 100,
 	Year		= 1939,
-	Diameter	= 21.2 * 14, -- in mm
+	Diameter	= 10.5 * 25.4, -- in mm
+	Offset		= Vector(-6, 0, 0),
 	Guidance	= { "Dumb" },
 	Fuzes		= { "Contact", "Optical", "Cluster" },
-	Racks		= { ["1xRK_small"] = true, ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true },
+	Racks		= { ["1xRK_small"] = true, ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true },
 	SeekCone	= 40,
 	ViewCone	= 60,
 	Agility		= 1,
@@ -405,10 +407,11 @@ ACF.RegisterMissile("250kgBOMB", "BOMB", {
 	Caliber		= 125,
 	Mass		= 250,
 	Year		= 1941,
-	Diameter	= 16.3 * 19, -- in mm
+	Diameter	= 12.7 * 25.4, -- in mm
+	Offset		= Vector(-14, 0, 0),
 	Guidance	= { "Dumb" },
 	Fuzes		= { "Contact", "Optical", "Cluster" },
-	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true },
+	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true },
 	SeekCone	= 40,
 	ViewCone	= 60,
 	Agility		= 1,
@@ -436,10 +439,11 @@ ACF.RegisterMissile("500kgBOMB", "BOMB", {
 	Caliber		= 300,
 	Mass		= 500,
 	Year		= 1943,
-	Diameter	= 16.3 * 19, -- in mm
+	Diameter	= 15.25 * 25.4, -- in mm
+	Offset		= Vector(-14, 0, 0),
 	Guidance	= { "Dumb" },
 	Fuzes		= { "Contact", "Optical", "Cluster" },
-	Racks		= { ["1xRK"] = true, ["2xRK"] = true },
+	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true },
 	SeekCone	= 40,
 	ViewCone	= 60,
 	Agility		= 1,
@@ -467,10 +471,11 @@ ACF.RegisterMissile("1000kgBOMB", "BOMB", {
 	Caliber		= 300,
 	Mass		= 1000,
 	Year		= 1945,
-	Diameter	= 16.3 * 45, -- in mm
+	Diameter	= 22 * 25.4, -- in mm
+	Offset		= Vector(-10, 0, 0),
 	Guidance	= { "Dumb" },
 	Fuzes		= { "Contact", "Optical", "Cluster" },
-	Racks		= { ["1xRK"] = true },
+	Racks		= { ["1xRK"] = true, ["2xRK"] = true },
 	SeekCone	= 40,
 	ViewCone	= 60,
 	Agility		= 1,

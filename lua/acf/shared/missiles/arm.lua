@@ -9,18 +9,20 @@ ACF.RegisterMissileClass("ARM", {
 	Blacklist	= { "AP", "APHE", "HEAT", "HP", "FL", "SM" }
 })
 
-ACF.RegisterMissile("AGM-122 ARM", "ARM", {
+ACF.RegisterMissile("AGM-122 ASM", "ARM", {
 	Name		= "AGM-122 Sidearm",
 	Description	= "A refurbished early-model AIM-9, for attacking ground targets.",
 	Model		= "models/missiles/aim9.mdl",
 	Length		= 205,
 	Caliber		= 127,
 	Mass		= 89,
+	Diameter	= 3.5 * 25.4, -- in mm
+	Offset		= Vector(-6, 0, 0),
 	RoFMod		= 0.3,
 	Year		= 1986,
 	Guidance	= { "Dumb", "Anti-radiation" },
 	Fuzes		= { "Contact", "Optical" },
-	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true, ["1xRK_small"] = true },
+	Racks		= { ["1xRK_small"] = true, ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true },
 	SeekCone	= 10,
 	ViewCone	= 20,
 	Agility		= 0.3,
@@ -48,12 +50,12 @@ ACF.RegisterMissile("AGM-45 ASM", "ARM", {
 	Length		= 1000,
 	Caliber		= 203,
 	Mass		= 177,
-	Diameter	= 7.1 * 25.4, -- in mm
+	Diameter	= 6.75 * 25.4, -- in mm
 	Year		= 1969,
 	RoFMod		= 0.6,
 	Guidance	= { "Dumb", "Anti-radiation" },
 	Fuzes		= { "Contact", "Timed" },
-	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true },
+	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true },
 	SeekCone	= 5,
 	ViewCone	= 10,
 	Agility		= 0.08,

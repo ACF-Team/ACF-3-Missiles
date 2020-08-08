@@ -326,11 +326,13 @@ ACF.RegisterMissile("RS82 ASR", "UAR", {
 	Caliber		= 82,
 	Mass		= 7,
 	Length		= 40,
+	Diameter	= 2.2 * 25.4, -- in mm
+	Offset		= Vector(1, 0, 0),
 	Year		= 1933,
 	RoFMod		= 0.6,
 	Guidance	= { "Dumb" },
 	Fuzes		= { "Contact", "Timed" },
-	Racks		= { ["1xRK_small"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true },
+	Racks		= { ["1xRK_small"] = true, ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true },
 	ArmDelay	= 0.3,
 	Bodygroups = {
 		warhead = {
@@ -368,14 +370,17 @@ ACF.RegisterMissile("HVAR ASR", "UAR", {
 	Caliber		= 127,
 	Mass		= 64,
 	Length		= 44,
+	Diameter	= 4 * 25.4, -- in mm
+	Offset		= Vector(2, 0, 0),
 	Year		= 1933,
 	RoFMod		= 0.5,
 	Guidance	= { "Dumb" },
 	Fuzes		= { "Contact", "Timed" },
-	Racks		= { ["1xRK"] = true, ["1xRK_small"] = true, ["3xUARRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true },
+	Racks		= { ["1xRK_small"] = true, ["1xRK"] = true, ["2xRK"] = true, ["3xUARRK"] = true, ["4xRK"] = true },
 	ArmDelay	= 0.3,
 	Round = {
 		Model			= "models/missiles/hvar.mdl",
+		RackModel		= "models/missiles/hvar_folded.mdl",
 		MaxLength		= 25,
 		Armor			= 12,
 		PropMass		= 0.7,
@@ -427,11 +432,12 @@ ACF.RegisterMissile("S-24 ASR", "UAR", {
 	Caliber		= 240,
 	Mass		= 235,
 	Length		= 25,
+	Diameter	= 8.3 * 25.4, -- in mm
 	Year		= 1960,
 	RoFMod		= 0.6,
 	Guidance	= { "Dumb" },
 	Fuzes		= { "Contact", "Timed" },
-	Racks		= { ["1xRK"] = true, ["3xRK"] = true, ["2xRK"] = true, ["6xUARRK"] = true },
+	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true },
 	SkinIndex	= { HEAT = 0, HE = 1 },
 	ArmDelay	= 0.3,
 	Round = {

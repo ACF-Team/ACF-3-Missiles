@@ -212,9 +212,10 @@ ACF.RegisterMissile("AIM-9 AAM", "AAM", {
 	Mass		= 85,
 	RoFMod		= 0.5,
 	Year		= 1953,
+	Diameter	= 101.6, -- in mm
 	Guidance	= { "Dumb", "Infrared", "Semi-Active Radar" },
 	Fuzes		= { "Contact", "Radio" },
-	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["1xRK_small"] = true },
+	Racks		= { ["1xRK_small"] = true, ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true },
 	SeekCone	= 10,
 	ViewCone	= 30,
 	Agility		= 5,
@@ -243,10 +244,10 @@ ACF.RegisterMissile("AIM-120 AAM", "AAM", {
 	Caliber		= 180,
 	Mass		= 152,
 	Year		= 1991,
-	Diameter	= 130, -- in mm
+	Diameter	= 154.5, -- in mm
 	Guidance	= { "Dumb", "Semi-Active Radar", "Active Radar" },
 	Fuzes		= { "Contact", "Radio" },
-	Racks		= { ["1xRK"] = true, ["2xRK"] = true },
+	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true },
 	SeekCone	= 5,
 	ViewCone	= 20,
 	Agility		= 0.173,
@@ -275,10 +276,10 @@ ACF.RegisterMissile("AIM-54 AAM", "AAM", {
 	Caliber		= 380,
 	Mass		= 453,
 	Year		= 1974,
-	Diameter	= 300, -- in mm
+	Diameter	= 327.5, -- in mm
 	Guidance	= { "Dumb", "Semi-Active Radar", "Active Radar" },
 	Fuzes		= { "Contact", "Radio" },
-	Racks		= { ["1xRK"] = true },
+	Racks		= { ["1xRK"] = true, ["2xRK"] = true },
 	SeekCone	= 5,
 	ViewCone	= 20,
 	Agility		= 0.05,

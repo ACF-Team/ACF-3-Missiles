@@ -163,7 +163,6 @@ ACF.RegisterMissile("FIM-92 SAM", "SAM", {
 	Length		= 66,
 	Caliber		= 70,
 	Mass		= 10,
-	Diameter	= 66, -- in mm
 	Year		= 1978,
 	RoFMod		= 1.2,
 	Guidance	= { "Dumb", "Infrared", "Anti-missile" },

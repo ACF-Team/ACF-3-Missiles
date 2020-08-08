@@ -81,13 +81,13 @@ do -- Spawning and Updating --------------------
 
 			for K, V in pairs(Rack.MountPoints) do
 				Points[K] = {
-					Position = V.Offset,
-					BulletData = EMPTY,
-					Scale = V.ScaleDir,
-					Angle = V.Angle or Angle(),
-					State = "Empty",
-					Name = V.Name,
 					Index = K,
+					Name = V.Name,
+					Position = V.Position,
+					Angle = V.Angle or Angle(),
+					Direction = V.Direction,
+					BulletData = EMPTY,
+					State = "Empty",
 				}
 			end
 
@@ -515,16 +515,18 @@ end ---------------------------------------------
 
 do -- Loading ----------------------------------
 	local Missiles = ACF.Classes.Missiles
+	local NO_OFFSET = Vector()
 
 	local function GetMissileAngPos(BulletData, Point)
 		local Class = ACF.GetClassGroup(Missiles, BulletData.Id) --ACF.Weapons.Guns[BulletData.Id]
 		local Position = Point.Position
 
-		if Class then
+		if Class and Point.Direction then -- If no Direction is given then the point is centered
 			local Data = Class.Lookup[BulletData.Id]
-			local Offset = (Data.Diameter or Data.Caliber) / (25.4 * 2)
+			local Radius = (Data.Diameter or Data.Caliber) * 0.03937 * 0.5 -- Getting the radius on inches
+			local Offset = Data.Offset or NO_OFFSET
 
-			Position = Position + Point.Scale * Offset
+			Position = Position + Point.Direction * Radius + Offset
 		end
 
 		return Position, Point.Angle

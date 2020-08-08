@@ -9,7 +9,7 @@ ACF.RegisterRack("1xRK", {
 	Armor		= 10,
 
 	MountPoints = {
-		{ Name = "missile1", Offset = Vector(0, 0, 2), ScaleDir = Vector(0, 0, -1) }
+		{ Name = "missile1", Position = Vector(0, 0, 2.5), Direction = Vector(0, 0, -1) }
 	}
 })
 
@@ -24,7 +24,7 @@ ACF.RegisterRack("1xRK_small", {
 	Armor		= 10,
 
 	MountPoints = {
-		{ Name = "missile1", Offset = Vector(0, 0, 2), ScaleDir = Vector(0, 0, -1) }
+		{ Name = "missile1", Position = Vector(0, 0, 2.5), Direction = Vector(0, 0, -1) }
 	}
 })
 
@@ -38,8 +38,8 @@ ACF.RegisterRack("2xRK", {
 	Armor		= 20,
 
 	MountPoints = {
-		{ Name = "missile1", Offset = Vector(4, -16.5, -1.7), ScaleDir = Vector(0, -1, 0) },
-		{ Name = "missile2", Offset = Vector(4, 16.5, -1.7),	ScaleDir = Vector(0, 1, 0) }
+		{ Name = "missile1", Position = Vector(4, -14, -1.7), Direction = Vector(0, -1, 0), Angle = Angle(0, 0, -90) },
+		{ Name = "missile2", Position = Vector(4, 14, -1.7), Direction = Vector(0, 1, 0), Angle = Angle(0, 0, 90) }
 	}
 })
 
@@ -53,9 +53,9 @@ ACF.RegisterRack("3xRK", {
 	MagSize		= 3,
 
 	MountPoints = {
-		{ Name = "missile1", Offset = Vector(1.9, 0, -12.6), ScaleDir = Vector(-0.2, 0, -0.3) },
-		{ Name = "missile2", Offset = Vector(2.26, 6.42, -3.6), ScaleDir = Vector(-0.2, 0.3, -0.1) },
-		{ Name = "missile3", Offset = Vector(2.26, -6.42, -3.6), ScaleDir = Vector(-0.2, -0.3, -0.1) },
+		{ Name = "missile1", Position = Vector(-4, 0, -8.8), Direction = Vector(0, 0, -1) },
+		{ Name = "missile2", Position = Vector(-4, 3.7, -0.2), Direction = Vector(0, 0.75, -0.75), Angle = Angle(0, 0, 45) },
+		{ Name = "missile3", Position = Vector(-4, -3.7, -0.2), Direction = Vector(0, -0.75, -0.75), Angle = Angle(0, 0, -45) },
 	}
 })
 
@@ -69,10 +69,10 @@ ACF.RegisterRack("4xRK", {
 	MagSize		= 4,
 
 	MountPoints = {
-		{ Name = "missile1", Offset = Vector(0, 12.5, 9), ScaleDir = Vector(0, 1, 0) },
-		{ Name = "missile2", Offset = Vector(0, -12.5, 9), ScaleDir = Vector(0, -1, 0) },
-		{ Name = "missile3", Offset = Vector(0, -12.5, -5), ScaleDir = Vector(0, 0, -1) },
-		{ Name = "missile4", Offset = Vector(0, 12.5, -5), ScaleDir = Vector(0, 0, -1) }
+		{ Name = "missile1", Position = Vector(0, -12.5, -4.5), Direction = Vector(0, 0, -1) },
+		{ Name = "missile2", Position = Vector(0, 12.5, -4.5), Direction = Vector(0, 0, -1) },
+		{ Name = "missile3", Position = Vector(0, 13, 9), Direction = Vector(0, 1, 0), Angle = Angle(0, 0, 90) },
+		{ Name = "missile4", Position = Vector(0, -13, 9), Direction = Vector(0, -1, 0), Angle = Angle(0, 0, -90) },
 	}
 })
 
@@ -86,8 +86,8 @@ ACF.RegisterRack("2x AGM-114", {
 	Armor		= 5,
 
 	MountPoints = {
-		{ Name = "missile1", Offset = Vector(0, -8.1, 5.4), ScaleDir = Vector(0, 0, -1) },
-		{ Name = "missile2", Offset = Vector(0, 8.1, 5.4), ScaleDir = Vector(0, 0, -1) },
+		{ Name = "missile1", Position = Vector(0, -7.85, 4.9), Direction = Vector(0, 0, -1) },
+		{ Name = "missile2", Position = Vector(0, 8.05, 4.9), Direction = Vector(0, 0, -1) },
 	}
 })
 
@@ -101,16 +101,16 @@ ACF.RegisterRack("4x AGM-114", {
 	Armor		= 5,
 
 	MountPoints = {
-		{ Name = "missile1", Offset = Vector(0, -8.1, 5.4), ScaleDir = Vector(0, 0, -1) },
-		{ Name = "missile2", Offset = Vector(0, 8.1, 5.4), ScaleDir = Vector(0, 0, -1) },
-		{ Name = "missile3", Offset = Vector(0, -8.1, -12.6), ScaleDir = Vector(0, 0, -1) },
-		{ Name = "missile4", Offset = Vector(0, 8.1, -12.6), ScaleDir = Vector(0, 0, -1) }
+		{ Name = "missile1", Position = Vector(0, -7.85, 4.9), Direction = Vector(0, 0, -1) },
+		{ Name = "missile2", Position = Vector(0, 8.05,4.9), Direction = Vector(0, 0, -1) },
+		{ Name = "missile3", Position = Vector(0, -7.85, -13), Direction = Vector(0, 0, -1) },
+		{ Name = "missile4", Position = Vector(0, 8.05, -13), Direction = Vector(0, 0, -1) }
 	}
 })
 
 ACF.RegisterRack("1xAT3RK", {
 	Name		= "Single 9M14 Rack",
-	Description	= "Based on the 9P111 Portable Launcher, it can load a single AT-3 missile.",
+	Description	= "Based on the 9P111 Portable Launcher, it can load a single 9M14 missile.",
 	Model		= "models/missiles/at3rk.mdl",
 	Mass		= 17,
 	RoFMod		= 1.4,
@@ -119,13 +119,13 @@ ACF.RegisterRack("1xAT3RK", {
 	Armor		= 2.5,
 
 	MountPoints = {
-		{ Name = "missile1", Offset = Vector(3.2, 0, 3.4), ScaleDir = Vector(0, 0, -1) }
+		{ Name = "missile1", Position = Vector(3.4, -0.2, 0.95) }
 	}
 })
 
 ACF.RegisterRack("1xAT3RKS", {
 	Name		= "Single 9M14 Rail",
-	Description	= "Consisting of only the launch rail, it can be used to carry a single AT-3 missile on any kind of vehicle.",
+	Description	= "Consisting of only the launch rail, it can be used to carry a single 9M14 missile on any kind of vehicle.",
 	Model		= "models/missiles/at3rs.mdl",
 	Mass		= 8,
 	RoFMod		= 1,
@@ -134,6 +134,6 @@ ACF.RegisterRack("1xAT3RKS", {
 	Armor		= 2.5,
 
 	MountPoints = {
-		{ Name = "missile1", Offset = Vector(21, 0, 8.6), ScaleDir = Vector(0, 0, -1) }
+		{ Name = "missile1", Position = Vector(21, -0.2, 6.1) }
 	}
 })

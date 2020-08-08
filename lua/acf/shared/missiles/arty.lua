@@ -154,6 +154,7 @@ ACF.RegisterMissile("Type 63 RA", "ARTY", {
 	Caliber		= 107,
 	Mass		= 19,
 	Length		= 80,
+	Diameter	= 6.5 * 25.4, -- in mm
 	Year		= 1960,
 	RoFMod		= 0.6,
 	Guidance	= { "Dumb", "Laser", "GPS Guided" },
@@ -185,6 +186,7 @@ ACF.RegisterMissile("SAKR-10 RA", "ARTY", {
 	Caliber		= 122,
 	Mass		= 56,
 	Length		= 320,
+	Diameter	= 4.6 * 25.4, -- in mm
 	Year		= 1980,
 	RoFMod		= 0.75,
 	Guidance	= { "Dumb", "Laser", "GPS Guided" },
@@ -216,6 +218,7 @@ ACF.RegisterMissile("SS-40 RA", "ARTY", {
 	Caliber		= 180,
 	Mass		= 152,
 	Length		= 420,
+	Diameter	= 6.75 * 25.4, -- in mm
 	Year		= 1983,
 	RoFMod		= 1.1,
 	Guidance	= { "Dumb", "Laser", "GPS Guided" },
