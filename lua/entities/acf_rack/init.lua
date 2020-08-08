@@ -134,6 +134,7 @@ do -- Spawning and Updating --------------------
 
 		Rack.Owner				= Player -- MUST be stored on ent for PP
 		Rack.Firing				= false
+		Rack.Reloading			= false
 		Rack.Spread				= 1 -- GunClass.spread
 		Rack.ReloadTime			= 1
 		Rack.FireDelay			= 1
@@ -354,6 +355,8 @@ do -- Entity Inputs ----------------------------
 	end
 
 	ACF.AddInputAction("acf_rack", "Fire", function(Entity, Value)
+		if Entity.Firing == tobool(Value) then return end
+
 		Entity.Firing = tobool(Value)
 
 		if Entity:CanShoot() then
@@ -362,11 +365,11 @@ do -- Entity Inputs ----------------------------
 	end)
 
 	ACF.AddInputAction("acf_rack", "Reload", function(Entity, Value)
+		if Entity.Reloading == tobool(Value) then return end
+
 		Entity.Reloading = tobool(Value)
 
-		if Entity:CanReload() then
-			Entity:Reload()
-		end
+		Entity:Reload()
 	end)
 
 	ACF.AddInputAction("acf_rack", "Unload", function(Entity, Value)
@@ -473,7 +476,6 @@ do -- Firing -----------------------------------
 	function ENT:CanShoot()
 		if self.RetryShoot then return false end
 		if not self.Firing then return false end
-		if self.Disabled then return false end
 		if not ACF.GunfireEnabled then return false end
 
 		return true
@@ -560,18 +562,19 @@ do -- Loading ----------------------------------
 
 	function ENT:CanReload()
 		if self.RetryReload then return false end
+		if self.Firing then return false end
 		if not self.Reloading then return false end
-		if self.Disabled then return false end
-		if not ACF.GunfireEnabled then return false end
 
 		return true
 	end
 
 	function ENT:Reload()
+		if not ACF.GunfireEnabled then return end
+
 		local Index, Point = self:GetNextMountPoint("Empty")
 		local Crate = GetNextCrate(self)
 
-		if Index and Crate then
+		if self:CanReload() and Index and Crate then
 			local Bullet = Crate.BulletData
 			local Time = ACF.BaseReload + 2 + (Bullet.ProjMass + Bullet.PropMass) * ACF.MassToTime * 3 -- TODO: Not final, keep tweaking this
 
@@ -605,19 +608,19 @@ do -- Loading ----------------------------------
 
 				self:UpdateLoad(Point, Missile)
 			end)
-		else
-			self.RetryReload = true
 		end
 
-		timer.Simple(1, function()
-			if not IsValid(self) then return end
+		if not self.RetryReload then
+			self.RetryReload = true
 
-			self.RetryReload = nil
+			timer.Simple(1, function()
+				if not IsValid(self) then return end
 
-			if self:CanReload() then
+				self.RetryReload = nil
+
 				self:Reload()
-			end
-		end)
+			end)
+		end
 	end
 end ---------------------------------------------
 
@@ -706,9 +709,7 @@ do -- Misc -------------------------------------
 			self:Shoot()
 		end
 
-		if self:CanReload() then
-			self:Reload()
-		end
+		self:Reload()
 	end
 
 	function ENT:Disable()
