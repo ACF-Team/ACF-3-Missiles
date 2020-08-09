@@ -489,6 +489,14 @@ function ENT:Think()
 	return self.BaseClass.Think(self)
 end
 
+local Properties = { bodygroups = true, skin = true }
+
+function ENT:CanProperty(_, Property)
+	if Properties[Property] then return false end
+
+	return true
+end
+
 function ENT:OnRemove()
 	ActiveMissiles[self] = nil
 
