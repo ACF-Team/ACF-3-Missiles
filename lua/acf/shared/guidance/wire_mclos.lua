@@ -41,10 +41,10 @@ function Guidance:SnapRope(Missile)
 	if IsValid(self.Rope) then
 		self.Rope:Remove()
 		self.Rope = nil
-	end
 
-	if IsValid(self.Source) then
-		self.Source:EmitSound(SnapSound:format(math.random(3)))
+		if IsValid(self.Source) then
+			self.Source:EmitSound(SnapSound:format(math.random(3)))
+		end
 	end
 end
 
