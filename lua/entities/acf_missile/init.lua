@@ -69,7 +69,7 @@ local function LaunchEffect(Missile)
 		if ACF_SOUND_EXT then
 			hook.Call("ACF_SOUND_MISSILE", nil, Missile, SoundString)
 		else
-			Missile:EmitSound(SoundString, 511, math.random(98, 102))
+			Missile:EmitSound(SoundString, 511, math.random(99, 101))
 		end
 	end
 end
@@ -102,31 +102,6 @@ local function SetMotorState(Missile, Enabled)
 	end
 
 	Missile.MotorEnabled = Enabled
-end
-
-local function ConfigureFlight(Missile, Phase)
-	local BulletData = Missile.BulletData
-
-	if Missile.NoThrust then
-		Missile.MotorLength = 0
-	else
-		Missile.MotorLength = BulletData.PropMass / Missile.BurnRate * (1 - Missile.StarterPercent)
-	end
-
-	Missile.CurPos = BulletData.Pos
-	Missile.CurDir = BulletData.Flight:GetNormalized()
-	Missile.LastPos = Missile.CurPos
-
-	local PhysObj = Missile:GetPhysicsObject()
-
-	if IsValid(PhysObj) then
-		PhysObj:SetMass(Missile.ForcedMass)
-		PhysObj:EnableGravity(false)
-		PhysObj:EnableMotion(false)
-	end
-
-	UpdateBodygroups(Missile, Phase)
-	UpdateSkin(Missile)
 end
 
 local function Dud(Missile)
@@ -338,7 +313,7 @@ function MakeACF_Missile(Player, Pos, Ang, Rack, MountPoint, BulletData)
 	local Class = ACF.GetClassGroup(Missiles, BulletData.Id)
 	local Data = Class.Lookup[BulletData.Id]
 	local Round = Data.Round
-	local Length = Round.MaxLength
+	local Length = Data.Length
 
 	Missile:SetAngles(Rack:LocalToWorldAngles(Ang))
 	Missile:SetPos(Rack:LocalToWorld(Pos))
@@ -392,6 +367,17 @@ function MakeACF_Missile(Player, Pos, Ang, Rack, MountPoint, BulletData)
 		Missile.ExhaustPos = Missile:WorldToLocal(Offset)
 	end
 
+	local PhysObj = Missile:GetPhysicsObject()
+
+	if IsValid(PhysObj) then
+		PhysObj:SetMass(Missile.ForcedMass)
+		PhysObj:EnableGravity(false)
+		PhysObj:EnableMotion(false)
+	end
+
+	UpdateBodygroups(Missile, "OnRack")
+	UpdateSkin(Missile)
+
 	return Missile
 end
 
@@ -409,19 +395,61 @@ function ENT:SetBulletData(BulletData)
 
 	self.Fuze = Fuze or Fuzes.Contact()
 	self.Fuze:Configure()
-
-	ConfigureFlight(self, "OnRack")
 end
 
-function ENT:Launch(Delay)
+function ENT:Launch(Delay, IsMisfire)
+	if self.Launched then return end
+
+	local BulletData = self.BulletData
+	local Point = self.MountPoint
+	local Rack = self.Launcher
+	local Vel = ACF_GetAncestor(Rack):GetVelocity()
+	local Flight = self.Flight or self:LocalToWorldAngles(Point.Angle):Forward()
+
+	BulletData.Owner = Rack.Owner
+	BulletData.Flight = Flight * Vel
+	BulletData.Pos = Rack:LocalToWorld(Point.Position)
+
+	if Rack.SoundPath and Rack.SoundPath ~= "" then
+		BulletData.Sound = Rack.SoundPath
+	end
+
 	self.Launched = true
 	self.ThinkDelay = engine.TickInterval()
 	self.GhostPeriod = ACF.CurTime + GhostPeriod:GetFloat()
 	self.DisableDamage = nil
 	self.LastThink = ACF.CurTime - self.ThinkDelay
-	self.LastVel = ACF_GetAncestor(self.Launcher):GetVelocity() * self.ThinkDelay
+	self.LastVel = Vel * self.ThinkDelay
+	self.CurPos = BulletData.Pos
+	self.CurDir = Flight:GetNormalized()
+	self.LastPos = self.CurPos
 
-	self:EmitSound("phx/epicmetal_hard.wav", 500, math.random(98, 102))
+	if self.NoThrust then
+		self.MotorLength = 0
+	else
+		self.MotorLength = BulletData.PropMass / self.BurnRate * (1 - self.StarterPercent)
+	end
+
+	if self.RackModel then
+		self:SetModelEasy(self.RealModel)
+	end
+
+	for _, Missile in pairs(Rack.Missiles) do
+		self.Filter[#self.Filter + 1] = Missile
+	end
+
+	self:EmitSound("phx/epicmetal_hard.wav", 500, math.random(99, 101))
+	self:SetNoDraw(false)
+	self:SetParent()
+
+	self:DoFlight()
+
+	if IsMisfire then
+		self.Disabled = true
+		self.LastVel = Vel
+
+		return self:Detonate()
+	end
 
 	ActiveMissiles[self] = true
 
@@ -440,7 +468,8 @@ function ENT:Launch(Delay)
 
 	self.Fuze:Configure()
 
-	ConfigureFlight(self, "OnLaunch")
+	UpdateBodygroups(self, "OnLaunch")
+	UpdateSkin(self)
 
 	hook.Run("OnMissileLaunched", self)
 end

@@ -82,7 +82,6 @@ do -- Spawning and Updating --------------------
 			for K, V in pairs(Rack.MountPoints) do
 				Points[K] = {
 					Index = K,
-					Name = V.Name,
 					Position = V.Position,
 					Angle = V.Angle or Angle(),
 					Direction = V.Direction,
@@ -189,38 +188,87 @@ do -- Spawning and Updating --------------------
 end ---------------------------------------------
 
 do -- Custom ACF damage ------------------------
-	function ENT:ACF_OnDamage(Entity, Energy, FrArea, Ang, Inflictor)
-		if self.Exploded then
-			return {
-				Damage = 0,
-				Overkill = 1,
-				Loss = 0,
-				Kill = false
-			}
-		end
+	local SparkSound = "ambient/energy/spark%s.wav"
 
+	local function ShowDamage(Rack, Point)
+		local Position = Rack:LocalToWorld(Point.Position)
+
+		local Effect = EffectData()
+			Effect:SetMagnitude(math.Rand(0.5, 1))
+			Effect:SetRadius(1)
+			Effect:SetScale(1)
+			Effect:SetStart(Position)
+			Effect:SetOrigin(Position)
+			Effect:SetNormal(VectorRand())
+
+		util.Effect("Sparks", Effect, true, true)
+
+		Rack:EmitSound(SparkSound:format(math.random(6)), math.random(55, 65), math.random(99, 101))
+
+		timer.Simple(math.Rand(0.5, 2), function()
+			if not IsValid(Rack) then return end
+			if not Point.Disabled then return end
+			if Point.Removed then return end
+
+			ShowDamage(Rack, Point)
+		end)
+	end
+
+	function ENT:ACF_OnDamage(Entity, Energy, FrArea, Ang, Inflictor)
 		local HitRes = ACF.PropDamage(Entity, Energy, FrArea, Ang, Inflictor) --Calling the standard damage prop function
 
-		-- If the rack gets destroyed, we just blow up all the missiles it carries
-		-- TODO: Implement mountpoint damage
-		if HitRes.Kill then
-			self.Exploded = true
+		if not HitRes.Kill then
+			local Ratio = self.ACF.Health / self.ACF.MaxHealth
+			local Index = math.random(1, self.MagSize) -- Since we don't receive an impact position, we have to rely on RNG
+			local Point = self.MountPoints[Index]
+			local Affected
 
-			if hook.Run("ACF_AmmoExplode", self, self.BulletData) == false then return HitRes end
+			-- Missile dropping
+			if not self.ProtectMissile then
+				local Missile = Point.Missile
 
-			if IsValid(Inflictor) and Inflictor:IsPlayer() then
-				self.Inflictor = Inflictor
+				if Missile and math.random() > Ratio * 3 then
+					Missile:Launch(nil, true)
+
+					self:UpdateLoad(Point)
+
+					Affected = true
+				end
 			end
 
-			if next(self.Missiles) then
-				for _, Missile in pairs(self.Missiles) do
-					Missile:SetParent(nil)
-					Missile:Detonate(true)
+			-- Mountpoint jamming
+			if not Point.Disabled and math.random() > Ratio * 2 then
+				Point.Disabled = true
+
+				Affected = true
+			end
+
+			if Affected then
+				if Index == self.PointIndex then
+					self.PointIndex = self:GetNextMountPoint("Loaded", Index) or 1
 				end
+
+				self:UpdatePoint()
+
+				ShowDamage(self, Point)
 			end
 		end
 
 		return HitRes -- This function needs to return HitRes
+	end
+
+	function ENT:ACF_OnRepaired(_, _, _, NewHealth)
+		local Ratio = NewHealth / self.ACF.MaxHealth
+
+		if Ratio >= 1 then
+			for _, Point in pairs(self.MountPoints) do
+				if Point.Disabled then
+					Point.Disabled = nil
+				end
+			end
+
+			self:UpdatePoint()
+		end
 	end
 end ---------------------------------------------
 
@@ -414,7 +462,9 @@ do -- Entity Overlay ---------------------------
 			local Ammo = (Bullet.Id and (Bullet.Id .. " ") or "") .. Bullet.Type
 			local Status = Ent.State
 
-			if not next(Ent.Crates) then
+			if Ent.Jammed then
+				Status = "Jammed!\nRepair this rack to be able to use it again."
+			elseif not next(Ent.Crates) then
 				Status = "Not linked to an ammo crate!"
 			end
 
@@ -439,7 +489,6 @@ end ---------------------------------------------
 
 do -- Firing -----------------------------------
 	local function ShootMissile(Rack, Point)
-		local Pos = Rack:LocalToWorld(Point.Position)
 		local Ang = Rack:LocalToWorldAngles(Point.Angle)
 		local Cone = math.tan(math.rad(Rack:GetSpread()))
 		local RandDir = (Rack:GetUp() * math.Rand(-1, 1) + Rack:GetRight() * math.Rand(-1, 1)):GetNormalized()
@@ -450,24 +499,7 @@ do -- Firing -----------------------------------
 		local BulletData = Missile.BulletData
 		local Speed = BulletData.MuzzleVel or Missile.MinimumSpeed or 1
 
-		BulletData.Owner = Rack:GetUser(Rack.Inputs.Fire.Src)
-		BulletData.Flight = ShootDir * Speed
-		BulletData.Pos = Pos
-
-		if Rack.SoundPath and Rack.SoundPath ~= "" then
-			BulletData.Sound = Rack.SoundPath
-		end
-
-		for _, Load in pairs(Rack.Missiles) do
-			Missile.Filter[#Missile.Filter + 1] = Load
-		end
-
-		if Missile.RackModel then
-			Missile:SetModelEasy(Missile.RealModel)
-		end
-
-		Missile:SetNoDraw(false)
-		Missile:SetParent()
+		Missile.Flight = ShootDir * Speed
 
 		Missile:Launch(Rack.LaunchDelay)
 
@@ -574,6 +606,7 @@ do -- Loading ----------------------------------
 		return true
 	end
 
+	-- TODO: Once Unloading gets implemented, racks have to unload missiles if no empty mountpoint is found.
 	function ENT:Reload()
 		local Index, Point = self:GetNextMountPoint("Empty")
 		local Crate = GetNextCrate(self)
@@ -600,8 +633,6 @@ do -- Loading ----------------------------------
 				end
 
 				if not IsValid(Missile) then
-					if IsValid(Crate) then Crate:Consume(-1) end
-
 					Missile = nil
 				else
 					self:EmitSound("acf_missiles/fx/weapon_select.mp3", 500, math.random(99, 101))
@@ -739,7 +770,7 @@ do -- Misc -------------------------------------
 			local Index = self.ForcedIndex
 			local Data = MountPoints[Index]
 
-			if Data.State == State then
+			if not Data.Disabled and Data.State == State then
 				return Index, Data
 			end
 		else
@@ -748,7 +779,7 @@ do -- Misc -------------------------------------
 			local Start = Index
 
 			repeat
-				if Data.State == State then
+				if not Data.Disabled and Data.State == State then
 					return Index, Data
 				end
 
@@ -764,9 +795,9 @@ do -- Misc -------------------------------------
 
 		self.BulletData = Point.BulletData
 		self.NextFire = Point.NextFire
-		self.CurPoint = Point
+		self.Jammed = Point.Disabled
 
-		self:SetState(Point.State)
+		self:SetState(self.Jammed and "Jammed" or Point.State)
 
 		WireLib.TriggerOutput(self, "Current Index", Index)
 		WireLib.TriggerOutput(self, "Missile", Point.Missile)
@@ -800,8 +831,14 @@ do -- Misc -------------------------------------
 		self:Unlink(self.Radar)
 		self:Unlink(self.Computer)
 
-		for _, Missile in pairs(self.Missiles) do
-			Missile:Remove()
+		for _, Point in pairs(self.MountPoints) do
+			local Missile = Point.Missile
+
+			if Missile then
+				Missile:Remove()
+			end
+
+			Point.Removed = true
 		end
 
 		timer.Remove("ACF Rack Clock " .. self:EntIndex())
