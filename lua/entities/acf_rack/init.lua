@@ -272,7 +272,7 @@ end
 
 -------------------------------[[ Global Functions ]]-------------------------------
 
-function MakeACF_Rack(Owner, Pos, Angle, Id)
+function MakeACF_Rack(Owner, Pos, Angle, Id, Data)
 	if not Owner:CheckLimit("_acf_gun") then return end
 
 	Id = CheckRackID(Id)
@@ -364,11 +364,11 @@ function MakeACF_Rack(Owner, Pos, Angle, Id)
 
 	local MountPoints = ACF.Weapons.Rack[Rack.Id].mountpoints
 
-	for _, Data in pairs(Rack:GetAttachments()) do
-		local Attachment = Rack:GetAttachment(Data.id)
+	for _, Info in pairs(Rack:GetAttachments()) do
+		local Attachment = Rack:GetAttachment(Info.id)
 
-		if MountPoints[Data.name] then
-			Rack.AttachPoints[Data.name] = Rack:WorldToLocal(Attachment.Pos)
+		if MountPoints[Info.name] then
+			Rack.AttachPoints[Info.name] = Rack:WorldToLocal(Attachment.Pos)
 		end
 	end
 
@@ -376,13 +376,21 @@ function MakeACF_Rack(Owner, Pos, Angle, Id)
 
 	Rack:UpdateOverlay()
 
+	do -- Mass entity mod removal
+		local EntMods = Data and Data.EntityMods
+
+		if EntMods and EntMods.mass then
+			EntMods.mass = nil
+		end
+	end
+
 	CheckLegal(Rack)
 
 	return Rack
 end
 
-list.Set("ACFCvars", "acf_rack" , {"data9", "id"})
-duplicator.RegisterEntityClass("acf_rack", MakeACF_Rack, "Pos", "Angle", "Id")
+list.Set("ACFCvars", "acf_rack" , {"data9"})
+duplicator.RegisterEntityClass("acf_rack", MakeACF_Rack, "Pos", "Angle", "Id", "Data")
 ACF.RegisterLinkSource("acf_rack", "Crates")
 ACF.RegisterLinkSource("acf_rack", "Computer", true)
 ACF.RegisterLinkSource("acf_rack", "Radar", true)
