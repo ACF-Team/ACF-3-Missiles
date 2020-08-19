@@ -143,12 +143,12 @@ local function GetNextCrate(Rack)
 	local Start = Select
 
 	repeat
-		if Select.Load and Select.Ammo > 0 then return Select end
+		if Select:CanConsume() then return Select end
 
 		Select = next(Rack.Crates, Select) or next(Rack.Crates)
 	until Select == Start -- If we've looped back around to the start then there's nothing to use
 
-	return (Select.Load and Select.Ammo > 0) and Select
+	return Select:CanConsume() and Select or nil
 end
 
 local function GetNextAttachName(Rack)
@@ -252,7 +252,7 @@ local function UpdateRefillBonus(Rack)
 	local TotalBonus = 0
 
 	for Crate in pairs(ACF.AmmoCrates) do
-		if Crate.RoundType == "Refill" and Crate.Ammo > 0 and Crate.Load then
+		if Crate.RoundType == "Refill" and Crate:CanConsume() then
 			local CrateDist = SelfPos:Distance(Crate:GetPos())
 
 			if CrateDist <= MaxDist then
