@@ -255,7 +255,7 @@ local function CalcFlight(Missile)
 		Missile.RotAxis = Missile.RotAxis * 0.99
 		Missile.LastLOS = nil
 
-		DirAng:RotateAroundAxis(Missile.RotAxis, Missile.RotAxis:Length())
+		DirAng:RotateAroundAxis(Missile.RotAxis:GetNormalized(), Missile.RotAxis:Length())
 
 		Dir = DirAng:Forward()
 	end
