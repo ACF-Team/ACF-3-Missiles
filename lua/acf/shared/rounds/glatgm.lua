@@ -90,7 +90,7 @@ function Round.convert(Crate, PlayerData)
 
 	Data.Detonated = false
 	Data.NotFirstPen = false
-	Data.BoomPower = Data.PropMass + Data.FillerMass
+	Data.CartMass = Data.ProjMass + Data.PropMass
 
 	if SERVER then --Only the crates need this part
 		ServerData.Id = PlayerData.Id

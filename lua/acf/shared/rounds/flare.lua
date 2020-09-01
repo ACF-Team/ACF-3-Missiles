@@ -39,7 +39,7 @@ function Round.convert(_, PlayerData)
 	GUIData.MinFillerVol = 0
 	GUIData.MaxFillerVol = math.min(GUIData.ProjVolume, MaxVol * 0.9)
 	GUIData.FillerVol = math.min(PlayerData.Data5, GUIData.MaxFillerVol)
-	Data.FillerMass = GUIData.FillerVol * ACF.HEDensity / 200
+	Data.FillerMass = GUIData.FillerVol * ACF.HEDensity / 1000
 
 	Data.ProjMass = math.max(GUIData.ProjVolume-GUIData.FillerVol,0) * 7.9 / 1000 + Data.FillerMass
 	Data.MuzzleVel = ACF_MuzzleVelocity(Data.PropMass, Data.ProjMass, Data.Caliber)
@@ -56,7 +56,7 @@ function Round.convert(_, PlayerData)
 	Data.DistractChance = (2 / math.pi) * math.atan(Data.FrArea * ACFM.FlareDistractMultiplier)	* 0.5	--reduced effectiveness 50%--red
 	Data.BurnTime = Data.FillerMass / Data.BurnRate
 
-	Data.BoomPower = Data.PropMass + Data.FillerMass
+	Data.CartMass = Data.ProjMass + Data.PropMass
 
 	if SERVER then --Only the crates need this part
 		ServerData.Id = PlayerData.Id

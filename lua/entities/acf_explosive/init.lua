@@ -223,10 +223,18 @@ function ENT:Detonate(BulletData)
 
 		function BulletData.OnPenetrated(_, Bullet)
 			ACFM_ResetVelocity(Bullet)
+
+			-- We only need to do either just once
+			Bullet.OnPenetrated = nil
+			Bullet.OnRicocheted = nil
 		end
 
 		function BulletData.OnRicocheted(_, Bullet)
 			ACFM_ResetVelocity(Bullet)
+
+			-- We only need to do either just once
+			Bullet.OnPenetrated = nil
+			Bullet.OnRicocheted = nil
 		end
 
 		self:SetNotSolid(true)
