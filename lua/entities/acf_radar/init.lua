@@ -321,6 +321,14 @@ do -- Spawn and Update functions
 			Class.OnSpawn(Radar, Data, Class, RadarData)
 		end
 
+		do -- Mass entity mod removal
+			local EntMods = Data and Data.EntityMods
+
+			if EntMods and EntMods.mass then
+				EntMods.mass = nil
+			end
+		end
+
 		CheckLegal(Radar)
 
 		TimerCreate("ACF Radar Clock " .. Radar:EntIndex(), 3, 0, function()

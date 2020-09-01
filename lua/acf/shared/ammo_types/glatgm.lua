@@ -66,6 +66,7 @@ function Ammo:UpdateRoundData(ToolData, Data, GUIData)
 	Data.SlugPenArea	= SlugFrArea ^ ACF.PenAreaMod
 	Data.CasingMass		= Data.ProjMass - Data.FillerMass - ConeVol * 0.0079
 	Data.DragCoef		= Data.FrArea * 0.0001 / Data.ProjMass
+	Data.CartMass		= Data.PropMass + Data.ProjMass
 
 	for K, V in pairs(self:GetDisplayData(Data)) do
 		GUIData[K] = V

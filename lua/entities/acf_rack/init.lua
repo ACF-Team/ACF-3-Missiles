@@ -151,6 +151,14 @@ do -- Spawning and Updating --------------------
 
 		WireLib.TriggerOutput(Rack, "Entity", Rack)
 
+		do -- Mass entity mod removal
+			local EntMods = Data and Data.EntityMods
+
+			if EntMods and EntMods.mass then
+				EntMods.mass = nil
+			end
+		end
+
 		CheckLegal(Rack)
 
 		timer.Create("ACF Rack Clock " .. Rack:EntIndex(), 3, 0, function()

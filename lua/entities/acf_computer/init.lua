@@ -224,6 +224,14 @@ do -- Spawn and update function
 
 		UpdateComputer(Entity, Data, Class, Computer)
 
+		do -- Mass entity mod removal
+			local EntMods = Data and Data.EntityMods
+
+			if EntMods and EntMods.mass then
+				EntMods.mass = nil
+			end
+		end
+
 		CheckLegal(Entity)
 
 		timer.Create("ACF Computer Clock " .. Entity:EntIndex(), 3, 0, function()

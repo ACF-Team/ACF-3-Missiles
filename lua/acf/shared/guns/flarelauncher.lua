@@ -52,7 +52,7 @@ ACF.RegisterWeapon("40mmFGL", "FGL", {
 	Year		= 1970,
 	MagSize		= 30,
 	MagReload	= 20,
-	Cyclic		= 125,
+	Cyclic		= 300,
 	Round = {
 		MaxLength = 9,
 		PropMass  = 0.007,

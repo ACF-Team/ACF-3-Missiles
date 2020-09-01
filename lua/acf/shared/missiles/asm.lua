@@ -446,51 +446,51 @@ ACF.RegisterMissile("AT-3 ASM", "ATGM", {
 	Fuzes		= { "Contact", "Optical" },
 	Racks		= { ["1xAT3RKS"] = true, ["1xAT3RK"] = true, ["1xRK_small"] = true, ["4xRK"] = true },
 	SkinIndex	= { HEAT = 0, HE = 1 },
-	Agility		= 0.3,
-	ArmDelay	= 0.3,
+	Agility		= 0.2,
+	ArmDelay	= 0.1,
 	Round = {
 		Model			= "models/missiles/at3.mdl",
 		MaxLength		= 35,
 		Armor			= 5,
-		PropMass		= 1.2,
-		Thrust			= 7000, -- in kg*in/s^2
-		BurnRate		= 150, -- in cm^3/s
+		PropMass		= 0.2,
+		Thrust			= 8000, -- in kg*in/s^2
+		BurnRate		= 20, -- in cm^3/s
 		StarterPercent	= 0.2,
 		MinSpeed		= 1500,
 		DragCoef		= 0.005,
 		DragCoefFlight	= 0.1,
 		FinMul			= 0.1,
-		PenMul			= math.sqrt(5.5)
+		PenMul			= math.sqrt(5.39)
 	},
 })
 
 ACF.RegisterMissile("BGM-71E ASM", "ATGM", {
 	Name		= "BGM-71E TOW",
-	Description	= "The BGM-71E TOW is a short-range wire guided anti-tank missile.",
+	Description	= "The BGM-71E TOW is a medium-range wire guided anti-tank missile.",
 	Model		= "models/missiles/bgm_71e.mdl",
 	Length		= 46,
 	Caliber		= 152,
 	Mass		= 23,
 	Year		= 1970,
-	RoFMod		= 0.8,
+	RoFMod		= 0.6,
 	Guidance	= { "Dumb", "Wire (SACLOS)" },
 	Fuzes		= { "Contact", "Optical" },
 	Racks		= { ["1x BGM-71E"] = true, ["2x BGM-71E"] = true, ["4x BGM-71E"] = true },
-	Agility		= 0.25,
-	ArmDelay	= 0.3,
+	Agility		= 0.13,
+	ArmDelay	= 0.1,
 	Round = {
 		Model			= "models/missiles/bgm_71e.mdl",
-		MaxLength		= 35,
+		MaxLength		= 64,
 		Armor			= 6,
-		PropMass		= 1.2,
+		PropMass		= 0.2,
 		Thrust			= 13000, -- in kg*in/s^2
-		BurnRate		= 200, -- in cm^3/s
+		BurnRate		= 31, -- in cm^3/s
 		StarterPercent	= 0.2,
 		MinSpeed		= 2000,
 		DragCoef		= 0.005,
 		DragCoefFlight	= 0.05,
 		FinMul			= 0.05,
-		PenMul			= math.sqrt(6)
+		PenMul			= math.sqrt(3.97)
 	},
 })
 
@@ -500,7 +500,7 @@ ACF.RegisterMissile("AGM-114 ASM", "ATGM", {
 	Model		= "models/missiles/agm_114.mdl",
 	Length		= 66,
 	Caliber		= 180,
-	Mass		= 45,
+	Mass		= 49,
 	Diameter	= 6.5 * 25.4, -- in mm
 	Year		= 1984,
 	RoFMod		= 1,
@@ -526,17 +526,17 @@ ACF.RegisterMissile("AGM-114 ASM", "ATGM", {
 	},
 	Round = {
 		Model			= "models/missiles/agm_114.mdl",
-		MaxLength		= 46,
+		MaxLength		= 67,
 		Armor			= 5,
-		PropMass		= 1,
-		Thrust			= 12000, -- in kg*in/s^2
-		BurnRate		= 150, -- in cm^3/s
+		PropMass		= 0.25,
+		Thrust			= 18000, -- in kg*in/s^2
+		BurnRate		= 80, -- in cm^3/s
 		StarterPercent	= 0.1,
 		MinSpeed		= 4000,
 		DragCoef		= 0.001,
 		DragCoefFlight	= 0.05,
-		FinMul			= 0.1,
-		PenMul			= math.sqrt(5)
+		FinMul			= 0.05,
+		PenMul			= math.sqrt(4.175)
 	},
 })
 
@@ -552,22 +552,22 @@ ACF.RegisterMissile("Ataka ASM", "ATGM", {
 	Guidance	= { "Dumb", "Radio (SACLOS)" },
 	Fuzes		= { "Contact", "Optical" },
 	Racks		= { ["1x Ataka"] = true },
-	ViewCone	= 40,
-	Agility		= 0.06,
-	ArmDelay	= 0.4,
+	ViewCone	= 45,
+	Agility		= 0.092,
+	ArmDelay	= 0.1,
 	Round = {
 		Model			= "models/missiles/9m120.mdl",
-		MaxLength		= 60,
+		MaxLength		= 120,
 		Armor			= 5,
-		PropMass		= 2.4,
-		Thrust			= 14000, -- in kg*in/s^2
-		BurnRate		= 400, -- in cm^3/s
+		PropMass		= 0.11,
+		Thrust			= 20000, -- in kg*in/s^2
+		BurnRate		= 300, -- in cm^3/s
 		StarterPercent	= 0.2,
-		MinSpeed		= 5000,
+		MinSpeed		= 800,
 		DragCoef		= 0.001,
 		DragCoefFlight	= 0.04,
 		FinMul			= 0.05,
-		PenMul			= math.sqrt(4.5)
+		PenMul			= math.sqrt(1.454)
 	},
 })
 
@@ -602,21 +602,21 @@ ACF.RegisterMissile("9M113 ASM", "ATGM", {
 		Model			= "models/kali/weapons/kornet/parts/9m133 kornet missile.mdl",
 		MaxLength		= 70,
 		Armor			= 5,
-		PropMass		= 3,
-		Thrust			= 16000, -- in kg*in/s^2
-		BurnRate		= 300, -- in cm^3/s
+		PropMass		= 0.1,
+		Thrust			= 15000, -- in kg*in/s^2
+		BurnRate		= 10, -- in cm^3/s
 		StarterPercent	= 0.2,
-		MinSpeed		= 6000,
+		MinSpeed		= 8000,
 		DragCoef		= 0.005,
 		DragCoefFlight	= 0.05,
 		FinMul			= 0.05,
-		PenMul			= math.sqrt(3.9)
+		PenMul			= math.sqrt(4.2)
 	},
 })
 
 ACF.RegisterMissile("AT-2 ASM", "ATGM", {
 	Name		= "9M17 Fleyta",
-	Description	= "The 9M17 Fleyta (AT-2 Sagger) is a VERY powerful long-range antitank missile.",
+	Description	= "The 9M17 Fleyta (AT-2 Sagger) is a powerful radio command medium-range antitank missile, intended for use on helicopters and anti tank vehicles. It has a more powerful warhead and longer range than the AT-3 at the cost of weight and agility.",
 	Model		= "models/missiles/at2.mdl",
 	Length		= 55,
 	Caliber		= 148,
@@ -627,20 +627,20 @@ ACF.RegisterMissile("AT-2 ASM", "ATGM", {
 	Fuzes		= { "Contact", "Optical" },
 	ViewCone	= 90,
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true },
-	Agility		= 0.2,
-	ArmDelay	= 1,
+	Agility		= 0.08,
+	ArmDelay	= 0.1,
 	Round = {
 		Model			= "models/missiles/at2.mdl",
-		MaxLength		= 55,
+		MaxLength		= 60,
 		Armor			= 5,
-		PropMass		= 1,
-		Thrust			= 1500, -- in kg*in/s^2
-		BurnRate		= 50, -- in cm^3/s
+		PropMass		= 0.07,
+		Thrust			= 6000, -- in kg*in/s^2
+		BurnRate		= 9, -- in cm^3/s
 		StarterPercent	= 0.2,
 		MinSpeed		= 500,
-		DragCoef		= 0.001,
-		DragCoefFlight	= 0.01,
+		DragCoef		= 0.01,
+		DragCoefFlight	= 0.04,
 		FinMul			= 0.1,
-		PenMul			= math.sqrt(5.4)
+		PenMul			= math.sqrt(3.025)
 	},
 })

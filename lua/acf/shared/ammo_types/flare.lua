@@ -34,11 +34,12 @@ function Ammo:UpdateRoundData(ToolData, Data, GUIData)
 	GUIData.MaxFillerVol = math.Round(math.min(GUIData.ProjVolume, MaxVolume * 0.9), 2)
 	GUIData.FillerVol	 = math.Round(math.Clamp(ToolData.FillerMass, GUIData.MinFillerVol, GUIData.MaxFillerVol), 2)
 
-	Data.FillerMass	= GUIData.FillerVol * ACF.HEDensity * 0.005
+	Data.FillerMass	= GUIData.FillerVol * ACF.HEDensity * 0.001
 	Data.ProjMass	= math.max(GUIData.ProjVolume - GUIData.FillerVol, 0) * 0.0079 + Data.FillerMass
 	Data.MuzzleVel	= ACF_MuzzleVelocity(Data.PropMass, Data.ProjMass)
 	Data.DragCoef	= Data.FrArea * 0.0027 / Data.ProjMass
 	Data.BurnTime	= Data.FillerMass / Data.BurnRate
+	Data.CartMass	= Data.PropMass + Data.ProjMass
 
 	for K, V in pairs(self:GetDisplayData(Data)) do
 		GUIData[K] = V
