@@ -168,7 +168,7 @@ ACF_defineGun("250kgBOMB", { --id
 	guidance    = {"Dumb"},
 	fuses       = {"Contact", "Optical", "Cluster"},
 
-	racks       = {["1xRK"] = true,  ["2xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
+	racks       = {["1xRK"] = true, ["1xRK_small"] = true, ["2xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
 
 	seekcone    = 40,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
@@ -320,6 +320,6 @@ ACF_defineGun("250kgGBOMB", { --id
 	guidance    = {"Dumb"},
 	fuses       = {"Contact", "Optical", "Cluster"},
 
-	racks       = {["1xRK"] = true,  ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
+	racks       = {["1xRK"] = true, ["1xRK_small"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 	armdelay    = 1     -- minimum fuse arming delay
 } )
