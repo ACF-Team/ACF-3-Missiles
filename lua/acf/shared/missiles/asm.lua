@@ -235,7 +235,7 @@ ACF_defineGun("9M113 ASM", {
 
 	ent         = "acf_rack",
 	guidance    = { "Dumb", "Laser" },
-	fuzes       = { "Contact", "Optical" },
+	fuses       = { "Contact", "Optical" },
 
 	racks       = {["1x Kornet"] = true},
 

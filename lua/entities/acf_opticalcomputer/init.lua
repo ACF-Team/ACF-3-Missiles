@@ -403,6 +403,17 @@ function ENT:PostEntityPaste(Player, Ent, CreatedEntities)
 		EntMods.ACFWeapons = nil
 	end
 
+	-- Mass entity mod removal
+	if EntMods.mass then
+		EntMods.mass = nil
+
+		local PhysObj = self:GetPhysicsObject()
+
+		if IsValid(PhysObj) then
+			PhysObj:SetMass(self.Mass)
+		end
+	end
+
 	-- Wire dupe info
 	self.BaseClass.PostEntityPaste(self, Player, Ent, CreatedEntities)
 end

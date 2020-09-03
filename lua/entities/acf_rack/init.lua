@@ -143,12 +143,12 @@ local function GetNextCrate(Rack)
 	local Start = Select
 
 	repeat
-		if Select.Load and Select.Ammo > 0 then return Select end
+		if Select:CanConsume() then return Select end
 
 		Select = next(Rack.Crates, Select) or next(Rack.Crates)
 	until Select == Start -- If we've looped back around to the start then there's nothing to use
 
-	return (Select.Load and Select.Ammo > 0) and Select
+	return Select:CanConsume() and Select or nil
 end
 
 local function GetNextAttachName(Rack)
@@ -252,7 +252,7 @@ local function UpdateRefillBonus(Rack)
 	local TotalBonus = 0
 
 	for Crate in pairs(ACF.AmmoCrates) do
-		if Crate.RoundType == "Refill" and Crate.Ammo > 0 and Crate.Load then
+		if Crate.RoundType == "Refill" and Crate:CanConsume() then
 			local CrateDist = SelfPos:Distance(Crate:GetPos())
 
 			if CrateDist <= MaxDist then
@@ -272,7 +272,7 @@ end
 
 -------------------------------[[ Global Functions ]]-------------------------------
 
-function MakeACF_Rack(Owner, Pos, Angle, Id)
+function MakeACF_Rack(Owner, Pos, Angle, Id, Data)
 	if not Owner:CheckLimit("_acf_gun") then return end
 
 	Id = CheckRackID(Id)
@@ -364,11 +364,11 @@ function MakeACF_Rack(Owner, Pos, Angle, Id)
 
 	local MountPoints = ACF.Weapons.Rack[Rack.Id].mountpoints
 
-	for _, Data in pairs(Rack:GetAttachments()) do
-		local Attachment = Rack:GetAttachment(Data.id)
+	for _, Info in pairs(Rack:GetAttachments()) do
+		local Attachment = Rack:GetAttachment(Info.id)
 
-		if MountPoints[Data.name] then
-			Rack.AttachPoints[Data.name] = Rack:WorldToLocal(Attachment.Pos)
+		if MountPoints[Info.name] then
+			Rack.AttachPoints[Info.name] = Rack:WorldToLocal(Attachment.Pos)
 		end
 	end
 
@@ -376,13 +376,21 @@ function MakeACF_Rack(Owner, Pos, Angle, Id)
 
 	Rack:UpdateOverlay()
 
+	do -- Mass entity mod removal
+		local EntMods = Data and Data.EntityMods
+
+		if EntMods and EntMods.mass then
+			EntMods.mass = nil
+		end
+	end
+
 	CheckLegal(Rack)
 
 	return Rack
 end
 
-list.Set("ACFCvars", "acf_rack" , {"data9", "id"})
-duplicator.RegisterEntityClass("acf_rack", MakeACF_Rack, "Pos", "Angle", "Id")
+list.Set("ACFCvars", "acf_rack" , {"data9"})
+duplicator.RegisterEntityClass("acf_rack", MakeACF_Rack, "Pos", "Angle", "Id", "Data")
 ACF.RegisterLinkSource("acf_rack", "Crates")
 ACF.RegisterLinkSource("acf_rack", "Computer", true)
 ACF.RegisterLinkSource("acf_rack", "Radar", true)

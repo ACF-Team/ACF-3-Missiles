@@ -226,7 +226,7 @@ end
 
 --===============================================================================================--
 
-function MakeACF_Radar(Owner, Pos, Angle, Id)
+function MakeACF_Radar(Owner, Pos, Angle, Id, Data)
 	if not Owner:CheckLimit("_acf_radar") then return false end
 
 	local RadarData = ACF.Weapons.Radar[Id]
@@ -294,6 +294,14 @@ function MakeACF_Radar(Owner, Pos, Angle, Id)
 
 	Radar:UpdateOverlay(true)
 
+	do -- Mass entity mod removal
+		local EntMods = Data and Data.EntityMods
+
+		if EntMods and EntMods.mass then
+			EntMods.mass = nil
+		end
+	end
+
 	CheckLegal(Radar)
 
 	TimerCreate("ACF Radar Clock " .. Radar:EntIndex(), 3, 0, function()
@@ -309,10 +317,10 @@ end
 
 -- Backwards compatibility
 list.Set("ACFCvars", "acf_missileradar", {"id"})
-duplicator.RegisterEntityClass("acf_missileradar", MakeACF_Radar, "Pos", "Angle", "Id")
+duplicator.RegisterEntityClass("acf_missileradar", MakeACF_Radar, "Pos", "Angle", "Id", "Data")
 
 list.Set("ACFCvars", "acf_radar", {"id"})
-duplicator.RegisterEntityClass("acf_radar", MakeACF_Radar, "Pos", "Angle", "Id")
+duplicator.RegisterEntityClass("acf_radar", MakeACF_Radar, "Pos", "Angle", "Id", "Data")
 ACF.RegisterLinkSource("acf_radar", "Weapons")
 
 --===============================================================================================--

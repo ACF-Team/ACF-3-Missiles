@@ -22,6 +22,7 @@ ACF_defineGun("40mmFGL", { --id
 	weight = 75,
 	magsize = 30,
 	magreload = 20,
+	Cyclic = 300,
 	year = 1970,
 	round = {
 		maxlength = 9,
