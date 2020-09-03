@@ -64,7 +64,7 @@ function ENT:Think()
 		local dt = CurTime() - self.Time --timestep
 		self.Time = CurTime()
 		local d = Vector()
-		local dir = AngleRand() * 0.002 * self.InnacV*dt
+		local dir = AngleRand() * 0.002 * self.InnacV * dt
 		local Dist = 0.01
 		self.InnacV = self.InnacV + 1 --inaccuracy when not guided bloom
 		if IsValid(self.Guidance) and self.Guidance:GetPos():Distance(self:GetPos()) < self.Distance then
