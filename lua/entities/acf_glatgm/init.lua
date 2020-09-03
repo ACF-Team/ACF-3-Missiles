@@ -51,8 +51,8 @@ function ENT:Initialize()
 		self.velocity = 120
 		self.secondsOffset = 0.1
 	end
-	
 	self.velocity = self.velocity*39.37
+
 	self.offsetLength = self.velocity * self.secondsOffset	--how far off the forward offset is for the targeting position
 end
 
@@ -64,24 +64,23 @@ function ENT:Think()
 		local dt = CurTime() - self.Time --timestep
 		self.Time = CurTime()
 		local d = Vector()
-		local dir = AngleRand()*0.002*self.InnacV*dt 
+		local dir = AngleRand()*0.002*self.InnacV*dt
 		local Dist = 0.01
 		self.InnacV = self.InnacV+1 --inaccuracy when not guided bloom
 		if IsValid(self.Guidance) and self.Guidance:GetPos():Distance(self:GetPos()) < self.Distance then
 			local acosc = math.acos((self:GetPos()-self.Guidance:GetPos()):GetNormalized():Dot(self.Guidance:GetForward())) --switch to acos as it's cheaper than comparing 4 angle values
 			if acosc<0.436332 then
 				local glpos = self.Guidance:GetPos() + self.Guidance:GetForward()
-
 				if not self.Optic then
 					glpos = self.Guidance:GetAttachment(1).Pos + self.Guidance:GetForward() * 20
 				end
-				local tr = util.QuickTrace( glpos, self.Guidance:GetForward()*68000, {self.Guidance,self,self.Entity}) 
+				local tr = util.QuickTrace( glpos, self.Guidance:GetForward()*68000, {self.Guidance,self})
 				local thp = tr.HitPos
 				if thp:Distance(self:GetPos())>(self.offsetLength*2) then --Missile will beam ride until it is close enough, then it will use hitpos of the guidance trace.
-					local tr = util.QuickTrace( glpos, self.Guidance:GetForward() * (self.Guidance:GetPos():Distance(self:GetPos()) + self.offsetLength), {self.Guidance, self})
+					tr = util.QuickTrace( glpos, self.Guidance:GetForward() * (self.Guidance:GetPos():Distance(self:GetPos()) + self.offsetLength), {self.Guidance, self})
 					thp = tr.HitPos
 				end
-				local acosc = math.acos((thp-self:GetPos()):GetNormalized():Dot(self:GetForward())) --acos also added to missile so it doesn't have 360 vision
+				acosc = math.acos((thp-self:GetPos()):GetNormalized():Dot(self:GetForward())) --acos also added to missile so it doesn't have 360 vision
 				if acosc<0.785398 then
 					d = ( thp - (self:GetPos()-self:GetForward()*20))
 					dir = self:WorldToLocalAngles(d:Angle())*self.velocity*0.00007*dt
