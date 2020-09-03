@@ -46,12 +46,12 @@ function ENT:Initialize()
 	self.secondsOffset = 0.08	--seconds of forward flight to aim towards, to affect the beam-riding simulation
 	self.InnacV = 0
 	self.Sub = self.BulletData.Caliber < 10 -- is it a small glatgm?
-	self.SpiralAm = (10-self.BulletData.Caliber)*0.2 -- amount of artifical spiraling for <100 shells, caliber in acf is in cm
+	self.SpiralAm = (10-self.BulletData.Caliber) * 0.2 -- amount of artifical spiraling for <100 shells, caliber in acf is in cm
 	if self.Sub then
 		self.velocity = 120
 		self.secondsOffset = 0.1
 	end
-	self.velocity = self.velocity*39.37
+	self.velocity = self.velocity * 39.37
 
 	self.offsetLength = self.velocity * self.secondsOffset	--how far off the forward offset is for the targeting position
 end
@@ -64,41 +64,41 @@ function ENT:Think()
 		local dt = CurTime() - self.Time --timestep
 		self.Time = CurTime()
 		local d = Vector()
-		local dir = AngleRand()*0.002*self.InnacV*dt
+		local dir = AngleRand() * 0.002 * self.InnacV*dt
 		local Dist = 0.01
-		self.InnacV = self.InnacV+1 --inaccuracy when not guided bloom
+		self.InnacV = self.InnacV + 1 --inaccuracy when not guided bloom
 		if IsValid(self.Guidance) and self.Guidance:GetPos():Distance(self:GetPos()) < self.Distance then
-			local acosc = math.acos((self:GetPos()-self.Guidance:GetPos()):GetNormalized():Dot(self.Guidance:GetForward())) --switch to acos as it's cheaper than comparing 4 angle values
-			if acosc<0.436332 then
+			local acosc = math.acos((self:GetPos() - self.Guidance:GetPos()):GetNormalized():Dot(self.Guidance:GetForward())) --switch to acos as it's cheaper than comparing 4 angle values
+			if acosc < 0.436332 then
 				local glpos = self.Guidance:GetPos() + self.Guidance:GetForward()
 				if not self.Optic then
 					glpos = self.Guidance:GetAttachment(1).Pos + self.Guidance:GetForward() * 20
 				end
-				local tr = util.QuickTrace( glpos, self.Guidance:GetForward()*68000, {self.Guidance,self})
+				local tr = util.QuickTrace( glpos, self.Guidance:GetForward() * 68000, {self.Guidance,self})
 				local thp = tr.HitPos
-				if thp:Distance(self:GetPos())>(self.offsetLength*2) then --Missile will beam ride until it is close enough, then it will use hitpos of the guidance trace.
+				if thp:Distance(self:GetPos()) > (self.offsetLength * 2) then --Missile will beam ride until it is close enough, then it will use hitpos of the guidance trace.
 					tr = util.QuickTrace( glpos, self.Guidance:GetForward() * (self.Guidance:GetPos():Distance(self:GetPos()) + self.offsetLength), {self.Guidance, self})
 					thp = tr.HitPos
 				end
-				acosc = math.acos((thp-self:GetPos()):GetNormalized():Dot(self:GetForward())) --acos also added to missile so it doesn't have 360 vision
-				if acosc<0.785398 then
-					d = ( thp - (self:GetPos()-self:GetForward()*20))
-					dir = self:WorldToLocalAngles(d:Angle())*self.velocity*0.00007*dt
+				acosc = math.acos((thp - self:GetPos()):GetNormalized():Dot(self:GetForward())) --acos also added to missile so it doesn't have 360 vision
+				if acosc < 0.785398 then
+					d = ( thp - (self:GetPos() - self:GetForward() * 20))
+					dir = self:WorldToLocalAngles(d:Angle()) * self.velocity * 0.00007 * dt
 					Dist = self.Guidance:GetPos():Distance(self:GetPos()) / 39.37 / 10000
 					self.InnacV = 0
 				end
 			end
 		end
 		local Spiral = 0
-		if self.Sub or self.InnacV>0 then
+		if self.Sub or self.InnacV > 0 then
 			Spiral = self.SpiralAm + math.random(-self.SpiralAm * 0.25, self.SpiralAm) --Spaghett
-			local Inacc = math.random(-1, 1) * Dist*dt
+			local Inacc = math.random(-1, 1) * Dist * dt
 			self:SetAngles(self:LocalToWorldAngles(dir + Angle(Inacc, -Inacc, 5)))
 		else
 			self:SetAngles(self:LocalToWorldAngles(dir))
 		end
 		local tr = util.QuickTrace( self:GetPos() + self:GetForward() * -50, self:GetForward() * (self.velocity * dt + 150), self.Filter)
-		self:SetPos((tr.HitPos-(self:GetForward()*100))+self:GetUp()*Spiral)
+		self:SetPos((tr.HitPos - (self:GetForward() * 100)) + self:GetUp() * Spiral)
 		if tr.Hit then
 			self:Detonate()
 		end
