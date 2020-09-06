@@ -42,6 +42,10 @@ local ClassUnlink = ACF.GetClassUnlink
 local UnlinkSound = "physics/metal/metal_box_impact_bullet%s.wav"
 local MaxDistance = ACF.RefillDistance * ACF.RefillDistance
 local TraceData	  = { start = true, endpos = true, mask = MASK_SOLID_BRUSHONLY }
+local Gamemode	  = GetConVar("acf_gamemode")
+local Indexes	  = {}
+local Unused	  = {}
+local IndexCount  = 0
 local TraceLine	  = util.TraceLine
 local TimerExists = timer.Exists
 local TimerCreate = timer.Create
@@ -106,6 +110,47 @@ local function CheckLOS(Start, End)
 	return not TraceLine(TraceData).Hit
 end
 
+local function GetEntityIndex(Entity)
+	if Indexes[Entity] then return Indexes[Entity] end
+
+	if next(Unused) then
+		local Index = next(Unused)
+
+		Indexes[Entity] = Index
+		Unused[Index] = nil
+	else
+		IndexCount = IndexCount + 1
+
+		Indexes[Entity] = IndexCount
+	end
+
+	local EntID = Indexes[Entity]
+
+	Entity:CallOnRemove("Radar Index", function()
+		Indexes[Entity] = nil
+		Unused[EntID] = true
+	end)
+
+	return EntID
+end
+
+local function GetEntityOwner(Owner, Entity)
+	-- If the server is competitive and the radar owner doesn't has permissions on this entity then return Unknown
+	if Gamemode:GetInt() == 2 and not Entity:CPPICanTool(Owner) then
+		return "Unknown"
+	end
+
+	local EntOwner = Entity:CPPIGetOwner()
+
+	if not IsValid(EntOwner) then
+		EntOwner = EntOwner == game.GetWorld() and "World" or "Unknown"
+	else
+		EntOwner = EntOwner:GetName()
+	end
+
+	return EntOwner
+end
+
 local function ScanForEntities(Entity)
 	ClearTargets(Entity)
 
@@ -120,22 +165,21 @@ local function ScanForEntities(Entity)
 	local Origin = Entity:LocalToWorld(Entity.Origin)
 	local Closest = math.huge
 	local Count = 0
-	local EntPos, EntVel, EntDist, Spread
 
 	for Ent in pairs(Detected) do
-		EntPos = Ent.CurPos or Ent:GetPos()
-		EntVel = Ent.LastVel or Ent:GetVelocity()
+		local EntPos = Ent.CurPos or Ent:GetPos()
+		local EntVel = Ent.LastVel or Ent:GetVelocity()
 
 		if CheckLOS(Origin, EntPos) then
-			EntDist = Origin:DistToSqr(EntPos)
-			Spread = VectorRand(-Entity.Spread, Entity.Spread)
+			local EntDist = Origin:DistToSqr(EntPos)
+			local Spread = VectorRand(-Entity.Spread, Entity.Spread)
+
 			EntPos = EntPos + Spread
 			EntVel = EntVel + Spread
-
 			Count = Count + 1
 
-			IDs[Count] = Ent:EntIndex()
-			Own[Count] = Ent:CPPIGetOwner():GetName() or ""
+			IDs[Count] = GetEntityIndex(Ent)
+			Own[Count] = GetEntityOwner(Entity.Owner, Ent)
 			Position[Count] = EntPos
 			Velocity[Count] = EntVel
 			Entity.Targets[Ent] = Spread
