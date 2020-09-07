@@ -135,7 +135,7 @@ ACF_defineGun("AGM-114 ASM", {
 	guidance    = { "Dumb", "Laser", "Active Radar" },
 	fuses       = { "Contact", "Optical" },
 
-	racks       = {["2x AGM-114"] = true, ["4x AGM-114"] = true, ["1xRK"] = true, ["1xRK_small"] = true},
+	racks       = {["2x AGM-114"] = true, ["4x AGM-114"] = true, ["1xRK"] = true},
 
 	viewcone    = 40,
 	seekcone	= 10,
@@ -191,7 +191,7 @@ ACF_defineGun("Ataka ASM", {
 	guidance    = { "Dumb", "Radio (SACLOS)" },
 	fuses       = { "Contact", "Optical" },
 
-	racks       = {["1x Ataka"] = true, ["1xRK"] = true, ["1xRK_small"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
+	racks       = {["1x Ataka"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
 	viewcone    = 45,
 
