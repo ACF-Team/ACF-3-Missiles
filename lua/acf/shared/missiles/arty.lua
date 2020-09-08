@@ -88,7 +88,7 @@ ACF_defineGun("SAKR-10 RA", { --id
 	guidance    = { "Dumb", "Laser", "GPS Guided" },
 	fuses       = { "Contact", "Timed", "Optical", "Cluster" },
 
-	racks       = {["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true, ["6xUARRK"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
+	racks       = {["1xRK"] = true, ["1xRK_small"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true, ["6xUARRK"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
 	agility		= 0.07,
 	viewcone	= 180,
