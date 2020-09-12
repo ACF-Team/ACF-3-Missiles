@@ -145,12 +145,12 @@ function Round.cratetxt(BulletData)
 end
 
 function Round.detonate(_, Bullet, HitPos)
-	ACF_HE(HitPos - Bullet.Flight:GetNormalized() * 3, Bullet.BoomFillerMass, Bullet.CasingMass, Bullet.Owner, Bullet.Filter, Bullet.Gun)
+	ACF_HE(HitPos, Bullet.BoomFillerMass, Bullet.CasingMass, Bullet.Owner, Bullet.Filter, Bullet.Gun)
 
 	Bullet.Detonated = true
-	Bullet.InitTime = CurTime()
+	Bullet.InitTime = ACF.CurTime
 	Bullet.FuseLength = 0.005 + 40 / ((Bullet.Flight + Bullet.Flight:GetNormalized() * Bullet.SlugMV * 39.37):Length() * 0.0254)
-	Bullet.Pos = HitPos
+	Bullet.NextPos = HitPos
 	Bullet.Flight = Bullet.Flight + Bullet.Flight:GetNormalized() * Bullet.SlugMV * 39.37
 	Bullet.DragCoef = Bullet.SlugDragCoef
 
@@ -158,10 +158,6 @@ function Round.detonate(_, Bullet, HitPos)
 	Bullet.Caliber = Bullet.SlugCaliber
 	Bullet.PenArea = Bullet.SlugPenArea
 	Bullet.Ricochet = Bullet.SlugRicochet
-
-	local DeltaTime = CurTime() - Bullet.LastThink
-	Bullet.StartTrace = Bullet.Pos - Bullet.Flight:GetNormalized() * math.min(ACF.PhysMaxVel * DeltaTime,Bullet.FlightTime * Bullet.Flight:Length())
-	Bullet.NextPos = Bullet.Pos + (Bullet.Flight * ACF.Scale * DeltaTime)		--Calculates the next shell position
 end
 
 function Round.propimpact(Index, Bullet, Target, HitNormal, HitPos, Bone)
