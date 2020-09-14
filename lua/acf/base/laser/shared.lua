@@ -1,3 +1,4 @@
+local Trace = ACF.TraceF
 local Lasers = ACF.ActiveLasers
 local Sources = ACF.LaserSources
 local TraceData = { start = true, endpos = true, filter = true }
@@ -22,19 +23,19 @@ local function GetLaserData(Entity, Data)
 	TraceData.endpos = Entity:LocalToWorld(Offset + Direction * 50000)
 	TraceData.filter = Data.Filter
 
-	local Result = ACF.Trace(TraceData, true)
+	local Result = Trace(TraceData)
 	Result.Distance = Result.Fraction * 50000
 
 	return Origin, Result.HitPos, Result
 end
 
 local function UpdateLaserData(Entity, Laser)
-	local Origin, HitPos, Trace = GetLaserData(Entity, Sources[Entity])
+	local Origin, HitPos, Result = GetLaserData(Entity, Sources[Entity])
 
 	Laser.Distance = Trace.Distance
 	Laser.Origin = Origin
 	Laser.HitPos = HitPos
-	Laser.Trace = Trace
+	Laser.Trace = Result
 
 	return Laser
 end

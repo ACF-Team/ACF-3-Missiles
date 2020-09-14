@@ -252,7 +252,7 @@ local function CalcFlight(Missile)
 	TraceData.endpos = EndPos
 	TraceData.filter = Missile.Filter
 
-	local Result = Trace(TraceData, true)
+	local Result = Trace(TraceData)
 	local Ghosted = Time < Missile.GhostPeriod
 	local GhostHit = Ghosted and Result.HitWorld
 
