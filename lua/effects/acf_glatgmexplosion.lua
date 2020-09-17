@@ -1,7 +1,5 @@
 local TraceData = { start = true, endpos = true, mask = true }
 local TraceLine = util.TraceLine
-local GetIndex = ACF.GetAmmoDecalIndex
-local GetDecal = ACF.GetRicochetDecal
 
 local Colors = {
 	[MAT_GRATE] = Vector(170, 170, 170),
@@ -169,7 +167,7 @@ function EFFECT:Airburst()
 		EF:SetStartSize( 20 * Radius )
 		EF:SetEndSize( 10 * Radius )
 		EF:SetRoll( math.random(0, 360) )
-		EF:SetRollDelta( math.random(-1, 1) )	
+		EF:SetRollDelta( math.random(-1, 1) )
 		EF:SetAirResistance( 400 )
 		EF:SetGravity(Vector(math.random(-10, 10) * Radius, math.random(-10, 10) * Radius, 20))
 		EF:SetColor(SmokeColor.x, SmokeColor.y, SmokeColor.z)
