@@ -42,7 +42,7 @@ function ENT:Initialize()
 		end
 	end
 
-	self.velocity = 150 		--velocity of missile per second in ACF meters (Hu/39.37)
+	self.velocity = 170 		--velocity of missile per second in ACF meters (Hu/39.37)
 	self.secondsOffset = 0.08	--seconds of forward flight to aim towards, to affect the beam-riding simulation
 	self.InnacV = 0
 	local Caliber = self.BulletData.Caliber
@@ -50,11 +50,10 @@ function ENT:Initialize()
 	self.SpiralC = 0
 	self.SpiralAm = (10-Caliber) * 0.2 -- amount of artifical spiraling for <100 shells, caliber in acf is in cm
 	if self.Sub then
-		self.velocity = 80
+		self.velocity = 72
 		self.secondsOffset = 0.1
 	end
 	self.velocity = self.velocity * 39.37
-	
 	self.offsetLength = self.velocity * self.secondsOffset	--how far off the forward offset is for the targeting position
 	self.GuideDelay = CurTime()+self.secondsOffset*3.2
 end
