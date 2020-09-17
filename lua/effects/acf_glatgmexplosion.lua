@@ -14,8 +14,6 @@ local Colors = {
 }
 
 function EFFECT:Init(Data)
-	local Caliber = Data:GetRadius()
-
 	self.Origin = Data:GetOrigin()
 	self.DirVec = Data:GetNormal()
 	self.Radius = math.max(Data:GetScale() * 0.02, 1)
@@ -113,7 +111,7 @@ function EFFECT:Airburst()
 
 	self:Core(self.DirVec)
 	for _ = 0, 3 * Radius * Mult do
-	local EF = self.Emitter:Add("effects/muzzleflash"..math.random(1, 4), Origin )
+	local EF = self.Emitter:Add("effects/muzzleflash" .. math.random(1, 4), Origin )
 		if (EF) then
 			EF:SetVelocity( self.DirVec * 100 )
 			EF:SetAirResistance( 200 )
@@ -124,12 +122,12 @@ function EFFECT:Airburst()
 			EF:SetEndSize( 0 )
 			EF:SetRoll(800)
 			EF:SetRollDelta( math.random(-1, 1) )
-			EF:SetColor(255,255,255)	
+			EF:SetColor(255,255,255)
 		end
 	end
 	local EI = 20 * Radius * Mult
 	for E = 0, EI do
-	local EF = self.Emitter:Add("effects/muzzleflash"..math.random(1, 4), Origin )
+	local EF = self.Emitter:Add("effects/muzzleflash" .. math.random(1, 4), Origin )
 		if (EF) then
 			EF:SetVelocity( self.DirVec * (EI - E) * 60)
 			EF:SetAirResistance(100)
@@ -140,12 +138,12 @@ function EFFECT:Airburst()
 			EF:SetEndSize( 0 )
 			EF:SetRoll(800)
 			EF:SetRollDelta( math.random(-1, 1) )
-			EF:SetColor(255,255,255)	
+			EF:SetColor(255,255,255)
 		end
 	end
-	local EI = 10 * Radius * Mult
+	EI = 10 * Radius * Mult
 	for E = 0, EI do
-	local EF = self.Emitter:Add("effects/muzzleflash"..math.random(1, 4), Origin )
+	local EF = self.Emitter:Add("effects/muzzleflash" .. math.random(1, 4), Origin )
 		if (EF) then
 			EF:SetVelocity( self.DirVec * (EI - E) * -40)
 			EF:SetAirResistance(400)
@@ -156,12 +154,12 @@ function EFFECT:Airburst()
 			EF:SetEndSize( 0 )
 			EF:SetRoll(800)
 			EF:SetRollDelta( math.random(-1, 1) )
-			EF:SetColor(255,255,255)	
+			EF:SetColor(255,255,255)
 		end
 	end
 	local Angle = self.DirVec:Angle()
 	for _ = 0, 50 * Radius * Mult do
-		Angle:RotateAroundAxis(Angle:Forward(), (360 / 30))
+		Angle:RotateAroundAxis(Angle:Forward(), 360 / 30)
 		local EF = self.Emitter:Add( "particle/smokesprites_000" .. math.random(1, 9), Origin )
 		if (EF) then
 		EF:SetVelocity( Angle:Up() * 300 * Radius )
@@ -171,11 +169,11 @@ function EFFECT:Airburst()
 		EF:SetStartSize( 20 * Radius )
 		EF:SetEndSize( 10 * Radius )
 		EF:SetRoll( math.random(0, 360) )
-		EF:SetRollDelta( math.random(-1, 1) )			
-		EF:SetAirResistance( 400 ) 			 
-		EF:SetGravity(Vector(math.random(-10, 10) * Radius, math.random(-10, 10) * Radius, 20))		
+		EF:SetRollDelta( math.random(-1, 1) )	
+		EF:SetAirResistance( 400 )
+		EF:SetGravity(Vector(math.random(-10, 10) * Radius, math.random(-10, 10) * Radius, 20))
 		EF:SetColor(SmokeColor.x, SmokeColor.y, SmokeColor.z)
-		end	
+		end
 	end
 
 	for _ = 0, 5 * Radius * Mult do
