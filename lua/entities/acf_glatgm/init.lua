@@ -65,11 +65,9 @@ function ENT:Think()
 		end
 		local dt = CurTime() - self.Time --timestep
 		self.Time = CurTime()
-		local d = Vector()
 		local InnacDT = self.InnacV * dt
 		local dir = AngleRand() * 0.0002 * InnacDT
-		local Correction = VectorRand()  *0.0007 * InnacDT
-		local Dist = 0.01
+		local Correction = VectorRand()  * 0.0007 * InnacDT
 		local GD = self.GuideDelay < self.Time
 		if GD then
 			self.InnacV = self.InnacV + 1 --inaccuracy when not guided bloom
@@ -101,7 +99,7 @@ function ENT:Think()
 			Spiral = self.SpiralAm + math.random(-self.SpiralAm * 0.25, self.SpiralAm) --Spaghett
 			self.SpiralC = self.SpiralC + Spiral * dt * 411
 			self:SetAngles(self:LocalToWorldAngles(dir + Angle(0, 0, self.SpiralC)))
-			Correction = Vector(0,(self:WorldToLocal(self.Guidance:GetPos())* dt * 0.5).y,Correction.z)
+			Correction = Vector(0,(self:WorldToLocal(self.Guidance:GetPos()) * dt * 0.5).y,Correction.z)
 		else
 			self:SetAngles(self:LocalToWorldAngles(dir))
 		end
