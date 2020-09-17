@@ -55,7 +55,7 @@ function ENT:Initialize()
 	end
 	self.velocity = self.velocity * 39.37
 	self.offsetLength = self.velocity * self.secondsOffset	--how far off the forward offset is for the targeting position
-	self.GuideDelay = CurTime()+self.secondsOffset*3.2
+	self.GuideDelay = CurTime() + self.secondsOffset * 3.2
 end
 
 function ENT:Think()
@@ -68,14 +68,14 @@ function ENT:Think()
 		local d = Vector()
 		local InnacDT = self.InnacV * dt
 		local dir = AngleRand() * 0.0002 * InnacDT
-		local Correction = VectorRand() *0.0007 * InnacDT
+		local Correction = VectorRand()  *0.0007 * InnacDT
 		local Dist = 0.01
-		local GD = self.GuideDelay<self.Time
+		local GD = self.GuideDelay < self.Time
 		if GD then
 			self.InnacV = self.InnacV + 1 --inaccuracy when not guided bloom
 			if IsValid(self.Guidance) and self.Guidance:GetPos():Distance(self:GetPos()) < self.Distance then
 				local acosc = math.acos((self:GetPos() - self.Guidance:GetPos()):GetNormalized():Dot(self.Guidance:GetForward())) --switch to acos as it's cheaper than comparing 4 angle values
-				
+
 				if acosc < 0.785398 then
 					local glpos = self.Guidance:GetPos() + self.Guidance:GetForward()
 					if not self.Optic then
@@ -99,21 +99,21 @@ function ENT:Think()
 		local Spiral = 0
 		if self.Sub or self.InnacV > 0 and GD then
 			Spiral = self.SpiralAm + math.random(-self.SpiralAm * 0.25, self.SpiralAm) --Spaghett
-			self.SpiralC = self.SpiralC + Spiral*dt*411
+			self.SpiralC = self.SpiralC + Spiral * dt * 411
 			self:SetAngles(self:LocalToWorldAngles(dir + Angle(0, 0, self.SpiralC)))
-			Correction = Vector(0,(self:WorldToLocal(self.Guidance:GetPos())* dt*0.5).y,Correction.z)
+			Correction = Vector(0,(self:WorldToLocal(self.Guidance:GetPos())* dt * 0.5).y,Correction.z)
 		else
 			self:SetAngles(self:LocalToWorldAngles(dir))
 		end
 		local tr = util.TraceHull( {
 			start = self:GetPos(),
-			endpos = self:LocalToWorld(Vector((self.velocity * dt + 200),Correction.y,Correction.z)),
+			endpos = self:LocalToWorld(Vector(self.velocity * dt + 200,Correction.y,Correction.z)),
 			filter = self.Filter,
 			mins = Vector(),
 			maxs = Vector(),
 			mask = MASK_SOLID
 		} )
-		self:SetPos((tr.HitPos - (self:GetForward() * 200)))
+		self:SetPos(tr.HitPos - self:GetForward() * 200)
 		if tr.Hit then
 			self:Detonate()
 		end
