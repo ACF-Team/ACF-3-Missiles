@@ -73,14 +73,26 @@ local function Overlay(Ent)
 	end
 end
 
+-- TODO: Optimize this so the entries are only cleared when the target is no longer detected by the radar
 local function ClearTargets(Entity)
-	for Target in pairs(Entity.Targets) do
-		Entity.Targets[Target] = nil
+	local TargetInfo = Entity.TargetInfo
+	local Targets = Entity.Targets
+
+	for Target in pairs(Targets) do
+		Targets[Target] = nil
+	end
+
+	for _, List in pairs(TargetInfo) do
+		for Index in ipairs(List) do
+			List[Index] = nil
+		end
 	end
 end
 
 local function ResetOutputs(Entity)
 	if Entity.TargetCount == 0 then return end
+
+	local TargetInfo = Entity.TargetInfo
 
 	ClearTargets(Entity)
 
@@ -88,10 +100,11 @@ local function ResetOutputs(Entity)
 
 	WireLib.TriggerOutput(Entity, "Detected", 0)
 	WireLib.TriggerOutput(Entity, "ClosestDistance", 0)
-	WireLib.TriggerOutput(Entity, "IDs", {})
-	WireLib.TriggerOutput(Entity, "Owner", {})
-	WireLib.TriggerOutput(Entity, "Position", {})
-	WireLib.TriggerOutput(Entity, "Velocity", {})
+	WireLib.TriggerOutput(Entity, "IDs", TargetInfo.ID)
+	WireLib.TriggerOutput(Entity, "Owner", TargetInfo.Owner)
+	WireLib.TriggerOutput(Entity, "Position", TargetInfo.Position)
+	WireLib.TriggerOutput(Entity, "Velocity", TargetInfo.Velocity)
+	WireLib.TriggerOutput(Entity, "Distance", TargetInfo.Distance)
 end
 
 local function SetSequence(Entity, Active)
@@ -157,32 +170,47 @@ local function ScanForEntities(Entity)
 	if not Entity.GetDetected then return end
 
 	local Detected = Entity:GetDetected()
-	local IDs = {}
-	local Own = {}
-	local Position = {}
-	local Velocity = {}
 
 	local Origin = Entity:LocalToWorld(Entity.Origin)
+	local TargetInfo = Entity.TargetInfo
+	local Targets = Entity.Targets
 	local Closest = math.huge
 	local Count = 0
 
+	local IDs = TargetInfo.ID
+	local Own = TargetInfo.Owner
+	local Position = TargetInfo.Position
+	local Velocity = TargetInfo.Velocity
+	local Distance = TargetInfo.Distance
+
 	for Ent in pairs(Detected) do
 		local EntPos = Ent.CurPos or Ent:GetPos()
-		local EntVel = Ent.LastVel or Ent:GetVelocity()
 
 		if CheckLOS(Origin, EntPos) then
-			local EntDist = Origin:DistToSqr(EntPos)
 			local Spread = VectorRand(-Entity.Spread, Entity.Spread)
+			local EntVel = Ent.LastVel or Ent:GetVelocity()
+			local Owner = GetEntityOwner(Entity.Owner, Ent)
+			local Index = GetEntityIndex(Ent)
 
 			EntPos = EntPos + Spread
 			EntVel = EntVel + Spread
 			Count = Count + 1
 
-			IDs[Count] = GetEntityIndex(Ent)
-			Own[Count] = GetEntityOwner(Entity.Owner, Ent)
+			local EntDist = Origin:Distance(EntPos)
+
+			Targets[Ent] = {
+				Index = Index,
+				Owner = Owner,
+				Position = EntPos,
+				Velocity = EntVel,
+				Distance = EntDist
+			}
+
+			IDs[Count] = Index
+			Own[Count] = Owner
 			Position[Count] = EntPos
 			Velocity[Count] = EntVel
-			Entity.Targets[Ent] = Spread
+			Distance[Count] = EntDist
 
 			if EntDist < Closest then
 				Closest = EntDist
@@ -190,7 +218,7 @@ local function ScanForEntities(Entity)
 		end
 	end
 
-	Closest = Closest < math.huge and Closest ^ 0.5 or 0
+	Closest = Closest < math.huge and Closest or 0
 
 	WireLib.TriggerOutput(Entity, "Detected", Count)
 	WireLib.TriggerOutput(Entity, "ClosestDistance", Closest)
@@ -198,6 +226,7 @@ local function ScanForEntities(Entity)
 	WireLib.TriggerOutput(Entity, "Owner", Own)
 	WireLib.TriggerOutput(Entity, "Position", Position)
 	WireLib.TriggerOutput(Entity, "Velocity", Velocity)
+	WireLib.TriggerOutput(Entity, "Distance", Distance)
 
 	if Count ~= Entity.TargetCount then
 		if Count > Entity.TargetCount then
@@ -319,9 +348,18 @@ function MakeACF_Radar(Owner, Pos, Angle, Id, Data)
 	Radar.Targets		= {}
 
 	Radar.Inputs		= WireLib.CreateInputs(Radar, { "Active" })
-	Radar.Outputs		= WireLib.CreateOutputs(Radar, { "Scanning", "Detected", "ClosestDistance", "IDs [ARRAY]", "Owner [ARRAY]", "Position [ARRAY]", "Velocity [ARRAY]" })
+	Radar.Outputs		= WireLib.CreateOutputs(Radar, { "Scanning", "Detected", "ClosestDistance", "IDs [ARRAY]", "Owner [ARRAY]", "Position [ARRAY]", "Velocity [ARRAY]", "Distance [ARRAY]" })
 	Radar.GetDetected	= RadarClass.detect
 	Radar.Origin		= AttachData and Radar:WorldToLocal(AttachData.Pos) or Vector()
+
+	-- Used by Outputs
+	Radar.TargetInfo = {
+		ID = {},
+		Owner = {},
+		Position = {},
+		Velocity = {},
+		Distance = {},
+	}
 
 	Radar:SetNWString("WireName", "ACF " .. Radar.Name)
 

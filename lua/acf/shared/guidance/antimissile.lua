@@ -21,11 +21,11 @@ function Guidance:FindNewTarget(Missile, Radar)
 	local Targets = Radar.Targets
 	local Position = Missile:GetPos()
 	local HighestDot = 0
-	local CurrentDot, TargetPos, Distance, Target
+	local CurrentDot, Target
 
-	for Entity, Spread in pairs(Targets) do
-		TargetPos = Entity:GetPos() + Spread
-		Distance = Position:DistToSqr(TargetPos)
+	for Entity, Info in pairs(Targets) do
+		local TargetPos = Info.Position
+		local Distance = Position:DistToSqr(TargetPos)
 
 		if Distance >= self.MinDistance and self:CheckConeLOS(Missile, Position, TargetPos, self.SeekConeCos) then
 			CurrentDot = self.GetDirectionDot(Missile, TargetPos)
@@ -50,14 +50,13 @@ function Guidance:GetGuidance(Missile)
 	if not Radar then return {} end
 
 	local Targets = Radar.Targets
-	local TargetPos, Spread
+	local TargetInfo = IsValid(self.Target) and Targets[self.Target]
 
-	if IsValid(self.Target) and Targets[self.Target] then
-		TargetPos = self.Target:GetPos()
-		Spread = Targets[self.Target]
+	if TargetInfo then
+		local TargetPos = TargetInfo.Position
 
-		if self:CheckConeLOS(Missile, Missile:GetPos(), TargetPos + Spread, self.ViewConeCos) then
-			return { TargetPos = TargetPos + Spread, ViewCone = self.ViewCone }
+		if self:CheckConeLOS(Missile, Missile:GetPos(), TargetPos, self.ViewConeCos) then
+			return { TargetPos = TargetPos, ViewCone = self.ViewCone }
 		end
 	end
 
@@ -65,8 +64,7 @@ function Guidance:GetGuidance(Missile)
 
 	if not self.Target then return {} end
 
-	TargetPos = self.Target:GetPos()
-	Spread = Targets[self.Target]
+	TargetInfo = Targets[self.Target]
 
-	return { TargetPos = TargetPos + Spread, ViewCone = self.ViewCone }
+	return { TargetPos = TargetInfo.Position, ViewCone = self.ViewCone }
 end

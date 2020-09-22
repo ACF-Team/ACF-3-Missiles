@@ -1,6 +1,7 @@
 local Guidance = ACF.RegisterGuidance("Active Radar", "Semi-Active Radar")
 
 Guidance.desc = "This guidance package uses a radar to detect contraptions and guides the munition towards the most centered one it can find."
+Guidance.Spread = 100 -- Max spread when not using a radar
 
 function Guidance:SeekNewTarget(Missile)
 	local Position = Missile:GetPos()
@@ -34,11 +35,11 @@ function Guidance:FindNewTarget(Missile, Radar)
 
 	local Position = Missile:GetPos()
 	local HighestDot = 0
-	local CurrentDot, TargetPos, Distance, Target
+	local CurrentDot, Target
 
-	for Entity, Spread in pairs(Radar.Targets) do
-		TargetPos = Entity:GetPos() + Spread
-		Distance = Position:DistToSqr(TargetPos)
+	for Entity, Info in pairs(Radar.Targets) do
+		local TargetPos = Info.Position
+		local Distance = Position:DistToSqr(TargetPos)
 
 		if Distance >= self.MinDistance and self:CheckConeLOS(Missile, Position, TargetPos, self.ViewConeCos) then
 			CurrentDot = self.GetDirectionDot(Missile, TargetPos)
@@ -63,19 +64,19 @@ function Guidance:GetGuidance(Missile)
 	if Override then return Override end
 
 	local Radar = self:GetRadar("TGT")
-	local TargetPos, Spread
+	local TargetPos
 
 	if IsValid(self.Target) then
 		if self.TargetMode == "Active" then
-			Spread = Vector()
+			TargetPos = self.Target:GetPos() + VectorRand(-self.Spread, self.Spread)
 		else
-			Spread = Radar and Radar.Targets[self.Target]
+			local TargetInfo = Radar.Targets[self.Target]
+
+			TargetPos = TargetInfo.Position
 		end
 
-		TargetPos = self.Target:GetPos()
-
-		if Spread and self:CheckConeLOS(Missile, Missile:GetPos(), TargetPos + Spread, self.ViewConeCos) then
-			return { TargetPos = TargetPos + Spread, ViewCone = self.ViewCone }
+		if self:CheckConeLOS(Missile, Missile:GetPos(), TargetPos, self.ViewConeCos) then
+			return { TargetPos = TargetPos, ViewCone = self.ViewCone }
 		end
 	end
 
@@ -83,8 +84,13 @@ function Guidance:GetGuidance(Missile)
 
 	if not self.Target then return {} end
 
-	TargetPos = self.Target:GetPos()
-	Spread = Radar and Radar.Targets[self.Target] or Vector()
+	if self.TargetMode == "Active" then
+		TargetPos = self.Target:GetPos() + VectorRand(-self.Spread, self.Spread)
+	else
+		local TargetInfo = Radar.Targets[self.Target]
 
-	return { TargetPos = TargetPos + Spread, ViewCone = self.ViewCone }
+		TargetPos = TargetInfo.Position
+	end
+
+	return { TargetPos = TargetPos, ViewCone = self.ViewCone }
 end
