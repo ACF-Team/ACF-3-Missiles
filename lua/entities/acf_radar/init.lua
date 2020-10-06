@@ -220,13 +220,13 @@ local function ScanForEntities(Entity)
 
 	Closest = Closest < math.huge and Closest or 0
 
-	WireLib.TriggerOutput(Entity, "Detected", Count)
 	WireLib.TriggerOutput(Entity, "ClosestDistance", Closest)
 	WireLib.TriggerOutput(Entity, "IDs", IDs)
 	WireLib.TriggerOutput(Entity, "Owner", Own)
 	WireLib.TriggerOutput(Entity, "Position", Position)
 	WireLib.TriggerOutput(Entity, "Velocity", Velocity)
 	WireLib.TriggerOutput(Entity, "Distance", Distance)
+	WireLib.TriggerOutput(Entity, "Detected", Count)
 
 	if Count ~= Entity.TargetCount then
 		if Count > Entity.TargetCount then
