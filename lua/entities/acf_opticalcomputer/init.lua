@@ -37,7 +37,6 @@ ACF.RegisterLinkSource("acf_opticalcomputer", "Weapons")
 -- Local Funcs and Vars
 --===============================================================================================--
 
-local TraceLine = util.TraceLine
 local TraceData = { start = true, endpos = true, filter = true }
 local CheckLegal = ACF_CheckLegal
 local ClassLink = ACF.GetClassLink
