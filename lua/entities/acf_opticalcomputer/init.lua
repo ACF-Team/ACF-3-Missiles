@@ -338,7 +338,7 @@ function ENT:GetTrace()
 	TraceData.endpos = self:LocalToWorld(Vector(50000))
 	TraceData.filter = self.Filter
 
-	return TraceLine(TraceData)
+	return ACF.TraceF(TraceData)
 end
 
 function ENT:Think()
