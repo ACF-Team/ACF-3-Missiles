@@ -5,7 +5,9 @@ include("shared.lua")
 
 -- Local Vars -----------------------------------
 
-local EMPTY = { Type = "Empty", PropMass = 0, ProjMass = 0, Tracer = 0 }
+local EMPTY   = { Type = "Empty", PropMass = 0, ProjMass = 0, Tracer = 0 }
+local HookRun = hook.Run
+local ACF     = ACF
 
 do -- Spawning and Updating --------------------
 	local UnlinkSound = "physics/metal/metal_box_impact_bullet%s.wav"
@@ -14,14 +16,56 @@ do -- Spawning and Updating --------------------
 	local Racks       = ACF.Classes.Racks
 
 	local function VerifyData(Data)
-		if Data.Rack then -- Entity was created via menu tool
-			Data.Id = Data.Rack
-		elseif not Data.Id then
-			Data.Id = "1xRK"
+		if not Data.Rack then
+			Data.Rack = Data.Id or "1xRK"
 		end
 
-		if not Racks[Data.Id] then
-			Data.Id = "1xRK"
+		local Rack = Racks[Data.Rack]
+
+		if not Rack then
+			Data.Rack = "1xRK"
+
+			Rack = Racks["1xRK"]
+		end
+
+		do -- External verifications
+			if Rack.VerifyData then
+				Rack.VerifyData(Data, Rack)
+			end
+
+			HookRun("ACF_VerifyData", "acf_rack", Data, Rack)
+		end
+	end
+
+	local function CreateInputs(Entity, Data, Rack)
+		local List = { "Fire", "Reload", "Unload", "Missile Index", "Fire Delay" }
+
+		if Rack.SetupInputs then
+			Rack.SetupInputs(List, Entity, Data, Rack)
+		end
+
+		HookRun("ACF_OnSetupInputs", "acf_rack", List, Entity, Data, Rack)
+
+		if Entity.Inputs then
+			Entity.Inputs = WireLib.AdjustInputs(Entity, List)
+		else
+			Entity.Inputs = WireLib.CreateInputs(Entity, List)
+		end
+	end
+
+	local function CreateOutputs(Entity, Data, Rack)
+		local List = { "Ready", "Shots Left", "Current Index", "Status [STRING]", "Missile [ENTITY]", "Entity [ENTITY]" }
+
+		if Rack.SetupOutputs then
+			Rack.SetupOutputs(List, Entity, Data, Rack)
+		end
+
+		HookRun("ACF_OnSetupOutputs", "acf_rack", List, Entity, Data, Rack)
+
+		if Entity.Outputs then
+			Entity.Outputs = WireLib.AdjustOutputs(Entity, List)
+		else
+			Entity.Outputs = WireLib.CreateOutputs(Entity, List)
 		end
 	end
 
@@ -36,31 +80,34 @@ do -- Spawning and Updating --------------------
 			Entity[V] = Data[V]
 		end
 
-		Entity.Name				= Rack.Name
-		Entity.ShortName		= Data.Id
-		Entity.Class			= "Rack"
-		Entity.EntType			= "Rack"
-		Entity.Caliber			= Rack.Caliber
-		Entity.MagSize			= Rack.MagSize or 1
-		Entity.ForcedIndex		= Entity.ForcedIndex and math.max(Entity.ForcedIndex, Entity.MagSize)
-		Entity.PointIndex		= 1
-		Entity.SoundPath		= Rack.Sound
-		Entity.HideMissile		= Rack.HideMissile
-		Entity.ProtectMissile	= Rack.ProtectMissile
-		Entity.WhitelistOnly	= Rack.WhitelistOnly
-		Entity.MissileModel		= Rack.RackModel
-		Entity.ReloadTime		= 1
-		Entity.CurrentShot		= 0
+		Entity.Name           = Rack.Name
+		Entity.ShortName      = Rack.ID
+		Entity.EntType        = Rack.EntType
+		Entity.RackData       = Rack
+		Entity.Caliber        = Rack.Caliber
+		Entity.MagSize        = Rack.MagSize or 1
+		Entity.ForcedIndex    = Entity.ForcedIndex and math.max(Entity.ForcedIndex, Entity.MagSize)
+		Entity.PointIndex     = 1
+		Entity.SoundPath      = Rack.Sound
+		Entity.DefaultSound   = Rack.Sound
+		Entity.HideMissile    = Rack.HideMissile
+		Entity.ProtectMissile = Rack.ProtectMissile
+		Entity.MissileModel   = Rack.RackModel
+		Entity.ReloadTime     = 1
+		Entity.CurrentShot    = 0
 
 		Entity:SetNWString("WireName", "ACF " .. Entity.Name)
 
-		local Phys = Entity:GetPhysicsObject()
-		if IsValid(Phys) then Phys:SetMass(Rack.Mass) end
+		CreateInputs(Entity, Data, Rack)
+		CreateOutputs(Entity, Data, Rack)
 
 		ACF_Activate(Entity, true)
 
 		Entity.ACF.Model		= Rack.Model
 		Entity.ACF.LegalMass	= Rack.Mass
+
+		local Phys = Entity:GetPhysicsObject()
+		if IsValid(Phys) then Phys:SetMass(Rack.Mass) end
 
 		do -- Removing old missiles
 			local Missiles = Entity.Missiles
@@ -92,8 +139,6 @@ do -- Spawning and Updating --------------------
 
 			Entity:UpdatePoint()
 		end
-
-		Entity:UpdateOverlay(true)
 	end
 
 	local function CheckDistantLinks(Entity, Source)
@@ -111,12 +156,19 @@ do -- Spawning and Updating --------------------
 		end
 	end
 
+	hook.Add("ACF_OnSetupInputs", "ACF Rack Launch Delay", function(EntClass, List, _, _, Rack)
+		if EntClass ~= "acf_rack" then return end
+		if Rack.EntType ~= "Rack" then return end
+
+		List[#List + 1] = "Launch Delay"
+	end)
+
 	-------------------------------------------------------------------------------
 
 	function MakeACF_Rack(Player, Pos, Ang, Data)
 		VerifyData(Data)
 
-		local RackData = Racks[Data.Id]
+		local RackData = Racks[Data.Rack]
 		local Limit = RackData.LimitConVar.Name
 
 		if not Player:CheckLimit(Limit) then return end
@@ -133,23 +185,29 @@ do -- Spawning and Updating --------------------
 		Player:AddCleanup("acfmenu", Rack)
 		Player:AddCount(Limit, Rack)
 
-		Rack.Owner				= Player -- MUST be stored on ent for PP
-		Rack.Firing				= false
-		Rack.Reloading			= false
-		Rack.Spread				= 1 -- GunClass.spread
-		Rack.ReloadTime			= 1
-		Rack.FireDelay			= 1
-		Rack.LastSend			= ACF.CurTime
-		Rack.MountPoints		= {}
-		Rack.Missiles			= {}
-		Rack.Crates				= {}
-		Rack.Inputs				= WireLib.CreateInputs(Rack, { "Fire", "Reload", "Unload", "Missile Index", "Fire Delay", "Launch Delay" })
-		Rack.Outputs			= WireLib.CreateOutputs(Rack, { "Ready", "Shots Left", "Current Index", "Status [STRING]", "Missile [ENTITY]", "Entity [ENTITY]" })
-		Rack.DataStore			= ACF.GetEntClassVars("acf_rack")
+		Rack.Owner       = Player -- MUST be stored on ent for PP
+		Rack.Firing      = false
+		Rack.Reloading   = false
+		Rack.Spread      = 1 -- GunClass.spread
+		Rack.ReloadTime  = 1
+		Rack.FireDelay   = 1
+		Rack.LastSend    = ACF.CurTime
+		Rack.MountPoints = {}
+		Rack.Missiles    = {}
+		Rack.Crates      = {}
+		Rack.DataStore   = ACF.GetEntityArguments("acf_rack")
 
 		UpdateRack(Rack, Data, RackData)
 
+		if RackData.OnSpawn then
+			RackData.OnSpawn(Rack, Data, RackData)
+		end
+
+		HookRun("ACF_OnEntitySpawn", "acf_rack", Rack, Data, RackData)
+
 		WireLib.TriggerOutput(Rack, "Entity", Rack)
+
+		Rack:UpdateOverlay(true)
 
 		do -- Mass entity mod removal
 			local EntMods = Data and Data.EntityMods
@@ -170,7 +228,7 @@ do -- Spawning and Updating --------------------
 		return Rack
 	end
 
-	ACF.RegisterEntityClass("acf_rack", MakeACF_Rack, "Id")
+	ACF.RegisterEntityClass("acf_rack", MakeACF_Rack, "Rack")
 	ACF.RegisterLinkSource("acf_rack", "Crates")
 	ACF.RegisterLinkSource("acf_rack", "Computer", true)
 	ACF.RegisterLinkSource("acf_rack", "Radar", true)
@@ -183,13 +241,32 @@ do -- Spawning and Updating --------------------
 
 		VerifyData(Data)
 
-		local Rack = Racks[Data.Id]
+		local Rack    = Racks[Data.Rack]
+		local OldData = self.RackData
+
+		if OldData.OnLast then
+			OldData.OnLast(self, OldData)
+		end
+
+		HookRun("ACF_OnEntityLast", "acf_rack", self, OldData)
 
 		ACF.SaveEntity(self)
 
 		UpdateRack(self, Data, Rack)
 
 		ACF.RestoreEntity(self)
+
+		if Rack.OnUpdate then
+			Rack.OnUpdate(self, Data, Rack)
+		end
+
+		HookRun("ACF_OnEntityUpdate", "acf_rack", self, Data, Rack)
+
+		self:UpdateOverlay(true)
+
+		net.Start("ACF_UpdateEntity")
+			net.WriteEntity(self)
+		net.Broadcast()
 
 		return true, "Rack updated successfully!"
 	end
@@ -311,17 +388,17 @@ do -- Entity Link/Unlink -----------------------
 	end
 
 	ACF.RegisterClassLink("acf_rack", "acf_ammo", function(Weapon, Target)
-		if Target.RoundType == "Refill" then return false, "Refill crates cannot be linked!" end
 		if Weapon.Crates[Target] then return false, "This rack is already linked to this crate." end
 		if Target.Weapons[Weapon] then return false, "This rack is already linked to this crate." end
+		if Target.IsRefill then return false, "Refill crates cannot be linked!" end
 
-		local BulletData = Target.BulletData
-		local GunClass = ACF_GetGunValue(BulletData, "ClassID")
-		local Blacklist = ACF.AmmoBlacklist[Target.RoundType]
+		local Blacklist = Target.RoundData.Blacklist
 
-		if not GunClass or table.HasValue(Blacklist, GunClass) then return false, "That round type cannot be used with this rack!" end
+		if Blacklist[Target.Class] then
+			return false, "That round type cannot be used with this missile!"
+		end
 
-		local Result, Message = ACF_CanLinkRack(Weapon.Id, BulletData.Id, BulletData, Weapon)
+		local Result, Message = ACF.CanLinkRack(Weapon.RackData, Target.WeaponData)
 
 		if not Result then return Result, Message end
 
@@ -533,7 +610,7 @@ do -- Firing -----------------------------------
 		local Index, Point = self:GetNextMountPoint("Loaded", self.PointIndex)
 		local Delay = self.FireDelay
 
-		if Index and hook.Run("ACF_FireShell", self) ~= false then
+		if Index and HookRun("ACF_FireShell", self) ~= false then
 			ShootMissile(self, Point)
 
 			self.PointIndex = self:GetNextMountPoint("Loaded", Index) or 1
@@ -566,7 +643,7 @@ do -- Loading ----------------------------------
 	local NO_OFFSET = Vector()
 
 	local function GetMissileAngPos(BulletData, Point)
-		local Class = ACF.GetClassGroup(Missiles, BulletData.Id) --ACF.Weapons.Guns[BulletData.Id]
+		local Class = ACF.GetClassGroup(Missiles, BulletData.Id)
 		local Position = Point.Position
 
 		if Class and Point.Direction then -- If no Direction is given then the point is centered
@@ -832,6 +909,14 @@ do -- Misc -------------------------------------
 	end
 
 	function ENT:OnRemove()
+		local OldData = self.RackData
+
+		if OldData.OnLast then
+			OldData.OnLast(self, OldData)
+		end
+
+		HookRun("ACF_OnEntityLast", "acf_rack", self, OldData)
+
 		for Crate in pairs(self.Crates) do
 			self:Unlink(Crate)
 		end

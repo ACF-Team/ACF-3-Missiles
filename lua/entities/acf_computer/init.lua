@@ -4,6 +4,8 @@ AddCSLuaFile("cl_init.lua")
 
 include("shared.lua")
 
+local ACF = ACF
+
 ACF.RegisterClassLink("acf_computer", "acf_rack", function(Computer, Target)
 	if Computer.Weapons[Target] then return false, "This rack is already linked to this computer!" end
 	if Target.Computer == Computer then return false, "This rack is already linked to this computer!" end
@@ -62,13 +64,14 @@ end)
 -- Local Funcs and Vars
 --===============================================================================================--
 
-local CheckLegal	= ACF_CheckLegal
-local ClassLink		= ACF.GetClassLink
-local ClassUnlink	= ACF.GetClassUnlink
-local Components	= ACF.Classes.Components
-local Inputs		= ACF.GetInputActions("acf_computer")
-local UnlinkSound	= "physics/metal/metal_box_impact_bullet%s.wav"
-local MaxDistance	= ACF.RefillDistance * ACF.RefillDistance
+local CheckLegal  = ACF_CheckLegal
+local ClassLink   = ACF.GetClassLink
+local ClassUnlink = ACF.GetClassUnlink
+local Components  = ACF.Classes.Components
+local Inputs      = ACF.GetInputActions("acf_computer")
+local UnlinkSound = "physics/metal/metal_box_impact_bullet%s.wav"
+local MaxDistance = ACF.RefillDistance * ACF.RefillDistance
+local HookRun     = hook.Run
 
 local function CheckDistantLinks(Entity, Source)
 	local Position = Entity:GetPos()
@@ -95,55 +98,52 @@ do -- Spawn and update function
 
 		if not Class or Class.Entity ~= "acf_computer" then
 			Data.Id = "CPR-LSR"
+
+			Class = ACF.GetClassGroup(Components, "CPR-LSR")
+		end
+
+		do -- External verifications
+			if Class.VerifyData then
+				Class.VerifyData(Data, Class)
+			end
+
+			HookRun("ACF_VerifyData", "acf_computer", Data, Class)
 		end
 	end
 
-	local function GetInputList(Class, Computer)
-		local Count = 0
+	local function CreateInputs(Entity, Data, Class, Computer)
 		local List = {}
 
-		if istable(Class.Inputs) then
-			for _, V in ipairs(Class.Inputs) do
-				Count = Count + 1
-				List[Count] = V
-			end
+		if Class.SetupInputs then
+			Class.SetupInputs(List, Entity, Data, Class, Computer)
 		end
 
-		if istable(Computer.Inputs) then
-			for _, V in ipairs(Computer.Inputs) do
-				Count = Count + 1
-				List[Count] = V
-			end
-		end
+		HookRun("ACF_OnSetupInputs", "acf_computer", List, Entity, Data, Class, Computer)
 
-		return List
+		if Entity.Inputs then
+			Entity.Inputs = WireLib.AdjustInputs(Entity, List)
+		else
+			Entity.Inputs = WireLib.CreateInputs(Entity, List)
+		end
 	end
 
-	local function GetOutputList(Class, Computer)
-		local Count = 1
+	local function CreateOutputs(Entity, Data, Class, Computer)
 		local List = { "Entity [ENTITY]" }
 
-		if istable(Class.Outputs) then
-			for _, V in ipairs(Class.Outputs) do
-				Count = Count + 1
-				List[Count] = V
-			end
+		if Class.SetupOutputs then
+			Class.SetupOutputs(List, Entity, Data, Class, Computer)
 		end
 
-		if istable(Computer.Outputs) then
-			for _, V in ipairs(Computer.Outputs) do
-				Count = Count + 1
-				List[Count] = V
-			end
-		end
+		HookRun("ACF_OnSetupOutputs", "acf_computer", List, Entity, Data, Class, Computer)
 
-		return List
+		if Entity.Outputs then
+			Entity.Outputs = WireLib.AdjustOutputs(Entity, List)
+		else
+			Entity.Outputs = WireLib.CreateOutputs(Entity, List)
+		end
 	end
 
 	local function UpdateComputer(Entity, Data, Class, Computer)
-		local InputList = GetInputList(Class, Computer)
-		local OutputList = GetOutputList(Class, Computer)
-
 		Entity:SetModel(Computer.Model)
 
 		Entity:PhysicsInit(SOLID_VPHYSICS)
@@ -158,25 +158,24 @@ do -- Spawn and update function
 			Entity[V] = Data[V]
 		end
 
-		Entity.Name			= Computer.Name
-		Entity.ShortName	= Entity.Id
-		Entity.EntType		= Class.Name
-		Entity.Class		= Computer.ClassID
-		Entity.OnUpdate		= Computer.OnUpdate or Class.OnUpdate
-		Entity.OnLast		= Computer.OnLast or Class.OnLast
-		Entity.OverlayTitle	= Computer.OnOverlayTitle or Class.OnOverlayTitle
-		Entity.OverlayBody	= Computer.OnOverlayBody or Class.OnOverlayBody
-		Entity.OnDamaged	= Computer.OnDamaged or Class.OnDamaged
-		Entity.OnEnabled	= Computer.OnEnabled or Class.OnEnabled
-		Entity.OnDisabled	= Computer.OnDisabled or Class.OnDisabled
-		Entity.OnThink		= Computer.OnThink or Class.OnThink
-		Entity.Inputs		= WireLib.CreateInputs(Entity, InputList)
-		Entity.Outputs		= WireLib.CreateOutputs(Entity, OutputList)
+		Entity.Name         = Computer.Name
+		Entity.ShortName    = Entity.Id
+		Entity.EntType      = Class.Name
+		Entity.ClassData    = Class
+		Entity.OnUpdate     = Computer.OnUpdate or Class.OnUpdate
+		Entity.OnLast       = Computer.OnLast or Class.OnLast
+		Entity.OverlayTitle = Computer.OnOverlayTitle or Class.OnOverlayTitle
+		Entity.OverlayBody  = Computer.OnOverlayBody or Class.OnOverlayBody
+		Entity.OnDamaged    = Computer.OnDamaged or Class.OnDamaged
+		Entity.OnEnabled    = Computer.OnEnabled or Class.OnEnabled
+		Entity.OnDisabled   = Computer.OnDisabled or Class.OnDisabled
+		Entity.OnThink      = Computer.OnThink or Class.OnThink
 
 		Entity:SetNWString("WireName", "ACF " .. Computer.Name)
 		Entity:SetNW2String("ID", Entity.Id)
 
-		WireLib.TriggerOutput(Entity, "Entity", Entity)
+		CreateInputs(Entity, Data, Class, Computer)
+		CreateOutputs(Entity, Data, Class, Computer)
 
 		ACF_Activate(Entity, true)
 
@@ -193,9 +192,31 @@ do -- Spawn and update function
 		if Entity.OnDamaged then
 			Entity:OnDamaged()
 		end
-
-		Entity:UpdateOverlay(true)
 	end
+
+	hook.Add("ACF_OnSetupInputs", "ACF Computer Inputs", function(Class, List, _, _, _, Computer)
+		if Class ~= "acf_computer" then return end
+		if not Computer.Inputs then return end
+
+		local Count = #List
+
+		for I, Input in ipairs(Computer.Inputs) do
+			List[Count + I] = Input
+		end
+	end)
+
+	hook.Add("ACF_OnSetupOutputs", "ACF Computer Outputs", function(Class, List, _, _, _, Computer)
+		if Class ~= "acf_computer" then return end
+		if not Computer.Outputs then return end
+
+		local Count = #List
+
+		for I, Output in ipairs(Computer.Outputs) do
+			List[Count + I] = Output
+		end
+	end)
+
+	-------------------------------------------------------------------------------
 
 	function MakeACF_Computer(Player, Pos, Angle, Data)
 		VerifyData(Data)
@@ -218,11 +239,21 @@ do -- Spawn and update function
 		Player:AddCleanup("acfmenu", Entity)
 		Player:AddCount(Limit, Entity)
 
-		Entity.Owner		= Player -- MUST be stored on ent for PP
-		Entity.Weapons		= {}
-		Entity.DataStore	= ACF.GetEntClassVars("acf_computer")
+		Entity.Owner     = Player -- MUST be stored on ent for PP
+		Entity.Weapons   = {}
+		Entity.DataStore = ACF.GetEntityArguments("acf_computer")
 
 		UpdateComputer(Entity, Data, Class, Computer)
+
+		if Class.OnSpawn then
+			Class.OnSpawn(Entity, Data, Class, Computer)
+		end
+
+		HookRun("ACF_OnEntitySpawn", "acf_computer", Entity, Data, Class, Computer)
+
+		WireLib.TriggerOutput(Entity, "Entity", Entity)
+
+		Entity:UpdateOverlay(true)
 
 		do -- Mass entity mod removal
 			local EntMods = Data and Data.EntityMods
@@ -252,14 +283,29 @@ do -- Spawn and update function
 	function ENT:Update(Data)
 		VerifyData(Data)
 
-		local Class = ACF.GetClassGroup(Components, Data.Id)
+		local Class    = ACF.GetClassGroup(Components, Data.Id)
 		local Computer = Class.Lookup[Data.Id]
+		local OldClass = self.ClassData
+
+		if OldClass.OnLast then
+			OldClass.OnLast(self, OldClass)
+		end
+
+		HookRun("ACF_OnEntityLast", "acf_computer", self, OldClass)
 
 		ACF.SaveEntity(self)
 
 		UpdateComputer(self, Data, Class, Computer)
 
 		ACF.RestoreEntity(self)
+
+		if Class.OnUpdate then
+			Class.OnUpdate(self, Data, Class, Computer)
+		end
+
+		HookRun("ACF_OnEntityUpdate", "acf_computer", self, Data, Class, Computer)
+
+		self:UpdateOverlay(true)
 
 		net.Start("ACF_UpdateEntity")
 			net.WriteEntity(self)
@@ -409,6 +455,14 @@ function ENT:PostEntityPaste(Player, Ent, CreatedEntities)
 end
 
 function ENT:OnRemove()
+	local OldClass = self.ClassData
+
+	if OldClass.OnLast then
+		OldClass.OnLast(self, OldClass)
+	end
+
+	HookRun("ACF_OnEntityLast", "acf_computer", self, OldClass)
+
 	for Weapon in pairs(self.Weapons) do
 		self:Unlink(Weapon)
 	end

@@ -10,7 +10,6 @@ ACF.RegisterRack("40mm7xPOD", {
 	Armor		= 5,
 
 	ProtectMissile = true,
-	WhitelistOnly = true,
 
 	MountPoints = {
 		{ Name = "missile1", Position = Vector() },
@@ -35,7 +34,6 @@ ACF.RegisterRack("70mm7xPOD", {
 	Armor		= 5,
 
 	ProtectMissile = true,
-	WhitelistOnly = true,
 
 	MountPoints = {
 		{ Name = "missile1", Position = Vector() },
@@ -60,7 +58,6 @@ ACF.RegisterRack("1x BGM-71E", {
 	Armor		= 2.5,
 
 	ProtectMissile = true,
-	WhitelistOnly = true,
 	HideMissile = true,
 
 	MountPoints = {
@@ -80,7 +77,6 @@ ACF.RegisterRack("2x BGM-71E", {
 	Armor		= 2.5,
 
 	ProtectMissile = true,
-	WhitelistOnly = true,
 	HideMissile = true,
 
 	MountPoints = {
@@ -101,7 +97,6 @@ ACF.RegisterRack("4x BGM-71E", {
 	Armor		= 2.5,
 
 	ProtectMissile = true,
-	WhitelistOnly = true,
 	HideMissile = true,
 
 	MountPoints = {
@@ -124,7 +119,6 @@ ACF.RegisterRack("380mmRW61", {
 	Armor		= 25,
 
 	ProtectMissile = true,
-	WhitelistOnly = true,
 
 	MountPoints = {
 		{ Name = "missile1", Position = Vector(8.39, -0.01, 0) },
@@ -142,7 +136,6 @@ ACF.RegisterRack("3xUARRK", {
 	MagSize		= 3,
 
 	ProtectMissile = true,
-	WhitelistOnly = true,
 
 	MountPoints = {
 		{ Name = "missile1", Position = Vector(-4.5, 0, 9.09) },
@@ -163,7 +156,6 @@ ACF.RegisterRack("6xUARRK", {
 	MagSize		= 6,
 
 	ProtectMissile = true,
-	WhitelistOnly = true,
 
 	MountPoints = {
 		{ Name = "missile1", Position = Vector(0.035, -11.26, 5.58) },
@@ -187,7 +179,6 @@ ACF.RegisterRack("1x FIM-92", {
 	Armor		= 2.5,
 
 	ProtectMissile = true,
-	WhitelistOnly = true,
 
 	MountPoints = {
 		{ Name = "missile1", Position = Vector() }
@@ -206,7 +197,6 @@ ACF.RegisterRack("2x FIM-92", {
 	Armor		= 16,
 
 	ProtectMissile = true,
-	WhitelistOnly = true,
 
 	MountPoints = {
 		{ Name = "missile1", Position = Vector(0, 3.35, 0.45) },
@@ -226,7 +216,6 @@ ACF.RegisterRack("4x FIM-92", {
 	Armor		= 5,
 
 	ProtectMissile = true,
-	WhitelistOnly = true,
 
 	MountPoints = {
 		{ Name = "missile1", Position = Vector(0, 2.6, 2.65) },
@@ -248,7 +237,6 @@ ACF.RegisterRack("1x Strela-1", {
 	Armor		= 5,
 
 	ProtectMissile = true,
-	WhitelistOnly = true,
 
 	MountPoints = {
 		{ Name = "missile1", Position = Vector(44.12, 2.65, 0.13) }
@@ -267,7 +255,6 @@ ACF.RegisterRack("2x Strela-1", {
 	Armor		= 5,
 
 	ProtectMissile = true,
-	WhitelistOnly = true,
 
 	MountPoints = {
 		{ Name = "missile1", Position = Vector(44.12, -5.59, 0.13) },
@@ -287,7 +274,6 @@ ACF.RegisterRack("4x Strela-1", {
 	Armor		= 5,
 
 	ProtectMissile = true,
-	WhitelistOnly = true,
 
 	MountPoints = {
 		{ Name = "missile1", Position = Vector(44.17, -42.66, 3.74) },
@@ -309,7 +295,6 @@ ACF.RegisterRack("1x Ataka", {
 	Armor		= 2.5,
 
 	ProtectMissile = true,
-	WhitelistOnly = true,
 	HideMissile = true,
 
 	MountPoints = {
@@ -329,7 +314,6 @@ ACF.RegisterRack("1x SPG9", {
 	Armor		= 5,
 
 	ProtectMissile = true,
-	WhitelistOnly = true,
 	HideMissile = true,
 
 	MountPoints = {
@@ -349,7 +333,6 @@ ACF.RegisterRack("1x Kornet", {
 	Armor		= 2.5,
 
 	ProtectMissile = true,
-	WhitelistOnly = true,
 
 	MountPoints = {
 		{ Name = "missile1", Position = Vector() }
@@ -368,7 +351,6 @@ ACF.RegisterRack("127mm4xPOD", {
 	Armor		= 5,
 
 	ProtectMissile = true,
-	WhitelistOnly = true,
 
 	MountPoints = {
 		{ Name = "missile1", Position = Vector(5.2, 2.75, 2.65) },

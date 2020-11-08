@@ -15,110 +15,44 @@ function ACF_GetGunValue(BulletData, Value)
 	end
 end
 
-function ACF_RackCanLoadCaliber(RackID, Caliber)
-	local RackData = ACF.Weapons.Rack[RackID]
+local function CanLoadCaliber(RackData, WeaponData)
+	local RackCaliber = RackData.Caliber
+	local Caliber     = WeaponData.Caliber
+	local RackName    = RackData.Name
 
-	if not RackData then
-		return false, "Rack '" .. tostring(RackID) .. "' does not exist."
+	if RackCaliber then
+		if RackCaliber == Caliber then return true end
+
+		return false, "Only " .. RackCaliber .. "mm rounds can be loaded on " .. RackName
 	end
 
-	if RackData.caliber then
-		if RackData.caliber == Caliber then return true end
+	local MinCaliber = RackData.MinCaliber
 
-		return false, "Only " .. math.Round(RackData.caliber * 10, 2) .. "mm rounds can fit in this GunData."
+	if MinCaliber and Caliber < MinCaliber then
+		return false, "Rounds must be at least " .. MinCaliber .. "mm to be loaded into " .. RackName
 	end
 
-	if RackData.mincaliber and Caliber < RackData.mincaliber then
-		return false, "Rounds must be at least " .. math.Round(RackData.mincaliber * 10, 2) .. "mm to fit in this GunData."
-	end
+	local MaxCaliber = RackData.maxcaliber
 
-	if RackData.maxcaliber and Caliber > RackData.maxcaliber then
-		return false, "Rounds cannot be more than " .. math.Round(RackData.maxcaliber * 10, 2) .. "mm to fit in this GunData."
+	if MaxCaliber and Caliber > MaxCaliber then
+		return false, "Rounds cannot be more than " .. MaxCaliber .. "mm to be loaded into " .. RackName
 	end
 
 	return true
 end
 
-function ACF_CanLinkRack(RackID, AmmoID, BulletData)
-	local RackData = ACF.Weapons.Rack[RackID]
+function ACF.CanLinkRack(RackData, WeaponData)
+	local Allowed = WeaponData.Racks
 
-	if not RackData then
-		return false, "Rack '" .. tostring(RackID) .. "' does not exist."
+	if not (Allowed and Allowed[RackData.ID]) then
+		return false, WeaponData.ID .. " rounds are not compatible with " .. RackData.Name .. "!"
 	end
 
-	local GunData = ACF.Weapons.Guns[AmmoID]
-
-	if not GunData then
-		return false, "Ammo '" .. tostring(AmmoID) .. "' does not exist."
-	end
-
-	local AllowedRacks = ACF_GetGunValue(AmmoID, "Racks")
-	local AllowedType = type(AllowedRacks)
-	local IsAllowed
-
-	if AllowedRacks == nil and RackData.whitelistonly then
-		IsAllowed = false
-	elseif AllowedType == "table" then
-		IsAllowed = AllowedRacks[RackID]
-	elseif AllowedType == "function" then
-		IsAllowed = AllowedRacks(BulletData or AmmoID, RackData or RackID)
-	end
-
-	if not IsAllowed then
-		return false, AmmoID .. " rounds are not compatible with a " .. tostring(RackID) .. "!"
-	end
-
-	local Bool, Message = ACF_RackCanLoadCaliber(RackID, GunData.caliber)
+	local Bool, Message = CanLoadCaliber(RackData, WeaponData)
 
 	if not Bool then
-		return false, Message
-	end
-
-	local Classes = ACF.Classes.GunClass
-
-	if Classes[GunData.gunclass].type ~= "missile" then
-		return false, "Racks cannot be linked to ammo crates of type '" .. tostring(AmmoID) .. "'!"
+		return Bool, Message
 	end
 
 	return true
-end
-
-function ACF_GetCompatibleRacks(AmmoID)
-	local Result = {}
-
-	for RackID in pairs(ACF.Weapons.Rack) do
-		if ACF_CanLinkRack(RackID, AmmoID) then
-			Result[#Result + 1] = RackID
-		end
-	end
-
-	return Result
-end
-
-local ConVarData1 = GetConVar("acfmenu_data1")
-local ConVarData2 = GetConVar("acfmenu_data2")
-local ConVarData3 = GetConVar("acfmenu_data3")
-local ConVarData4 = GetConVar("acfmenu_data4")
-local ConVarData5 = GetConVar("acfmenu_data5")
-local ConVarData6 = GetConVar("acfmenu_data6")
-local ConVarData7 = GetConVar("acfmenu_data7")
-local ConVarData8 = GetConVar("acfmenu_data8")
-local ConVarData9 = GetConVar("acfmenu_data9")
-local ConVarData10 = GetConVar("acfmenu_data10")
-
-function ACF_GetRoundFromCVars()
-	local RoundData = {
-		Id            = ConVarData1:GetString(),
-		Type          = ConVarData2:GetString(),
-		PropLength    = ConVarData3:GetFloat(),
-		ProjLength    = ConVarData4:GetFloat(),
-		Data5         = ConVarData5:GetFloat(),
-		Data6         = ConVarData6:GetFloat(),
-		Data7         = ConVarData7:GetString(),
-		Data8         = ConVarData8:GetString(),
-		Data9         = ConVarData9:GetString(),
-		Data10        = ConVarData10:GetFloat(),
-	}
-
-	return RoundData
 end

@@ -168,7 +168,7 @@ local function CreateMenu(Menu)
 		Selected[Choices] = Index
 
 		ACF.WriteValue("Weapon", Data.ID)
-		ACF.WriteValue("Destiny", Data.Destiny)
+		ACF.WriteValue("Destiny", Data.Destiny or "Missiles")
 
 		LoadSortedList(RackList, GetRackList(Data), "MagSize")
 
@@ -232,7 +232,7 @@ local function CreateMenu(Menu)
 		local Choices = Sorted[GetAmmoList(MissileTypes.Selected.ID)]
 		Selected[Choices] = Index
 
-		ACF.WriteValue("Ammo", Data.ID)
+		ACF.WriteValue("AmmoType", Data.ID)
 
 		AmmoDesc:SetText(Data.Description .. "\n\nThis entity can be fully parented.")
 
@@ -245,7 +245,7 @@ local function CreateMenu(Menu)
 		local Ammo = self.Selected
 		local ToolData = ACF.GetToolData()
 
-		AmmoData = Ammo:ClientConvert(Menu, ToolData)
+		AmmoData = Ammo:ClientConvert(ToolData)
 
 		Menu:ClearTemporal(AmmoBase)
 		Menu:StartTemporal(AmmoBase)
