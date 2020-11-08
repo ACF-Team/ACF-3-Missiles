@@ -3,8 +3,6 @@ ACF.RegisterMissileClass("ARM", {
 	Description	= "Missiles specialized for Suppression of Enemy Air Defenses.",
 	Sound		= "acf_missiles/missiles/missile_rocket.mp3",
 	Effect		= "Rocket Motor ATGM",
-	ReloadMul	= 8,
-	RoFMod		= 1,
 	Spread		= 1,
 	Blacklist	= { "AP", "APHE", "HEAT", "HP", "FL", "SM" }
 })
@@ -18,11 +16,10 @@ ACF.RegisterMissile("AGM-122 ASM", "ARM", {
 	Mass		= 89,
 	Diameter	= 3.5 * 25.4, -- in mm
 	Offset		= Vector(-6, 0, 0),
-	RoFMod		= 0.3,
 	Year		= 1986,
-	Guidance	= { "Dumb", "Anti-radiation" },
-	Fuzes		= { "Contact", "Optical" },
 	Racks		= { ["1xRK_small"] = true, ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true },
+	Guidance	= { Dumb = true, ["Anti-radiation"] = true },
+	Fuzes		= { Contact = true, Optical = true },
 	SeekCone	= 10,
 	ViewCone	= 20,
 	Agility		= 0.3,
@@ -52,10 +49,9 @@ ACF.RegisterMissile("AGM-45 ASM", "ARM", {
 	Mass		= 177,
 	Diameter	= 6.75 * 25.4, -- in mm
 	Year		= 1969,
-	RoFMod		= 0.6,
-	Guidance	= { "Dumb", "Anti-radiation" },
-	Fuzes		= { "Contact", "Timed" },
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true },
+	Guidance	= { Dumb = true, ["Anti-radiation"] = true },
+	Fuzes		= { Contact = true, Timed = true },
 	SeekCone	= 5,
 	ViewCone	= 10,
 	Agility		= 0.08,

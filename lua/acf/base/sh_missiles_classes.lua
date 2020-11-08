@@ -51,11 +51,15 @@ do -- Rack registration function
 	function ACF.RegisterRack(ID, Data)
 		local Class = AddSimpleClass(ID, Racks, Data)
 
+		if not Class.EntClass then
+			Class.EntClass = "Rack"
+		end
+
 		if not Class.LimitConVar then
 			Class.LimitConVar = {
 				Name = "_acf_rack",
-				Amount = 16,
-				Text = "Maximum amount of ACF racks a player can create."
+				Amount = 12,
+				Text = "Maximum amount of ACF Racks a player can create."
 			}
 		end
 

@@ -3,8 +3,6 @@ ACF.RegisterMissileClass("GBOMB", {
 	Description	= "Similar to regular free falling bombs, gliding bombs are capable of travelling longer distances.",
 	Sound		= "acf_missiles/fx/clunk.mp3",
 	NoThrust	= true,
-	ReloadMul	= 8,
-	RoFMod		= 0.1,
 	Spread		= 1,
 	Blacklist	= { "AP", "APHE", "HP", "FL" }
 })
@@ -18,9 +16,9 @@ ACF.RegisterMissile("100kgGBOMB", "GBOMB", {
 	Mass		= 100,
 	Year		= 1939,
 	Diameter	= 10.8 * 25.4, -- in mm
-	Guidance	= { "Dumb" },
-	Fuzes		= { "Contact", "Optical", "Cluster" },
 	Racks		= { ["1xRK_small"] = true, ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true },
+	Guidance	= { Dumb = true },
+	Fuzes		= { Contact = true, Optical = true, Cluster = true },
 	ArmDelay	= 1,
 	Round = {
 		Model			= "models/missiles/micro.mdl",
@@ -46,9 +44,9 @@ ACF.RegisterMissile("250kgGBOMB", "GBOMB", {
 	Mass		= 250,
 	Year		= 1941,
 	Diameter	= 14.5 * 25.4, -- in mm
-	Guidance	= { "Dumb" },
-	Fuzes		= { "Contact", "Optical", "Cluster" },
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true },
+	Guidance	= { Dumb = true },
+	Fuzes		= { Contact = true, Optical = true, Cluster = true },
 	ArmDelay	= 1,
 	Round = {
 		Model			= "models/missiles/fab250.mdl",
