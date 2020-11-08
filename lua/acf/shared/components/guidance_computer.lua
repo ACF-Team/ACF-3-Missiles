@@ -3,7 +3,7 @@ ACF.RegisterComponentClass("GD-CPR", {
 	Entity	= "acf_computer",
 	LimitConVar = {
 		Name	= "_acf_computer",
-		Amount	= 12,
+		Amount	= 6,
 		Text	= "Maximum amount of ACF Computers a player can create."
 	}
 })

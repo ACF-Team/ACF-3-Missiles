@@ -1,5 +1,4 @@
 local Ammo = ACF.RegisterAmmoType("FLR", "AP")
-local IgniteConVar = GetConVar("ACFM_FlaresIgnite")
 
 function Ammo:OnLoaded()
 	Ammo.BaseClass.OnLoaded(self)
@@ -7,18 +6,22 @@ function Ammo:OnLoaded()
 	self.Name		 = "Flare"
 	self.Description = "A countermeasure for infrared guided munitions."
 	self.Blacklist = ACF.GetWeaponBlacklist({
-		GL = true,
 		SL = true,
 		FLR = true,
 	})
 end
 
-function Ammo:Create(_, BulletData)
-	local Bullet = ACF_CreateBullet(BulletData)
+function Ammo:GetDisplayData(Data)
+	local Display = {
+		MaxPen         = 0,
+		BurnRate       = Data.BurnRate,
+		DistractChance = Data.DistractChance,
+		BurnTime       = Data.BurnTime,
+	}
 
-	Bullet.CreateTime = ACF.CurTime
+	hook.Run("ACF_GetDisplayData", self, Data, Display)
 
-	ACFM_RegisterFlare(Bullet)
+	return Display
 end
 
 function Ammo:UpdateRoundData(ToolData, Data, GUIData)
@@ -41,16 +44,14 @@ function Ammo:UpdateRoundData(ToolData, Data, GUIData)
 	Data.BurnTime	= Data.FillerMass / Data.BurnRate
 	Data.CartMass	= Data.PropMass + Data.ProjMass
 
+	hook.Run("ACF_UpdateRoundData", self, ToolData, Data, GUIData)
+
 	for K, V in pairs(self:GetDisplayData(Data)) do
 		GUIData[K] = V
 	end
 end
 
-function Ammo:BaseConvert(_, ToolData)
-	if not ToolData.Projectile then ToolData.Projectile = 0 end
-	if not ToolData.Propellant then ToolData.Propellant = 0 end
-	if not ToolData.FillerMass then ToolData.FillerMass = 0 end
-
+function Ammo:BaseConvert(ToolData)
 	local Data, GUIData = ACF.RoundBaseGunpowder(ToolData, {})
 
 	GUIData.MinFillerVol = 0
@@ -68,112 +69,125 @@ function Ammo:BaseConvert(_, ToolData)
 	return Data, GUIData
 end
 
-function Ammo:Network(Crate, BulletData)
-	Crate:SetNW2String("AmmoType", "FLR")
-	Crate:SetNW2String("AmmoID", BulletData.Id)
-	Crate:SetNW2Float("Caliber", BulletData.Caliber)
-	Crate:SetNW2Float("ProjMass", BulletData.ProjMass)
-	Crate:SetNW2Float("FillerMass", BulletData.FillerMass)
-	Crate:SetNW2Float("PropMass", BulletData.PropMass)
-	Crate:SetNW2Float("DragCoef", BulletData.DragCoef)
-	Crate:SetNW2Float("MuzzleVel", BulletData.MuzzleVel)
-	Crate:SetNW2Float("Tracer", BulletData.Tracer)
+function Ammo:VerifyData(ToolData)
+	Ammo.BaseClass.VerifyData(self, ToolData)
+
+	if not ToolData.FillerMass then
+		local Data5 = ToolData.RoundData5
+
+		ToolData.FillerMass = Data5 and tonumber(Data5) or 0
+	end
 end
 
-function Ammo:GetDisplayData(Data)
-	return {
-		MaxPen		   = 0,
-		BurnRate	   = Data.BurnRate,
-		DistractChance = Data.DistractChance,
-		BurnTime	   = Data.BurnTime,
-	}
-end
+if SERVER then
+	local IgniteConVar = GetConVar("ACFM_FlaresIgnite")
 
-function Ammo:GetCrateText(BulletData)
-	local Text = "Muzzle Velocity: %s m/s\nBurn Rate: %s kg/s\nBurn Duration: %s s\nDistract Chance: %s %"
-	local Data = self:GetDisplayData(BulletData)
+	function Ammo:Create(_, BulletData)
+		local Bullet = ACF_CreateBullet(BulletData)
 
-	return Text:format(math.Round(BulletData.MuzzleVel, 2), math.Round(Data.BurnRate, 2), math.Round(Data.BurnTime, 2), math.floor(Data.DistractChance * 100))
-end
+		Bullet.CreateTime = ACF.CurTime
 
-function Ammo:PropImpact(_, _, Target)
-	if IgniteConVar:GetBool() then
-		local Type = ACF_Check(Target)
-
-		if Type == "Squishy" and ((Target:IsPlayer() and not Target:HasGodMode()) or Target:IsNPC()) then
-			Target:Ignite(30)
-		end
+		ACFM_RegisterFlare(Bullet)
 	end
 
-	return false
+	function Ammo:Network(Crate, BulletData)
+		Crate:SetNW2String("AmmoType", "FLR")
+		Crate:SetNW2String("AmmoID", BulletData.Id)
+		Crate:SetNW2Float("Caliber", BulletData.Caliber)
+		Crate:SetNW2Float("ProjMass", BulletData.ProjMass)
+		Crate:SetNW2Float("FillerMass", BulletData.FillerMass)
+		Crate:SetNW2Float("PropMass", BulletData.PropMass)
+		Crate:SetNW2Float("DragCoef", BulletData.DragCoef)
+		Crate:SetNW2Float("MuzzleVel", BulletData.MuzzleVel)
+		Crate:SetNW2Float("Tracer", BulletData.Tracer)
+	end
+
+	function Ammo:GetCrateText(BulletData)
+		local Text = "Muzzle Velocity: %s m/s\nBurn Rate: %s kg/s\nBurn Duration: %s s\nDistract Chance: %s %"
+		local Data = self:GetDisplayData(BulletData)
+
+		return Text:format(math.Round(BulletData.MuzzleVel, 2), math.Round(Data.BurnRate, 2), math.Round(Data.BurnTime, 2), math.floor(Data.DistractChance * 100))
+	end
+
+	function Ammo:PropImpact(_, _, Target)
+		if IgniteConVar:GetBool() then
+			local Type = ACF_Check(Target)
+
+			if Type == "Squishy" and ((Target:IsPlayer() and not Target:HasGodMode()) or Target:IsNPC()) then
+				Target:Ignite(30)
+			end
+		end
+
+		return false
+	end
+
+	function Ammo:WorldImpact()
+		return false
+	end
+else
+	ACF.RegisterAmmoDecal("FLR", "damage/ap_pen", "damage/ap_rico")
+
+	function Ammo:ImpactEffect()
+	end
+
+	function Ammo:MenuAction(Menu, ToolData, Data)
+		local FillerMass = Menu:AddSlider("Flare Filler", 0, Data.MaxFillerVol, 2)
+		FillerMass:SetDataVar("FillerMass", "OnValueChanged")
+		FillerMass:TrackDataVar("Projectile")
+		FillerMass:SetValueFunction(function(Panel)
+			ToolData.FillerMass = math.Round(ACF.ReadNumber("FillerMass"), 2)
+
+			self:UpdateRoundData(ToolData, Data)
+
+			Panel:SetMax(Data.MaxFillerVol)
+			Panel:SetValue(Data.FillerVol)
+
+			return Data.FillerVol
+		end)
+
+		local Tracer = Menu:AddCheckBox("Tracer")
+		Tracer:SetDataVar("Tracer", "OnChange")
+		Tracer:SetValueFunction(function(Panel)
+			ToolData.Tracer = ACF.ReadBool("Tracer")
+
+			self:UpdateRoundData(ToolData, Data)
+
+			ACF.WriteValue("Projectile", Data.ProjLength)
+			ACF.WriteValue("Propellant", Data.PropLength)
+
+			Panel:SetText("Tracer : " .. Data.Tracer .. " cm")
+			Panel:SetValue(ToolData.Tracer)
+
+			return ToolData.Tracer
+		end)
+
+		local RoundStats = Menu:AddLabel()
+		RoundStats:TrackDataVar("Projectile", "SetText")
+		RoundStats:TrackDataVar("Propellant")
+		RoundStats:TrackDataVar("FillerMass")
+		RoundStats:SetValueFunction(function()
+			self:UpdateRoundData(ToolData, Data)
+
+			local Text		= "Muzzle Velocity : %s m/s\nProjectile Mass : %s\nPropellant Mass : %s\nFlare Filler Mass : %s"
+			local MuzzleVel	= math.Round(Data.MuzzleVel * ACF.Scale, 2)
+			local ProjMass	= ACF.GetProperMass(Data.ProjMass)
+			local PropMass	= ACF.GetProperMass(Data.PropMass)
+			local Filler	= ACF.GetProperMass(Data.FillerMass)
+
+			return Text:format(MuzzleVel, ProjMass, PropMass, Filler)
+		end)
+
+		local FillerStats = Menu:AddLabel()
+		FillerStats:TrackDataVar("FillerMass", "SetText")
+		FillerStats:SetValueFunction(function()
+			self:UpdateRoundData(ToolData, Data)
+
+			local Text		= "Burn Rate : %s/s\nBurn Duration : %s s\nDistraction Chance : %s"
+			local Rate		= ACF.GetProperMass(Data.BurnRate)
+			local Duration	= math.Round(Data.BurnTime, 2)
+			local Chance	= math.Round(Data.DistractChance * 100, 2) .. "%"
+
+			return Text:format(Rate, Duration, Chance)
+		end)
+	end
 end
-
-function Ammo:WorldImpact()
-	return false
-end
-
-function Ammo:ImpactEffect()
-end
-
-function Ammo:MenuAction(Menu, ToolData, Data)
-	local FillerMass = Menu:AddSlider("Flare Filler", 0, Data.MaxFillerVol, 2)
-	FillerMass:SetDataVar("FillerMass", "OnValueChanged")
-	FillerMass:TrackDataVar("Projectile")
-	FillerMass:SetValueFunction(function(Panel)
-		ToolData.FillerMass = math.Round(ACF.ReadNumber("FillerMass"), 2)
-
-		self:UpdateRoundData(ToolData, Data)
-
-		Panel:SetMax(Data.MaxFillerVol)
-		Panel:SetValue(Data.FillerVol)
-
-		return Data.FillerVol
-	end)
-
-	local Tracer = Menu:AddCheckBox("Tracer")
-	Tracer:SetDataVar("Tracer", "OnChange")
-	Tracer:SetValueFunction(function(Panel)
-		ToolData.Tracer = ACF.ReadBool("Tracer")
-
-		self:UpdateRoundData(ToolData, Data)
-
-		ACF.WriteValue("Projectile", Data.ProjLength)
-		ACF.WriteValue("Propellant", Data.PropLength)
-
-		Panel:SetText("Tracer : " .. Data.Tracer .. " cm")
-		Panel:SetValue(ToolData.Tracer)
-
-		return ToolData.Tracer
-	end)
-
-	local RoundStats = Menu:AddLabel()
-	RoundStats:TrackDataVar("Projectile", "SetText")
-	RoundStats:TrackDataVar("Propellant")
-	RoundStats:TrackDataVar("FillerMass")
-	RoundStats:SetValueFunction(function()
-		self:UpdateRoundData(ToolData, Data)
-
-		local Text		= "Muzzle Velocity : %s m/s\nProjectile Mass : %s\nPropellant Mass : %s\nFlare Filler Mass : %s"
-		local MuzzleVel	= math.Round(Data.MuzzleVel * ACF.Scale, 2)
-		local ProjMass	= ACF.GetProperMass(Data.ProjMass)
-		local PropMass	= ACF.GetProperMass(Data.PropMass)
-		local Filler	= ACF.GetProperMass(Data.FillerMass)
-
-		return Text:format(MuzzleVel, ProjMass, PropMass, Filler)
-	end)
-
-	local FillerStats = Menu:AddLabel()
-	FillerStats:TrackDataVar("FillerMass", "SetText")
-	FillerStats:SetValueFunction(function()
-		self:UpdateRoundData(ToolData, Data)
-
-		local Text		= "Burn Rate : %s/s\nBurn Duration : %s s\nDistraction Chance : %s"
-		local Rate		= ACF.GetProperMass(Data.BurnRate)
-		local Duration	= math.Round(Data.BurnTime, 2)
-		local Chance	= math.Round(Data.DistractChance * 100, 2) .. "%"
-
-		return Text:format(Rate, Duration, Chance)
-	end)
-end
-
-ACF.RegisterAmmoDecal("FLR", "damage/ap_pen", "damage/ap_rico")
