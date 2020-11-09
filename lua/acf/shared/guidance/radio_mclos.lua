@@ -1,59 +1,63 @@
-local Guidance = ACF.RegisterGuidance("Radio (MCLOS)", "Dumb")
-local TraceData = { start = true, endpos = true, mask = MASK_SOLID_BRUSHONLY }
-local TraceLine = util.TraceLine
 
-Guidance.desc = "This guidance package allows you to manually control the direction of the missile."
+local Guidance = ACF.RegisterGuidance("Radio (MCLOS)", "Dumb")
 
 function Guidance:Configure(Missile)
 	self.Source = Missile.Launcher
 end
 
-function Guidance:OnLaunched(Missile)
-	self.InPos = Missile.MountPoint.Position
-	self.OutPos = Missile.ExhaustPos
-end
+if CLIENT then
+	Guidance.desc = "This guidance package allows you to manually control the direction of the missile."
+else
+	local TraceData = { start = true, endpos = true, mask = MASK_SOLID_BRUSHONLY }
+	local TraceLine = util.TraceLine
 
-function Guidance:GetComputer()
-	local Source = self.Source
+	function Guidance:OnLaunched(Missile)
+		self.InPos = Missile.MountPoint.Position
+		self.OutPos = Missile.ExhaustPos
+	end
 
-	if not IsValid(Source) then return end
+	function Guidance:GetComputer()
+		local Source = self.Source
 
-	local Computer = Source.Computer
+		if not IsValid(Source) then return end
 
-	if not IsValid(Computer) then return end
-	if Computer.Disabled then return end
+		local Computer = Source.Computer
 
-	return Computer
-end
+		if not IsValid(Computer) then return end
+		if Computer.Disabled then return end
 
-function Guidance:CheckComputer()
-	local Computer = self:GetComputer()
+		return Computer
+	end
 
-	if not Computer then return end
-	if not Computer.IsJoystick then return end
+	function Guidance:CheckComputer()
+		local Computer = self:GetComputer()
 
-	local Pitch = Computer.Pitch or 0
-	local Yaw = Computer.Yaw or 0
+		if not Computer then return end
+		if not Computer.IsJoystick then return end
 
-	return -Pitch, -Yaw
-end
+		local Pitch = Computer.Pitch or 0
+		local Yaw = Computer.Yaw or 0
 
-function Guidance:CheckLOS(Missile)
-	TraceData.start = self.Source:LocalToWorld(self.InPos)
-	TraceData.endpos = Missile:LocalToWorld(self.OutPos)
+		return -Pitch, -Yaw
+	end
 
-	return not TraceLine(TraceData).Hit
-end
+	function Guidance:CheckLOS(Missile)
+		TraceData.start = self.Source:LocalToWorld(self.InPos)
+		TraceData.endpos = Missile:LocalToWorld(self.OutPos)
 
-function Guidance:GetGuidance(Missile)
-	if not self:CheckLOS(Missile) then return {} end
+		return not TraceLine(TraceData).Hit
+	end
 
-	local Pitch, Yaw = self:CheckComputer()
+	function Guidance:GetGuidance(Missile)
+		if not self:CheckLOS(Missile) then return {} end
 
-	if not Pitch then return {} end
-	if Pitch == 0 and Yaw == 0 then return {} end
+		local Pitch, Yaw = self:CheckComputer()
 
-	local Direction = Angle(Pitch, Yaw):Forward() * 12000
+		if not Pitch then return {} end
+		if Pitch == 0 and Yaw == 0 then return {} end
 
-	return { TargetPos = Missile:LocalToWorld(Direction) }
+		local Direction = Angle(Pitch, Yaw):Forward() * 12000
+
+		return { TargetPos = Missile:LocalToWorld(Direction) }
+	end
 end
