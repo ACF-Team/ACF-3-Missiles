@@ -19,137 +19,43 @@ ACF.MaxDamageInaccuracy = 1000
 
 ACFM.DefaultRadarSound = "buttons/button16.wav"
 
-local cvarGrav = GetConVar("sv_gravity")
-local toconvert = {}
+resource.AddWorkshop("403587498")
 
-function ACFM_ExpandBulletData(bullet)
-	toconvert.Id =			bullet.Id or "12.7mmMG"
-	toconvert.Type =		bullet.Type or "AP"
-	toconvert.PropLength =	bullet.PropLength or 0
-	toconvert.ProjLength =	bullet.ProjLength or 0
-	toconvert.Data5 =		bullet.FillerVol or bullet.Flechettes or bullet.Data5 or 0
-	toconvert.Data6 =		bullet.ConeAng or bullet.FlechetteSpread or bullet.Data6 or 0
-	toconvert.Data7 =		bullet.Data7 or 0
-	toconvert.Data8 =		bullet.Data8 or 0
-	toconvert.Data9 =		bullet.Data9 or 0
-	toconvert.Data10 =		bullet.Tracer or bullet.Data10 or 0
-	toconvert.Colour =		bullet.Colour or Color(255, 255, 255)
+local AmmoTypes = ACF.Classes.AmmoTypes
 
-	local rounddef = ACF.RoundTypes[toconvert.Type] or error("No definition for the shell-type", toconvert.Type)
-	local conversion = rounddef.convert
+local function ResetDefault(BulletData)
+	if not BulletData.MuzzleVel then return end
 
-	if not conversion then error("No conversion available for this shell!") end
-	local ret = conversion( nil, toconvert )
-
-	ret.Pos = bullet.Pos or Vector()
-	ret.Flight = bullet.Flight or Vector()
-	ret.Type = ret.Type or bullet.Type
-
-	ret.Accel = Vector(0, 0, cvarGrav:GetInt() * -1)
-	if ret.Tracer == 0 and bullet.Tracer and bullet.Tracer > 0 then ret.Tracer = bullet.Tracer end
-	ret.Colour = toconvert.Colour
-
-	ret.Sound = bullet.Sound
-
-	return ret
+	BulletData.Flight:Normalize()
+	BulletData.Flight = BulletData.Flight * (BulletData.MuzzleVel * 39.37)
 end
 
-function ACFM_MakeCrateForBullet(self, bullet)
-	if not istable(bullet) and bullet.BulletData then
-		self:SetNWString("Sound", bullet.Sound or (bullet.Primary and bullet.Primary.Sound))
-		self.Owner = bullet:GetOwner()
-		self:SetOwner(bullet:GetOwner())
-		bullet = bullet.BulletData
+local function ResetHEAT(BulletData)
+	if not BulletData.Detonated then return ResetDefault(BulletData) end
+	if not BulletData.MuzzleVel then return end
+
+	local PenMul = BulletData.PenMul or ACF_GetGunValue(BulletData, "PenMul") or 1
+
+	if not BulletData.SlugMV then -- heat needs to calculate slug mv on the fly
+		BulletData.SlugMV = AmmoTypes.HEAT:CalcSlugMV(BulletData, BulletData.FillerMass)
 	end
 
-	self:SetNWInt( "Caliber", bullet.Caliber or 10)
-	self:SetNWInt( "ProjMass", bullet.ProjMass or 10)
-	self:SetNWInt( "FillerMass", bullet.FillerMass or 0)
-	self:SetNWInt( "DragCoef", bullet.DragCoef or 1)
-	self:SetNWString( "AmmoType", bullet.Type or "AP")
-	self:SetNWInt( "Tracer" , bullet.Tracer or 0)
-	local col = bullet.Colour or self:GetColor()
-	self:SetNWVector( "Color" , Vector(col.r, col.g, col.b))
-	self:SetNWVector( "TracerColour" , Vector(col.r, col.g, col.b))
-	self:SetColor(col)
-end
-
--- TODO: modify ACF to use this global table, so any future tweaks won't break anything here.
-ACF.FillerDensity = {
-	SM =    2000,
-	HE =    1000,
-	HP =    1,
-	HEAT =  1450,
-	APHE =  1000
-}
-
-function ACFM_CompactBulletData(crate)
-	local compact = {
-		Id = crate.RoundId or crate.Id,
-		Type = crate.RoundType or crate.Type,
-		PropLength = crate.PropLength or crate.RoundPropellant,
-		ProjLength = crate.ProjLength or crate.RoundProjectile,
-		Data5 = crate.Data5 or crate.RoundData5 or crate.FillerVol or crate.CavVol or crate.Flechettes,
-		Data6 = crate.Data6 or crate.RoundData6 or crate.ConeAng or crate.FlechetteSpread,
-		Data7 = crate.Data7 or crate.RoundData7,
-		Data8 = crate.Data8 or crate.RoundData8,
-		Data9 = crate.Data9 or crate.RoundData9,
-		Data10 = crate.Data10 or crate.RoundData10 or crate.Tracer,
-		Colour = crate.GetColor and crate:GetColor() or crate.Colour,
-		Sound = crate.Sound,
-	}
-
-	if not compact.Data5 and crate.FillerMass then
-		local Filler = ACF.FillerDensity[compact.Type]
-
-		if Filler then
-			compact.Data5 = crate.FillerMass / ACF.HEDensity * Filler
-		end
-	end
-
-	return compact
-end
-
-local ResetVelocity = {}
-
-function ResetVelocity.AP(bdata)
-	if not bdata.MuzzleVel then return end
-
-	bdata.Flight:Normalize()
-	bdata.Flight = bdata.Flight * (bdata.MuzzleVel * 39.37)
-end
-
-ResetVelocity.HE = ResetVelocity.AP
-ResetVelocity.HP = ResetVelocity.AP
-ResetVelocity.FL = ResetVelocity.AP
-ResetVelocity.SM = ResetVelocity.AP
-ResetVelocity.APHE = ResetVelocity.AP
-
-function ResetVelocity.HEAT(bdata)
-	if not bdata.Detonated then return ResetVelocity.AP(bdata) end
-	if not bdata.MuzzleVel then return end
-
-	if not bdata.SlugMV then -- heat needs to calculate slug mv on the fly
-		bdata.SlugMV = ACF.RoundTypes.HEAT.CalcSlugMV( bdata, bdata.FillerMass )
-	end
-
-	bdata.Flight:Normalize()
-
-	local penmul = bdata.penmul or ACF_GetGunValue(bdata, "PenMul") or 1
-
-	bdata.Flight = bdata.Flight * (bdata.SlugMV * penmul) * 39.37
-	bdata.NotFirstPen = false
+	BulletData.Flight:Normalize()
+	BulletData.Flight = BulletData.Flight * (BulletData.SlugMV * PenMul) * 39.37
+	BulletData.NotFirstPen = false
 end
 
 -- Resets the velocity of the bullet based on its current state on the serverside only.
 -- This will de-sync the clientside effect!
-function ACFM_ResetVelocity(bdata)
-	local resetFunc = ResetVelocity[bdata.Type]
+function ACF.ResetBulletVelocity(BulletData)
+	if BulletData.Type == "HEAT" then
+		return ResetHEAT(BulletData)
+	end
 
-	if not resetFunc then return end
-
-	return resetFunc(bdata)
+	ResetDefault(BulletData)
 end
+
+ACFM_ResetVelocity = ACF.ResetBulletVelocity
 
 hook.Add("InitPostEntity", "ACFMissiles_AddSoundSupport", function()
 	timer.Simple(1, function()
@@ -162,14 +68,9 @@ hook.Add("InitPostEntity", "ACFMissiles_AddSoundSupport", function()
 			end,
 
 			ResetSound = function(ent)
-				local Class = ent.Class
-				local Classes = ACF.Classes
-
-				local soundData = { Sound = Classes.GunClass[Class].sound }
-
 				local setSound = ACF.SoundToolSupport.acf_rack.SetSound
 
-				setSound(ent, soundData)
+				setSound(ent, { Sound = ent.DefaultSound })
 			end
 		}
 

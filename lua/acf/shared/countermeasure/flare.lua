@@ -80,7 +80,7 @@ function Countermeasure:ApplyToAll()
 	local Targets = ACFM_GetAllMissilesWhichCanSee(self.Flare.Pos)
 
 	for Missile in pairs(Targets) do
-		local Guidance = Missile.Guidance
+		local Guidance = Missile.GuidanceData
 
 		if self:ApplyChance(Missile, Guidance) then
 			Result[Missile] = true

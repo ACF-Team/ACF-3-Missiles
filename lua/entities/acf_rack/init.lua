@@ -671,9 +671,8 @@ do -- Loading ----------------------------------
 	end
 
 	local function AddMissile(Rack, Point, Crate)
-		local BulletData = ACFM_CompactBulletData(Crate)
-		local Pos, Ang = GetMissileAngPos(BulletData, Point)
-		local Missile = MakeACF_Missile(Rack.Owner, Pos, Ang, Rack, Point, BulletData)
+		local Pos, Ang = GetMissileAngPos(Crate.BulletData, Point)
+		local Missile = MakeACF_Missile(Rack.Owner, Pos, Ang, Rack, Point, Crate)
 
 		Rack:EmitSound("acf_missiles/fx/bomb_reload.mp3", 500, math.random(99, 101))
 		Rack:UpdateLoad(Point, Missile)

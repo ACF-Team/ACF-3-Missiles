@@ -32,7 +32,7 @@ function ACFM_OnFlareSpawn(BulletData)
 	local Missiles = FlareObj:ApplyToAll()
 
 	for Missile in pairs(Missiles) do
-		Missile.Guidance.Override = FlareObj
+		Missile.GuidanceData.Override = FlareObj
 	end
 end
 
@@ -111,7 +111,7 @@ function ACFM_GetAllMissilesWhichCanSee(Position)
 	local Result = {}
 
 	for Missile in pairs(ACF.ActiveMissiles) do
-		local Guidance = Missile.Guidance
+		local Guidance = Missile.GuidanceData
 
 		if not Guidance or Guidance.Override or not Guidance.ViewCone then
 			continue

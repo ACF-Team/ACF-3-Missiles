@@ -1,125 +1,162 @@
-ACFM_RoundDisplayFuncs = ACFM_RoundDisplayFuncs or {}
-ACFM_CrateTextFuncs = ACFM_CrateTextFuncs or {}
 
-local function checkIfDataIsMissile(BulletData)
-	local class = ACF.Weapons.Guns[BulletData.Id]
+hook.Add("ACF_UpdateRoundData", "ACF Missile Ammo", function(_, ToolData, Data)
+	if ToolData.Destiny ~= "Missiles" then return end
+	if Data.RealMuzzleVel then return end
 
-	if not (class and class.gunclass) then return end
+	Data.RealMuzzleVel = Data.MuzzleVel
+	Data.MuzzleVel     = 0
+	Data.SlugPenMul    = ACF_GetGunValue(ToolData.Weapon, "PenMul")
+end)
 
-	class = ACF.Classes.GunClass[class.gunclass]
+hook.Add("ACF_GetDisplayData", "ACF Missile Ammo", function(_, Data)
+	if not Data.RealMuzzleVel then return end
 
-	return class.type and class.type == "missile"
+	Data.MuzzleVel     = Data.RealMuzzleVel
+	Data.RealMuzzleVel = nil
+end)
+
+if CLIENT then return end
+
+local Guidances = ACF.Classes.Guidances
+local Fuzes     = ACF.Classes.Fuzes
+local Display   = "%s: %s%s\n\n%s: %s%s"
+local AllowedClass   = {
+	acf_missile = true,
+	acf_ammo = true,
+}
+
+local function DecodeData(String, Classes)
+	if not isstring(String) then return end
+
+	local Arguments = {}
+	local Name
+
+	-- Parsing the old string
+	for Part in string.gmatch(String, "[^:]+") do
+		if not Name and Classes[Part] then
+			Name = Part
+		else
+			local Key = string.match(Part, "^[^=]+")
+			local Value = string.match(Part, "[^=]+$")
+
+			if Key and Value then
+				Arguments[string.upper(Key)] = tonumber(Value) or 0
+			end
+		end
+	end
+
+	return Name, next(Arguments) and Arguments
 end
 
-local function configConcat(tbl)
-	local toConcat = {}
+local function ConcatConfig(tbl)
+	local Result = ""
 
 	for K, V in pairs(tbl) do
-		toConcat[#toConcat + 1] = tostring(K) .. ": " .. tostring(V)
+		Result = Result .. "\n" .. tostring(K) .. ": " .. tostring(V)
 	end
 
-	return table.concat(toConcat, "\n")
+	return Result
 end
 
-local function ModifyRoundDisplayFuncs()
-	for K, V in pairs(ACF.RoundTypes) do
-		local OldDisplayData = ACFM_RoundDisplayFuncs[K]
+hook.Add("ACF_VerifyData", "ACF Missile Ammo", function(EntClass, Data, ...)
+	if not AllowedClass[EntClass] then return end
+	if Data.Destiny ~= "Missiles" then return end
 
-		if not OldDisplayData then
-			ACFM_RoundDisplayFuncs[K] = V.getDisplayData
-			OldDisplayData = V.getDisplayData
+	do -- Verifying guidance
+		if not Data.Guidance then -- Porting old guidance data
+			Data.Guidance = DecodeData(Data.RoundData7, Guidances) or "Dumb"
 		end
 
-		if OldDisplayData then
-			V.getDisplayData = function(BulletData)
-				if not checkIfDataIsMissile(BulletData) then
-					return OldDisplayData(BulletData)
-				end
+		local Allowed  = ACF_GetGunValue(Data.Weapon, "Guidance")
+		local Guidance = Guidances[Data.Guidance]
 
-				-- NOTE: if these replacements cause side-effects somehow, move to a masking-metatable approach
+		if not (Guidance and Allowed[Data.Guidance]) then
+			Data.Guidance = "Dumb"
 
-				local MuzzleVel = BulletData.MuzzleVel
+			Guidance = Guidances.Dumb
+		end
 
-				BulletData.MuzzleVel = 0
-				BulletData.SlugPenMul = ACF_GetGunValue(BulletData.Id, "PenMul")
-
-				local DisplayData = OldDisplayData(BulletData)
-
-				BulletData.MuzzleVel = MuzzleVel
-
-				return DisplayData
-			end
+		if Guidance.VerifyData then
+			Guidance:VerifyData(EntClass, Data, ...)
 		end
 	end
-end
 
-local function ModifyCrateTextFuncs()
-	for K, V in pairs(ACF.RoundTypes) do
-		local OldCrateText = ACFM_CrateTextFuncs[K]
+	do -- Fuze verification
+		if not Data.Fuze then -- Porting old fuze data
+			local Name, Arguments = DecodeData(Data.RoundData8, Fuzes)
 
-		if not OldCrateText then
-			ACFM_CrateTextFuncs[K] = V.cratetxt
-			OldCrateText = V.cratetxt
+			Data.Fuze = Name or "Contact"
+			Data.FuzeArgs = Arguments
 		end
 
-		if OldCrateText then
-			V.cratetxt = function(BulletData)
-				local CrateText = OldCrateText(BulletData)
+		local Allowed = ACF_GetGunValue(Data.Weapon, "Fuzes")
+		local Fuze    = Fuzes[Data.Fuze]
 
-				if not checkIfDataIsMissile(BulletData) then
-					return CrateText
-				end
+		if not (Fuze and Allowed[Data.Fuze]) then
+			Data.Fuze = "Contact"
 
-				local Crate = Entity(BulletData.Crate)
-				local Guidance = IsValid(Crate) and Crate.RoundData7 or BulletData.Data7
-				local Fuze = IsValid(Crate) and Crate.RoundData8 or BulletData.Data8
-				local Display = "\n\n%s %s\n%s"
-				local Text
+			Fuze = Fuzes.Contact
+		end
 
-				if Guidance then
-					Guidance = ACFM_CreateConfigurable(Guidance, ACF.Classes.Guidances, nil, "Guidance")
-
-					if Guidance and Guidance.Name ~= "Dumb" then
-						Guidance:Configure(Crate)
-
-						Text = configConcat(Guidance:GetDisplayConfig())
-						CrateText = CrateText .. Display:format(Guidance.Name, "guidance", Text)
-					end
-				end
-
-				if Fuze then
-					Fuze = ACFM_CreateConfigurable(Fuze, ACF.Classes.Fuzes, nil, "fuzes")
-
-					if Fuze then
-						Fuze:Configure(Crate)
-
-						Text = configConcat(Fuze:GetDisplayConfig())
-						CrateText = CrateText .. Display:format(Fuze.Name, "fuze", Text)
-					end
-				end
-
-				return CrateText
-			end
+		if Fuze.VerifyData then
+			Fuze:VerifyData(EntClass, Data, ...)
 		end
 	end
-end
+end)
 
-local function ModifyRoundBaseGunpowder()
-	local oldGunpowder = ACFM_ModifiedRoundBaseGunpowder and oldGunpowder or ACF_RoundBaseGunpowder
+hook.Add("ACF_OnAmmoFirst", "ACF Missile Ammo", function(_, Entity, Data, ...)
+	if Data.Destiny ~= "Missiles" then return end
+	if Entity.IsRefill then return end
 
-	ACF_RoundBaseGunpowder = function(PlayerData, Data, ServerData, GUIData)
-		PlayerData, Data, ServerData, GUIData = oldGunpowder(PlayerData, Data, ServerData, GUIData)
+	local Guidance = Guidances[Data.Guidance]()
+	local Fuze     = Fuzes[Data.Fuze]()
 
-		Data.Id = PlayerData.Id
-
-		return PlayerData, Data, ServerData, GUIData
+	if Guidance.OnFirst then
+		Guidance:OnFirst(Entity, Data, ...)
 	end
 
-	ACFM_ModifiedRoundBaseGunpowder = true
-end
+	if Fuze.OnFirst then
+		Fuze:OnFirst(Entity, Data, ...)
+	end
 
-timer.Simple(1, function()
-	ModifyRoundBaseGunpowder()
-	ModifyRoundDisplayFuncs()
-	ModifyCrateTextFuncs()
+	Guidance:Configure(Entity)
+	Fuze:Configure(Entity)
+
+	Entity.IsMissileAmmo = true
+	Entity.GuidanceData  = Guidance
+	Entity.FuzeData      = Fuze
+end)
+
+hook.Add("ACF_OnAmmoLast", "ACF Missile Ammo", function(_, Entity)
+	if not Entity.IsMissileAmmo then return end
+
+	local Guidance = Entity.GuidanceData
+	local Fuze     = Entity.FuzeData
+
+	if Guidance.OnLast then
+		Guidance:OnLast(Entity)
+	end
+
+	if Fuze.OnLast then
+		Fuze:OnLast(Entity)
+	end
+
+	Entity.IsMissileAmmo = nil
+	Entity.GuidanceData  = nil
+	Entity.FuzeData      = nil
+	Entity.Guidance      = nil
+	Entity.Fuze          = nil
+end)
+
+ACF.AddEntityArguments("acf_ammo", "Guidance", "Fuze") -- Adding extra info to ammo crates
+
+ACF.RegisterOverlayText("acf_ammo", "ACF Missile Overlay", function(Crate)
+	if not Crate.IsMissileAmmo then return end
+
+	local Guidance     = Crate.GuidanceData
+	local Fuze         = Crate.FuzeData
+	local GuidanceText = ConcatConfig(Guidance:GetDisplayConfig())
+	local FuzeText     = ConcatConfig(Fuze:GetDisplayConfig())
+
+	return Display:format("Guidance", Guidance.Name, GuidanceText, "Fuze", Fuze.Name, FuzeText)
 end)
