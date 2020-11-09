@@ -101,16 +101,7 @@ if SERVER then
 		if Gun:GetClass() == "acf_ammo" then
 			ACF_CreateBullet(BulletData)
 		else
-			local GLATGM 		  = ents.Create("acf_glatgm")
-			GLATGM.Distance		  = BulletData.MuzzleVel * 4 * 39.37 -- optical fuze distance
-			GLATGM.BulletData	  = BulletData
-			GLATGM.DoNotDuplicate = true
-			GLATGM.Owner		  = Gun.Owner
-			GLATGM.Guidance		  = Gun
-
-			GLATGM:SetAngles(Gun:GetAngles())
-			GLATGM:SetPos(Gun:GetAttachment(1).Pos)
-			GLATGM:Spawn()
+			MakeACF_GLATGM(Gun, BulletData)
 		end
 	end
 
@@ -128,7 +119,6 @@ if SERVER then
 
 		Bullet.Detonated  = true
 		Bullet.InitTime	  = ACF.CurTime
-		Bullet.FuzeLength = 0.005 + 40 / ((Bullet.Flight + Bullet.Flight:GetNormalized() * Bullet.SlugMV * 39.37):Length() * 0.0254)
 		Bullet.Pos		  = HitPos
 		Bullet.Flight	  = Bullet.Flight + Bullet.Flight:GetNormalized() * Bullet.SlugMV * 39.37
 		Bullet.DragCoef	  = Bullet.SlugDragCoef

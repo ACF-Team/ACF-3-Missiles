@@ -675,6 +675,8 @@ do -- Laser guidance computer
 end
 
 do -- GPS transmitter
+	local ZERO = Vector()
+
 	ACF.RegisterComponent("CPR-GPS", "GD-CPR", {
 		Name		= "GPS Transmitter",
 		Description	= "A transmitter for GPS-based guided munitions.",
@@ -739,7 +741,7 @@ do -- GPS transmitter
 			Entity:TriggerInput("Coordinates", Vector())
 		end,
 		OnThink = function(Entity)
-			if Entity.InputCoords == Vector() then return end
+			if Entity.InputCoords == ZERO then return end
 
 			local Spread = VectorRand(-Entity.Spread, Entity.Spread)
 

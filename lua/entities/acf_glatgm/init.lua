@@ -3,9 +3,12 @@ AddCSLuaFile("shared.lua")
 
 include("shared.lua")
 
+local ACF = ACF
 local Missiles = ACF.ActiveMissiles
+local AmmoTypes = ACF.Classes.AmmoTypes
 local TraceData = { start = true, endpos = true, filter = true }
 local Trace = ACF.Trace
+local ZERO = Vector()
 
 local function CheckViewCone(Missile, HitPos)
 	local Position = Missile:GetPos()
@@ -20,13 +23,15 @@ function MakeACF_GLATGM(Gun, BulletData)
 
 	if not IsValid(Entity) then return end
 
+	local Ammo = AmmoTypes.HEAT()
+
 	Entity:SetPos(Gun:LocalToWorld(Gun.Muzzle))
 	Entity:SetAngles(Gun:GetAngles())
 	Entity:Spawn()
 
-	if BulletData.Caliber == 12.0 then
+	if BulletData.Caliber == 12 then
 		Entity:SetModel("models/missiles/glatgm/9m112.mdl")
-	elseif BulletData.Caliber > 12.0 then
+	elseif BulletData.Caliber > 12 then
 		Entity:SetModel("models/missiles/glatgm/mgm51.mdl")
 	else
 		Entity:SetModel("models/missiles/glatgm/9m117.mdl")
@@ -38,26 +43,29 @@ function MakeACF_GLATGM(Gun, BulletData)
 
 	ParticleEffectAttach("Rocket Motor GLATGM", 4, Entity, 1)
 
-	Entity.Owner			= Gun.Owner
-	Entity.Weapon			= Gun
-	Entity.BulletData		= BulletData
-	Entity.ViewCone			= math.cos(math.rad(15)) -- Number inside is on degrees
-	Entity.Distance			= BulletData.MuzzleVel * 4 * 39.37 -- optical fuze distance
-	Entity.KillTime			= ACF.CurTime + 20
-	Entity.Time				= ACF.CurTime
-	Entity.Filter			= { Entity }
-	Entity.Sub				= BulletData.Caliber < 10 -- is it a small glatgm?
-	Entity.Velocity			= Entity.Sub and 2500 or 50 --self.Velocity of the missile per second
-	Entity.secondsOffset	= Entity.Sub and 0.25 or 0.5 --seconds of forward flight to aim towards, to affect the beam-riding simulation
-	Entity.SpiralAm			= Entity.Sub and (10 - BulletData.Caliber) * 0.5 -- amount of artifical spiraling for <100 shells, caliber in acf is in cm
-	Entity.offsetLength		= Entity.Velocity * Entity.secondsOffset --how far off the forward offset is for the targeting position
+	Entity.Owner         = Gun.Owner
+	Entity.Weapon        = Gun
+	Entity.RoundData     = Ammo
+	Entity.BulletData    = table.Copy(BulletData)
+	Entity.ViewCone      = math.cos(math.rad(15)) -- Number inside is on degrees
+	Entity.Distance      = BulletData.MuzzleVel * 4 * 39.37 -- optical fuze distance
+	Entity.KillTime      = ACF.CurTime + 20
+	Entity.Time          = ACF.CurTime
+	Entity.Filter        = { Entity }
+	Entity.Sub           = BulletData.Caliber < 10 -- is it a small glatgm?
+	Entity.Velocity      = Entity.Sub and 2000 or 4000 --self.Velocity of the missile per second
+	Entity.secondsOffset = Entity.Sub and 0.25 or 0.5 --seconds of forward flight to aim towards, to affect the beam-riding simulation
+	Entity.SpiralAm      = Entity.Sub and (10 - BulletData.Caliber) * 0.5 -- amount of artifical spiraling for <100 shells, caliber in acf is in cm
+	Entity.offsetLength  = Entity.Velocity * Entity.secondsOffset --how far off the forward offset is for the targeting position
 
-	local Mass = BulletData.ProjMass + BulletData.PropMass
-	local Phys = Entity:GetPhysicsObject()
-	if IsValid(Phys) then
-		Phys:EnableGravity(false)
-		Phys:EnableMotion(false)
-		Phys:SetMass(Mass)
+	Ammo:Network(Entity, Entity.BulletData)
+
+	local PhysObj = Entity:GetPhysicsObject()
+
+	if IsValid(PhysObj) then
+		PhysObj:EnableGravity(false)
+		PhysObj:EnableMotion(false)
+		PhysObj:SetMass(BulletData.CartMass)
 	end
 
 	ACF_Activate(Entity)
@@ -105,7 +113,7 @@ function ENT:GetComputer()
 	if not IsValid(Computer) then return end
 	if Computer.Disabled then return end
 	if not Computer.IsComputer then return end
-	if Computer.HitPos == Vector() then return end
+	if Computer.HitPos == ZERO then return end
 
 	return Computer
 end
@@ -168,15 +176,16 @@ function ENT:Detonate()
 
 	self.Detonated = true
 
+	local BulletData  = self.BulletData
+
+	BulletData.Type   = "HEAT"
+	BulletData.Filter = self.Filter
+	BulletData.Flight = self:GetForward() * self.Velocity
+	BulletData.Pos    = self:GetPos()
+
+	self.RoundData:Create(self, BulletData)
+
 	Missiles[self] = nil
-
-	local BulletData	= table.Copy(self.BulletData)
-	BulletData.Type		= "HEAT"
-	BulletData.Filter	= { self }
-	BulletData.Flight	= self:GetForward() * self.Velocity
-	BulletData.Pos		= self:GetPos()
-
-	ACF.RoundTypes.HEAT.create(self, BulletData)
 
 	self:Remove()
 end
