@@ -3,6 +3,8 @@ local Countermeasures = ACF.Classes.Countermeasures
 ACFM_Flares = {}
 ACFM_FlareUID = 0
 
+local Bullets = ACF.Bullets
+
 function ACFM_RegisterFlare(BulletData)
 	BulletData.FlareUID = ACFM_FlareUID
 
@@ -38,7 +40,6 @@ end
 
 function ACFM_GetFlaresInCone(Position, Direction, Degrees)
 	local Result = {}
-	local Bullets = ACF.Bullet
 
 	for Index, UID in pairs(ACFM_Flares) do
 		local Flare = Bullets[Index]
@@ -56,8 +57,6 @@ function ACFM_GetFlaresInCone(Position, Direction, Degrees)
 end
 
 function ACFM_GetAnyFlareInCone(Position, Direction, Degrees)
-	local Bullets = ACF.Bullet
-
 	for Index, UID in pairs(ACFM_Flares) do
 		local Flare = Bullets[Index]
 

@@ -33,7 +33,7 @@ function Countermeasure:GetGuidanceOverride()
 
 	if not self.Active then return end
 
-	local Flare = ACF.Bullet[self.Flare.Index]
+	local Flare = ACF.Bullets[self.Flare.Index]
 
 	if not (Flare and Flare.FlareUID == self.Flare.FlareUID) then return end
 

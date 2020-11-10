@@ -96,6 +96,16 @@ function ENT:ACF_OnDamage(Entity, Energy, FrArea, Angle, Inflictor)
 		if IsValid(Inflictor) and Inflictor:IsPlayer() then
 			self.Inflictor = Inflictor
 		end
+		local dt = CurTime() - self.Time --timestep
+		self.Time = CurTime()
+		local InnacDT = self.InnacV * dt
+		local dir = AngleRand() * 0.0002 * InnacDT
+		local Correction = VectorRand()  * 0.0007 * InnacDT
+		local GD = self.GuideDelay < self.Time
+		if GD then
+			self.InnacV = self.InnacV + 1 --inaccuracy when not guided bloom
+			if IsValid(self.Guidance) and self.Guidance:GetPos():Distance(self:GetPos()) < self.Distance then
+				local acosc = math.acos((self:GetPos() - self.Guidance:GetPos()):GetNormalized():Dot(self.Guidance:GetForward())) --switch to acos as it's cheaper than comparing 4 angle values
 
 		self:Detonate()
 	end

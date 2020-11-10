@@ -44,6 +44,10 @@ local Inputs	  = ACF.GetInputActions("acf_radar")
 local UnlinkSound = "physics/metal/metal_box_impact_bullet%s.wav"
 local MaxDistance = ACF.RefillDistance * ACF.RefillDistance
 local TraceData	  = { start = true, endpos = true, mask = MASK_SOLID_BRUSHONLY }
+local Gamemode	  = GetConVar("acf_gamemode")
+local Indexes	  = {}
+local Unused	  = {}
+local IndexCount  = 0
 local TraceLine	  = util.TraceLine
 local TimerExists = timer.Exists
 local TimerCreate = timer.Create
@@ -72,14 +76,26 @@ local function Overlay(Ent)
 	end
 end
 
+-- TODO: Optimize this so the entries are only cleared when the target is no longer detected by the radar
 local function ClearTargets(Entity)
-	for Target in pairs(Entity.Targets) do
-		Entity.Targets[Target] = nil
+	local TargetInfo = Entity.TargetInfo
+	local Targets = Entity.Targets
+
+	for Target in pairs(Targets) do
+		Targets[Target] = nil
+	end
+
+	for _, List in pairs(TargetInfo) do
+		for Index in ipairs(List) do
+			List[Index] = nil
+		end
 	end
 end
 
 local function ResetOutputs(Entity)
 	if Entity.TargetCount == 0 then return end
+
+	local TargetInfo = Entity.TargetInfo
 
 	ClearTargets(Entity)
 
@@ -87,10 +103,11 @@ local function ResetOutputs(Entity)
 
 	WireLib.TriggerOutput(Entity, "Detected", 0)
 	WireLib.TriggerOutput(Entity, "ClosestDistance", 0)
-	WireLib.TriggerOutput(Entity, "IDs", {})
-	WireLib.TriggerOutput(Entity, "Owner", {})
-	WireLib.TriggerOutput(Entity, "Position", {})
-	WireLib.TriggerOutput(Entity, "Velocity", {})
+	WireLib.TriggerOutput(Entity, "IDs", TargetInfo.ID)
+	WireLib.TriggerOutput(Entity, "Owner", TargetInfo.Owner)
+	WireLib.TriggerOutput(Entity, "Position", TargetInfo.Position)
+	WireLib.TriggerOutput(Entity, "Velocity", TargetInfo.Velocity)
+	WireLib.TriggerOutput(Entity, "Distance", TargetInfo.Distance)
 end
 
 local function SetSequence(Entity, Active)
@@ -109,39 +126,94 @@ local function CheckLOS(Start, End)
 	return not TraceLine(TraceData).Hit
 end
 
+local function GetEntityIndex(Entity)
+	if Indexes[Entity] then return Indexes[Entity] end
+
+	if next(Unused) then
+		local Index = next(Unused)
+
+		Indexes[Entity] = Index
+		Unused[Index] = nil
+	else
+		IndexCount = IndexCount + 1
+
+		Indexes[Entity] = IndexCount
+	end
+
+	local EntID = Indexes[Entity]
+
+	Entity:CallOnRemove("Radar Index", function()
+		Indexes[Entity] = nil
+		Unused[EntID] = true
+	end)
+
+	return EntID
+end
+
+local function GetEntityOwner(Owner, Entity)
+	-- If the server is competitive and the radar owner doesn't has permissions on this entity then return Unknown
+	if Gamemode:GetInt() == 2 and not Entity:CPPICanTool(Owner) then
+		return "Unknown"
+	end
+
+	local EntOwner = Entity:CPPIGetOwner()
+
+	if not IsValid(EntOwner) then
+		EntOwner = EntOwner == game.GetWorld() and "World" or "Unknown"
+	else
+		EntOwner = EntOwner:GetName()
+	end
+
+	return EntOwner
+end
+
 local function ScanForEntities(Entity)
 	ClearTargets(Entity)
 
 	if not Entity.GetDetected then return end
 
 	local Detected = Entity:GetDetected()
-	local IDs = {}
-	local Own = {}
-	local Position = {}
-	local Velocity = {}
 
 	local Origin = Entity:LocalToWorld(Entity.Origin)
+	local TargetInfo = Entity.TargetInfo
+	local Targets = Entity.Targets
 	local Closest = math.huge
 	local Count = 0
-	local EntPos, EntVel, EntDist, Spread
+
+	local IDs = TargetInfo.ID
+	local Own = TargetInfo.Owner
+	local Position = TargetInfo.Position
+	local Velocity = TargetInfo.Velocity
+	local Distance = TargetInfo.Distance
 
 	for Ent in pairs(Detected) do
-		EntPos = Ent.CurPos or Ent:GetPos()
-		EntVel = Ent.LastVel or Ent:GetVelocity()
+		local EntPos = Ent.CurPos or Ent:GetPos()
 
 		if CheckLOS(Origin, EntPos) then
-			EntDist = Origin:DistToSqr(EntPos)
-			Spread = VectorRand(-Entity.Spread, Entity.Spread)
+			local Spread = VectorRand(-Entity.Spread, Entity.Spread)
+			local EntVel = Ent.LastVel or Ent:GetVelocity()
+			local Owner = GetEntityOwner(Entity.Owner, Ent)
+			local Index = GetEntityIndex(Ent)
+
 			EntPos = EntPos + Spread
 			EntVel = EntVel + Spread
-
 			Count = Count + 1
 
-			IDs[Count] = Ent:EntIndex()
-			Own[Count] = Ent:CPPIGetOwner():GetName() or ""
+			local EntDist = Origin:Distance(EntPos)
+
+			Targets[Ent] = {
+				Index = Index,
+				Owner = Owner,
+				Position = EntPos,
+				Velocity = EntVel,
+				Distance = EntDist
+			}
+
+			IDs[Count] = Index
+			Own[Count] = Owner
 			Position[Count] = EntPos
 			Velocity[Count] = EntVel
-			Entity.Targets[Ent] = Spread
+			Distance[Count] = EntDist
 
 			if EntDist < Closest then
 				Closest = EntDist
@@ -149,14 +221,15 @@ local function ScanForEntities(Entity)
 		end
 	end
 
-	Closest = Closest < math.huge and Closest ^ 0.5 or 0
+	Closest = Closest < math.huge and Closest or 0
 
-	WireLib.TriggerOutput(Entity, "Detected", Count)
 	WireLib.TriggerOutput(Entity, "ClosestDistance", Closest)
 	WireLib.TriggerOutput(Entity, "IDs", IDs)
 	WireLib.TriggerOutput(Entity, "Owner", Own)
 	WireLib.TriggerOutput(Entity, "Position", Position)
 	WireLib.TriggerOutput(Entity, "Velocity", Velocity)
+	WireLib.TriggerOutput(Entity, "Distance", Distance)
+	WireLib.TriggerOutput(Entity, "Detected", Count)
 
 	if Count ~= Entity.TargetCount then
 		if Count > Entity.TargetCount then
