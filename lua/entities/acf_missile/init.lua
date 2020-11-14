@@ -571,34 +571,9 @@ function ENT:Detonate(Destroyed)
 		Bullet.OnRicocheted = nil
 	end
 
-	local Bullet = ACF_CreateBullet(BulletData)
+	local Bullet = ACF.CreateBullet(BulletData)
 
-	self:DoReplicatedPropHit(Bullet)
-end
-
-function ENT:DoReplicatedPropHit(Bullet)
-	local FlightRes = { Entity = self, HitNormal = Bullet.Flight, HitPos = Bullet.Pos, HitGroup = HITGROUP_GENERIC }
-	local Ammo  = AmmoTypes[Bullet.Type]
-	local Index = Bullet.Index
-	local Retry = Ammo:PropImpact(Index, Bullet, FlightRes.Entity, FlightRes.HitNormal, FlightRes.HitPos, FlightRes.HitGroup)				--If we hit stuff then send the resolution to the damage function
-
-	if Retry == "Penetrated" then
-		if Bullet.OnPenetrated then Bullet.OnPenetrated(Index, Bullet, FlightRes) end
-
-		ACF_BulletClient(Index, Bullet, "Update", 2, FlightRes.HitPos)
-		ACF_CalcBulletFlight(Index, Bullet, true)
-	elseif Retry == "Ricochet" then
-		if Bullet.OnRicocheted then Bullet.OnRicocheted(Index, Bullet, FlightRes) end
-
-		ACF_BulletClient(Index, Bullet, "Update", 3, FlightRes.HitPos)
-		ACF_CalcBulletFlight(Index, Bullet, true)
-	else
-		if Bullet.OnEndFlight then Bullet.OnEndFlight(Index, Bullet, FlightRes) end
-
-		ACF_BulletClient(Index, Bullet, "Update", 1, FlightRes.HitPos)
-
-		Ammo:OnFlightEnd(Index, Bullet, FlightRes.HitPos, FlightRes.HitNormal)
-	end
+	ACF.DoReplicatedPropHit(self, Bullet)
 end
 
 function ENT:Think()

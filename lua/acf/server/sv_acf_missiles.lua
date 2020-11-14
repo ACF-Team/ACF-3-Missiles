@@ -57,6 +57,31 @@ end
 
 ACFM_ResetVelocity = ACF.ResetBulletVelocity
 
+function ACF.DoReplicatedPropHit(Entity, Bullet)
+	local FlightRes = { Entity = Entity, HitNormal = Bullet.Flight, HitPos = Bullet.Pos }
+	local Ammo  = AmmoTypes[Bullet.Type]
+	local Index = Bullet.Index
+	local Retry = Ammo:PropImpact(Index, Bullet, FlightRes.Entity, FlightRes.HitNormal, FlightRes.HitPos, FlightRes.HitGroup)				--If we hit stuff then send the resolution to the damage function
+
+	if Retry == "Penetrated" then
+		if Bullet.OnPenetrated then Bullet.OnPenetrated(Index, Bullet, FlightRes) end
+
+		ACF.BulletClient(Index, Bullet, "Update", 2, FlightRes.HitPos)
+		ACF.CalcBulletFlight(Index, Bullet, true)
+	elseif Retry == "Ricochet" then
+		if Bullet.OnRicocheted then Bullet.OnRicocheted(Index, Bullet, FlightRes) end
+
+		ACF.BulletClient(Index, Bullet, "Update", 3, FlightRes.HitPos)
+		ACF.CalcBulletFlight(Index, Bullet, true)
+	else
+		if Bullet.OnEndFlight then Bullet.OnEndFlight(Index, Bullet, FlightRes) end
+
+		ACF.BulletClient(Index, Bullet, "Update", 1, FlightRes.HitPos)
+
+		Ammo:OnFlightEnd(Index, Bullet, FlightRes.HitPos, FlightRes.HitNormal)
+	end
+end
+
 hook.Add("InitPostEntity", "ACFMissiles_AddSoundSupport", function()
 	timer.Simple(1, function()
 		ACF.SoundToolSupport.acf_rack = {
@@ -93,6 +118,7 @@ hook.Add("InitPostEntity", "ACFMissiles_AddSoundSupport", function()
 end)
 
 do -- Entity find
+	local LastThink = ACF.CurTime
 	local NextUpdate = 0
 	local Entities = {}
 	local Ancestors = {}
@@ -123,30 +149,66 @@ do -- Entity find
 			Entities[Entity] = true
 
 			Entity:CallOnRemove("ACF Entity Tracking", function()
+				Ancestors[Entity] = nil
 				Entities[Entity] = nil
 			end)
 		end
 	end)
 
+	hook.Add("Think", "ACF Entity Tracking", function()
+		local DeltaTime = ACF.CurTime - LastThink
+
+		for K in pairs(Ancestors) do
+			local Data = K.TrackData
+			local Previous = Data.Position
+			local PhysObj = K:GetPhysicsObject()
+			local Current = IsValid(PhysObj) and PhysObj:GetMassCenter() or K:GetPos()
+
+			Entity.Position = Current
+			Entity.Velocity = (Current - Previous) / DeltaTime
+
+			Data.Previous = Previous
+			Data.Position = Current
+		end
+
+		LastThink = ACF.CurTime
+	end)
+
 	local function GetAncestorEntities()
-		if CurTime() < NextUpdate then return Ancestors end
+		if ACF.CurTime < NextUpdate then return Ancestors end
 
 		local Checked = {}
-		local Ancestor
+		local Previous = {}
 
 		-- Cleanup
-		for K in pairs(Ancestors) do Ancestors[K] = nil end
+		for K in pairs(Ancestors) do
+			Ancestors[K] = nil
+			Previous[K] = true
+		end
 
 		for K in pairs(Entities) do
-			Ancestor = ACF_GetAncestor(K)
+			local Ancestor = ACF_GetAncestor(K)
 
 			if IsValid(Ancestor) and Ancestor ~= K and not Checked[Ancestor] then
 				Ancestors[Ancestor] = true
 				Checked[Ancestor] = true
+
+				if not Previous[Ancestor] then
+					local PhysObj = Ancestor:GetPhysicsObject()
+					local Position = IsValid(PhysObj) and PhysObj:GetMassCenter()
+
+					Ancestor.TrackData = {
+						Position = Position or Ancestor:GetPos()
+					}
+				end
+
+				Previous[Ancestor] = nil
 			end
 		end
 
-		NextUpdate = CurTime() + 2
+		for K in pairs(Previous) do K.TrackData = nil end
+
+		NextUpdate = ACF.CurTime + math.Rand(3, 5)
 
 		return Ancestors
 	end
