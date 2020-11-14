@@ -168,7 +168,7 @@ do -- Entity find
 			K.Velocity = (Current - Previous) / DeltaTime
 
 			Data.Previous = Previous
-			Data.Position = Current
+			Data.Position = K.Position
 		end
 
 		LastThink = ACF.CurTime
