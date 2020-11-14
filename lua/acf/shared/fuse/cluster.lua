@@ -47,7 +47,7 @@ else
 		RoundData:Network(Entity, BulletData)
 
 		local Effect = EffectData()
-		Effect:SetOrigin(Entity.CurPos)
+		Effect:SetOrigin(Entity.Position)
 		Effect:SetNormal(Entity.CurDir)
 		Effect:SetScale(math.max(BulletData.FillerMass ^ 0.33 * 8 * 39.37, 1))
 		Effect:SetRadius(BulletData.Caliber)

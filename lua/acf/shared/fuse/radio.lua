@@ -11,6 +11,6 @@ else
 
 		if not Target then return false end
 
-		return (Missile.CurPos + Missile.LastVel):Distance(Target) <= self.Distance
+		return (Missile.Position + Missile.LastVel):Distance(Target) <= self.Distance
 	end
 end

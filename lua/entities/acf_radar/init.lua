@@ -189,11 +189,11 @@ local function ScanForEntities(Entity)
 	local Distance = TargetInfo.Distance
 
 	for Ent in pairs(Detected) do
-		local EntPos = Ent.CurPos or Ent:GetPos()
+		local EntPos = Ent.Position or Ent:GetPos()
 
 		if CheckLOS(Origin, EntPos) then
 			local Spread = VectorRand(-Entity.Spread, Entity.Spread)
-			local EntVel = Ent.LastVel or Ent:GetVelocity()
+			local EntVel = Ent.Velocity or Ent:GetVelocity()
 			local Owner = GetEntityOwner(Entity.Owner, Ent)
 			local Index = GetEntityIndex(Ent)
 

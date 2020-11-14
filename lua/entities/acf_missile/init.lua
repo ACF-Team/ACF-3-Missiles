@@ -10,7 +10,6 @@ local Gravity = GetConVar("sv_gravity")
 local GhostPeriod = GetConVar("ACFM_GhostPeriod")
 local ActiveMissiles = ACF.ActiveMissiles
 local Missiles = ACF.Classes.Missiles
-local AmmoTypes = ACF.Classes.AmmoTypes
 local HookRun = hook.Run
 
 local function ApplyBodySubgroup(Missile, Group, Source, Phase)
@@ -99,24 +98,25 @@ local function SetMotorState(Missile, Enabled)
 	Missile.MotorEnabled = Enabled
 end
 
+-- TODO: Hitting players with the Dud should hurt/kill them
 local function Dud(Missile)
-	local PhysObj = Missile:GetPhysicsObject()
+	local PhysObj   = Missile:GetPhysicsObject()
 	local HitNormal = Missile.HitNormal
-	local LastVel = Missile.LastVel
-	local CurDir = Missile.CurDir
+	local Velocity  = Missile.Velocity
+	local CurDir    = Missile.CurDir
 
 	if HitNormal then
 		local Dot = CurDir:Dot(HitNormal)
 		local NewDir = CurDir - 2 * Dot * HitNormal
-		local VelMul = (0.8 + Dot * 0.7) * LastVel:Length()
+		local VelMul = (0.8 + Dot * 0.7) * Velocity:Length()
 
-		LastVel = NewDir * VelMul
+		Velocity = NewDir * VelMul
 	end
 
 	if IsValid(PhysObj) then
 		PhysObj:EnableGravity(true)
 		PhysObj:EnableMotion(true)
-		PhysObj:SetVelocity(LastVel)
+		PhysObj:SetVelocity(Velocity)
 	end
 
 	timer.Simple(30, function()
@@ -126,6 +126,7 @@ local function Dud(Missile)
 	end)
 end
 
+-- TODO: Missiles must base their movement off an ACF bullet
 local function CalcFlight(Missile)
 	if not Missile.Launched then return end
 	if Missile.Detonated then return end
@@ -135,15 +136,10 @@ local function CalcFlight(Missile)
 
 	if DeltaTime <= 0 then return end
 
-	local Pos = Missile.CurPos
+	local Pos = Missile.Position
 	local Dir = Missile.CurDir
 	local LastVel = Missile.LastVel
 	local LastSpeed = LastVel:Length()
-
-	if LastSpeed == 0 then
-		LastVel = Dir
-		LastSpeed = 1
-	end
 
 	Missile.LastThink = Time
 
@@ -242,6 +238,8 @@ local function CalcFlight(Missile)
 
 	local EndPos = Pos + Vel
 
+	Missile.Velocity = Vel / DeltaTime
+
 	--Hit detection
 	TraceData.start = Pos
 	TraceData.endpos = EndPos
@@ -251,9 +249,9 @@ local function CalcFlight(Missile)
 	local Ghosted = Time < Missile.GhostPeriod
 	local GhostHit = Ghosted and Result.HitWorld
 
+	-- TODO: Missiles must be able to leave the map
 	if Result.Hit and (GhostHit or not Ghosted) then
 		Missile.HitNormal = Result.HitNormal
-		Missile.LastVel = Vel / DeltaTime
 		Missile.Disabled = GhostHit
 
 		Missile:DoFlight(Result.HitPos)
@@ -263,7 +261,6 @@ local function CalcFlight(Missile)
 	end
 
 	if Missile.FuzeData:GetDetonate(Missile, Missile.GuidanceData) then
-		Missile.LastVel = Vel / DeltaTime
 		Missile:Detonate()
 
 		return
@@ -271,7 +268,7 @@ local function CalcFlight(Missile)
 
 	Missile.LastVel = Vel
 	Missile.LastPos = Pos
-	Missile.CurPos = EndPos
+	Missile.Position = EndPos
 	Missile.CurDir = Dir
 
 	--Missile trajectory debugging
@@ -281,7 +278,7 @@ local function CalcFlight(Missile)
 end
 
 hook.Add("CanDrive", "acf_missile_CanDrive", function(_, Entity)
-	if Entity:GetClass() == "acf_missile" then return false end
+	if ActiveMissiles[Entity] then return false end
 end)
 
 hook.Add("OnMissileLaunched", "ACF Missile Rack Filter", function(Missile)
@@ -435,9 +432,10 @@ function ENT:Launch(Delay, IsMisfire)
 	self.DisableDamage = nil
 	self.LastThink     = ACF.CurTime - self.ThinkDelay
 	self.LastVel       = Vel * self.ThinkDelay
-	self.CurPos        = BulletData.Pos
+	self.Position      = BulletData.Pos
+	self.Velocity      = Vel
 	self.CurDir        = Flight:GetNormalized()
-	self.LastPos       = self.CurPos
+	self.LastPos       = self.Position
 
 	if self.NoThrust then
 		self.MotorLength = 0
@@ -461,7 +459,6 @@ function ENT:Launch(Delay, IsMisfire)
 
 	if IsMisfire then
 		self.Disabled = true
-		self.LastVel = Vel
 
 		return self:Detonate()
 	end
@@ -490,7 +487,7 @@ function ENT:Launch(Delay, IsMisfire)
 end
 
 function ENT:DoFlight(ToPos, ToDir)
-	local NewPos = ToPos or self.CurPos
+	local NewPos = ToPos or self.Position
 	local NewDir = ToDir or self.CurDir
 
 	self:SetPos(NewPos)
@@ -531,7 +528,7 @@ function ENT:Detonate(Destroyed)
 		self:SetNW2String("AmmoType", "HE")
 	end
 
-	BulletData.Flight = self.LastVel
+	BulletData.Flight = self.Velocity
 
 	if Filter then
 		Filter[#Filter + 1] = self
