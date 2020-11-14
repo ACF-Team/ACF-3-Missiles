@@ -162,7 +162,7 @@ do -- Entity find
 			local Data = K.TrackData
 			local Previous = Data.Position
 			local PhysObj = K:GetPhysicsObject()
-			local Current = IsValid(PhysObj) and Entity:LocalToWorld(PhysObj:GetMassCenter()) or K:GetPos()
+			local Current = IsValid(PhysObj) and K:LocalToWorld(PhysObj:GetMassCenter()) or K:GetPos()
 
 			K.Position = Current
 			K.Velocity = (Current - Previous) / DeltaTime
