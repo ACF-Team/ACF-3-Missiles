@@ -118,7 +118,7 @@ hook.Add("InitPostEntity", "ACFMissiles_AddSoundSupport", function()
 end)
 
 do -- Entity find
-	local LastThink = ACF.CurTime
+	local LastThink = 0
 	local NextUpdate = 0
 	local Entities = {}
 	local Ancestors = {}
@@ -164,8 +164,8 @@ do -- Entity find
 			local PhysObj = K:GetPhysicsObject()
 			local Current = IsValid(PhysObj) and PhysObj:GetMassCenter() or K:GetPos()
 
-			Entity.Position = Current
-			Entity.Velocity = (Current - Previous) / DeltaTime
+			K.Position = Current
+			K.Velocity = (Current - Previous) / DeltaTime
 
 			Data.Previous = Previous
 			Data.Position = Current
