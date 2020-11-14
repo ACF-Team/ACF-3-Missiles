@@ -162,13 +162,13 @@ do -- Entity find
 			local Data = K.TrackData
 			local Previous = Data.Position
 			local PhysObj = K:GetPhysicsObject()
-			local Current = IsValid(PhysObj) and Entity:LocalToWorld(PhysObj:GetMassCenter())
+			local Current = IsValid(PhysObj) and Entity:LocalToWorld(PhysObj:GetMassCenter()) or K:GetPos()
 
-			K.Position = Current or K:GetPos()
+			K.Position = Current
 			K.Velocity = (Current - Previous) / DeltaTime
 
 			Data.Previous = Previous
-			Data.Position = K.Position
+			Data.Position = Current
 		end
 
 		LastThink = ACF.CurTime
