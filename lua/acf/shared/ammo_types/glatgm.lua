@@ -30,50 +30,6 @@ function Ammo:GetDisplayData(Data)
 	return Display
 end
 
-function Ammo:UpdateRoundData(ToolData, Data, GUIData)
-	GUIData = GUIData or Data
-
-	ACF.UpdateRoundSpecs(ToolData, Data, GUIData)
-
-	local MaxConeAng = math.deg(math.atan((Data.ProjLength - Data.Caliber * 0.002) / (Data.Caliber * 0.05)))
-	local LinerAngle = math.Clamp(ToolData.LinerAngle, GUIData.MinConeAng, MaxConeAng)
-	local _, ConeArea, AirVol = self:ConeCalc(LinerAngle, Data.Caliber * 0.05)
-
-	local LinerRad	  = math.rad(LinerAngle * 0.5)
-	local SlugCaliber = Data.Caliber * 0.1 - Data.Caliber * (math.sin(LinerRad) * 0.5 + math.cos(LinerRad) * 1.5) * 0.05
-	local SlugFrArea  = 3.1416 * (SlugCaliber * 0.5) ^ 2
-	local ConeVol	  = ConeArea * Data.Caliber * 0.002
-	-- Volume of the projectile as a cylinder - Volume of the filler - Volume of the crush cone * density of steel + Volume of the filler * density of TNT + Area of the cone * thickness * density of steel
-	local ProjMass	  = math.max(GUIData.ProjVolume - ToolData.FillerMass, 0) * 0.0079 + math.min(ToolData.FillerMass, GUIData.ProjVolume) * ACF.HEDensity * 0.001 + ConeVol * 0.0079
-	local MuzzleVel	  = ACF_MuzzleVelocity(Data.PropMass, ProjMass)
-	local Energy	  = ACF_Kinetic(MuzzleVel * 39.37, ProjMass, Data.LimitVel)
-	local MaxVol	  = ACF.RoundShellCapacity(Energy.Momentum, Data.FrArea, Data.Caliber, Data.ProjLength)
-
-	GUIData.MaxConeAng	 = MaxConeAng
-	GUIData.MaxFillerVol = math.max(MaxVol - AirVol - ConeVol, GUIData.MinFillerVol)
-	GUIData.FillerVol	 = math.Clamp(ToolData.FillerMass, GUIData.MinFillerVol, GUIData.MaxFillerVol)
-
-	Data.FillerMass		= GUIData.FillerVol * ACF.HEDensity * 0.0007
-	Data.BoomFillerMass	= Data.FillerMass * 0.3333 -- Manually update function "pierceeffect" with the divisor
-	Data.ProjMass		= math.max(GUIData.ProjVolume - GUIData.FillerVol - AirVol - ConeVol, 0) * 0.0079 + Data.FillerMass + ConeVol * 0.0079
-	Data.MuzzleVel		= ACF_MuzzleVelocity(Data.PropMass, Data.ProjMass)
-	Data.ConeAng		= LinerAngle
-	Data.SlugMass		= ConeVol * 0.0079
-	Data.SlugCaliber	= SlugCaliber
-	Data.SlugMV			= (Data.FillerMass * 0.5 * ACF.HEPower * math.sin(math.rad(10 + LinerAngle) * 0.5) / Data.SlugMass) ^ ACF.HEATMVScale --keep fillermass/2 so that penetrator stays the same
-	Data.SlugDragCoef	= SlugFrArea * 0.0001 / Data.SlugMass
-	Data.SlugPenArea	= SlugFrArea ^ ACF.PenAreaMod
-	Data.CasingMass		= Data.ProjMass - Data.FillerMass - ConeVol * 0.0079
-	Data.DragCoef		= Data.FrArea * 0.0001 / Data.ProjMass
-	Data.CartMass		= Data.PropMass + Data.ProjMass
-
-	hook.Run("ACF_UpdateRoundData", self, ToolData, Data, GUIData)
-
-	for K, V in pairs(self:GetDisplayData(Data)) do
-		GUIData[K] = V
-	end
-end
-
 function Ammo:BaseConvert(ToolData)
 	local Data, GUIData = ACF.RoundBaseGunpowder(ToolData, {})
 
@@ -87,7 +43,6 @@ function Ammo:BaseConvert(ToolData)
 	Data.KETransfert	= 0.1 -- Kinetic energy transfert to the target for movement purposes
 	Data.Ricochet		= 60 -- Base ricochet angle
 	Data.DetonatorAngle	= 75
-	--Data.Crate			= Crate
 	Data.Detonated		= false
 	Data.NotFirstPen	= false
 
@@ -99,10 +54,16 @@ end
 if SERVER then
 	function Ammo:Create(Gun, BulletData)
 		if Gun:GetClass() == "acf_ammo" then
-			ACF_CreateBullet(BulletData)
+			ACF.CreateBullet(BulletData)
 		else
 			MakeACF_GLATGM(Gun, BulletData)
 		end
+	end
+
+	function Ammo:Network(Entity, BulletData)
+		Ammo.BaseClass.Network(self, Entity, BulletData)
+
+		Entity:SetNW2String("AmmoType", "GLATGM")
 	end
 
 	function Ammo:GetCrateText(BulletData)
@@ -111,85 +72,38 @@ if SERVER then
 
 		return Text:format(math.Round(BulletData.MuzzleVel * 4, 2), math.floor(Data.MaxPen), math.Round(Data.BlastRadius, 2), math.floor(BulletData.BoomFillerMass * ACF.HEPower))
 	end
-
-	function Ammo:Detonate(_, Bullet, HitPos)
-		ACF_HE(HitPos, Bullet.BoomFillerMass, Bullet.CasingMass, Bullet.Owner, Bullet.Filter, Bullet.Gun)
-
-		local DeltaTime = ACF.CurTime - Bullet.LastThink
-
-		Bullet.Detonated  = true
-		Bullet.InitTime	  = ACF.CurTime
-		Bullet.Pos		  = HitPos
-		Bullet.Flight	  = Bullet.Flight + Bullet.Flight:GetNormalized() * Bullet.SlugMV * 39.37
-		Bullet.DragCoef	  = Bullet.SlugDragCoef
-		Bullet.ProjMass	  = Bullet.SlugMass
-		Bullet.Caliber	  = Bullet.SlugCaliber
-		Bullet.PenArea	  = Bullet.SlugPenArea
-		Bullet.Ricochet	  = Bullet.SlugRicochet
-		Bullet.StartTrace = Bullet.Pos - Bullet.Flight:GetNormalized() * math.min(ACF.PhysMaxVel * DeltaTime, Bullet.FlightTime * Bullet.Flight:Length())
-		Bullet.NextPos	  = Bullet.Pos + (Bullet.Flight * ACF.Scale * DeltaTime) -- Calculates the next shell position
-	end
-
-	function Ammo:PropImpact(_, Bullet, Target, HitNormal, HitPos, Bone)
-		if ACF_Check(Target) then
-			if Bullet.Detonated then
-				Bullet.NotFirstPen = true
-
-				local Speed	 = Bullet.Flight:Length() / ACF.Scale
-				local Energy = ACF_Kinetic(Speed, Bullet.ProjMass, 999999)
-				local HitRes = ACF_RoundImpact(Bullet, Speed, Energy, Target, HitPos, HitNormal, Bone)
-
-				if HitRes.Overkill > 0 then
-					table.insert(Bullet.Filter, Target) -- "Penetrate" (Ingoring the prop for the retry trace)
-
-					ACF_Spall(HitPos, Bullet.Flight, Bullet.Filter, Energy.Kinetic * HitRes.Loss, Bullet.Caliber, Target.ACF.Armour, Bullet.Owner) --Do some spalling
-
-					Bullet.Flight = Bullet.Flight:GetNormalized() * (Energy.Kinetic * (1 - HitRes.Loss) * ((Bullet.NotFirstPen and ACF.HEATPenLayerMul) or 1) * 2000 / Bullet.ProjMass) ^ 0.5 * 39.37
-
-					return "Penetrated"
-				else
-					return false
-				end
-			else
-				local Speed	 = Bullet.Flight:Length() / ACF.Scale
-				local Energy = ACF_Kinetic(Speed, Bullet.ProjMass - Bullet.FillerMass, Bullet.LimitVel)
-				local HitRes = ACF_RoundImpact(Bullet, Speed, Energy, Target, HitPos, HitNormal, Bone)
-
-				if HitRes.Ricochet then
-					return "Ricochet"
-				else
-					self:Detonate(_, Bullet, HitPos)
-
-					return "Penetrated"
-				end
-			end
-		else
-			table.insert(Bullet.Filter, Target)
-
-			return "Penetrated"
-		end
-
-		return false
-	end
-
-	function Ammo:WorldImpact(_, Bullet, HitPos, HitNormal)
-		if not Bullet.Detonated then
-			self:Detonate(_, Bullet, HitPos)
-
-			return "Penetrated"
-		end
-
-		local Energy = ACF_Kinetic(Bullet.Flight:Length() / ACF.Scale, Bullet.ProjMass, 999999)
-		local HitRes = ACF_PenetrateGround(Bullet, Energy, HitPos, HitNormal)
-
-		if HitRes.Penetrated then
-			return "Penetrated"
-		else
-			return false
-		end
-	end
 else
 	ACF.RegisterAmmoDecal("GLATGM", "damage/heat_pen", "damage/heat_rico", function(Caliber) return Caliber * 0.1667 end)
+
+	local DecalIndex = ACF.GetAmmoDecalIndex
+
+	function Ammo:PenetrationEffect(Effect, Bullet)
+		local Data = EffectData()
+
+		if Bullet.Detonated then
+			Data:SetOrigin(Bullet.SimPos)
+			Data:SetNormal(Bullet.SimFlight:GetNormalized())
+			Data:SetScale(Bullet.SimFlight:Length())
+			Data:SetMagnitude(Bullet.RoundMass)
+			Data:SetRadius(Bullet.Caliber)
+			Data:SetDamageType(DecalIndex(Bullet.AmmoType))
+
+			util.Effect("ACF_Penetration", Data)
+		else
+			local _, _, BoomFillerMass = self:CrushCalc(Bullet.SimFlight:Length() * 0.0254, Bullet.FillerMass)
+
+			Data:SetOrigin(Bullet.SimPos)
+			Data:SetNormal(Bullet.SimFlight:GetNormalized())
+			Data:SetScale(math.max(BoomFillerMass ^ 0.33 * 3 * 39.37, 1))
+			Data:SetRadius(Bullet.Caliber)
+
+			util.Effect("ACF_GLATGMExplosion", Data)
+
+			Bullet.Detonated = true
+
+			Effect:SetModel("models/Gibs/wood_gib01e.mdl")
+		end
+	end
 
 	function Ammo:MenuAction(Menu, ToolData, Data)
 		local LinerAngle = Menu:AddSlider("Liner Angle", Data.MinConeAng, Data.MaxConeAng, 2)

@@ -4,6 +4,8 @@ AddCSLuaFile("shared.lua")
 
 include("shared.lua")
 
+local ACF = ACF
+
 ACF.RegisterClassLink("acf_radar", "acf_rack", function(Radar, Target)
 	if Radar.Weapons[Target] then return false, "This rack is already linked to this radar!" end
 	if Target.Radar == Radar then return false, "This rack is already linked to this radar!" end
@@ -430,6 +432,13 @@ do -- Spawn and Update functions
 		Radar.Weapons     = {}
 		Radar.Targets     = {}
 		Radar.DataStore   = ACF.GetEntityArguments("acf_radar")
+		Radar.TargetInfo  = {
+			ID = {},
+			Owner = {},
+			Position = {},
+			Velocity = {},
+			Distance = {}
+		}
 
 		UpdateRadar(Radar, Data, Class, RadarData)
 

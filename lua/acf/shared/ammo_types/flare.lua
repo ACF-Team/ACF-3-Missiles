@@ -83,7 +83,7 @@ if SERVER then
 	local IgniteConVar = GetConVar("ACFM_FlaresIgnite")
 
 	function Ammo:Create(_, BulletData)
-		local Bullet = ACF_CreateBullet(BulletData)
+		local Bullet = ACF.CreateBullet(BulletData)
 
 		Bullet.CreateTime = ACF.CurTime
 

@@ -24,8 +24,7 @@ local function GetLaserData(Entity, Data)
 	TraceData.endpos = Entity:LocalToWorld(Offset + Direction * 50000)
 	TraceData.filter = Data.Filter
 
-	local Trace = ACF.TraceF or ACF.Trace
-	local Result = Trace(TraceData, true)
+	local Result = ACF.TraceF(TraceData)
 	Result.Distance = Result.Fraction * 50000
 
 	return Origin, Result.HitPos, Result
