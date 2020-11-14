@@ -305,6 +305,7 @@ do -- Optical guidance computer
 			Entity.Offset		= Computer.Offset
 			Entity.Filter		= { Entity }
 			Entity.HitPos		= Vector()
+			Entity.TraceDir		= Vector()
 			Entity.TracePos		= Vector()
 			Entity.Distance		= 0
 			Entity.TraceDist	= 0
@@ -335,6 +336,7 @@ do -- Optical guidance computer
 			Entity.Offset		= nil
 			Entity.Filter		= nil
 			Entity.HitPos		= nil
+			Entity.TraceDir		= nil
 			Entity.TracePos		= nil
 			Entity.Distance		= nil
 			Entity.TraceDist	= nil
@@ -423,6 +425,7 @@ do -- Optical guidance computer
 
 			local Result = Trace(TraceData)
 
+			Entity.TraceDir = Result.Normal
 			Entity.TracePos = Result.HitPos
 			Entity.TraceDist = Result.Fraction * 50000
 
@@ -487,6 +490,9 @@ do -- Laser guidance computer
 			Entity.OnCooldown	= false
 			Entity.HitPos		= Vector()
 			Entity.Distance		= 0
+			Entity.TraceDir		= Vector()
+			Entity.TracePos		= Entity.HitPos
+			Entity.TraceDist	= Entity.Distance
 			Entity.NextSpread	= 0
 			Entity.Spread		= 0
 			Entity.LaseTime		= 0
@@ -526,6 +532,9 @@ do -- Laser guidance computer
 			Entity.OnCooldown	= nil
 			Entity.HitPos		= nil
 			Entity.Distance		= nil
+			Entity.TraceDir		= nil
+			Entity.TracePos		= nil
+			Entity.TraceDist	= nil
 			Entity.NextSpread	= nil
 			Entity.Spread		= nil
 			Entity.LaseTime		= nil
@@ -636,6 +645,9 @@ do -- Laser guidance computer
 					Entity.HitPos = Vector()
 					Entity.Distance = 0
 					Entity.LaseTime	= 0
+					Entity.TraceDir = Vector()
+					Entity.TracePos = Entity.HitPos
+					Entity.TraceDist = Entity.Distance
 
 					WireLib.TriggerOutput(Entity, "Cooling Down", 1)
 					WireLib.TriggerOutput(Entity, "HitPos", Vector())
@@ -659,6 +671,9 @@ do -- Laser guidance computer
 
 					Entity.Distance = Laser and Laser.Distance or 0
 					Entity.HitPos = Laser and Laser.HitPos or Vector()
+					Entity.TraceDir = Laser and Laser.Trace.Normal
+					Entity.TracePos = Entity.HitPos
+					Entity.TraceDist = Entity.Distance
 
 					WireLib.TriggerOutput(Entity, "Distance", Entity.Distance)
 					WireLib.TriggerOutput(Entity, "HitPos", Entity.HitPos)
