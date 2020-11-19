@@ -120,6 +120,8 @@ local function CreateMenu(Menu)
 
 		MissileInfo:SetText(GetMissileText(Data))
 
+		Menu.AmmoBase.MissileData = Data
+
 		ACF.UpdateAmmoMenu(Menu, Settings)
 	end
 

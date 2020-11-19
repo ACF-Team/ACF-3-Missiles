@@ -2,16 +2,8 @@
 local ACF = ACF
 local Fuze = ACF.RegisterFuze("Optical", "Contact")
 
---[[
--- Configuration information for things like acfmenu.
-
-Name = "Distance",			-- name of the variable to change
-DisplayName = "Distance",	-- name displayed to the user
-CommandName = "Ds",			-- shorthand name used in console commands
-Type = "number",			-- lua type of the configurable variable
-Min = 0,					-- number specific: minimum value
-Max = 2500					-- number specific: maximum value
-]]--
+Fuze.MinDistance = 40
+Fuze.MaxDistance = 2500
 
 function Fuze:GetDisplayConfig()
 	local Config = Fuze.BaseClass.GetDisplayConfig(self)
@@ -22,7 +14,21 @@ function Fuze:GetDisplayConfig()
 end
 
 if CLIENT then
-	Fuze.desc = "This fuze fires a beam directly ahead and detonates when the beam hits something close-by.\nDistance in inches."
+	Fuze.Description = "This fuze fires a beam directly ahead and detonates when the beam hits something close-by. Distance in inches."
+
+	function Fuze:AddMenuControls(Base, ToolData, ...)
+		Fuze.BaseClass.AddMenuControls(self, Base, ToolData, ...)
+
+		local Distance = Base:AddSlider("Fuze Distance", self.MinDistance, self.MaxDistance, 2)
+		Distance:SetDataVar("FuzeDistance", "OnValueChanged")
+		Distance:SetValueFunction(function(Panel)
+			local Value = ACF.ReadNumber("FuzeDistance")
+
+			Panel:SetValue(Value)
+
+			return Value
+		end)
+	end
 else
 	ACF.AddEntityArguments("acf_ammo", "FuzeDistance") -- Adding extra info to ammo crates
 
@@ -40,13 +46,13 @@ else
 			Args.DS = nil
 		end
 
-		Data.FuzeDistance = math.Clamp(Distance or 0, 0, 2500)
+		Data.FuzeDistance = math.Clamp(Distance or 0, self.MinDistance, self.MaxDistance)
 	end
 
 	function Fuze:OnFirst(Entity, Data)
 		Fuze.BaseClass.OnFirst(self, Entity, Data)
 
-		self.Distance = Data.FuzeDistance -- TODO: This needs to be done in the clientside aswell
+		self.Distance = Data.FuzeDistance
 	end
 
 	function Fuze:GetDetonate(Missile)

@@ -1,25 +1,13 @@
 
 local Fuze = ACF.RegisterFuze("Cluster", "Optical")
 
+Fuze.MinDistance = 500
+Fuze.MaxDistance = 5000
+
 if CLIENT then
-	Fuze.desc = "This fuze fires a beam directly ahead and releases bomblets when the beam hits something close-by.\nDistance in inches."
+	Fuze.Description = "This fuze fires a beam directly ahead and releases bomblets when the beam hits something close-by. Distance in inches."
 else
 	Fuze.Spread = 15
-
-	function Fuze:VerifyData(EntClass, Data, ...)
-		Fuze.BaseClass.VerifyData(self, EntClass, Data, ...)
-
-		local Distance = Data.FuzeDistance
-		local Args = Data.FuzeArgs
-
-		if not ACF.CheckNumber(Distance) and Args then
-			Distance = ACF.CheckNumber(Args.DS) or 500
-
-			Args.DS = nil
-		end
-
-		Data.FuzeDistance = math.Clamp(Distance or 500, 500, 5000)
-	end
 
 	function Fuze:HandleDetonation(Entity, BulletData)
 		local Bomblets  = math.Clamp(math.Round(BulletData.FillerMass * 0.5), 10, 100)

@@ -2,7 +2,7 @@
 local Guidance = ACF.RegisterGuidance("Semi-Active Radar", "Anti-missile")
 
 if CLIENT then
-	Guidance.desc = "This guidance package uses a radar to detect contraptions and guides the munition towards the most centered one it can find."
+	Guidance.Description = "This guidance package uses a radar to detect contraptions and guides the munition towards the most centered one it can find."
 else
 	function Guidance:FindNewTarget(Missile, Radar)
 		if not Radar then return end

@@ -18,7 +18,7 @@ function Guidance:GetDisplayConfig()
 end
 
 if CLIENT then
-	Guidance.desc = "This guidance package will detect an active radar infront of itself and guide the munition towards it."
+	Guidance.Description = "This guidance package will detect an active radar infront of itself and guide the munition towards it."
 else
 	local Radars = ACF.ActiveRadars
 

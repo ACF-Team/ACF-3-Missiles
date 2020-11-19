@@ -2,7 +2,7 @@
 local Guidance = ACF.RegisterGuidance("Anti-missile", "Anti-radiation")
 
 if CLIENT then
-	Guidance.desc = "This guidance package uses a radar to detect missiles and guides the munition towards the most centered one it can find."
+	Guidance.Description = "This guidance package uses a radar to detect missiles and guides the munition towards the most centered one it can find."
 else
 	function Guidance:GetRadar(Type)
 		if not IsValid(self.Source) then return end

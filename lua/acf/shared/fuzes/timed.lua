@@ -2,16 +2,14 @@
 local ACF = ACF
 local Fuze = ACF.RegisterFuze("Timed", "Contact")
 
---[[
--- Configuration information for things like acfmenu.
+Fuze.MinTime = 1
+Fuze.MaxTime = 30
 
-Name = "Timer",					-- name of the variable to change
-DisplayName = "Trigger Delay",	-- name displayed to the user
-CommandName = "Tm",				-- shorthand name used in console commands
-Type = "number",				-- lua type of the configurable variable
-Min = 0,						-- number specific: minimum value
-Max = 30						-- number specific: maximum value
-]]--
+function Fuze:OnFirst(Entity, Data)
+	Fuze.BaseClass.OnFirst(self, Entity, Data)
+
+	self.Timer = Data.FuzeTimer
+end
 
 function Fuze:GetDisplayConfig()
 	local Config = Fuze.BaseClass.GetDisplayConfig(self)
@@ -22,7 +20,21 @@ function Fuze:GetDisplayConfig()
 end
 
 if CLIENT then
-	Fuze.desc = "This fuze triggers upon direct contact, or when the timer ends.\nDelay in seconds."
+	Fuze.Description = "This fuze triggers upon direct contact, or when the timer ends. Delay in seconds."
+
+	function Fuze:AddMenuControls(Base, ToolData, ...)
+		Fuze.BaseClass.AddMenuControls(self, Base, ToolData, ...)
+
+		local Timer = Base:AddSlider("Fuze Timer", self.MinTime, self.MaxTime, 2)
+		Timer:SetDataVar("FuzeTimer", "OnValueChanged")
+		Timer:SetValueFunction(function(Panel)
+			local Value = ACF.ReadNumber("FuzeTimer")
+
+			Panel:SetValue(Value)
+
+			return Value
+		end)
+	end
 else
 	ACF.AddEntityArguments("acf_ammo", "FuzeTimer") -- Adding extra info to ammo crates
 
@@ -33,18 +45,12 @@ else
 		local Args = Data.FuzeArgs
 
 		if not ACF.CheckNumber(Timer) and Args then
-			Timer = ACF.CheckNumber(Args.TM) or 1
+			Timer = ACF.CheckNumber(Args.TM) or 0
 
 			Args.TM = nil
 		end
 
-		Data.FuzeTimer = math.Clamp(Timer or 1, 1, 30)
-	end
-
-	function Fuze:OnFirst(Entity, Data)
-		Fuze.BaseClass.OnFirst(self, Entity, Data)
-
-		self.Timer = Data.FuzeTimer -- TODO: This needs to be done in the clientside aswell
+		Data.FuzeTimer = math.Clamp(Timer or 0, self.MinTime, self.MaxTime)
 	end
 
 	function Fuze:IsOnTime()

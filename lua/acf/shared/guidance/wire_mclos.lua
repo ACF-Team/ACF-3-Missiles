@@ -14,7 +14,7 @@ function Guidance:GetDisplayConfig()
 end
 
 if CLIENT then
-	Guidance.desc = "This guidance package allows you to manually control the direction of the missile."
+	Guidance.Description = "This guidance package allows you to manually control the direction of the missile."
 else
 	local SnapSound = "physics/metal/sawblade_stick%s.wav"
 

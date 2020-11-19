@@ -2,7 +2,7 @@
 local Fuze = ACF.RegisterFuze("Radio", "Optical")
 
 if CLIENT then
-	Fuze.desc = "This fuze tracks the Guidance module's target and detonates when the distance becomes low enough.\nDistance in inches."
+	Fuze.Description = "This fuze tracks the Guidance module's target and detonates when the distance becomes low enough.\nDistance in inches."
 else
 	function Fuze:GetDetonate(Missile, Guidance)
 		if not self:IsArmed() then return false end

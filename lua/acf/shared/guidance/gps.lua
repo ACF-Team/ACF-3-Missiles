@@ -2,7 +2,7 @@
 local Guidance = ACF.RegisterGuidance("GPS Guided", "Radio (MCLOS)")
 
 if CLIENT then
-	Guidance.desc = "This guidance package allows you to guide the munition to a desired point in the map."
+	Guidance.Description = "This guidance package allows you to guide the munition to a desired point in the map."
 else
 	local ZERO = Vector()
 

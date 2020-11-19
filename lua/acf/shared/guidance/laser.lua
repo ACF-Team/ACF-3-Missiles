@@ -13,7 +13,7 @@ function Guidance:GetDisplayConfig()
 end
 
 if CLIENT then
-	Guidance.desc = "This guidance package reads a target-position from the launcher and guides the munition towards it."
+	Guidance.Description = "This guidance package reads a target-position from the launcher and guides the munition towards it."
 else
 	local TraceData = { start = true, endpos = true, mask = MASK_SOLID_BRUSHONLY }
 	local TraceLine = util.TraceLine

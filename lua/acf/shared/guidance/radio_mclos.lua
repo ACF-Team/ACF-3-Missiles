@@ -6,7 +6,7 @@ function Guidance:Configure(Missile)
 end
 
 if CLIENT then
-	Guidance.desc = "This guidance package allows you to manually control the direction of the missile."
+	Guidance.Description = "This guidance package allows you to manually control the direction of the missile."
 else
 	local TraceData = { start = true, endpos = true, mask = MASK_SOLID_BRUSHONLY }
 	local TraceLine = util.TraceLine

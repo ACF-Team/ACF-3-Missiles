@@ -2,7 +2,7 @@
 local Guidance = ACF.RegisterGuidance("Wire (SACLOS)", "Wire (MCLOS)")
 
 if CLIENT then
-	Guidance.desc = "This guidance package allows you to control the direction of the missile using a computer's aiming position."
+	Guidance.Description = "This guidance package allows you to control the direction of the missile using a computer's aiming position."
 else
 	local ZERO = Vector()
 

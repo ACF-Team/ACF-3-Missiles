@@ -12,7 +12,7 @@ function Guidance:GetDisplayConfig()
 end
 
 if CLIENT then
-	Guidance.desc = "This guidance package is empty and provides no control."
+	Guidance.Description = "This guidance package is empty and provides no control."
 else
 	function Guidance:OnLaunched() end
 
