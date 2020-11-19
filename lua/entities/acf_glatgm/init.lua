@@ -44,7 +44,7 @@ function MakeACF_GLATGM(Gun, BulletData)
 	Entity.Weapon       = Gun
 	Entity.BulletData   = table.Copy(BulletData)
 	Entity.ViewCone     = math.cos(math.rad(30)) -- Number inside is on degrees
-	Entity.Distance     = BulletData.MuzzleVel * 4 * 39.37 -- optical fuze distance
+	Entity.MaxRange     = BulletData.MuzzleVel * 2 * 39.37 / ACF.Scale -- optical fuze distance
 	Entity.KillTime     = ACF.CurTime + 20
 	Entity.GuideDelay   = ACF.CurTime + 2 -- Missile won't be guided for the first two seconds
 	Entity.LastThink    = ACF.CurTime
@@ -148,7 +148,7 @@ function ENT:Think()
 		local HitPos   = Computer.HitPos
 		local CanSee   = CheckViewCone(self, HitPos)
 
-		if CanSee and Position:Distance(StartPos) <= self.Distance then
+		if CanSee and Position:Distance(StartPos) <= self.MaxRange then
 			local Desired = self:WorldToLocalAngles(Computer.TraceDir:Angle()) + AngleRand() * 0.01
 			local Agility = self.Agility
 

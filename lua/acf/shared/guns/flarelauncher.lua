@@ -1,11 +1,12 @@
 
 ACF.RegisterWeaponClass("FGL", {
-	Name		  = "Flare Launcher",
-	Description	  = "Flare Launchers can fire flares much more rapidly than other launchers, but can't load any other ammo types.",
-	MuzzleFlash	  = "gl_muzzleflash_noscale",
-	ROFMod		  = 0.6,
-	Spread		  = 1.5,
-	Sound		  = "acf_missiles/missiles/flare_launch.mp3",
+	Name        = "Flare Launcher",
+	Description = "Flare Launchers can fire flares much more rapidly than other launchers, but can't load any other ammo types.",
+	MuzzleFlash = "gl_muzzleflash_noscale",
+	ROFMod      = 0.6,
+	Spread      = 1.5,
+	Sound       = "acf_missiles/missiles/flare_launch.mp3",
+	Blacklist   = { "AP", "APHE", "FL", "HE", "HEAT", "HP", "SM" },
 	LimitConVar = {
 		Name = "_acf_flarelauncher",
 		Amount = 4,

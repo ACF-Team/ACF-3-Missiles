@@ -7,7 +7,7 @@ function Ammo:OnLoaded()
 	self.Description = "A countermeasure for infrared guided munitions."
 	self.Blacklist = ACF.GetWeaponBlacklist({
 		SL = true,
-		FLR = true,
+		FGL = true,
 	})
 end
 
@@ -90,16 +90,11 @@ if SERVER then
 		ACFM_RegisterFlare(Bullet)
 	end
 
-	function Ammo:Network(Crate, BulletData)
-		Crate:SetNW2String("AmmoType", "FLR")
-		Crate:SetNW2String("AmmoID", BulletData.Id)
-		Crate:SetNW2Float("Caliber", BulletData.Caliber)
-		Crate:SetNW2Float("ProjMass", BulletData.ProjMass)
-		Crate:SetNW2Float("FillerMass", BulletData.FillerMass)
-		Crate:SetNW2Float("PropMass", BulletData.PropMass)
-		Crate:SetNW2Float("DragCoef", BulletData.DragCoef)
-		Crate:SetNW2Float("MuzzleVel", BulletData.MuzzleVel)
-		Crate:SetNW2Float("Tracer", BulletData.Tracer)
+	function Ammo:Network(Entity, BulletData)
+		Ammo.BaseClass.Network(self, Entity, BulletData)
+
+		Entity:SetNW2String("AmmoType", "FLR")
+		Entity:SetNW2Float("FillerMass", BulletData.FillerMass)
 	end
 
 	function Ammo:GetCrateText(BulletData)
@@ -130,62 +125,52 @@ else
 	function Ammo:ImpactEffect()
 	end
 
-	function Ammo:MenuAction(Menu, ToolData, Data)
-		local FillerMass = Menu:AddSlider("Flare Filler", 0, Data.MaxFillerVol, 2)
+	function Ammo:SetupAmmoMenuSettings(Settings)
+		Settings.SuppressTracer = true
+	end
+
+	function Ammo:AddAmmoControls(Base, ToolData, BulletData)
+		local FillerMass = Base:AddSlider("Flare Filler", 0, BulletData.MaxFillerVol, 2)
 		FillerMass:SetDataVar("FillerMass", "OnValueChanged")
 		FillerMass:TrackDataVar("Projectile")
 		FillerMass:SetValueFunction(function(Panel)
 			ToolData.FillerMass = math.Round(ACF.ReadNumber("FillerMass"), 2)
 
-			self:UpdateRoundData(ToolData, Data)
+			self:UpdateRoundData(ToolData, BulletData)
 
-			Panel:SetMax(Data.MaxFillerVol)
-			Panel:SetValue(Data.FillerVol)
+			Panel:SetMax(BulletData.MaxFillerVol)
+			Panel:SetValue(BulletData.FillerVol)
 
-			return Data.FillerVol
+			return BulletData.FillerVol
 		end)
+	end
 
-		local Tracer = Menu:AddCheckBox("Tracer")
-		Tracer:SetDataVar("Tracer", "OnChange")
-		Tracer:SetValueFunction(function(Panel)
-			ToolData.Tracer = ACF.ReadBool("Tracer")
-
-			self:UpdateRoundData(ToolData, Data)
-
-			ACF.WriteValue("Projectile", Data.ProjLength)
-			ACF.WriteValue("Propellant", Data.PropLength)
-
-			Panel:SetText("Tracer : " .. Data.Tracer .. " cm")
-			Panel:SetValue(ToolData.Tracer)
-
-			return ToolData.Tracer
-		end)
-
-		local RoundStats = Menu:AddLabel()
+	function Ammo:AddAmmoInformation(Base, ToolData, BulletData)
+		local RoundStats = Base:AddLabel()
 		RoundStats:TrackDataVar("Projectile", "SetText")
 		RoundStats:TrackDataVar("Propellant")
 		RoundStats:TrackDataVar("FillerMass")
 		RoundStats:SetValueFunction(function()
-			self:UpdateRoundData(ToolData, Data)
+			self:UpdateRoundData(ToolData, BulletData)
 
 			local Text		= "Muzzle Velocity : %s m/s\nProjectile Mass : %s\nPropellant Mass : %s\nFlare Filler Mass : %s"
-			local MuzzleVel	= math.Round(Data.MuzzleVel * ACF.Scale, 2)
-			local ProjMass	= ACF.GetProperMass(Data.ProjMass)
-			local PropMass	= ACF.GetProperMass(Data.PropMass)
-			local Filler	= ACF.GetProperMass(Data.FillerMass)
+			local MuzzleVel	= math.Round(BulletData.MuzzleVel * ACF.Scale, 2)
+			local ProjMass	= ACF.GetProperMass(BulletData.ProjMass)
+			local PropMass	= ACF.GetProperMass(BulletData.PropMass)
+			local Filler	= ACF.GetProperMass(BulletData.FillerMass)
 
 			return Text:format(MuzzleVel, ProjMass, PropMass, Filler)
 		end)
 
-		local FillerStats = Menu:AddLabel()
+		local FillerStats = Base:AddLabel()
 		FillerStats:TrackDataVar("FillerMass", "SetText")
 		FillerStats:SetValueFunction(function()
-			self:UpdateRoundData(ToolData, Data)
+			self:UpdateRoundData(ToolData, BulletData)
 
 			local Text		= "Burn Rate : %s/s\nBurn Duration : %s s\nDistraction Chance : %s"
-			local Rate		= ACF.GetProperMass(Data.BurnRate)
-			local Duration	= math.Round(Data.BurnTime, 2)
-			local Chance	= math.Round(Data.DistractChance * 100, 2) .. "%"
+			local Rate		= ACF.GetProperMass(BulletData.BurnRate)
+			local Duration	= math.Round(BulletData.BurnTime, 2)
+			local Chance	= math.Round(BulletData.DistractChance * 100, 2) .. "%"
 
 			return Text:format(Rate, Duration, Chance)
 		end)

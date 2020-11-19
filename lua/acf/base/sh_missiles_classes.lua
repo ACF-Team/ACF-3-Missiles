@@ -73,23 +73,6 @@ do -- Missile registration functions
 	ACF.Classes.Missiles = ACF.Classes.Missiles or {}
 
 	local Missiles = ACF.Classes.Missiles
-	local Blacklist = {}
-
-	local function SaveBlacklist(Group)
-		if not Group.Blacklist then return end
-
-		for _, V in pairs(Group.Blacklist) do
-			local Current = Blacklist[V]
-
-			if not Current then
-				Blacklist[V] = {
-					[Group.ID] = true
-				}
-			else
-				Current[Group.ID] = true
-			end
-		end
-	end
 
 	function ACF.RegisterMissileClass(ID, Data)
 		local Group = AddClassGroup(ID, Missiles, Data)
@@ -97,8 +80,6 @@ do -- Missile registration functions
 		if not Group.Entity then
 			Group.Entity = "acf_rack"
 		end
-
-		SaveBlacklist(Group)
 
 		return Group
 	end
@@ -110,16 +91,45 @@ do -- Missile registration functions
 
 		return Class
 	end
+end
 
-	hook.Add("OnClassLoaded", "ACF Missiles Ammo Blacklist", function(ID, Class)
-		if not Blacklist[ID] then return end
-		if not Class.Blacklist then return end
+do -- External ammo blacklisting
+	local AmmoTypes = ACF.Classes.AmmoTypes
+	local Blacklisted = {}
 
-		local ClassList = Class.Blacklist
-		local List = Blacklist[ID]
+	local function AddToBlacklist(Weapon, Ammo)
+		local AmmoType = AmmoTypes[Ammo]
+		local Blacklist = Blacklisted[Ammo]
 
-		for K in pairs(List) do
-			ClassList[K] = true
+		if Blacklist then
+			Blacklist[Weapon] = true
+		else
+			Blacklisted[Ammo] = {
+				[Weapon] = true,
+			}
+		end
+
+		if AmmoType and AmmoType.Loaded then
+			AmmoType.Blacklist[Weapon] = true
+		end
+	end
+
+	hook.Add("ACF_OnNewClassGroup", "ACF External Ammo Blacklist", function(ID, Group)
+		if not Group.Blacklist then return end
+
+		for _, Ammo in ipairs(Group.Blacklist) do
+			AddToBlacklist(ID, Ammo)
+		end
+	end)
+
+	hook.Add("ACF_OnClassLoaded", "ACF External Ammo Blacklist", function(ID, Class)
+		if not AmmoTypes[ID] then return end
+		if not Blacklisted[ID] then return end
+
+		local Blacklist = Class.Blacklist
+
+		for K in pairs(Blacklisted[ID]) do
+			Blacklist[K] = true
 		end
 	end)
 end
