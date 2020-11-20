@@ -1,5 +1,8 @@
 include("shared.lua")
 
+language.Add("Undone_acf_rack", "Undone ACF Rack")
+language.Add("SBoxLimit__acf_rack", "You've hit the ACF Rack limit!")
+
 local HideInfo = ACF.HideInfoBubble
 
 function ENT:Draw()

@@ -1,28 +1,38 @@
 util.AddNetworkString("ACF_SetupLaserSource")
+util.AddNetworkString("ACF_ClearLaserSource")
 util.AddNetworkString("ACF_SyncLaserSources")
 util.AddNetworkString("ACF_UpdateLaserFilter")
 
 local Sources = ACF.LaserSources
 
-function ACF.SetupLaserSource(Entity, NetVar, Offset, Direction, Spread, Filter)
+function ACF.SetupLaserSource(Entity, Data)
 	if not IsValid(Entity) then return end
+	if not istable(Data) then return end
 
-	Offset = Offset or Vector()
-	Direction = Direction or Vector(1)
-	Spread = Spread or ""
-
-	ACF.AddLaserSource(Entity, NetVar, Offset, Direction, Spread, Filter)
+	local LaserData = ACF.AddLaserSource(Entity, {
+		NetVar = Data.NetVar,
+		Offset = Data.Offset,
+		Direction = Data.Direction,
+		Filter = Data.Filter
+	})
 
 	-- We have to wait for the entity to be created on the clientside
-	timer.Simple(0.05, function()
+	timer.Simple(0.1, function()
 		net.Start("ACF_SetupLaserSource")
 			net.WriteEntity(Entity)
-			net.WriteString(NetVar)
-			net.WriteVector(Offset)
-			net.WriteVector(Direction)
-			net.WriteType(Filter)
+			net.WriteTable(LaserData)
 		net.Broadcast()
 	end)
+end
+
+function ACF.ClearLaserSource(Entity)
+	if not IsValid(Entity) then return end
+
+	ACF.RemoveLaserSource(Entity)
+
+	net.Start("ACF_ClearLaserSource")
+		net.WriteEntity(Entity)
+	net.Broadcast()
 end
 
 function ACF.FilterLaserEntity(Entity)
@@ -32,8 +42,6 @@ function ACF.FilterLaserEntity(Entity)
 		local Filter = Data.Filter
 
 		Filter[#Filter + 1] = Entity
-
-		Data.Filter = Filter
 
 		if Source.UpdateFilter then
 			Source:UpdateFilter(Filter)
@@ -50,7 +58,7 @@ hook.Add("PlayerInitialSpawn", "ACF Laser Setup", function(Player)
 		if not IsValid(Player) then return end
 
 		net.Start("ACF_SyncLaserSources")
-			net.WriteTable(ACF.LaserSources)
+			net.WriteTable(Sources)
 		net.Send(Player)
 	end)
 end)

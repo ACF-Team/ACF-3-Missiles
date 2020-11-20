@@ -3,167 +3,227 @@ AddCSLuaFile("shared.lua")
 
 include("shared.lua")
 
+local ACF = ACF
+local Missiles = ACF.ActiveMissiles
+local TraceData = { start = true, endpos = true, filter = true }
+local ZERO = Vector()
 
-function ENT:Initialize()
-	if self.BulletData.Caliber == 12.0 then
-		self:SetModel( "models/missiles/glatgm/9m112.mdl" )
-	elseif self.BulletData.Caliber > 12.0 then
-		self:SetModel( "models/missiles/glatgm/mgm51.mdl" )
+local function CheckViewCone(Missile, HitPos)
+	local Position = Missile.Position
+	local Forward = Missile:GetForward()
+	local Direction = (HitPos - Position):GetNormalized()
+
+	return Direction:Dot(Forward) >= Missile.ViewCone
+end
+
+function MakeACF_GLATGM(Gun, BulletData)
+	local Entity = ents.Create("acf_glatgm")
+
+	if not IsValid(Entity) then return end
+
+	Entity:SetAngles(Gun:GetAngles())
+	Entity:SetPos(BulletData.Pos)
+	Entity:SetPlayer(Gun.Owner)
+	Entity:Spawn()
+
+	if BulletData.Caliber == 12 then
+		Entity:SetModel("models/missiles/glatgm/9m112.mdl")
+	elseif BulletData.Caliber > 12 then
+		Entity:SetModel("models/missiles/glatgm/mgm51.mdl")
 	else
-		self:SetModel( "models/missiles/glatgm/9m117.mdl" )
-		self:SetModelScale(self.BulletData.Caliber * 10 / 100, 0)
+		Entity:SetModel("models/missiles/glatgm/9m117.mdl")
+		Entity:SetModelScale(BulletData.Caliber * 0.1, 0)
 	end
 
-	self:SetMoveType(MOVETYPE_VPHYSICS);
-	self:PhysicsInit(SOLID_VPHYSICS);
-	self:SetUseType(SIMPLE_USE);
-	self:SetSolid(SOLID_VPHYSICS);
-	self:SetCollisionGroup( COLLISION_GROUP_WORLD ) -- DISABLES collisions with players/props
+	Entity:PhysicsInit(SOLID_VPHYSICS)
+	Entity:SetMoveType(MOVETYPE_VPHYSICS)
 
-	self.PhysObj = self:GetPhysicsObject()
-	self.PhysObj:EnableGravity( false )
-	self.PhysObj:EnableMotion( false )
+	ParticleEffectAttach("Rocket Motor GLATGM", 4, Entity, 1)
 
-	timer.Simple(0.1,function()
-		self:SetCollisionGroup( COLLISION_GROUP_NONE ) -- ENABLES collisions with players/props
+	Entity.Owner        = Gun.Owner
+	Entity.Weapon       = Gun
+	Entity.BulletData   = table.Copy(BulletData)
+	Entity.ViewCone     = math.cos(math.rad(30)) -- Number inside is on degrees
+	Entity.MaxRange     = BulletData.MuzzleVel * 2 * 39.37 / ACF.Scale -- optical fuze distance
+	Entity.KillTime     = ACF.CurTime + 20
+	Entity.GuideDelay   = ACF.CurTime + 2 -- Missile won't be guided for the first two seconds
+	Entity.LastThink    = ACF.CurTime
+	Entity.Filter       = Entity.BulletData.Filter
+	Entity.Agility      = 10 -- Magic multiplier that controls the agility of the missile
+	Entity.IsSubcaliber = BulletData.Caliber < 10
+	Entity.Speed        = Entity.IsSubcaliber and 2500 or 5000 -- gmu/s
+	Entity.SpiralRadius = Entity.IsSubcaliber and 3.5 or nil
+	Entity.SpiralSpeed  = Entity.IsSubcaliber and 15 or nil
+	Entity.SpiralAngle  = Entity.IsSubcaliber and 0 or nil
+	Entity.Position     = BulletData.Pos
+	Entity.Innacuracy   = 0
 
-		ParticleEffectAttach("Rocket Motor GLATGM",4, self,1)
-	end )
+	Entity.Filter[#Entity.Filter + 1] = Entity
 
-	self.KillTime = CurTime() + 20
-	self.Time = CurTime()
-	self.Filter = {self, self.Guidance}
+	local PhysObj = Entity:GetPhysicsObject()
 
-	for _, v in pairs( ents.FindInSphere( self.Guidance:GetPos(), 250 )   ) do
-		if v:GetClass() == "acf_opticalcomputer" and (not v.CPPIGetOwner or v:CPPIGetOwner() == self.Owner) then
-			self.Guidance = v
-			self.Optic = true
-			break
+	if IsValid(PhysObj) then
+		PhysObj:EnableGravity(false)
+		PhysObj:EnableMotion(false)
+		PhysObj:SetMass(BulletData.CartMass)
+	end
+
+	ACF_Activate(Entity)
+
+	Missiles[Entity] = true
+
+	hook.Run("OnMissileLaunched", Entity)
+
+	return Entity
+end
+
+function ENT:ACF_OnDamage(Entity, Energy, FrArea, Angle, Inflictor)
+	if self.Detonated then
+		return {
+			Damage = 0,
+			Overkill = 1,
+			Loss = 0,
+			Kill = false
+		}
+	end
+
+	local HitRes = ACF.PropDamage(Entity, Energy, FrArea, Angle, Inflictor) --Calling the standard damage prop function
+
+	-- Detonate if the shot penetrates the casing or destroys the missile.
+	if HitRes.Kill or HitRes.Overkill > 0 then
+		if hook.Run("ACF_AmmoExplode", self, self.BulletData) == false then return HitRes end
+
+		if IsValid(Inflictor) and Inflictor:IsPlayer() then
+			self.Inflictor = Inflictor
 		end
+
+		self:Detonate()
 	end
 
-	self.velocity = 170 		--velocity of missile per second in ACF meters (Hu/39.37)
-	self.secondsOffset = 0.08	--seconds of forward flight to aim towards, to affect the beam-riding simulation
-	self.InnacV = 0
-	local Caliber = self.BulletData.Caliber
-	self.Sub = Caliber < 10 -- is it a small glatgm?
-	self.SpiralC = 0
-	self.SpiralAm = (10-Caliber) * 0.2 -- amount of artifical spiraling for <100 shells, caliber in acf is in cm
-	if self.Sub then
-		self.velocity = 72
-		self.secondsOffset = 0.1
-	end
-	self.velocity = self.velocity * 39.37
-	self.offsetLength = self.velocity * self.secondsOffset	--how far off the forward offset is for the targeting position
-	self.GuideDelay = CurTime() + self.secondsOffset * 3.2
+	return HitRes -- This function needs to return HitRes
+end
+
+function ENT:GetComputer()
+	local Weapon = self.Weapon
+
+	if not IsValid(Weapon) then return end
+
+	local Computer = Weapon.Computer
+
+	if not IsValid(Computer) then return end
+	if Computer.Disabled then return end
+	if not Computer.IsComputer then return end
+	if Computer.HitPos == ZERO then return end
+
+	return Computer
+end
+
+local function ClampAng(Ang, Min, Max)
+	local Pitch, Yaw, Roll = Ang:Unpack()
+
+	return Angle(
+		math.Clamp(Pitch, Min, Max),
+		math.Clamp(Yaw, Min, Max),
+		math.Clamp(Roll, Min, Max)
+	)
 end
 
 function ENT:Think()
-	if IsValid(self) then
-		if self.KillTime < CurTime() then
-			self:Detonate()
-		end
-		local dt = CurTime() - self.Time --timestep
-		self.Time = CurTime()
-		local InnacDT = self.InnacV * dt
-		local dir = AngleRand() * 0.0002 * InnacDT
-		local Correction = VectorRand()  * 0.0007 * InnacDT
-		local GD = self.GuideDelay < self.Time
-		if GD then
-			self.InnacV = self.InnacV + 1 --inaccuracy when not guided bloom
-			if IsValid(self.Guidance) and self.Guidance:GetPos():Distance(self:GetPos()) < self.Distance then
-				local acosc = math.acos((self:GetPos() - self.Guidance:GetPos()):GetNormalized():Dot(self.Guidance:GetForward())) --switch to acos as it's cheaper than comparing 4 angle values
+	if self.Detonated then return end
 
-				if acosc < 0.785398 then
-					local glpos = self.Guidance:GetPos() + self.Guidance:GetForward()
-					if not self.Optic then
-						glpos = self.Guidance:GetAttachment(1).Pos + self.Guidance:GetForward() * 20
-					end
-					local tr = util.QuickTrace( glpos, self.Guidance:GetForward() * 68000, {self.Guidance,self})
-					local thp = tr.HitPos
-					if thp:Distance(self:GetPos()) > (self.offsetLength * 2) then --Missile will beam ride until it is close enough, then it will use hitpos of the guidance trace.
-						tr = util.QuickTrace( glpos, self.Guidance:GetForward() * (self.Guidance:GetPos():Distance(self:GetPos()) + self.offsetLength), {self.Guidance, self})
-						thp = tr.HitPos
-					end
-					acosc = math.acos((thp - self:GetPos()):GetNormalized():Dot(self:GetForward())) --acos also added to missile so it doesn't have 360 vision
-					if acosc < 0.41179 then
-						self.InnacV = 0
-						dir = self:WorldToLocalAngles(self.Guidance:GetAngles() ) * dt * self.velocity * 0.007
-						Correction = self:WorldToLocal(self.Guidance:GetPos()) * dt
-					end
-				end
-			end
-		end
-		local Spiral = 0
-		if self.Sub or self.InnacV > 0 and GD then
-			Spiral = self.SpiralAm + math.random(-self.SpiralAm * 0.25, self.SpiralAm) --Spaghett
-			self.SpiralC = self.SpiralC + Spiral * dt * 411
-			self:SetAngles(self:LocalToWorldAngles(dir + Angle(0, 0, self.SpiralC)))
-			Correction = Vector(0,(self:WorldToLocal(self.Guidance:GetPos()) * dt * 0.5).y,Correction.z)
-		else
-			self:SetAngles(self:LocalToWorldAngles(dir))
-		end
-		local tr = util.TraceHull( {
-			start = self:GetPos(),
-			endpos = self:LocalToWorld(Vector(self.velocity * dt + 200,Correction.y,Correction.z)),
-			filter = self.Filter,
-			mins = Vector(),
-			maxs = Vector(),
-			mask = MASK_SOLID
-		} )
-		self:SetPos(tr.HitPos - self:GetForward() * 200)
-		if tr.Hit then
-			self:Detonate()
-		end
-		self:NextThink( CurTime() + 0.01 )
-		return true
+	local Time = ACF.CurTime
+
+	if Time >= self.KillTime then
+		return self:Detonate()
 	end
+
+	local IsGuided, Direction, Correction
+	local DeltaTime = ACF.CurTime - self.LastThink
+	local IsDelayed = self.GuideDelay > Time
+	local Computer  = self:GetComputer()
+	local Position  = self.Position
+
+	if not IsDelayed and IsValid(Computer) then
+		local StartPos = Computer:LocalToWorld(Computer.Offset)
+		local HitPos   = Computer.HitPos
+		local CanSee   = CheckViewCone(self, HitPos)
+
+		if CanSee and Position:Distance(StartPos) <= self.MaxRange then
+			local Desired = self:WorldToLocalAngles(Computer.TraceDir:Angle()) + AngleRand() * 0.01
+			local Agility = self.Agility
+
+			Direction  = ClampAng(Desired, -Agility, Agility) * DeltaTime
+			Correction = self:WorldToLocal(StartPos) * DeltaTime
+			IsGuided   = true
+
+			self.Innacuracy = 0
+		end
+	end
+
+	if not IsGuided then
+		local Innacuracy = self.Innacuracy * DeltaTime
+
+		Direction  = AngleRand() * 0.0002 * Innacuracy
+		Correction = VectorRand() * 0.0007 * Innacuracy
+
+		self.Innacuracy = self.Innacuracy + 100 * DeltaTime
+	end
+
+	if self.IsSubcaliber then
+		local Radius = self.SpiralRadius
+		local CurAng = self.SpiralAngle
+
+		Correction.y = Correction.y + Radius * math.cos(CurAng)
+		Correction.z = Correction.z + Radius * math.sin(CurAng)
+
+		self.SpiralAngle = (CurAng + self.SpiralSpeed * DeltaTime) % 360
+	end
+
+	self:SetAngles(self:LocalToWorldAngles(Direction))
+
+	self.Position = self:LocalToWorld(Vector(self.Speed * DeltaTime, Correction.y, Correction.z))
+	self.Velocity = (self.Position - Position) / DeltaTime
+
+	TraceData.start  = Position
+	TraceData.endpos = self.Position
+	TraceData.filter = self.Filter
+
+	local Result = ACF.Trace(TraceData)
+
+	if Result.Hit then
+		self.Position = Result.HitPos
+
+		return self:Detonate()
+	end
+
+	self:SetPos(self.Position)
+	self:NextThink(Time)
+
+	self.LastThink = Time
+
+	return true
 end
 
 function ENT:Detonate()
-	if IsValid(self) and not self.Detonated then
-		self.Detonated = true
+	if self.Detonated then return end
 
-		BulletData = table.Copy(self.BulletData)
-		BulletData.Type			= "HEAT"
-		BulletData.Filter		= { self }
-		BulletData.FlightTime	= 0
-		BulletData.Gun			= self
-		BulletData.LimitVel		= 100
-		BulletData.Flight		= self:GetForward():GetNormalized() * self.velocity -- initial vel from glatgm
-		BulletData.FuseLength	= 0
-		BulletData.Pos			= self:GetPos()
+	self.Detonated = true
 
-		-- manual detonation
-		BulletData.Detonated	= true
-		BulletData.InitTime		= CurTime()
-		BulletData.Flight		= BulletData.Flight + BulletData.Flight:GetNormalized() * BulletData.SlugMV * 39.37
-		BulletData.FuseLength	= 0.005 + 40 / ((BulletData.Flight + BulletData.Flight:GetNormalized() * BulletData.SlugMV * 39.37):Length() * 0.0254)
-		BulletData.DragCoef		= BulletData.SlugDragCoef
-		BulletData.ProjMass		= BulletData.SlugMass
-		BulletData.Caliber		= BulletData.SlugCaliber
-		BulletData.PenArea		= BulletData.SlugPenArea
-		BulletData.Ricochet		= BulletData.SlugRicochet
+	local BulletData  = self.BulletData
 
-		self.FakeCrate = ents.Create("acf_fakecrate2")
-		self.FakeCrate:RegisterTo(BulletData)
-		self:DeleteOnRemove(self.FakeCrate)
+	BulletData.Filter = self.Filter
+	BulletData.Flight = self:GetForward() * self.Speed
+	BulletData.Pos    = self.Position
 
-		BulletData.Crate = self.FakeCrate:EntIndex()
+	local Bullet = ACF.CreateBullet(BulletData)
 
-		ACF.RoundTypes[BulletData.Type].create(self, BulletData)
+	ACF.DoReplicatedPropHit(self, Bullet)
 
-		local _, _, BoomFillerMass = ACF.RoundTypes.HEAT.CrushCalc(self.velocity * 0.0254, self.BulletData.FillerMass)
-		local Effect = EffectData()
-		Effect:SetOrigin(self:GetPos())
-		Effect:SetNormal(self:GetForward())
-		Effect:SetScale(math.max(BoomFillerMass ^ 0.33 * 3 * 39.37, 1))
-		Effect:SetRadius(self.BulletData.Caliber)
+	self:Remove()
+end
 
-		util.Effect("acf_glatgmexplosion", Effect)
+function ENT:OnRemove()
+	Missiles[self] = nil
 
-		ACF_HE(BulletData.Pos, BulletData.BoomFillerMass , BulletData.CasingMass , BulletData.Owner, BulletData.Filter, BulletData.Gun)
-
-		self:Remove()
-	end
+	WireLib.Remove(self)
 end

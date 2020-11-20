@@ -1,23 +1,34 @@
+
 local Guidance = ACF.RegisterGuidance("GPS Guided", "Radio (MCLOS)")
 
-Guidance.desc = "This guidance package allows you to guide the munition to a desired point in the map."
+if CLIENT then
+	Guidance.Description = "This guidance package allows you to guide the munition to a desired point in the map."
+else
+	local ZERO = Vector()
 
-function Guidance:OnLaunched(Missile)
-	Guidance.BaseClass.OnLaunched(self, Missile)
+	function Guidance:OnLaunched(Missile)
+		Guidance.BaseClass.OnLaunched(self, Missile)
 
-	self.NextUpdate = ACF.CurTime
-end
-
-function Guidance:GetGuidance()
-	local Computer = self:GetComputer()
-
-	if not IsValid(Computer) then return {} end
-	if not Computer.Active then return {} end
-
-	if ACF.CurTime >= self.NextUpdate then
-		self.NextUpdate = ACF.CurTime + 5
-		self.LastPos = self.Source.TargetPos
+		self.NextUpdate = 0
 	end
 
-	return { TargetPos = self.LastPos }
+	function Guidance:CheckComputer()
+		local Computer = self:GetComputer()
+
+		if not Computer then return end
+		if not Computer.IsGPS then return end
+		if Computer.InputCoords == ZERO then return end
+		if Computer.IsJammed then return end
+
+		if ACF.CurTime >= self.NextUpdate then
+			self.NextUpdate = ACF.CurTime + 5
+			self.LastPos = Computer.Coordinates
+		end
+	end
+
+	function Guidance:GetGuidance()
+		self:CheckComputer()
+
+		return { TargetPos = self.LastPos }
+	end
 end

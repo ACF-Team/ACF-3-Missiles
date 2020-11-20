@@ -1,2 +1,4 @@
-ENT.Type 		= "anim"
-ENT.Base 		= "base_anim"
+DEFINE_BASECLASS("base_wire_entity")
+
+ENT.DoNotDuplicate    = true
+ENT.DisableDuplicator = true
