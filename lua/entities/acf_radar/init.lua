@@ -235,9 +235,7 @@ local function ScanForEntities(Entity)
 
 	if Count ~= Entity.TargetCount then
 		if Count > Entity.TargetCount then
-			local Sound = Entity.Sound or ACFM.DefaultRadarSound
-
-			Entity:EmitSound(Sound, 500, 100)
+			Entity:EmitSound(Entity.SoundPath, 500, 100)
 		end
 
 		Entity.TargetCount = Count
@@ -377,17 +375,19 @@ do -- Spawn and Update functions
 			Entity[V] = Data[V]
 		end
 
-		Entity.Name        = Radar.Name
-		Entity.ShortName   = Radar.Name
-		Entity.EntType     = Class.Name
-		Entity.ClassType   = Class.ID
-		Entity.ClassData   = Class
-		Entity.ConeDegs    = Radar.ViewCone
-		Entity.Range       = Radar.Range
-		Entity.SwitchDelay = Radar.SwitchDelay
-		Entity.ThinkDelay  = Radar.ThinkDelay
-		Entity.GetDetected = Radar.Detect or Class.Detect
-		Entity.Origin      = AttachData and Entity:WorldToLocal(AttachData.Pos) or Vector()
+		Entity.Name         = Radar.Name
+		Entity.ShortName    = Radar.Name
+		Entity.EntType      = Class.Name
+		Entity.ClassType    = Class.ID
+		Entity.ClassData    = Class
+		Entity.SoundPath    = Class.Sound or ACFM.DefaultRadarSound
+		Entity.DefaultSound = Entity.SoundPath
+		Entity.ConeDegs     = Radar.ViewCone
+		Entity.Range        = Radar.Range
+		Entity.SwitchDelay  = Radar.SwitchDelay
+		Entity.ThinkDelay   = Radar.ThinkDelay
+		Entity.GetDetected  = Radar.Detect or Class.Detect
+		Entity.Origin       = AttachData and Entity:WorldToLocal(AttachData.Pos) or Vector()
 
 		Entity:SetNWString("WireName", "ACF " .. Entity.Name)
 

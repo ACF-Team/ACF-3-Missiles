@@ -342,6 +342,7 @@ function MakeACF_Missile(Player, Pos, Ang, Rack, MountPoint, Crate)
 	Missile.CanDelay       = Round.CanDelayLaunch
 	Missile.Agility        = Data.Agility or 1
 	Missile.Inertia        = 0.08333 * Data.Mass * (3.1416 * (Data.Caliber * 0.05) ^ 2 + Length)
+	Missile.Length         = Length
 	Missile.TorqueMul      = Length * 25
 	Missile.RotAxis        = Vector()
 	Missile.MotorEnabled   = false

@@ -80,7 +80,7 @@ local function CreateMenu(Menu)
 	ACF.WriteValue("PrimaryClass", "acf_rack")
 	ACF.WriteValue("SecondaryClass", "acf_ammo")
 
-	ACF.SetToolMode("acf_menu2", "Main", "Spawner")
+	ACF.SetToolMode("acf_menu", "Main", "Spawner")
 
 	function MissileTypes:OnSelect(Index, _, Data)
 		if self.Selected == Data then return end

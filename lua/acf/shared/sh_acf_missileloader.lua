@@ -4,7 +4,7 @@ function ACF_DefineRack(ID)
 end
 
 function ACF_DefineRackClass(ID)
-	print("Attempted to register rack class " .. ID .. " with a discontinued function. Racks are no longer separated in classes")
+	print("Attempted to register rack class " .. ID .. " with a discontinued function. Racks are no longer separated in classes.")
 end
 
 function ACF_DefineRadar(ID)

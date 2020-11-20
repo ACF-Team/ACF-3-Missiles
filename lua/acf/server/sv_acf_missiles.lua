@@ -82,39 +82,38 @@ function ACF.DoReplicatedPropHit(Entity, Bullet)
 	end
 end
 
-hook.Add("InitPostEntity", "ACFMissiles_AddSoundSupport", function()
-	timer.Simple(1, function()
-		ACF.SoundToolSupport.acf_rack = {
+timer.Simple(1, function()
+	local Sounds = ACF.SoundToolSupport
+
+	Sounds.acf_rack = {
 			GetSound = function(ent) return { Sound = ent.SoundPath } end,
 
-			SetSound = function(ent, soundData)
-				ent.SoundPath = soundData.Sound
-				ent:SetNWString("Sound", soundData.Sound)
-			end,
+		SetSound = function(ent, soundData)
+			ent.SoundPath = soundData.Sound
+			ent:SetNWString("Sound", soundData.Sound)
+		end,
 
-			ResetSound = function(ent)
-				local setSound = ACF.SoundToolSupport.acf_rack.SetSound
+		ResetSound = function(ent)
+			local setSound = Sounds.acf_rack.SetSound
 
-				setSound(ent, { Sound = ent.DefaultSound })
-			end
-		}
+			setSound(ent, { Sound = ent.DefaultSound })
+		end
+	}
 
-		ACF.SoundToolSupport.acf_radar = {
-			GetSound = function(ent) return {Sound = ent.Sound} end,
+	Sounds.acf_radar = {
+		GetSound = function(ent) return { Sound = ent.SoundPath } end,
 
-			SetSound = function(ent, soundData)
-				ent.Sound = soundData.Sound
-				ent:SetNWString( "Sound", soundData.Sound )
-			end,
+		SetSound = function(ent, soundData)
+			ent.SoundPath = soundData.Sound
+			ent:SetNWString( "Sound", soundData.Sound )
+		end,
 
-			ResetSound = function(ent)
-				local soundData = { Sound = ACFM.DefaultRadarSound }
+		ResetSound = function(ent)
+			local setSound = Sounds.acf_radar.SetSound
 
-				local setSound = ACF.SoundToolSupport.acf_radar.SetSound
-				setSound( ent, soundData )
-			end
-		}
-	end)
+			setSound(ent, { Sound = ent.DefaultSound })
+		end
+	}
 end)
 
 do -- Entity find
