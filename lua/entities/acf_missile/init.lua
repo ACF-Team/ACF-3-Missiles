@@ -418,9 +418,9 @@ function ENT:Launch(Delay, IsMisfire)
 	local Point      = self.MountPoint
 	local Rack       = self.Launcher
 	local Vel        = ACF_GetAncestor(Rack):GetVelocity()
-	local Flight     = self.Flight or self:LocalToWorldAngles(Point.Angle):Forward()
+	local Flight     = BulletData.Flight or self:LocalToWorldAngles(Point.Angle):Forward()
 
-	BulletData.Flight = Flight * Vel
+	BulletData.Flight = Flight + Vel
 	BulletData.Pos    = Rack:LocalToWorld(Point.Position)
 
 	if Rack.SoundPath and Rack.SoundPath ~= "" then
