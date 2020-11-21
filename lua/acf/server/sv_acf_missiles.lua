@@ -155,6 +155,8 @@ do -- Entity find
 	end)
 
 	hook.Add("Think", "ACF Entity Tracking", function()
+		if not ACF.CurTime then return end -- ACF.CurTime undefined, aborting.
+
 		local DeltaTime = ACF.CurTime - LastThink
 
 		for K in pairs(Ancestors) do
