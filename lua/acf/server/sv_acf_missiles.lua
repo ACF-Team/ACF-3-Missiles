@@ -192,7 +192,7 @@ do -- Entity find
 				Ancestors[Ancestor] = true
 				Checked[Ancestor] = true
 
-				if not Previous[Ancestor] then
+				if not Ancestor.TrackData then
 					local PhysObj = Ancestor:GetPhysicsObject()
 					local Position = IsValid(PhysObj) and PhysObj:GetMassCenter()
 
