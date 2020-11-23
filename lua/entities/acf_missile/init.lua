@@ -425,7 +425,7 @@ function ENT:Launch(Delay, IsMisfire)
 		BulletData.Sound = Rack.SoundPath
 	end
 
-	BulletData.Flight = Flight + Velocity * DeltaTime
+	BulletData.Flight = Flight + Flight:GetNormalized() * Velocity * DeltaTime
 	BulletData.Pos    = Rack:LocalToWorld(Point.Position)
 
 	self.Launched      = true
@@ -435,8 +435,8 @@ function ENT:Launch(Delay, IsMisfire)
 	self.LastThink     = ACF.CurTime - DeltaTime
 	self.LastVel       = BulletData.Flight
 	self.Position      = BulletData.Pos
-	self.Velocity      = Velocity
 	self.CurDir        = Flight:GetNormalized()
+	self.Velocity      = self.CurDir * Velocity
 	self.LastPos       = self.Position
 
 	if self.NoThrust then
