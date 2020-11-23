@@ -287,6 +287,7 @@ ACF.RegisterRack("1x Ataka", {
 	Name		= "Ataka Launch Tube",
 	Description	= "An 9M120 rack designed to carry 1 missile.",
 	Model		= "models/missiles/9m120_rk1.mdl",
+	RackModel	= "models/missiles/9m120.mdl",
 	EntType		= "Pod",
 	Caliber		= 130,
 	Mass		= 13,

@@ -324,7 +324,7 @@ function MakeACF_Missile(Player, Pos, Ang, Rack, MountPoint, Crate)
 	Missile.ForcedMass     = Data.Mass or 10
 	Missile.ForcedArmor    = Round.Armor
 	Missile.Effect         = Data.Effect or Class.Effect
-	Missile.DisableDamage  = Rack.ProtectMissile
+	Missile.NoDamage       = Rack.ProtectMissile or Data.NoDamage
 	Missile.ExhaustOffset  = Data.ExhaustOffset
 	Missile.Bodygroups     = Data.Bodygroups
 	Missile.RackModel      = Rack.MissileModel or Round.RackModel
@@ -425,16 +425,16 @@ function ENT:Launch(Delay, IsMisfire)
 	BulletData.Flight = Flight + Flight:GetNormalized() * Velocity * DeltaTime
 	BulletData.Pos    = Rack:LocalToWorld(Point.Position)
 
-	self.Launched      = true
-	self.ThinkDelay    = DeltaTime
-	self.GhostPeriod   = ACF.CurTime + GhostPeriod:GetFloat()
-	self.DisableDamage = nil
-	self.LastThink     = ACF.CurTime - DeltaTime
-	self.LastVel       = BulletData.Flight
-	self.Position      = BulletData.Pos
-	self.CurDir        = Flight:GetNormalized()
-	self.Velocity      = self.CurDir * Velocity
-	self.LastPos       = self.Position
+	self.Launched    = true
+	self.ThinkDelay  = DeltaTime
+	self.GhostPeriod = ACF.CurTime + GhostPeriod:GetFloat()
+	self.NoDamage    = nil
+	self.LastThink   = ACF.CurTime - DeltaTime
+	self.LastVel     = BulletData.Flight
+	self.Position    = BulletData.Pos
+	self.CurDir      = Flight:GetNormalized()
+	self.Velocity    = self.CurDir * Velocity
+	self.LastPos     = self.Position
 
 	if self.NoThrust then
 		self.MotorLength = 0
@@ -630,7 +630,7 @@ function ENT:ACF_Activate(Recalc)
 end
 
 function ENT:ACF_OnDamage(Entity, Energy, FrArea, Angle, Inflictor)
-	if self.Detonated or self.DisableDamage then
+	if self.Detonated or self.NoDamage then
 		return {
 			Damage = 0,
 			Overkill = 1,
