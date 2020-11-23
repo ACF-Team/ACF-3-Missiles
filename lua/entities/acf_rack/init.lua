@@ -584,7 +584,7 @@ do -- Firing -----------------------------------
 		local BulletData = Missile.BulletData
 		local Speed = math.max(1, BulletData.MuzzleVel or Missile.MinimumSpeed)
 
-		BulletData.Flight = ShootDir * Speed
+		BulletData.Flight = ShootDir * Speed -- NOTE: Doesn't this need to be on gmu/s?
 
 		Missile:Launch(Rack.LaunchDelay)
 

@@ -417,24 +417,25 @@ function ENT:Launch(Delay, IsMisfire)
 	local BulletData = self.BulletData
 	local Point      = self.MountPoint
 	local Rack       = self.Launcher
-	local Vel        = ACF_GetAncestor(Rack):GetVelocity()
+	local Velocity   = ACF_GetAncestor(Rack):GetVelocity()
 	local Flight     = BulletData.Flight or self:LocalToWorldAngles(Point.Angle):Forward()
-
-	BulletData.Flight = Flight + Vel
-	BulletData.Pos    = Rack:LocalToWorld(Point.Position)
+	local DeltaTime  = engine.TickInterval()
 
 	if Rack.SoundPath and Rack.SoundPath ~= "" then
 		BulletData.Sound = Rack.SoundPath
 	end
 
+	BulletData.Flight = Flight + Velocity * DeltaTime
+	BulletData.Pos    = Rack:LocalToWorld(Point.Position)
+
 	self.Launched      = true
-	self.ThinkDelay    = engine.TickInterval()
+	self.ThinkDelay    = DeltaTime
 	self.GhostPeriod   = ACF.CurTime + GhostPeriod:GetFloat()
 	self.DisableDamage = nil
-	self.LastThink     = ACF.CurTime - self.ThinkDelay
-	self.LastVel       = Vel * self.ThinkDelay
+	self.LastThink     = ACF.CurTime - DeltaTime
+	self.LastVel       = BulletData.Flight
 	self.Position      = BulletData.Pos
-	self.Velocity      = Vel
+	self.Velocity      = Velocity
 	self.CurDir        = Flight:GetNormalized()
 	self.LastPos       = self.Position
 
