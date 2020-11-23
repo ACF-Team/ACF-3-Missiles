@@ -56,15 +56,12 @@ local function UpdateSkin(Missile)
 end
 
 local function LaunchEffect(Missile)
-	local BulletData = Missile.BulletData
-	local SoundString = BulletData.Sound or Missile.Sound
+	local Sound = Missile.Sound
 
-	if SoundString then
-		if ACF_SOUND_EXT then
-			hook.Call("ACF_SOUND_MISSILE", nil, Missile, SoundString)
-		else
-			Missile:EmitSound(SoundString, 511, math.random(99, 101))
-		end
+	if ACF_SOUND_EXT then
+		hook.Run("ACF_SOUND_MISSILE", Missile, Sound)
+	else
+		Missile:EmitSound(Sound, 511, math.random(99, 101))
 	end
 end
 
@@ -422,7 +419,7 @@ function ENT:Launch(Delay, IsMisfire)
 	local DeltaTime  = engine.TickInterval()
 
 	if Rack.SoundPath and Rack.SoundPath ~= "" then
-		BulletData.Sound = Rack.SoundPath
+		self.Sound = Rack.SoundPath
 	end
 
 	BulletData.Flight = Flight + Flight:GetNormalized() * Velocity * DeltaTime
