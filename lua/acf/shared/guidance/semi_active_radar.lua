@@ -11,11 +11,11 @@ else
 		local Targets = Radar.Targets
 		local Position = Missile:GetPos()
 		local HighestDot = 0
-		local CurrentDot, TargetPos, Distance, Target
+		local CurrentDot, Target
 
-		for Entity, Spread in pairs(Targets) do
-			TargetPos = Entity:GetPos() + Spread
-			Distance = Position:DistToSqr(TargetPos)
+		for Entity, Data in pairs(Targets) do
+			local TargetPos = Data.Position
+			local Distance  = Position:DistToSqr(TargetPos)
 
 			if Distance >= self.MinDistance and self:CheckConeLOS(Missile, Position, TargetPos, self.ViewConeCos) then
 				CurrentDot = self.GetDirectionDot(Missile, TargetPos)
@@ -31,11 +31,11 @@ else
 	end
 
 	function Guidance:OnLaunched(Missile)
-		self.Target = self:FindNewTarget(Missile, self:GetRadar("TGT"))
+		self.Target = self:FindNewTarget(Missile, self:GetRadar("TGT-Radar"))
 	end
 
 	function Guidance:GetGuidance(Missile)
-		local Radar = self:GetRadar("TGT")
+		local Radar = self:GetRadar("TGT-Radar")
 
 		if not Radar then return {} end
 
@@ -46,14 +46,12 @@ else
 		if Override then return Override end
 
 		local Targets = Radar.Targets
-		local TargetPos, Spread
 
 		if IsValid(self.Target) and Targets[self.Target] then
-			TargetPos = self.Target:GetPos()
-			Spread = Targets[self.Target]
+			local Position = Targets[self.Target].Position
 
-			if self:CheckConeLOS(Missile, Missile:GetPos(), TargetPos + Spread, self.ViewConeCos) then
-				return { TargetPos = TargetPos + Spread, ViewCone = self.ViewCone }
+			if self:CheckConeLOS(Missile, Missile:GetPos(), Position, self.ViewConeCos) then
+				return { TargetPos = Position, ViewCone = self.ViewCone }
 			end
 		end
 
@@ -61,9 +59,8 @@ else
 
 		if not self.Target then return {} end
 
-		TargetPos = self.Target:GetPos()
-		Spread = Targets[self.Target]
+		local Position = Targets[self.Target].Position
 
-		return { TargetPos = TargetPos + Spread, ViewCone = self.ViewCone }
+		return { TargetPos = Position, ViewCone = self.ViewCone }
 	end
 end

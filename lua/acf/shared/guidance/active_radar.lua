@@ -8,23 +8,25 @@ else
 		local Position = Missile:GetPos()
 		local Entities = ACF.GetEntitiesInCone(Position, Missile:GetForward(), self.SeekCone)
 		local HighestDot = 0
-		local CurrentDot, TargetPos, Distance, Target
+		local CurrentDot, Target, TargetOffset
 
 		for Entity in pairs(Entities) do
-			TargetPos = Entity:GetPos()
-			Distance = Position:DistToSqr(TargetPos)
+			local Offset    = VectorRand() * 50
+			local TargetPos = Entity.Position + Offset
+			local Distance  = Position:DistToSqr(TargetPos)
 
 			if Distance >= self.MinDistance and self:CheckConeLOS(Missile, Position, TargetPos, self.SeekConeCos) then
 				CurrentDot = self.GetDirectionDot(Missile, TargetPos)
 
 				if CurrentDot > HighestDot then
 					HighestDot = CurrentDot
+					TargetOffset = Offset
 					Target = Entity
 				end
 			end
 		end
 
-		self.TargetMode = "Active"
+		self.ForcedPos = Target and Target.Position + TargetOffset
 
 		return Target
 	end
@@ -36,11 +38,11 @@ else
 
 		local Position = Missile:GetPos()
 		local HighestDot = 0
-		local CurrentDot, TargetPos, Distance, Target
+		local CurrentDot, Target
 
-		for Entity, Spread in pairs(Radar.Targets) do
-			TargetPos = Entity:GetPos() + Spread
-			Distance = Position:DistToSqr(TargetPos)
+		for Entity, Data in pairs(Radar.Targets) do
+			local TargetPos = Data.Position
+			local Distance  = Position:DistToSqr(TargetPos)
 
 			if Distance >= self.MinDistance and self:CheckConeLOS(Missile, Position, TargetPos, self.ViewConeCos) then
 				CurrentDot = self.GetDirectionDot(Missile, TargetPos)
@@ -52,7 +54,7 @@ else
 			end
 		end
 
-		self.TargetMode = "Radar"
+		self.ForcedPos = nil
 
 		return Target or self:SeekNewTarget(Missile)
 	end
@@ -64,20 +66,14 @@ else
 
 		if Override then return Override end
 
-		local Radar = self:GetRadar("TGT")
-		local TargetPos, Spread
+		local Radar = self:GetRadar("TGT-Radar")
+		local Targets = Radar and Radar.Targets
 
 		if IsValid(self.Target) then
-			if self.TargetMode == "Active" then
-				Spread = Vector()
-			else
-				Spread = Radar and Radar.Targets[self.Target]
-			end
+			local Position = self.ForcedPos or (Targets and Targets[self.Target].Position)
 
-			TargetPos = self.Target:GetPos()
-
-			if Spread and self:CheckConeLOS(Missile, Missile:GetPos(), TargetPos + Spread, self.ViewConeCos) then
-				return { TargetPos = TargetPos + Spread, ViewCone = self.ViewCone }
+			if Position and self:CheckConeLOS(Missile, Missile:GetPos(), Position, self.ViewConeCos) then
+				return { TargetPos = Position, ViewCone = self.ViewCone }
 			end
 		end
 
@@ -85,9 +81,8 @@ else
 
 		if not self.Target then return {} end
 
-		TargetPos = self.Target:GetPos()
-		Spread = Radar and Radar.Targets[self.Target] or Vector()
+		local Position = self.ForcedPos or (Targets and Targets[self.Target].Position)
 
-		return { TargetPos = TargetPos + Spread, ViewCone = self.ViewCone }
+		return { TargetPos = Position, ViewCone = self.ViewCone }
 	end
 end
