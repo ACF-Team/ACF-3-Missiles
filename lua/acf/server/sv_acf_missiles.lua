@@ -201,6 +201,9 @@ do -- Entity find
 					Ancestor.TrackData = {
 						Position = Position or Ancestor:GetPos()
 					}
+
+					Ancestor.Position = Position
+					Ancestor.Velocity = Vector()
 				end
 
 				Previous[Ancestor] = nil
