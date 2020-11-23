@@ -51,8 +51,8 @@ do -- Rack registration function
 	function ACF.RegisterRack(ID, Data)
 		local Class = AddSimpleClass(ID, Racks, Data)
 
-		if not Class.EntClass then
-			Class.EntClass = "Rack"
+		if not Class.EntType then
+			Class.EntType = "Rack"
 		end
 
 		if not Class.LimitConVar then
