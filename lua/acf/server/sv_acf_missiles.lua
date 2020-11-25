@@ -122,26 +122,59 @@ do -- Entity find
 	local Entities = {}
 	local Ancestors = {}
 	local Whitelist = {
-		prop_physics                = true,
-		gmod_wheel                  = true,
-		gmod_hoverball              = true,
-		gmod_wire_expression2       = true,
-		gmod_wire_thruster          = true,
-		gmod_thruster               = true,
-		gmod_wire_light             = true,
-		gmod_light                  = true,
-		gmod_emitter                = true,
-		gmod_button                 = true,
-		phys_magnet                 = true,
-		prop_vehicle_jeep           = true,
-		prop_vehicle_airboat        = true,
-		prop_vehicle_prisoner_pod   = true,
-		acf_engine                  = true,
-		acf_ammo                    = true,
-		acf_gun                     = true,
-		acf_gearbox                 = true,
-		acf_opticalcomputer			= true,
+		-- Garry's Mod entities
+		gmod_wheel                 = true,
+		gmod_hoverball             = true,
+		gmod_thruster              = true,
+		gmod_light                 = true,
+		gmod_emitter               = true,
+		gmod_button                = true,
+		phys_magnet                = true,
+		-- Vehicle entities
+		prop_vehicle_jeep          = true,
+		prop_vehicle_airboat       = true,
+		prop_vehicle_prisoner_pod  = true,
+		-- Wiremod entities
+		gmod_wire_cameracontroller = true,
+		gmod_wire_expression2      = true,
+		gmod_wire_egp_hud          = true,
+		gmod_wire_eyepod           = true,
+		gmod_wire_gate             = true,
+		gmod_wire_light            = true,
+		gmod_wire_pod              = true,
+		gmod_wire_thruster         = true,
+		-- Starfall entities
+		starfall_hud               = true,
+		starfall_processor         = true,
+		starfall_screen            = true,
+		-- ACF entities
+		acf_ammo                   = true,
+		acf_computer               = true,
+		acf_engine                 = true,
+		acf_fueltank               = true,
+		acf_gearbox                = true,
+		acf_gun                    = true,
+		acf_rack                   = true,
+		acf_radar                  = true,
 	}
+
+	local function GetAncestor(Entity)
+		local Ancestor = ACF_GetAncestor(Entity)
+
+		if not IsValid(Ancestor) then return end
+		if Ancestor == Entity then return end
+		if Ancestor.DoNotTrack then return end
+
+		return Ancestor
+	end
+
+	local function GetPosition(Entity)
+		local PhysObj = Entity:GetPhysicsObject()
+
+		if not IsValid(PhysObj) then return Entity:GetPos() end
+
+		return Entity:LocalToWorld(PhysObj:GetMassCenter())
+	end
 
 	hook.Add("OnEntityCreated", "ACF Entity Tracking", function(Entity)
 		if IsValid(Entity) and Whitelist[Entity:GetClass()] then
@@ -160,16 +193,11 @@ do -- Entity find
 		local DeltaTime = ACF.CurTime - LastThink
 
 		for K in pairs(Ancestors) do
-			local Data = K.TrackData
-			local Previous = Data.Position
-			local PhysObj = K:GetPhysicsObject()
-			local Current = IsValid(PhysObj) and K:LocalToWorld(PhysObj:GetMassCenter()) or K:GetPos()
+			local Previous = K.Position
+			local Current  = GetPosition(K)
 
 			K.Position = Current
 			K.Velocity = (Current - Previous) / DeltaTime
-
-			Data.Previous = Previous
-			Data.Position = Current
 		end
 
 		LastThink = ACF.CurTime
@@ -178,39 +206,33 @@ do -- Entity find
 	local function GetAncestorEntities()
 		if ACF.CurTime < NextUpdate then return Ancestors end
 
-		local Checked = {}
 		local Previous = {}
+		local Checked  = {}
 
-		-- Cleanup
-		for K in pairs(Ancestors) do
-			Ancestors[K] = nil
-			Previous[K] = true
-		end
+		for K in pairs(Ancestors) do Previous[K] = true end
 
 		for K in pairs(Entities) do
-			local Ancestor = ACF_GetAncestor(K)
+			local Ancestor = GetAncestor(K)
 
-			if IsValid(Ancestor) and Ancestor ~= K and not Checked[Ancestor] then
-				Ancestors[Ancestor] = true
-				Checked[Ancestor] = true
-
-				if not Ancestor.TrackData then
-					local PhysObj = Ancestor:GetPhysicsObject()
-					local Position = IsValid(PhysObj) and PhysObj:GetMassCenter()
-
-					Ancestor.TrackData = {
-						Position = Position or Ancestor:GetPos()
-					}
-
-					Ancestor.Position = Position
+			if Ancestor and not Checked[Ancestor] then
+				if not Ancestors[Ancestor] then
+					Ancestor.Position = GetPosition(Ancestor)
 					Ancestor.Velocity = Vector()
+
+					Ancestors[Ancestor] = true
 				end
 
 				Previous[Ancestor] = nil
+				Checked[Ancestor] = true
 			end
 		end
 
-		for K in pairs(Previous) do K.TrackData = nil end
+		for K in pairs(Previous) do
+			Ancestors[K] = nil
+
+			K.Position = nil
+			K.Velocity = nil
+		end
 
 		NextUpdate = ACF.CurTime + math.Rand(3, 5)
 
