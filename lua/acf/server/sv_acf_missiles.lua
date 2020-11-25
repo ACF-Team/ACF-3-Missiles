@@ -181,7 +181,6 @@ do -- Entity find
 			Entities[Entity] = true
 
 			Entity:CallOnRemove("ACF Entity Tracking", function()
-				Ancestors[Entity] = nil
 				Entities[Entity] = nil
 			end)
 		end
@@ -220,6 +219,10 @@ do -- Entity find
 					Ancestor.Velocity = Vector()
 
 					Ancestors[Ancestor] = true
+
+					Ancestor:CallOnRemove("ACF Ancestor Tracking", function()
+						Ancestors[Ancestor] = nil
+					end)
 				end
 
 				Previous[Ancestor] = nil
@@ -232,6 +235,8 @@ do -- Entity find
 
 			K.Position = nil
 			K.Velocity = nil
+
+			K:RemoveCallOnRemove("ACF Ancestor Tracking")
 		end
 
 		NextUpdate = ACF.CurTime + math.Rand(3, 5)
