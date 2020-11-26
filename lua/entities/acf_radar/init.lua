@@ -346,7 +346,7 @@ do -- Spawn and Update functions
 	end
 
 	local function CreateOutputs(Entity, Data, Class, Radar)
-		local List = { "Scanning", "Detected", "ClosestDistance", "IDs [ARRAY]", "Owner [ARRAY]", "Position [ARRAY]", "Velocity [ARRAY]", "Distance [ARRAY]", "Entity [ENTITY]" }
+		local List = { "Think Delay", "Scanning", "Detected", "ClosestDistance", "IDs [ARRAY]", "Owner [ARRAY]", "Position [ARRAY]", "Velocity [ARRAY]", "Distance [ARRAY]", "Entity [ENTITY]" }
 
 		if Class.SetupOutputs then
 			Class.SetupOutputs(List, Entity, Data, Class, Radar)
@@ -393,6 +393,8 @@ do -- Spawn and Update functions
 
 		CreateInputs(Entity, Data, Class, Radar)
 		CreateOutputs(Entity, Data, Class, Radar)
+
+		WireLib.TriggerOutput(Entity, "Think Delay", Entity.ThinkDelay)
 
 		ACF_Activate(Entity, true)
 
