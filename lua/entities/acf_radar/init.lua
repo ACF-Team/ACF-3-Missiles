@@ -346,7 +346,7 @@ do -- Spawn and Update functions
 	end
 
 	local function CreateOutputs(Entity, Data, Class, Radar)
-		local List = { "Scanning", "Detected", "ClosestDistance", "IDs [ARRAY]", "Owner [ARRAY]", "Position [ARRAY]", "Velocity [ARRAY]", "Entity [ENTITY]" }
+		local List = { "Scanning", "Detected", "ClosestDistance", "IDs [ARRAY]", "Owner [ARRAY]", "Position [ARRAY]", "Velocity [ARRAY]", "Distance [ARRAY]", "Entity [ENTITY]" }
 
 		if Class.SetupOutputs then
 			Class.SetupOutputs(List, Entity, Data, Class, Radar)

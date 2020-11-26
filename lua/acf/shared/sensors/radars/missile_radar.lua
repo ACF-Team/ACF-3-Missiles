@@ -22,7 +22,7 @@ do -- Directional radars
 		ViewCone	= 10,
 		Origin		= "missile1",
 		SwitchDelay	= 2,
-		ThinkDelay	= 0.1,
+		ThinkDelay	= 0.05,
 		Detect		= DetectEntities,
 	})
 
@@ -34,7 +34,7 @@ do -- Directional radars
 		ViewCone	= 25,
 		Origin		= "missile1",
 		SwitchDelay	= 4,
-		ThinkDelay	= 0.1,
+		ThinkDelay	= 0.05,
 		Detect		= DetectEntities,
 	})
 
@@ -46,7 +46,7 @@ do -- Directional radars
 		ViewCone	= 60,
 		Origin		= "missile1",
 		SwitchDelay	= 8,
-		ThinkDelay	= 0.1,
+		ThinkDelay	= 0.05,
 		Detect		= DetectEntities,
 	})
 end
@@ -64,7 +64,7 @@ do -- Spherical radars
 		Range		= 7874,
 		Origin		= "missile1",
 		SwitchDelay	= 3,
-		ThinkDelay	= 0.5,
+		ThinkDelay	= 0.15,
 		Detect		= DetectEntities,
 	})
 
@@ -76,7 +76,7 @@ do -- Spherical radars
 		Range		= 15748,
 		Origin		= "missile1",
 		SwitchDelay	= 6,
-		ThinkDelay	= 0.5,
+		ThinkDelay	= 0.15,
 		Detect		= DetectEntities,
 	})
 
@@ -88,7 +88,7 @@ do -- Spherical radars
 		Range		= 31496,
 		Origin		= "missile1",
 		SwitchDelay	= 12,
-		ThinkDelay	= 0.5,
+		ThinkDelay	= 0.15,
 		Detect		= DetectEntities,
 	})
 end

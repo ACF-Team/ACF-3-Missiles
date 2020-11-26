@@ -64,7 +64,7 @@ do -- Spherical radars
 		Range		= 7874,
 		Origin		= "missile1",
 		SwitchDelay	= 3,
-		ThinkDelay	= 0.5,
+		ThinkDelay	= 0.3,
 		Detect		= DetectEntities,
 	})
 
@@ -76,7 +76,7 @@ do -- Spherical radars
 		Range		= 15748,
 		Origin		= "missile1",
 		SwitchDelay	= 6,
-		ThinkDelay	= 0.5,
+		ThinkDelay	= 0.3,
 		Detect		= DetectEntities,
 	})
 
@@ -88,7 +88,7 @@ do -- Spherical radars
 		Range		= 31496,
 		Origin		= "missile1",
 		SwitchDelay	= 12,
-		ThinkDelay	= 0.5,
+		ThinkDelay	= 0.3,
 		Detect		= DetectEntities,
 	})
 end
