@@ -17,6 +17,7 @@ ACF.RegisterMissile("Type 63 RA", "ARTY", {
 	Length		= 80,
 	Diameter	= 6.5 * 25.4, -- in mm
 	Year		= 1960,
+	ReloadTime	= 10,
 	Racks		= { ["1xRK_small"] = true, ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true, ["6xUARRK"] = true },
 	Guidance	= { Dumb = true, Laser = true, ["GPS Guided"] = true },
 	Fuzes		= { Contact = true, Timed = true, Optical = true, Cluster = true },
@@ -48,6 +49,7 @@ ACF.RegisterMissile("SAKR-10 RA", "ARTY", {
 	Length		= 320,
 	Diameter	= 4.6 * 25.4, -- in mm
 	Year		= 1980,
+	ReloadTime	= 20,
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true, ["6xUARRK"] = true },
 	Guidance	= { Dumb = true, Laser = true, ["GPS Guided"] = true },
 	Fuzes		= { Contact = true, Timed = true, Optical = true, Cluster = true },
@@ -79,6 +81,7 @@ ACF.RegisterMissile("SS-40 RA", "ARTY", {
 	Length		= 420,
 	Diameter	= 6.75 * 25.4, -- in mm
 	Year		= 1983,
+	ReloadTime	= 30,
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true, ["6xUARRK"] = true },
 	Guidance	= { Dumb = true, Laser = true, ["GPS Guided"] = true },
 	Fuzes		= { Contact = true, Timed = true, Optical = true, Cluster = true },

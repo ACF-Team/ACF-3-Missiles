@@ -17,6 +17,7 @@ ACF.RegisterMissile("AGM-122 ASM", "ARM", {
 	Diameter	= 3.5 * 25.4, -- in mm
 	Offset		= Vector(-6, 0, 0),
 	Year		= 1986,
+	ReloadTime	= 10,
 	Racks		= { ["1xRK_small"] = true, ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true },
 	Guidance	= { Dumb = true, ["Anti-radiation"] = true },
 	Fuzes		= { Contact = true, Optical = true },
@@ -49,6 +50,7 @@ ACF.RegisterMissile("AGM-45 ASM", "ARM", {
 	Mass		= 177,
 	Diameter	= 6.75 * 25.4, -- in mm
 	Year		= 1969,
+	ReloadTime	= 25,
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true },
 	Guidance	= { Dumb = true, ["Anti-radiation"] = true },
 	Fuzes		= { Contact = true, Timed = true },

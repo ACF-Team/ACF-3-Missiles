@@ -16,6 +16,7 @@ ACF.RegisterMissile("100kgGBOMB", "GBOMB", {
 	Mass		= 100,
 	Year		= 1939,
 	Diameter	= 10.8 * 25.4, -- in mm
+	ReloadTime	= 15,
 	Racks		= { ["1xRK_small"] = true, ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true },
 	Guidance	= { Dumb = true },
 	Fuzes		= { Contact = true, Optical = true, Cluster = true },
@@ -44,6 +45,7 @@ ACF.RegisterMissile("250kgGBOMB", "GBOMB", {
 	Mass		= 250,
 	Year		= 1941,
 	Diameter	= 14.5 * 25.4, -- in mm
+	ReloadTime	= 25,
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true },
 	Guidance	= { Dumb = true },
 	Fuzes		= { Contact = true, Optical = true, Cluster = true },

@@ -17,6 +17,7 @@ ACF.RegisterMissile("50kgBOMB", "BOMB", {
 	Mass		= 50,
 	Year		= 1936,
 	Diameter	= 8.35 * 25.4, -- in mm
+	ReloadTime	= 10,
 	Offset		= Vector(-6, 0, 0),
 	Racks		= { ["1xRK_small"] = true, ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true },
 	Guidance	= { Dumb = true },
@@ -47,6 +48,7 @@ ACF.RegisterMissile("100kgBOMB", "BOMB", {
 	Mass		= 100,
 	Year		= 1939,
 	Diameter	= 10.5 * 25.4, -- in mm
+	ReloadTime	= 15,
 	Offset		= Vector(-6, 0, 0),
 	Racks		= { ["1xRK_small"] = true, ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true },
 	Guidance	= { Dumb = true },
@@ -77,6 +79,7 @@ ACF.RegisterMissile("250kgBOMB", "BOMB", {
 	Mass		= 250,
 	Year		= 1941,
 	Diameter	= 12.7 * 25.4, -- in mm
+	ReloadTime	= 25,
 	Offset		= Vector(-14, 0, 0),
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true },
 	Guidance	= { Dumb = true },
@@ -107,6 +110,7 @@ ACF.RegisterMissile("500kgBOMB", "BOMB", {
 	Mass		= 500,
 	Year		= 1943,
 	Diameter	= 15.25 * 25.4, -- in mm
+	ReloadTime	= 40,
 	Offset		= Vector(-14, 0, 0),
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true },
 	Guidance	= { Dumb = true },
@@ -137,6 +141,7 @@ ACF.RegisterMissile("1000kgBOMB", "BOMB", {
 	Mass		= 1000,
 	Year		= 1945,
 	Diameter	= 22 * 25.4, -- in mm
+	ReloadTime	= 60,
 	Offset		= Vector(-10, 0, 0),
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true },
 	Guidance	= { Dumb = true },

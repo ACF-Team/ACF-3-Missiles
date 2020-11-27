@@ -321,8 +321,10 @@ function MakeACF_Missile(Player, Pos, Ang, Rack, MountPoint, Crate)
 	Missile.SkinIndex      = Data.SkinIndex
 	Missile.NoThrust       = Data.NoThrust or Class.NoThrust
 	Missile.Sound          = Data.Sound or Class.Sound or "acf_missiles/missiles/missile_rocket.mp3"
+	Missile.ReloadTime     = Data.ReloadTime or 10
 	Missile.ForcedMass     = Data.Mass or 10
 	Missile.ForcedArmor    = Round.Armor
+	Missile.ForcedHealth   = Data.Caliber * 2
 	Missile.Effect         = Data.Effect or Class.Effect
 	Missile.NoDamage       = Rack.ProtectMissile or Data.NoDamage
 	Missile.ExhaustOffset  = Data.ExhaustOffset
@@ -337,6 +339,7 @@ function MakeACF_Missile(Player, Pos, Ang, Rack, MountPoint, Crate)
 	Missile.StarterPercent = Round.StarterPercent
 	Missile.FinMultiplier  = Round.FinMul
 	Missile.CanDelay       = Round.CanDelayLaunch
+	Missile.MaxLength      = Round.MaxLength
 	Missile.Agility        = Data.Agility or 1
 	Missile.Inertia        = 0.08333 * Data.Mass * (3.1416 * (Data.Caliber * 0.05) ^ 2 + Length)
 	Missile.Length         = Length
@@ -422,7 +425,7 @@ function ENT:Launch(Delay, IsMisfire)
 		self.Sound = Rack.SoundPath
 	end
 
-	BulletData.Flight = Flight + Flight:GetNormalized() * Velocity * DeltaTime
+	BulletData.Flight = Flight
 	BulletData.Pos    = Rack:LocalToWorld(Point.Position)
 
 	self.Launched    = true
@@ -430,10 +433,10 @@ function ENT:Launch(Delay, IsMisfire)
 	self.GhostPeriod = ACF.CurTime + GhostPeriod:GetFloat()
 	self.NoDamage    = nil
 	self.LastThink   = ACF.CurTime - DeltaTime
-	self.LastVel     = BulletData.Flight
+	self.LastVel     = Flight
 	self.Position    = BulletData.Pos
-	self.CurDir      = Flight:GetNormalized()
-	self.Velocity    = self.CurDir * Velocity
+	self.CurDir      = Flight
+	self.Velocity    = Flight * Velocity
 	self.LastPos     = self.Position
 
 	if self.NoThrust then
@@ -603,30 +606,24 @@ function ENT:OnRemove()
 end
 
 function ENT:ACF_Activate(Recalc)
-	local PhysObj = self:GetPhysicsObject()
-
-	if not self.ACF.Area then
-		self.ACF.Area = PhysObj:GetSurfaceArea() * 6.45
-	end
-
-	if not self.ACF.Volume then
-		self.ACF.Volume = PhysObj:GetVolume() * 16.38
-	end
-
-	local Armour = self.ForcedArmor or self.ForcedMass * 1000 / self.ACF.Area / 0.78	--So we get the equivalent thickness of that prop in mm if all it's weight was a steel plate
-	local Health = self.ACF.Volume / ACF.Threshold							--Setting the threshold of the prop aera gone
+	local PhysObj = self.ACF.PhysObj
+	local Area    = PhysObj:GetSurfaceArea()
+	local Armor   = self.ForcedArmor
+	local Health  = self.ForcedHealth
 	local Percent = 1
 
 	if Recalc and self.ACF.Health and self.ACF.MaxHealth then
 		Percent = self.ACF.Health / self.ACF.MaxHealth
 	end
 
-	self.ACF.Health = Health * Percent
+	self.ACF.Area      = Area
+	self.ACF.Ductility = self.ACF.Ductility or 0
+	self.ACF.Health    = Health * Percent
 	self.ACF.MaxHealth = Health
-	self.ACF.Armour = Armour * (0.5 + Percent / 2)
-	self.ACF.MaxArmour = Armour
-	self.ACF.Mass = self.ForcedMass
-	self.ACF.Type = "Prop"
+	self.ACF.Armour    = Armor * (0.5 + Percent * 0.5)
+	self.ACF.MaxArmour = Armor * ACF.ArmorMod
+	self.ACF.Mass      = self.ForcedMass
+	self.ACF.Type      = "Prop"
 end
 
 function ENT:ACF_OnDamage(Entity, Energy, FrArea, Angle, Inflictor)

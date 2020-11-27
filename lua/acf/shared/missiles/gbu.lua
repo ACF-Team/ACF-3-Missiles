@@ -17,6 +17,7 @@ ACF.RegisterMissile("WalleyeGBU", "GBU", {
 	Mass		= 510,
 	Year		= 1967,
 	Diameter	= 16.4 * 25.4, -- in mm
+	ReloadTime	= 30,
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true },
 	Guidance	= { Dumb = true, ["Radio (MCLOS)"] = true },
 	Fuzes		= { Contact = true, Timed = true, Optical = true },
@@ -48,6 +49,7 @@ ACF.RegisterMissile("227kgGBU", "GBU", {
 	Mass		= 227,
 	Year		= 1976,
 	Diameter	= 10 * 25.4, -- in mm
+	ReloadTime	= 25,
 	Offset		= Vector(12, 0, 0),
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true },
 	Guidance	= { Dumb = true, Laser = true, ["GPS Guided"] = true },
@@ -96,6 +98,7 @@ ACF.RegisterMissile("454kgGBU", "GBU", {
 	Mass		= 454,
 	Year		= 1976,
 	Diameter	= 11.5 * 25.4, -- in mm
+	ReloadTime	= 40,
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true },
 	Guidance	= { Dumb = true, Laser = true, ["GPS Guided"] = true },
 	Fuzes		= { Contact = true, Timed = true, Optical = true, Cluster = true },
@@ -143,6 +146,7 @@ ACF.RegisterMissile("909kgGBU", "GBU", {
 	Mass		= 909,
 	Year		= 1976,
 	Diameter	= 17 * 25.4, -- in mm
+	ReloadTime	= 60,
 	Offset		= Vector(15, 0, 0),
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true },
 	Guidance	= { Dumb = true, Laser = true, ["GPS Guided"] = true },

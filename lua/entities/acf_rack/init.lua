@@ -674,7 +674,6 @@ do -- Loading ----------------------------------
 		local Missile = MakeACF_Missile(Rack.Owner, Pos, Ang, Rack, Point, Crate)
 
 		Rack:EmitSound("acf_missiles/fx/bomb_reload.mp3", 500, math.random(99, 101))
-		Rack:UpdateLoad(Point, Missile)
 
 		return Missile
 	end
@@ -695,16 +694,18 @@ do -- Loading ----------------------------------
 		local Crate = GetNextCrate(self)
 
 		if not self.Firing and Index and Crate then
-			local Bullet = Crate.BulletData
-			local Time = ACF.BaseReload + 2 + (Bullet.ProjMass + Bullet.PropMass) * ACF.MassToTime * 3 -- TODO: Not final, keep tweaking this
+			local Missile = AddMissile(self, Point, Crate)
+			local Bullet  = Missile.BulletData
+			local Percent = math.max(0.5, (Bullet.ProjLength + Bullet.PropLength) / Missile.MaxLength)
+			local Time    = Missile.ReloadTime * Percent
 
 			Point.NextFire = ACF.CurTime + Time
-			Point.State = "Loading"
+			Point.State    = "Loading"
 
-			local Missile = AddMissile(self, Point, Crate)
+			self:UpdateLoad(Point, Missile)
 
 			self.CurrentCrate = Crate
-			self.ReloadTime = Time
+			self.ReloadTime   = Time
 
 			Crate:Consume()
 

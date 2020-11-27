@@ -17,6 +17,7 @@ ACF.RegisterMissile("AIM-9 AAM", "AAM", {
 	Mass		= 85,
 	Year		= 1953,
 	Diameter	= 101.6, -- in mm
+	ReloadTime	= 10,
 	Racks		= { ["1xRK_small"] = true, ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true },
 	Guidance	= { Dumb = true, Infrared = true, ["Semi-Active Radar"] = true },
 	Fuzes		= { Contact = true, Radio = true },
@@ -49,6 +50,7 @@ ACF.RegisterMissile("AIM-120 AAM", "AAM", {
 	Mass		= 152,
 	Year		= 1991,
 	Diameter	= 154.5, -- in mm
+	ReloadTime	= 25,
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true },
 	Guidance	= { Dumb = true, ["Semi-Active Radar"] = true, ["Active Radar"] = true },
 	Fuzes		= { Contact = true, Radio = true },
@@ -81,6 +83,7 @@ ACF.RegisterMissile("AIM-54 AAM", "AAM", {
 	Mass		= 453,
 	Year		= 1974,
 	Diameter	= 327.5, -- in mm
+	ReloadTime	= 40,
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true },
 	Guidance	= { Dumb = true, ["Semi-Active Radar"] = true, ["Active Radar"] = true },
 	Fuzes		= { Contact = true, Radio = true },

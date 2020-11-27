@@ -16,6 +16,7 @@ ACF.RegisterMissile("RS82 ASR", "UAR", {
 	Mass		= 7,
 	Length		= 40,
 	Diameter	= 2.2 * 25.4, -- in mm
+	ReloadTime	= 5,
 	Offset		= Vector(1, 0, 0),
 	Year		= 1933,
 	Racks		= { ["1xRK_small"] = true, ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true },
@@ -59,6 +60,7 @@ ACF.RegisterMissile("HVAR ASR", "UAR", {
 	Mass		= 64,
 	Length		= 44,
 	Diameter	= 4 * 25.4, -- in mm
+	ReloadTime	= 10,
 	Offset		= Vector(2, 0, 0),
 	Year		= 1933,
 	Racks		= { ["1xRK_small"] = true, ["1xRK"] = true, ["2xRK"] = true, ["3xUARRK"] = true, ["4xRK"] = true },
@@ -90,6 +92,7 @@ ACF.RegisterMissile("SPG-9 ASR", "UAR", {
 	Mass		= 5,
 	Length		= 20,
 	Year		= 1962,
+	ReloadTime	= 10,
 	Racks		= { ["1x SPG9"] = true },
 	Guidance	= { Dumb = true },
 	Fuzes		= { Contact = true, Optical = true },
@@ -119,6 +122,7 @@ ACF.RegisterMissile("S-24 ASR", "UAR", {
 	Mass		= 235,
 	Length		= 25,
 	Diameter	= 8.3 * 25.4, -- in mm
+	ReloadTime	= 20,
 	Year		= 1960,
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true },
 	Guidance	= { Dumb = true },
@@ -149,6 +153,7 @@ ACF.RegisterMissile("RW61 ASR", "UAR", {
 	Mass		= 476,
 	Length		= 38,
 	Year		= 1960,
+	ReloadTime	= 40,
 	Racks		= { ["380mmRW61"] = true },
 	Guidance	= { Dumb = true },
 	Fuzes		= { Contact = true, Optical = true },
