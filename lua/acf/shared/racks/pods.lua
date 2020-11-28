@@ -334,6 +334,7 @@ ACF.RegisterRack("1x Kornet", {
 	Armor		= 2.5,
 
 	ProtectMissile = true,
+	HideMissile = true,
 
 	MountPoints = {
 		{ Name = "missile1", Position = Vector() }

@@ -353,6 +353,7 @@ function MakeACF_Missile(Player, Pos, Ang, Rack, MountPoint, Crate)
 	Missile:CreateBulletData(Crate)
 
 	if Rack.HideMissile then
+		Missile:SetNotSolid(true)
 		Missile:SetNoDraw(true)
 	end
 
@@ -454,6 +455,7 @@ function ENT:Launch(Delay, IsMisfire)
 	end
 
 	self:EmitSound("phx/epicmetal_hard.wav", 500, math.random(99, 101))
+	self:SetNotSolid(false)
 	self:SetNoDraw(false)
 	self:SetParent()
 
@@ -617,7 +619,7 @@ function ENT:ACF_Activate(Recalc)
 	end
 
 	self.ACF.Area      = Area
-	self.ACF.Ductility = self.ACF.Ductility or 0
+	self.ACF.Ductility = 0
 	self.ACF.Health    = Health * Percent
 	self.ACF.MaxHealth = Health
 	self.ACF.Armour    = Armor * (0.5 + Percent * 0.5)
