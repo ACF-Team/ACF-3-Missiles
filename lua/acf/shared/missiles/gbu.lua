@@ -28,7 +28,7 @@ ACF.RegisterMissile("WalleyeGBU", "GBU", {
 	Round = {
 		Model			= "models/bombs/gbu/agm62.mdl",
 		MaxLength		= 80,
-		Armor			= 25,
+		Armor			= 10,
 		PropMass		= 1,
 		Thrust			= 1,
 		BurnRate		= 1, -- in cm^3/s
@@ -77,7 +77,7 @@ ACF.RegisterMissile("227kgGBU", "GBU", {
 		Model			= "models/bombs/gbu/gbu12_fold.mdl",
 		RackModel		= "models/bombs/gbu/gbu12.mdl",
 		MaxLength		= 250,
-		Armor			= 20,
+		Armor			= 10,
 		PropMass		= 0,
 		Thrust			= 1, -- in kg*in/s^2
 		BurnRate		= 1, -- in cm^3/s
@@ -125,7 +125,7 @@ ACF.RegisterMissile("454kgGBU", "GBU", {
 		Model			= "models/bombs/gbu/gbu16_fold.mdl",
 		RackModel		= "models/bombs/gbu/gbu16.mdl",
 		MaxLength		= 500,
-		Armor			= 25,
+		Armor			= 10,
 		PropMass		= 0,
 		Thrust			= 1, -- in kg*in/s^2
 		BurnRate		= 1, -- in cm^3/s
@@ -174,7 +174,7 @@ ACF.RegisterMissile("909kgGBU", "GBU", {
 		Model			= "models/bombs/gbu/gbu10_fold.mdl",
 		RackModel		= "models/bombs/gbu/gbu10.mdl",
 		MaxLength		= 510,
-		Armor			= 20,
+		Armor			= 10,
 		PropMass		= 0,
 		Thrust			= 1, -- in kg*in/s^2
 		BurnRate		= 1, -- in cm^3/s

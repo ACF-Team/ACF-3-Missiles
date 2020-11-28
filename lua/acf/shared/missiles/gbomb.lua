@@ -24,7 +24,7 @@ ACF.RegisterMissile("100kgGBOMB", "GBOMB", {
 	Round = {
 		Model			= "models/missiles/micro.mdl",
 		MaxLength		= 100,
-		Armor			= 25,
+		Armor			= 10,
 		PropMass		= 0,
 		Thrust			= 1, -- in kg*in/s^2
 		BurnRate		= 1, -- in cm^3/s
@@ -53,7 +53,7 @@ ACF.RegisterMissile("250kgGBOMB", "GBOMB", {
 	Round = {
 		Model			= "models/missiles/fab250.mdl",
 		MaxLength		= 250,
-		Armor			= 25,
+		Armor			= 10,
 		PropMass		= 0,
 		Thrust			= 1, -- in kg*in/s^2
 		BurnRate		= 1, -- in cm^3/s

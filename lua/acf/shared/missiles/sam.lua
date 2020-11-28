@@ -28,7 +28,7 @@ ACF.RegisterMissile("FIM-92 SAM", "SAM", {
 		Model			= "models/missiles/fim_92.mdl",
 		RackModel		= "models/missiles/fim_92_folded.mdl",
 		MaxLength		= 100,
-		Armor			= 3,
+		Armor			= 5,
 		PropMass		= 1.5,
 		Thrust			= 7000, -- in kg*in/s^2
 		BurnRate		= 1000, -- in cm^3/s

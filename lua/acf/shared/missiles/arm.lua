@@ -28,7 +28,7 @@ ACF.RegisterMissile("AGM-122 ASM", "ARM", {
 	Round = {
 		Model			= "models/missiles/aim9.mdl",
 		MaxLength		= 70,
-		Armor			= 8,
+		Armor			= 5,
 		PropMass		= 4,
 		Thrust			= 4500, -- in kg*in/s^2
 		BurnRate		= 1400, -- in cm^3/s
@@ -61,7 +61,7 @@ ACF.RegisterMissile("AGM-45 ASM", "ARM", {
 	Round = {
 		Model			= "models/missiles/aim120.mdl",
 		MaxLength		= 120,
-		Armor			= 10,
+		Armor			= 5,
 		PropMass		= 3,
 		Thrust			= 800, -- in kg*in/s^2
 		BurnRate		= 300, -- in cm^3/s

@@ -49,6 +49,7 @@ ACF.RegisterMissile("BGM-71E ASM", "ATGM", {
 	Mass		= 23,
 	Year		= 1970,
 	ReloadTime	= 20,
+	Offset		= Vector(-17.5, 0, 0),
 	Racks		= { ["1x BGM-71E"] = true, ["2x BGM-71E"] = true, ["4x BGM-71E"] = true },
 	Guidance	= { Dumb = true, ["Wire (SACLOS)"] = true },
 	Fuzes		= { Contact = true, Optical = true },
@@ -57,7 +58,7 @@ ACF.RegisterMissile("BGM-71E ASM", "ATGM", {
 	Round = {
 		Model			= "models/missiles/bgm_71e.mdl",
 		MaxLength		= 64,
-		Armor			= 6,
+		Armor			= 5,
 		PropMass		= 0.2,
 		Thrust			= 13000, -- in kg*in/s^2
 		BurnRate		= 31, -- in cm^3/s

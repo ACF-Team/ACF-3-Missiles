@@ -25,7 +25,7 @@ ACF.RegisterMissile("40mmFFAR", "FFAR", {
 		Model			= "models/missiles/ffar_40mm.mdl",
 		RackModel		= "models/missiles/ffar_40mm_closed.mdl",
 		MaxLength		= 25,
-		Armor			= 4,
+		Armor			= 5,
 		PropMass		= 0.2,
 		Thrust			= 10000, -- in kg*in/s^2
 		BurnRate		= 120, -- in cm^3/s
@@ -56,7 +56,7 @@ ACF.RegisterMissile("70mmFFAR", "FFAR", {
 		Model			= "models/missiles/ffar_70mm.mdl",
 		RackModel		= "models/missiles/ffar_70mm_closed.mdl",
 		MaxLength		= 25,
-		Armor			= 6,
+		Armor			= 5,
 		PropMass		= 0.7,
 		Thrust			= 15000, -- in kg*in/s^2
 		BurnRate		= 300, -- in cm^3/s
@@ -87,7 +87,7 @@ ACF.RegisterMissile("Zuni ASR", "FFAR", {
 		Model			= "models/ghosteh/zuni.mdl",
 		RackModel		= "models/ghosteh/zuni_folded.mdl",
 		MaxLength		= 60,
-		Armor			= 12,
+		Armor			= 5,
 		PropMass		= 0.7,
 		Thrust			= 18000, -- in kg*in/s^2
 		BurnRate		= 600, -- in cm^3/s

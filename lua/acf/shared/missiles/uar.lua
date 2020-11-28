@@ -39,7 +39,7 @@ ACF.RegisterMissile("RS82 ASR", "UAR", {
 	Round = {
 		Model			= "models/missiles/rs82.mdl",
 		MaxLength		= 25,
-		Armor			= 8,
+		Armor			= 5,
 		PropMass		= 0.7,
 		Thrust			= 15000, -- in kg*in/s^2
 		BurnRate		= 800, -- in cm^3/s
@@ -71,7 +71,7 @@ ACF.RegisterMissile("HVAR ASR", "UAR", {
 		Model			= "models/missiles/hvar.mdl",
 		RackModel		= "models/missiles/hvar_folded.mdl",
 		MaxLength		= 25,
-		Armor			= 12,
+		Armor			= 5,
 		PropMass		= 0.7,
 		Thrust			= 25000, -- in kg*in/s^2
 		BurnRate		= 600, -- in cm^3/s
@@ -101,7 +101,7 @@ ACF.RegisterMissile("SPG-9 ASR", "UAR", {
 		Model			= "models/missiles/glatgm/9m112f.mdl",
 		RackModel		= "models/munitions/round_100mm_mortar_shot.mdl",
 		MaxLength		= 50,
-		Armor			= 10,
+		Armor			= 5,
 		PropMass		= 0.5,
 		Thrust			= 120000, -- in kg*in/s^2 very high but only burns a brief moment, most of which is in the tube
 		BurnRate		= 1200, -- in cm^3/s
@@ -132,7 +132,7 @@ ACF.RegisterMissile("S-24 ASR", "UAR", {
 	Round = {
 		Model			= "models/missiles/s24.mdl",
 		MaxLength		= 40,
-		Armor			= 18,
+		Armor			= 5,
 		PropMass		= 15,
 		Thrust			= 9000, -- in kg*in/s^2
 		BurnRate		= 1000, -- in cm^3/s
@@ -165,7 +165,7 @@ ACF.RegisterMissile("RW61 ASR", "UAR", {
 		Model			= "models/missiles/RW61M.mdl",
 		RackModel		= "models/missiles/RW61M.mdl",
 		MaxLength		= 60,
-		Armor			= 24,
+		Armor			= 5,
 		PropMass		= 5,
 		Thrust			= 5000, -- in kg*in/s^2
 		BurnRate		= 5000, -- in cm^3/s
