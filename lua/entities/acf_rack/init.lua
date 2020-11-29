@@ -312,7 +312,7 @@ do -- Custom ACF damage ------------------------
 			if not self.ProtectMissile then
 				local Missile = Point.Missile
 
-				if Missile and math.random() > Ratio * 3 then
+				if Missile and math.random() > 0.9 * Ratio then
 					Missile:Launch(nil, true)
 
 					self:UpdateLoad(Point)
@@ -322,7 +322,7 @@ do -- Custom ACF damage ------------------------
 			end
 
 			-- Mountpoint jamming
-			if not Point.Disabled and math.random() > Ratio * 2 then
+			if not Point.Disabled and math.random() > 0.9 * Ratio then
 				Point.Disabled = true
 
 				Affected = true

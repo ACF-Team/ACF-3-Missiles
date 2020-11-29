@@ -141,8 +141,8 @@ local function CalcFlight(Missile)
 	Missile.LastThink = Time
 
 	--Guidance calculations
-	local Guidance = Missile.GuidanceData:GetGuidance(Missile)
-	local TargetPos = Guidance.TargetPos
+	local Guidance = Missile.UseGuidance and Missile.GuidanceData:GetGuidance(Missile)
+	local TargetPos = Guidance and Guidance.TargetPos
 
 	if TargetPos then
 		local Dist = Pos:Distance(TargetPos)
@@ -274,6 +274,16 @@ local function CalcFlight(Missile)
 	Missile:DoFlight()
 end
 
+local function DetonateMissile(Missile, Inflictor)
+	if HookRun("ACF_AmmoExplode", Missile, Missile.BulletData) == false then return end
+
+	if IsValid(Inflictor) and Inflictor:IsPlayer() then
+		Missile.Inflictor = Inflictor
+	end
+
+	Missile:Detonate(true)
+end
+
 hook.Add("CanDrive", "acf_missile_CanDrive", function(_, Entity)
 	if ActiveMissiles[Entity] then return false end
 end)
@@ -345,6 +355,7 @@ function MakeACF_Missile(Player, Pos, Ang, Rack, MountPoint, Crate)
 	Missile.Length         = Length
 	Missile.TorqueMul      = Length * 25
 	Missile.RotAxis        = Vector()
+	Missile.UseGuidance    = true
 	Missile.MotorEnabled   = false
 	Missile.Thrust         = 0
 	Missile.ThinkDelay     = 0.1
@@ -640,15 +651,40 @@ function ENT:ACF_OnDamage(Entity, Energy, FrArea, Angle, Inflictor)
 
 	local HitRes = ACF.PropDamage(Entity, Energy, FrArea, Angle, Inflictor) --Calling the standard damage prop function
 
-	-- Detonate if the shot penetrates the casing or destroys the missile.
-	if HitRes.Kill or HitRes.Overkill > 0 then
-		if HookRun("ACF_AmmoExplode", self, self.BulletData) == false then return HitRes end
+	-- If the missile was destroyed, then we detonate it.
+	if HitRes.Kill then
+		DetonateMissile(Missile, Inflictor)
 
-		if IsValid(Inflictor) and Inflictor:IsPlayer() then
-			self.Inflictor = Inflictor
+		return HitRes
+	elseif HitRes.Overkill > 0 then
+		local Ratio      = self.ACF.Health / self.ACF.MaxHealth
+		local BulletData = self.BulletData
+
+		-- We give it a chance to explode when it gets penetrated aswell.
+		if math.random() > 0.75 * Ratio then
+			DetonateMissile(Missile, Inflictor)
+
+			return HitRes
 		end
 
-		self:Detonate(true)
+		-- Turning off the missile's motor.
+		if self.MotorLength > 0 and math.random() > 0.75 * Ratio then
+			self.MotorLength = 0
+
+			SetMotorState(self, false)
+		end
+
+		-- Turning off the missile's guidance.
+		if self.UseGuidance and math.random() > 0.5 * Ratio then
+			self.UseGuidance = nil
+		end
+
+		-- Damaged the liner.
+		if BulletData.Type == "HEAT" and math.random() > 0.9 * Ratio then
+			BulletData.Type = "HE"
+
+			self:SetNW2String("AmmoType", "HE")
+		end
 	end
 
 	return HitRes -- This function needs to return HitRes
