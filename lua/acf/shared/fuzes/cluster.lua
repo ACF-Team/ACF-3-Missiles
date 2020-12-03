@@ -10,13 +10,15 @@ else
 	Fuze.Spread = 15
 
 	function Fuze:HandleDetonation(Entity, BulletData)
-		local Bomblets  = math.Clamp(math.Round(BulletData.FillerMass * 0.5), 10, 100)
-		local MuzzleVec = BulletData.Flight:GetNormalized()
-		local RoundData = Entity.RoundData
+		local FillerMass = BulletData.FillerMass
+		local Bomblets   = math.Clamp(math.Round(FillerMass * 0.5), 10, 100)
+		local MuzzleVec  = BulletData.Flight:GetNormalized()
+		local RoundData  = Entity.RoundData
+		local Velocity   = BulletData.Flight
 
 		BulletData.Caliber    = BulletData.Caliber / Bomblets
 		BulletData.DragCoef   = BulletData.DragCoef / Bomblets
-		BulletData.FillerMass = BulletData.FillerMass / Bomblets
+		BulletData.FillerMass = FillerMass / Bomblets
 		BulletData.PenArea    = BulletData.PenArea / Bomblets
 		BulletData.ProjLength = BulletData.ProjLength / Bomblets
 		BulletData.ProjMass   = BulletData.ProjMass / Bomblets
@@ -37,7 +39,7 @@ else
 		local Effect = EffectData()
 		Effect:SetOrigin(Entity.Position)
 		Effect:SetNormal(Entity.CurDir)
-		Effect:SetScale(math.max(BulletData.FillerMass ^ 0.33 * 8 * 39.37, 1))
+		Effect:SetScale(math.max(FillerMass ^ 0.33 * 8 * 39.37, 1))
 		Effect:SetRadius(BulletData.Caliber)
 
 		util.Effect("ACF_Explosion", Effect)
@@ -47,7 +49,7 @@ else
 			local Spread = (Entity:GetUp() * math.Rand(-1, 1) + Entity:GetRight() * math.Rand(-1, 1)):GetNormalized()
 			local ShootDir = (MuzzleVec + Cone * Spread * (math.random() ^ (1 / ACF.GunInaccuracyBias))):GetNormalized()
 
-			BulletData.Flight = ShootDir * Entity.LastVel:Length()
+			BulletData.Flight = ShootDir * Velocity:Length()
 
 			RoundData:Create(Entity, BulletData)
 		end
