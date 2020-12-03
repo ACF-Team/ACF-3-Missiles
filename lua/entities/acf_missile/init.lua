@@ -4,13 +4,14 @@ include("shared.lua")
 
 -------------------------------[[ Local Functions ]]-------------------------------
 
-local ACF = ACF
-local TraceData = { start = true, endpos = true, filter = true }
-local Gravity = GetConVar("sv_gravity")
-local GhostPeriod = GetConVar("ACFM_GhostPeriod")
+local ACF            = ACF
+local TraceData      = { start = true, endpos = true, filter = true }
+local Gravity        = GetConVar("sv_gravity")
+local GhostPeriod    = GetConVar("ACFM_GhostPeriod")
 local ActiveMissiles = ACF.ActiveMissiles
-local Missiles = ACF.Classes.Missiles
-local HookRun = hook.Run
+local Missiles       = ACF.Classes.Missiles
+local Inputs         = ACF.GetInputActions("acf_missile")
+local HookRun        = hook.Run
 
 local function ApplyBodySubgroup(Missile, Group, Source, Phase)
 	local Target = Source.DataSource(Missile)
@@ -301,6 +302,14 @@ hook.Add("OnMissileLaunched", "ACF Missile Rack Filter", function(Missile)
 	end
 end)
 
+ACF.AddInputAction("acf_missile", "Detonate", function(Entity, Value)
+	if not Entity.Launched then return end
+
+	if Value ~= 0 then
+		Entity:Detonate(true)
+	end
+end)
+
 -------------------------------[[ Global Functions ]]-------------------------------
 
 -- TODO: Make ACF Missiles compliant with ACF legal checks. How to deal with SetNoDraw and SetNotSolid tho
@@ -359,6 +368,7 @@ function MakeACF_Missile(Player, Pos, Ang, Rack, MountPoint, Crate)
 	Missile.MotorEnabled   = false
 	Missile.Thrust         = 0
 	Missile.ThinkDelay     = 0.1
+	Missile.Inputs         = WireLib.CreateInputs(Missile, { "Detonate" })
 
 	Missile:UpdateModel(Missile.RackModel or Missile.RealModel)
 	Missile:CreateBulletData(Crate)
@@ -509,6 +519,14 @@ function ENT:DoFlight(ToPos, ToDir)
 	self:SetAngles(NewDir:Angle())
 
 	self.BulletData.Pos = NewPos
+end
+
+function ENT:TriggerInput(Name, Value)
+	local Action = Inputs[Name]
+
+	if Action then
+		Action(self, Value)
+	end
 end
 
 function ENT:Detonate(Destroyed)
