@@ -639,7 +639,7 @@ function ENT:ACF_Activate(Recalc)
 	self.ACF.Type      = "Prop"
 end
 
-function ENT:ACF_OnDamage(Entity, Energy, FrArea, Angle, Inflictor)
+function ENT:ACF_OnDamage(Energy, FrArea, Angle, Inflictor)
 	if self.Detonated or self.NoDamage then
 		return {
 			Damage = 0,
@@ -649,11 +649,11 @@ function ENT:ACF_OnDamage(Entity, Energy, FrArea, Angle, Inflictor)
 		}
 	end
 
-	local HitRes = ACF.PropDamage(Entity, Energy, FrArea, Angle, Inflictor) --Calling the standard damage prop function
+	local HitRes = ACF.PropDamage(self, Energy, FrArea, Angle, Inflictor) --Calling the standard damage prop function
 
 	-- If the missile was destroyed, then we detonate it.
 	if HitRes.Kill then
-		DetonateMissile(Missile, Inflictor)
+		DetonateMissile(self, Inflictor)
 
 		return HitRes
 	elseif HitRes.Overkill > 0 then
@@ -662,7 +662,7 @@ function ENT:ACF_OnDamage(Entity, Energy, FrArea, Angle, Inflictor)
 
 		-- We give it a chance to explode when it gets penetrated aswell.
 		if math.random() > 0.75 * Ratio then
-			DetonateMissile(Missile, Inflictor)
+			DetonateMissile(self, Inflictor)
 
 			return HitRes
 		end

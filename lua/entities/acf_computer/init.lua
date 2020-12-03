@@ -315,8 +315,8 @@ do -- Spawn and update function
 	end
 end
 
-function ENT:ACF_OnDamage(Entity, Energy, FrArea, Angle, Inflictor)
-	local HitRes = ACF.PropDamage(Entity, Energy, FrArea, Angle, Inflictor)
+function ENT:ACF_OnDamage(Energy, FrArea, Angle, Inflictor)
+	local HitRes = ACF.PropDamage(self, Energy, FrArea, Angle, Inflictor)
 
 	--self.Spread = ACF.MaxDamageInaccuracy * (1 - math.Round(self.ACF.Health / self.ACF.MaxHealth, 2))
 	if self.OnDamaged then

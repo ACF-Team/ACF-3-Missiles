@@ -16,23 +16,35 @@ local function CheckViewCone(Missile, HitPos)
 	return Direction:Dot(Forward) >= Missile.ViewCone
 end
 
+local function DetonateMissile(Missile, Inflictor)
+	if HookRun("ACF_AmmoExplode", Missile, Missile.BulletData) == false then return end
+
+	if IsValid(Inflictor) and Inflictor:IsPlayer() then
+		Missile.Inflictor = Inflictor
+	end
+
+	Missile:Detonate()
+end
+
 function MakeACF_GLATGM(Gun, BulletData)
 	local Entity = ents.Create("acf_glatgm")
 
 	if not IsValid(Entity) then return end
+
+	local Caliber = BulletData.Caliber * 10
 
 	Entity:SetAngles(Gun:GetAngles())
 	Entity:SetPos(BulletData.Pos)
 	Entity:SetPlayer(Gun.Owner)
 	Entity:Spawn()
 
-	if BulletData.Caliber == 12 then
+	if Caliber == 120 then
 		Entity:SetModel("models/missiles/glatgm/9m112.mdl")
-	elseif BulletData.Caliber > 12 then
+	elseif Caliber > 120 then
 		Entity:SetModel("models/missiles/glatgm/mgm51.mdl")
 	else
 		Entity:SetModel("models/missiles/glatgm/9m117.mdl")
-		Entity:SetModelScale(BulletData.Caliber * 0.1, 0)
+		Entity:SetModelScale(Caliber * 0.01, 0)
 	end
 
 	Entity:PhysicsInit(SOLID_VPHYSICS)
@@ -43,6 +55,10 @@ function MakeACF_GLATGM(Gun, BulletData)
 	Entity.Owner        = Gun.Owner
 	Entity.Weapon       = Gun
 	Entity.BulletData   = table.Copy(BulletData)
+	Entity.ForcedArmor  = 5 -- All missiles should get 5mm
+	Entity.ForcedHealth = Caliber * 2
+	Entity.ForcedMass   = BulletData.CartMass
+	Entity.UseGuidance  = true
 	Entity.ViewCone     = math.cos(math.rad(30)) -- Number inside is on degrees
 	Entity.MaxRange     = BulletData.MuzzleVel * 2 * 39.37 / ACF.Scale -- optical fuze distance
 	Entity.KillTime     = ACF.CurTime + 20
@@ -50,7 +66,7 @@ function MakeACF_GLATGM(Gun, BulletData)
 	Entity.LastThink    = ACF.CurTime
 	Entity.Filter       = Entity.BulletData.Filter
 	Entity.Agility      = 10 -- Magic multiplier that controls the agility of the missile
-	Entity.IsSubcaliber = BulletData.Caliber < 10
+	Entity.IsSubcaliber = Caliber < 100
 	Entity.Speed        = Entity.IsSubcaliber and 2500 or 5000 -- gmu/s
 	Entity.SpiralRadius = Entity.IsSubcaliber and 3.5 or nil
 	Entity.SpiralSpeed  = Entity.IsSubcaliber and 15 or nil
@@ -65,7 +81,7 @@ function MakeACF_GLATGM(Gun, BulletData)
 	if IsValid(PhysObj) then
 		PhysObj:EnableGravity(false)
 		PhysObj:EnableMotion(false)
-		PhysObj:SetMass(BulletData.CartMass)
+		PhysObj:SetMass(Entity.ForcedMass)
 	end
 
 	ACF_Activate(Entity)
@@ -77,7 +93,28 @@ function MakeACF_GLATGM(Gun, BulletData)
 	return Entity
 end
 
-function ENT:ACF_OnDamage(Entity, Energy, FrArea, Angle, Inflictor)
+function ENT:ACF_Activate(Recalc)
+	local PhysObj = self.ACF.PhysObj
+	local Area    = PhysObj:GetSurfaceArea()
+	local Armor   = self.ForcedArmor
+	local Health  = self.ForcedHealth
+	local Percent = 1
+
+	if Recalc and self.ACF.Health and self.ACF.MaxHealth then
+		Percent = self.ACF.Health / self.ACF.MaxHealth
+	end
+
+	self.ACF.Area      = Area
+	self.ACF.Ductility = 0
+	self.ACF.Health    = Health * Percent
+	self.ACF.MaxHealth = Health
+	self.ACF.Armour    = Armor * (0.5 + Percent * 0.5)
+	self.ACF.MaxArmour = Armor * ACF.ArmorMod
+	self.ACF.Mass      = self.ForcedMass
+	self.ACF.Type      = "Prop"
+end
+
+function ENT:ACF_OnDamage(Energy, FrArea, Angle, Inflictor)
 	if self.Detonated then
 		return {
 			Damage = 0,
@@ -87,23 +124,35 @@ function ENT:ACF_OnDamage(Entity, Energy, FrArea, Angle, Inflictor)
 		}
 	end
 
-	local HitRes = ACF.PropDamage(Entity, Energy, FrArea, Angle, Inflictor) --Calling the standard damage prop function
+	local HitRes = ACF.PropDamage(self, Energy, FrArea, Angle, Inflictor) --Calling the standard damage prop function
 
-	-- Detonate if the shot penetrates the casing or destroys the missile.
-	if HitRes.Kill or HitRes.Overkill > 0 then
-		if hook.Run("ACF_AmmoExplode", self, self.BulletData) == false then return HitRes end
+	-- If the missile was destroyed, then we detonate it.
+	if HitRes.Kill then
+		DetonateMissile(self, Inflictor)
 
-		if IsValid(Inflictor) and Inflictor:IsPlayer() then
-			self.Inflictor = Inflictor
+		return HitRes
+	elseif HitRes.Overkill > 0 then
+		local Ratio = self.ACF.Health / self.ACF.MaxHealth
+
+		-- We give it a chance to explode when it gets penetrated aswell.
+		if math.random() > 0.75 * Ratio then
+			DetonateMissile(self, Inflictor)
+
+			return HitRes
 		end
 
-		self:Detonate()
+		-- Turning off the missile's guidance.
+		if self.UseGuidance and math.random() > 0.5 * Ratio then
+			self.UseGuidance = nil
+		end
 	end
 
 	return HitRes -- This function needs to return HitRes
 end
 
 function ENT:GetComputer()
+	if not self.UseGuidance then return end
+
 	local Weapon = self.Weapon
 
 	if not IsValid(Weapon) then return end
