@@ -585,7 +585,7 @@ function ENT:Detonate(Destroyed)
 
 	debugoverlay.Line(BulletData.Pos, BulletData.Pos + BulletData.Flight, 10, Color(255, 128, 0))
 
-	function BulletData.OnPenetrated(_, Bullet)
+	function BulletData.OnPenetrated(Bullet)
 		ACF.ResetBulletVelocity(Bullet)
 
 		-- We only need to do either just once
@@ -593,7 +593,7 @@ function ENT:Detonate(Destroyed)
 		Bullet.OnRicocheted = nil
 	end
 
-	function BulletData.OnRicocheted(_, Bullet)
+	function BulletData.OnRicocheted(Bullet)
 		ACF.ResetBulletVelocity(Bullet)
 
 		-- We only need to do either just once

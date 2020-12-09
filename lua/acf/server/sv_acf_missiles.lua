@@ -60,25 +60,24 @@ ACFM_ResetVelocity = ACF.ResetBulletVelocity
 function ACF.DoReplicatedPropHit(Entity, Bullet)
 	local FlightRes = { Entity = Entity, HitNormal = Bullet.Flight, HitPos = Bullet.Pos }
 	local Ammo  = AmmoTypes[Bullet.Type]
-	local Index = Bullet.Index
-	local Retry = Ammo:PropImpact(Index, Bullet, FlightRes.Entity, FlightRes.HitNormal, FlightRes.HitPos, FlightRes.HitGroup)				--If we hit stuff then send the resolution to the damage function
+	local Retry = Ammo:PropImpact(Bullet, FlightRes.Entity, FlightRes.HitNormal, FlightRes.HitPos, FlightRes.HitGroup)				--If we hit stuff then send the resolution to the damage function
 
 	if Retry == "Penetrated" then
-		if Bullet.OnPenetrated then Bullet.OnPenetrated(Index, Bullet, FlightRes) end
+		if Bullet.OnPenetrated then Bullet.OnPenetrated(Bullet, FlightRes) end
 
-		ACF.BulletClient(Index, Bullet, "Update", 2, FlightRes.HitPos)
-		ACF.CalcBulletFlight(Index, Bullet, true)
+		ACF.BulletClient(Bullet, "Update", 2, FlightRes.HitPos)
+		ACF.CalcBulletFlight(Bullet)
 	elseif Retry == "Ricochet" then
-		if Bullet.OnRicocheted then Bullet.OnRicocheted(Index, Bullet, FlightRes) end
+		if Bullet.OnRicocheted then Bullet.OnRicocheted(Bullet, FlightRes) end
 
-		ACF.BulletClient(Index, Bullet, "Update", 3, FlightRes.HitPos)
-		ACF.CalcBulletFlight(Index, Bullet, true)
+		ACF.BulletClient(Bullet, "Update", 3, FlightRes.HitPos)
+		ACF.CalcBulletFlight(Bullet)
 	else
-		if Bullet.OnEndFlight then Bullet.OnEndFlight(Index, Bullet, FlightRes) end
+		if Bullet.OnEndFlight then Bullet.OnEndFlight(Bullet, FlightRes) end
 
-		ACF.BulletClient(Index, Bullet, "Update", 1, FlightRes.HitPos)
+		ACF.BulletClient(Bullet, "Update", 1, FlightRes.HitPos)
 
-		Ammo:OnFlightEnd(Index, Bullet, FlightRes.HitPos, FlightRes.HitNormal)
+		Ammo:OnFlightEnd(Bullet, FlightRes)
 	end
 end
 

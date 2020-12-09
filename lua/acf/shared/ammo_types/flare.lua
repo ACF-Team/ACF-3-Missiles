@@ -104,8 +104,9 @@ if SERVER then
 		return Text:format(math.Round(BulletData.MuzzleVel, 2), math.Round(Data.BurnRate, 2), math.Round(Data.BurnTime, 2), math.floor(Data.DistractChance * 100))
 	end
 
-	function Ammo:PropImpact(_, _, Target)
+	function Ammo:PropImpact(_, Trace)
 		if IgniteConVar:GetBool() then
+			local Target = Trace.Entity
 			local Type = ACF_Check(Target)
 
 			if Type == "Squishy" and ((Target:IsPlayer() and not Target:HasGodMode()) or Target:IsNPC()) then
