@@ -58,9 +58,9 @@ end
 ACFM_ResetVelocity = ACF.ResetBulletVelocity
 
 function ACF.DoReplicatedPropHit(Entity, Bullet)
-	local FlightRes = { Entity = Entity, HitNormal = Bullet.Flight, HitPos = Bullet.Pos }
+	local FlightRes = { Entity = Entity, HitNormal = Bullet.Flight, HitPos = Bullet.Pos, HitGroup = 0 }
 	local Ammo  = AmmoTypes[Bullet.Type]
-	local Retry = Ammo:PropImpact(Bullet, FlightRes.Entity, FlightRes.HitNormal, FlightRes.HitPos, FlightRes.HitGroup)				--If we hit stuff then send the resolution to the damage function
+	local Retry = Ammo:PropImpact(Bullet, FlightRes)
 
 	if Retry == "Penetrated" then
 		if Bullet.OnPenetrated then Bullet.OnPenetrated(Bullet, FlightRes) end
