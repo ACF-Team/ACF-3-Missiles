@@ -6,6 +6,7 @@ ACF.RegisterWeaponClass("FGL", {
 	ROFMod      = 0.6,
 	Spread      = 1.5,
 	Sound       = "acf_missiles/missiles/flare_launch.mp3",
+	Cleanup     = "acf_flarelauncher",
 	Blacklist   = { "AP", "APHE", "FL", "HE", "HEAT", "HP", "SM" },
 	LimitConVar = {
 		Name = "_acf_flarelauncher",
@@ -35,3 +36,11 @@ ACF.RegisterWeapon("40mmFGL", "FGL", {
 })
 
 ACF.SetCustomAttachment("models/missiles/blackjellypod.mdl", "muzzle", Vector(6, 0, 3.2))
+
+cleanup.Register("acf_flarelauncher")
+
+if SERVER then return end
+
+language.Add("Cleanup_acf_flarelauncher", "ACF Flare Launchers")
+language.Add("Cleaned_acf_flarelauncher", "Cleaned up all ACF Flare Launchers")
+language.Add("SBoxLimit__acf_flarelauncher", "You've reached the ACF Flare Launcher limit!")

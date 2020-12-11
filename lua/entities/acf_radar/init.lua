@@ -423,7 +423,7 @@ do -- Spawn and Update functions
 		Radar:SetPos(Pos)
 		Radar:Spawn()
 
-		Player:AddCleanup("acfmenu", Radar)
+		Player:AddCleanup("acf_radar", Radar)
 		Player:AddCount(Limit, Radar)
 
 		Radar.Owner       = Player -- MUST be stored on ent for PP

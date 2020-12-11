@@ -1,5 +1,9 @@
 include("shared.lua")
 
+language.Add("Cleanup_acf_computer", "ACF Computers")
+language.Add("Cleaned_acf_computer", "Cleaned up all ACF Computers")
+language.Add("SBoxLimit__acf_computer", "You've reached the ACF Computer limit!")
+
 local HideInfo = ACF.HideInfoBubble
 local Components = ACF.Classes.Components
 

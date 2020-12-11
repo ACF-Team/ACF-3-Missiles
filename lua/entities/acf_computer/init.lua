@@ -236,7 +236,7 @@ do -- Spawn and update function
 		Entity:SetPos(Pos)
 		Entity:Spawn()
 
-		Player:AddCleanup("acfmenu", Entity)
+		Player:AddCleanup("acf_computer", Entity)
 		Player:AddCount(Limit, Entity)
 
 		Entity.Owner     = Player -- MUST be stored on ent for PP

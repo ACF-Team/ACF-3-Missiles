@@ -9,3 +9,5 @@ ENT.Purpose       = "Because launch tubes aren't cool enough."
 ENT.Instructions  = "Point towards face for removal of face.  Point away from face for instant fake tan (then removal of face)."
 ENT.WireDebugName = "ACF Rack"
 ENT.IsRack        = true
+
+cleanup.Register("acf_rack")

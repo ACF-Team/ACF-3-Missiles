@@ -5,3 +5,4 @@ ENT.PrintName     = "ACF Guidance Computer"
 ENT.Author        = "Polymorphic Turtle"
 ENT.WireDebugName = "ACF Guidance Computer"
 
+cleanup.Register("acf_computer")

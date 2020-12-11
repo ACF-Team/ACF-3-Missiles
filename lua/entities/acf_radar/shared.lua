@@ -7,3 +7,5 @@ ENT.Purpose       = "Detects targets in flight."
 ENT.Instructions  = "Point towards targets to detect them. Results can be retrieved via wire outputs."
 ENT.WireDebugName = "ACF Radar"
 ENT.IsRadar       = true
+
+cleanup.Register("acf_radar")

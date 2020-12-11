@@ -182,7 +182,7 @@ do -- Spawning and Updating --------------------
 		Rack:SetPos(Pos)
 		Rack:Spawn()
 
-		Player:AddCleanup("acfmenu", Rack)
+		Player:AddCleanup("acf_rack", Rack)
 		Player:AddCount(Limit, Rack)
 
 		Rack.Owner       = Player -- MUST be stored on ent for PP
