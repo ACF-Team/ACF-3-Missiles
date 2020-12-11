@@ -101,7 +101,7 @@ do -- Spawning and Updating --------------------
 		CreateInputs(Entity, Data, Rack)
 		CreateOutputs(Entity, Data, Rack)
 
-		ACF_Activate(Entity, true)
+		ACF.Activate(Entity, true)
 
 		Entity.ACF.Model		= Rack.Model
 		Entity.ACF.LegalMass	= Rack.Mass

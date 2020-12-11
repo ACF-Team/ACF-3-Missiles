@@ -90,14 +90,14 @@ end
 
 do -- Spawn and update function
 	local function VerifyData(Data)
-		if Data.Component then -- Entity was created via menu tool
-			Data.Id = Data.Component
+		if not Data.Computer then
+			Data.Computer = Data.Component or Data.Id
 		end
 
-		local Class = ACF.GetClassGroup(Components, Data.Id)
+		local Class = ACF.GetClassGroup(Components, Data.Computer)
 
 		if not Class or Class.Entity ~= "acf_computer" then
-			Data.Id = "CPR-LSR"
+			Data.Computer = "CPR-LSR"
 
 			Class = ACF.GetClassGroup(Components, "CPR-LSR")
 		end
@@ -159,7 +159,7 @@ do -- Spawn and update function
 		end
 
 		Entity.Name         = Computer.Name
-		Entity.ShortName    = Entity.Id
+		Entity.ShortName    = Entity.Computer
 		Entity.EntType      = Class.Name
 		Entity.ClassData    = Class
 		Entity.OnUpdate     = Computer.OnUpdate or Class.OnUpdate
@@ -172,12 +172,12 @@ do -- Spawn and update function
 		Entity.OnThink      = Computer.OnThink or Class.OnThink
 
 		Entity:SetNWString("WireName", "ACF " .. Computer.Name)
-		Entity:SetNW2String("ID", Entity.Id)
+		Entity:SetNW2String("ID", Entity.Computer)
 
 		CreateInputs(Entity, Data, Class, Computer)
 		CreateOutputs(Entity, Data, Class, Computer)
 
-		ACF_Activate(Entity, true)
+		ACF.Activate(Entity, true)
 
 		Entity.ACF.LegalMass	= Computer.Mass
 		Entity.ACF.Model		= Computer.Model
@@ -221,8 +221,8 @@ do -- Spawn and update function
 	function MakeACF_Computer(Player, Pos, Angle, Data)
 		VerifyData(Data)
 
-		local Class = ACF.GetClassGroup(Components, Data.Id)
-		local Computer = Class.Lookup[Data.Id]
+		local Class = ACF.GetClassGroup(Components, Data.Computer)
+		local Computer = Class.Lookup[Data.Computer]
 		local Limit = Class.LimitConVar.Name
 
 		if not Player:CheckLimit(Limit) then return false end
@@ -274,8 +274,8 @@ do -- Spawn and update function
 		return Entity
 	end
 
-	ACF.RegisterEntityClass("acf_opticalcomputer", MakeACF_Computer, "Id") -- Backwards compatibility
-	ACF.RegisterEntityClass("acf_computer", MakeACF_Computer, "Id")
+	ACF.RegisterEntityClass("acf_opticalcomputer", MakeACF_Computer, "Computer") -- Backwards compatibility
+	ACF.RegisterEntityClass("acf_computer", MakeACF_Computer, "Computer")
 	ACF.RegisterLinkSource("acf_computer", "Weapons")
 
 	------------------- Updating ---------------------
@@ -283,8 +283,8 @@ do -- Spawn and update function
 	function ENT:Update(Data)
 		VerifyData(Data)
 
-		local Class    = ACF.GetClassGroup(Components, Data.Id)
-		local Computer = Class.Lookup[Data.Id]
+		local Class    = ACF.GetClassGroup(Components, Data.Computer)
+		local Computer = Class.Lookup[Data.Computer]
 		local OldClass = self.ClassData
 
 		if OldClass.OnLast then

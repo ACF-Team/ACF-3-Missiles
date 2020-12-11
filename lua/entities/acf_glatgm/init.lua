@@ -84,7 +84,7 @@ function MakeACF_GLATGM(Gun, BulletData)
 		PhysObj:SetMass(Entity.ForcedMass)
 	end
 
-	ACF_Activate(Entity)
+	ACF.Activate(Entity)
 
 	Missiles[Entity] = true
 

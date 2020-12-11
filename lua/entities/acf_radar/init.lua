@@ -308,14 +308,14 @@ end)
 
 do -- Spawn and Update functions
 	local function VerifyData(Data)
-		if Data.Sensor then -- Entity was created via menu tool
-			Data.Id = Data.Sensor
+		if not Data.Radar then
+			Data.Radar = Data.Sensor or Data.Id
 		end
 
-		local Class = ACF.GetClassGroup(Sensors, Data.Id)
+		local Class = ACF.GetClassGroup(Sensors, Data.Radar)
 
 		if not Class or Class.Entity ~= "acf_radar" then
-			Data.Id = "SmallDIR-TGT"
+			Data.Radar = "SmallDIR-TGT"
 
 			Class = ACF.GetClassGroup(Sensors, "SmallDIR-TGT")
 		end
@@ -396,7 +396,7 @@ do -- Spawn and Update functions
 
 		WireLib.TriggerOutput(Entity, "Think Delay", Entity.ThinkDelay)
 
-		ACF_Activate(Entity, true)
+		ACF.Activate(Entity, true)
 
 		Entity.ACF.Model		= Radar.Model
 		Entity.ACF.LegalMass	= Radar.Mass
@@ -408,8 +408,8 @@ do -- Spawn and Update functions
 	function MakeACF_Radar(Player, Pos, Angle, Data)
 		VerifyData(Data)
 
-		local Class = ACF.GetClassGroup(Sensors, Data.Id)
-		local RadarData = Class.Lookup[Data.Id]
+		local Class = ACF.GetClassGroup(Sensors, Data.Radar)
+		local RadarData = Class.Lookup[Data.Radar]
 		local Limit = Class.LimitConVar.Name
 
 		if not Player:CheckLimit(Limit) then return false end
@@ -473,8 +473,8 @@ do -- Spawn and Update functions
 		return Radar
 	end
 
-	ACF.RegisterEntityClass("acf_missileradar", MakeACF_Radar, "Id") -- Backwards compatibility
-	ACF.RegisterEntityClass("acf_radar", MakeACF_Radar, "Id")
+	ACF.RegisterEntityClass("acf_missileradar", MakeACF_Radar, "Radar") -- Backwards compatibility
+	ACF.RegisterEntityClass("acf_radar", MakeACF_Radar, "Radar")
 	ACF.RegisterLinkSource("acf_radar", "Weapons")
 
 	------------------- Updating ---------------------
@@ -484,8 +484,8 @@ do -- Spawn and Update functions
 
 		VerifyData(Data)
 
-		local Class    = ACF.GetClassGroup(Sensors, Data.Id)
-		local Radar    = Class.Lookup[Data.Id]
+		local Class    = ACF.GetClassGroup(Sensors, Data.Radar)
+		local Radar    = Class.Lookup[Data.Radar]
 		local OldClass = self.ClassData
 
 		if OldClass.OnLast then

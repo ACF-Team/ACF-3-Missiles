@@ -107,7 +107,7 @@ if SERVER then
 	function Ammo:PropImpact(_, Trace)
 		if IgniteConVar:GetBool() then
 			local Target = Trace.Entity
-			local Type = ACF_Check(Target)
+			local Type = ACF.Check(Target)
 
 			if Type == "Squishy" and ((Target:IsPlayer() and not Target:HasGodMode()) or Target:IsNPC()) then
 				Target:Ignite(30)
