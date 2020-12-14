@@ -1,8 +1,8 @@
+DEFINE_BASECLASS("acf_base_simple")
 
-DEFINE_BASECLASS("base_wire_entity")
-
-ENT.PrintName     = "ACF Guidance Computer"
+ENT.PrintName     = "ACF Computer"
 ENT.Author        = "Polymorphic Turtle"
-ENT.WireDebugName = "ACF Guidance Computer"
+ENT.WireDebugName = "ACF Computer"
+ENT.PluralName    = "ACF Computers"
 
 cleanup.Register("acf_computer")

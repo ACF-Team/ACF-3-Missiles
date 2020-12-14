@@ -156,11 +156,11 @@ do -- Spawning and Updating --------------------
 		end
 	end
 
-	hook.Add("ACF_OnSetupInputs", "ACF Rack Launch Delay", function(EntClass, List, _, _, Rack)
+	hook.Add("ACF_OnSetupInputs", "ACF Rack Motor Delay", function(EntClass, List, _, _, Rack)
 		if EntClass ~= "acf_rack" then return end
 		if Rack.EntType ~= "Rack" then return end
 
-		List[#List + 1] = "Launch Delay"
+		List[#List + 1] = "Motor Delay"
 	end)
 
 	-------------------------------------------------------------------------------
@@ -358,35 +358,6 @@ do -- Custom ACF damage ------------------------
 end ---------------------------------------------
 
 do -- Entity Link/Unlink -----------------------
-	local ClassLink	  = ACF.GetClassLink
-	local ClassUnlink = ACF.GetClassUnlink
-
-	function ENT:Link(Target)
-		if not IsValid(Target) then return false, "Attempted to link an invalid entity." end
-		if self == Target then return false, "Can't link a rack to itself." end
-
-		local Function = ClassLink("acf_rack", Target:GetClass())
-
-		if Function then
-			return Function(self, Target)
-		end
-
-		return false, "Racks can't be linked to '" .. Target:GetClass() .. "'."
-	end
-
-	function ENT:Unlink(Target)
-		if not IsValid(Target) then return false, "Attempted to unlink an invalid entity." end
-		if self == Target then return false, "Can't unlink a rack from itself." end
-
-		local Function = ClassUnlink("acf_rack", Target:GetClass())
-
-		if Function then
-			return Function(self, Target)
-		end
-
-		return false, "Racks can't be unlinked from '" .. Target:GetClass() .. "'."
-	end
-
 	ACF.RegisterClassLink("acf_rack", "acf_ammo", function(Weapon, Target)
 		if Weapon.Crates[Target] then return false, "This rack is already linked to this crate." end
 		if Target.Weapons[Weapon] then return false, "This rack is already linked to this crate." end
@@ -430,64 +401,8 @@ do -- Entity Link/Unlink -----------------------
 	end)
 end ---------------------------------------------
 
-do -- Entity User ------------------------------
-	local WireTable = {
-		gmod_wire_adv_pod = true,
-		gmod_wire_joystick = true,
-		gmod_wire_expression2 = true,
-		gmod_wire_joystick_multi = true,
-		gmod_wire_pod = function(Input)
-			if Input.Pod then
-				return Input.Pod:GetDriver()
-			end
-		end,
-		gmod_wire_keyboard = function(Input)
-			if Input.ply then
-				return Input.ply
-			end
-		end
-	}
-
-	local function FindUser(Entity, Input, Checked)
-		local Function = WireTable[Input:GetClass()]
-
-		return Function and Function(Entity, Input, Checked or {})
-	end
-
-	WireTable.gmod_wire_adv_pod			= WireTable.gmod_wire_pod
-	WireTable.gmod_wire_joystick		= WireTable.gmod_wire_pod
-	WireTable.gmod_wire_joystick_multi	= WireTable.gmod_wire_pod
-	WireTable.gmod_wire_expression2		= function(This, Input, Checked)
-		for _, V in pairs(Input.Inputs) do
-			if V.Src and not Checked[V.Src] and WireTable[V.Src:GetClass()] then
-				Checked[V.Src] = true -- We don't want to start an infinite loop
-
-				return FindUser(This, V.Src, Checked)
-			end
-		end
-	end
-
-	function ENT:GetUser(Input)
-		if not Input then return self.Owner end
-
-		return FindUser(self, Input) or self.Owner
-	end
-end ---------------------------------------------
-
 do -- Entity Inputs ----------------------------
-	local Inputs = ACF.GetInputActions("acf_rack")
-
-	function ENT:TriggerInput(Name, Value)
-		if self.Disabled then return end
-
-		local Action = Inputs[Name]
-
-		if Action then
-			Action(self, Value)
-
-			self:UpdateOverlay()
-		end
-	end
+	WireLib.AddInputAlias("Launch Delay", "Motor Delay")
 
 	ACF.AddInputAction("acf_rack", "Fire", function(Entity, Value)
 		if Entity.Firing == tobool(Value) then return end

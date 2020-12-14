@@ -65,10 +65,7 @@ end)
 --===============================================================================================--
 
 local CheckLegal  = ACF_CheckLegal
-local ClassLink   = ACF.GetClassLink
-local ClassUnlink = ACF.GetClassUnlink
 local Components  = ACF.Classes.Components
-local Inputs      = ACF.GetInputActions("acf_computer")
 local UnlinkSound = "physics/metal/metal_box_impact_bullet%s.wav"
 local MaxDistance = ACF.RefillDistance * ACF.RefillDistance
 local HookRun     = hook.Run
@@ -349,32 +346,6 @@ function ENT:Disable()
 	self:UpdateOverlay()
 end
 
-function ENT:Link(Target)
-	if not IsValid(Target) then return false, "Attempted to link an invalid entity." end
-	if self == Target then return false, "Can't link a computer to itself." end
-
-	local Function = ClassLink(self:GetClass(), Target:GetClass())
-
-	if Function then
-		return Function(self, Target)
-	end
-
-	return false, "Computers can't be linked to '" .. Target:GetClass() .. "'."
-end
-
-function ENT:Unlink(Target)
-	if not IsValid(Target) then return false, "Attempted to unlink an invalid entity." end
-	if self == Target then return false, "Can't unlink a computer from itself." end
-
-	local Function = ClassUnlink(self:GetClass(), Target:GetClass())
-
-	if Function then
-		return Function(self, Target)
-	end
-
-	return false, "Computers can't be unlinked from '" .. Target:GetClass() .. "'."
-end
-
 local function Overlay(Ent)
 	if Ent.Disabled then
 		Ent:SetOverlayText("Disabled: " .. Ent.DisableReason .. "\n" .. Ent.DisableDescription)
@@ -400,18 +371,6 @@ function ENT:UpdateOverlay(Instant)
 
 		Overlay(self)
 	end)
-end
-
-function ENT:TriggerInput(Name, Value)
-	if self.Disabled then return end
-
-	local Action = Inputs[Name]
-
-	if Action then
-		Action(self, Value)
-
-		self:UpdateOverlay()
-	end
 end
 
 function ENT:Think()

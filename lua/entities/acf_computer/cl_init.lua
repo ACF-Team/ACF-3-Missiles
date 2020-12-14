@@ -1,17 +1,12 @@
+DEFINE_BASECLASS("acf_base_simple") -- Required to get the local BaseClass
+
 include("shared.lua")
 
 language.Add("Cleanup_acf_computer", "ACF Computers")
 language.Add("Cleaned_acf_computer", "Cleaned up all ACF Computers")
 language.Add("SBoxLimit__acf_computer", "You've reached the ACF Computer limit!")
 
-local HideInfo = ACF.HideInfoBubble
 local Components = ACF.Classes.Components
-
-function ENT:Initialize()
-	self:Update()
-
-	self.BaseClass.Initialize(self)
-end
 
 function ENT:Update()
 	local Id = self:GetNW2String("ID")
@@ -32,21 +27,6 @@ function ENT:Update()
 	end
 end
 
-function ENT:Draw()
-	self:DoNormalDraw(false, HideInfo())
-
-	Wire_Render(self)
-
-	if self.GetBeamLength and (not self.GetShowBeam or self:GetShowBeam()) then
-		-- Every SENT that has GetBeamLength should draw a tracer. Some of them have the GetShowBeam boolean
-		Wire_DrawTracerBeam(self, 1, self.GetBeamHighlight and self:GetBeamHighlight() or false)
-	end
-
-	if self.OnDraw then
-		self:OnDraw()
-	end
-end
-
 function ENT:Think()
 	self:NextThink(ACF.CurTime)
 
@@ -54,7 +34,7 @@ function ENT:Think()
 		self:OnThink()
 	end
 
-	self.BaseClass.Think(self)
+	BaseClass.Think(self)
 
 	return true
 end

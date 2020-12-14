@@ -1,11 +1,9 @@
-DEFINE_BASECLASS("base_wire_entity")
+DEFINE_BASECLASS("acf_base_simple")
 
 ENT.PrintName     = "ACF Radar"
 ENT.Author        = "Bubbus"
-ENT.Contact       = "splambob@googlemail.com"
-ENT.Purpose       = "Detects targets in flight."
-ENT.Instructions  = "Point towards targets to detect them. Results can be retrieved via wire outputs."
 ENT.WireDebugName = "ACF Radar"
+ENT.PluralName    = "ACF Radars"
 ENT.IsRadar       = true
 
 cleanup.Register("acf_radar")
