@@ -88,7 +88,7 @@ do -- Joystick
 			Menu:AddLabel(MenuText:format(Angle, Speed, Mass))
 			Menu:AddLabel("This entity can be fully parented.")
 
-			ACF.WriteValue("PrimaryClass", "acf_computer")
+			ACF.SetClientData("PrimaryClass", "acf_computer")
 		end,
 		-- Serverside actions
 		OnUpdate = function(Entity, _, _, Computer)
@@ -296,7 +296,7 @@ do -- Optical guidance computer
 			Menu:AddLabel(MenuText:format(Pitch, Yaw, Speed, Focus, Mass))
 			Menu:AddLabel("This entity can be fully parented.")
 
-			ACF.WriteValue("PrimaryClass", "acf_computer")
+			ACF.SetClientData("PrimaryClass", "acf_computer")
 		end,
 		-- Serverside actions
 		OnUpdate = function(Entity, _, _, Computer)
@@ -481,7 +481,7 @@ do -- Laser guidance computer
 			Menu:AddLabel(LaserText:format(LaseTime, Cooldown))
 			Menu:AddLabel("This entity can be fully parented.")
 
-			ACF.WriteValue("PrimaryClass", "acf_computer")
+			ACF.SetClientData("PrimaryClass", "acf_computer")
 		end,
 		-- Serverside actions
 		OnUpdate = function(Entity, _, _, Computer)
@@ -707,7 +707,7 @@ do -- GPS transmitter
 			--Menu:AddLabel("This entity can be jammed.") -- Not yet
 			Menu:AddLabel("This entity can be fully parented.")
 
-			ACF.WriteValue("PrimaryClass", "acf_computer")
+			ACF.SetClientData("PrimaryClass", "acf_computer")
 		end,
 		-- Serverside actions
 		OnUpdate = function(Entity)

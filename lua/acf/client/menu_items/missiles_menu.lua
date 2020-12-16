@@ -77,8 +77,8 @@ local function CreateMenu(Menu)
 
 	local AmmoList = ACF.CreateAmmoMenu(Menu, Settings)
 
-	ACF.WriteValue("PrimaryClass", "acf_rack")
-	ACF.WriteValue("SecondaryClass", "acf_ammo")
+	ACF.SetClientData("PrimaryClass", "acf_rack")
+	ACF.SetClientData("SecondaryClass", "acf_ammo")
 
 	ACF.SetToolMode("acf_menu", "Main", "Spawner")
 
@@ -88,7 +88,7 @@ local function CreateMenu(Menu)
 		self.ListData.Index = Index
 		self.Selected = Data
 
-		ACF.WriteValue("WeaponClass", Data.ID)
+		ACF.SetClientData("WeaponClass", Data.ID)
 
 		MissileClass:SetText(Data.Description)
 
@@ -105,8 +105,8 @@ local function CreateMenu(Menu)
 
 		local Preview = Data.Preview
 
-		ACF.WriteValue("Weapon", Data.ID)
-		ACF.WriteValue("Destiny", Data.Destiny or "Missiles")
+		ACF.SetClientData("Weapon", Data.ID)
+		ACF.SetClientData("Destiny", Data.Destiny or "Missiles")
 
 		ACF.LoadSortedList(RackList, GetRackList(Data), "MagSize")
 
@@ -133,7 +133,7 @@ local function CreateMenu(Menu)
 
 		local Preview = Data.Preview
 
-		ACF.WriteValue("Rack", Data.ID)
+		ACF.SetClientData("Rack", Data.ID)
 
 		RackDesc:SetText(Data.Description)
 		RackInfo:SetText(GetRackText(Data))

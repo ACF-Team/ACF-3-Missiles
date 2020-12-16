@@ -6,5 +6,5 @@ function ACF.CreateRadarMenu(Data, Menu)
 
 	Menu:AddLabel(Text:format(ViewCone, ViewRange, Data.Mass))
 
-	ACF.WriteValue("PrimaryClass", "acf_radar")
+	ACF.SetClientData("PrimaryClass", "acf_radar")
 end

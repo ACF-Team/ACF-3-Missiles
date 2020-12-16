@@ -22,7 +22,7 @@ if CLIENT then
 		local Distance = Base:AddSlider("Fuze Distance", self.MinDistance, self.MaxDistance, 2)
 		Distance:SetDataVar("FuzeDistance", "OnValueChanged")
 		Distance:SetValueFunction(function(Panel)
-			local Value = ACF.ReadNumber("FuzeDistance")
+			local Value = ACF.GetClientNumber("FuzeDistance")
 
 			Panel:SetValue(Value)
 

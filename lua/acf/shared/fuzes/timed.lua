@@ -28,7 +28,7 @@ if CLIENT then
 		local Timer = Base:AddSlider("Fuze Timer", self.MinTime, self.MaxTime, 2)
 		Timer:SetDataVar("FuzeTimer", "OnValueChanged")
 		Timer:SetValueFunction(function(Panel)
-			local Value = ACF.ReadNumber("FuzeTimer")
+			local Value = ACF.GetClientNumber("FuzeTimer")
 
 			Panel:SetValue(Value)
 

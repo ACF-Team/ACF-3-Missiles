@@ -30,7 +30,7 @@ if CLIENT then
 		local Delay = Base:AddSlider("Arming Delay", Min, self.MaxDelay, 2)
 		Delay:SetDataVar("ArmingDelay", "OnValueChanged")
 		Delay:SetValueFunction(function(Panel)
-			local Value = ACF.ReadNumber("ArmingDelay")
+			local Value = ACF.GetClientNumber("ArmingDelay")
 
 			Panel:SetValue(Value)
 

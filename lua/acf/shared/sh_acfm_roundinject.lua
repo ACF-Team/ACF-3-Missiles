@@ -68,7 +68,7 @@ if CLIENT then
 			self.ListData.Index = Index
 			self.Selected = Data
 
-			ACF.WriteValue("Guidance", Data.ID)
+			ACF.SetClientData("Guidance", Data.ID)
 
 			local Guidance = Data()
 
@@ -98,7 +98,7 @@ if CLIENT then
 			self.ListData.Index = Index
 			self.Selected = Data
 
-			ACF.WriteValue("Fuze", Data.ID)
+			ACF.SetClientData("Fuze", Data.ID)
 
 			local Fuze = Data()
 
