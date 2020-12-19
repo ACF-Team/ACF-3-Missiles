@@ -20,10 +20,8 @@ if CLIENT then
 		Fuze.BaseClass.AddMenuControls(self, Base, ToolData, ...)
 
 		local Distance = Base:AddSlider("Fuze Distance", self.MinDistance, self.MaxDistance, 2)
-		Distance:SetDataVar("FuzeDistance", "OnValueChanged")
-		Distance:SetValueFunction(function(Panel)
-			local Value = ACF.GetClientNumber("FuzeDistance")
-
+		Distance:SetClientData("FuzeDistance", "OnValueChanged")
+		Distance:DefineSetter(function(Panel, _, _, Value)
 			Panel:SetValue(Value)
 
 			return Value

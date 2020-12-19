@@ -26,10 +26,8 @@ if CLIENT then
 		Fuze.BaseClass.AddMenuControls(self, Base, ToolData, ...)
 
 		local Timer = Base:AddSlider("Fuze Timer", self.MinTime, self.MaxTime, 2)
-		Timer:SetDataVar("FuzeTimer", "OnValueChanged")
-		Timer:SetValueFunction(function(Panel)
-			local Value = ACF.GetClientNumber("FuzeTimer")
-
+		Timer:SetClientData("FuzeTimer", "OnValueChanged")
+		Timer:DefineSetter(function(Panel, _, _, Value)
 			Panel:SetValue(Value)
 
 			return Value

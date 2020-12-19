@@ -28,10 +28,8 @@ if CLIENT then
 		local Min = ACF_GetGunValue(ToolData.Weapon, "ArmDelay") or self.MinDelay
 
 		local Delay = Base:AddSlider("Arming Delay", Min, self.MaxDelay, 2)
-		Delay:SetDataVar("ArmingDelay", "OnValueChanged")
-		Delay:SetValueFunction(function(Panel)
-			local Value = ACF.GetClientNumber("ArmingDelay")
-
+		Delay:SetClientData("ArmingDelay", "OnValueChanged")
+		Delay:DefineSetter(function(Panel, _, _, Value)
 			Panel:SetValue(Value)
 
 			return Value

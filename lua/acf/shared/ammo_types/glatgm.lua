@@ -123,11 +123,11 @@ else
 
 	function Ammo:AddAmmoInformation(Base, ToolData, BulletData)
 		local RoundStats = Base:AddLabel()
-		RoundStats:TrackDataVar("Projectile", "SetText")
-		RoundStats:TrackDataVar("Propellant")
-		RoundStats:TrackDataVar("FillerMass")
-		RoundStats:TrackDataVar("LinerAngle")
-		RoundStats:SetValueFunction(function()
+		RoundStats:TrackClientData("Projectile", "SetText")
+		RoundStats:TrackClientData("Propellant")
+		RoundStats:TrackClientData("FillerMass")
+		RoundStats:TrackClientData("LinerAngle")
+		RoundStats:DefineSetter(function()
 			self:UpdateRoundData(ToolData, BulletData)
 
 			local Text		= "Command Distance : %s m\nProjectile Mass : %s\nPropellant Mass : %s\nExplosive Mass : %s"
@@ -140,9 +140,9 @@ else
 		end)
 
 		local FillerStats = Base:AddLabel()
-		FillerStats:TrackDataVar("FillerMass", "SetText")
-		FillerStats:TrackDataVar("LinerAngle")
-		FillerStats:SetValueFunction(function()
+		FillerStats:TrackClientData("FillerMass", "SetText")
+		FillerStats:TrackClientData("LinerAngle")
+		FillerStats:DefineSetter(function()
 			self:UpdateRoundData(ToolData, BulletData)
 
 			local Text	   = "Blast Radius : %s m\nFragments : %s\nFragment Mass : %s\nFragment Velocity : %s m/s"
@@ -154,11 +154,11 @@ else
 		end)
 
 		local Penetrator = Base:AddLabel()
-		Penetrator:TrackDataVar("Projectile", "SetText")
-		Penetrator:TrackDataVar("Propellant")
-		Penetrator:TrackDataVar("FillerMass")
-		Penetrator:TrackDataVar("LinerAngle")
-		Penetrator:SetValueFunction(function()
+		Penetrator:TrackClientData("Projectile", "SetText")
+		Penetrator:TrackClientData("Propellant")
+		Penetrator:TrackClientData("FillerMass")
+		Penetrator:TrackClientData("LinerAngle")
+		Penetrator:DefineSetter(function()
 			self:UpdateRoundData(ToolData, BulletData)
 
 			local Text	   = "Penetrator Caliber : %s mm\nPenetrator Mass : %s\nPenetrator Velocity : %s m/s"
@@ -170,11 +170,11 @@ else
 		end)
 
 		local PenStats = Base:AddLabel()
-		PenStats:TrackDataVar("Projectile", "SetText")
-		PenStats:TrackDataVar("Propellant")
-		PenStats:TrackDataVar("FillerMass")
-		PenStats:TrackDataVar("LinerAngle")
-		PenStats:SetValueFunction(function()
+		PenStats:TrackClientData("Projectile", "SetText")
+		PenStats:TrackClientData("Propellant")
+		PenStats:TrackClientData("FillerMass")
+		PenStats:TrackClientData("LinerAngle")
+		PenStats:DefineSetter(function()
 			self:UpdateRoundData(ToolData, BulletData)
 
 			local Text	   = "Penetration : %s mm RHA\nAt 300m : %s mm RHA @ %s m/s\nAt 800m : %s mm RHA @ %s m/s"

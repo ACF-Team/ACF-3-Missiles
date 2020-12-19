@@ -132,10 +132,12 @@ else
 
 	function Ammo:AddAmmoControls(Base, ToolData, BulletData)
 		local FillerMass = Base:AddSlider("Flare Filler", 0, BulletData.MaxFillerVol, 2)
-		FillerMass:SetDataVar("FillerMass", "OnValueChanged")
-		FillerMass:TrackDataVar("Projectile")
-		FillerMass:SetValueFunction(function(Panel)
-			ToolData.FillerMass = math.Round(ACF.GetClientNumber("FillerMass"), 2)
+		FillerMass:SetClientData("FillerMass", "OnValueChanged")
+		FillerMass:TrackClientData("Projectile")
+		FillerMass:DefineSetter(function(Panel, _, Key, Value)
+			if Key == "FillerMass" then
+				ToolData.FillerMass = math.Round(Value, 2)
+			end
 
 			self:UpdateRoundData(ToolData, BulletData)
 
@@ -148,10 +150,10 @@ else
 
 	function Ammo:AddAmmoInformation(Base, ToolData, BulletData)
 		local RoundStats = Base:AddLabel()
-		RoundStats:TrackDataVar("Projectile", "SetText")
-		RoundStats:TrackDataVar("Propellant")
-		RoundStats:TrackDataVar("FillerMass")
-		RoundStats:SetValueFunction(function()
+		RoundStats:TrackClientData("Projectile", "SetText")
+		RoundStats:TrackClientData("Propellant")
+		RoundStats:TrackClientData("FillerMass")
+		RoundStats:DefineSetter(function()
 			self:UpdateRoundData(ToolData, BulletData)
 
 			local Text		= "Muzzle Velocity : %s m/s\nProjectile Mass : %s\nPropellant Mass : %s\nFlare Filler Mass : %s"
@@ -164,8 +166,8 @@ else
 		end)
 
 		local FillerStats = Base:AddLabel()
-		FillerStats:TrackDataVar("FillerMass", "SetText")
-		FillerStats:SetValueFunction(function()
+		FillerStats:TrackClientData("FillerMass", "SetText")
+		FillerStats:DefineSetter(function()
 			self:UpdateRoundData(ToolData, BulletData)
 
 			local Text		= "Burn Rate : %s/s\nBurn Duration : %s s\nDistraction Chance : %s"
