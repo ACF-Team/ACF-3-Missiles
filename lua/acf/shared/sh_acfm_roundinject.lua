@@ -4,18 +4,8 @@ local Fuzes     = ACF.Classes.Fuzes
 
 hook.Add("ACF_UpdateRoundData", "ACF Missile Ammo", function(_, ToolData, Data)
 	if ToolData.Destiny ~= "Missiles" then return end
-	if Data.RealMuzzleVel then return end
 
-	Data.RealMuzzleVel = Data.MuzzleVel
-	Data.MuzzleVel     = 0
-	Data.SlugPenMul    = ACF_GetGunValue(ToolData.Weapon, "PenMul")
-end)
-
-hook.Add("ACF_GetDisplayData", "ACF Missile Ammo", function(_, Data)
-	if not Data.RealMuzzleVel then return end
-
-	Data.MuzzleVel     = Data.RealMuzzleVel
-	Data.RealMuzzleVel = nil
+	Data.SlugPenMul = ACF_GetGunValue(ToolData.Weapon, "PenMul")
 end)
 
 if CLIENT then

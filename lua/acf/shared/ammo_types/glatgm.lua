@@ -177,15 +177,12 @@ else
 		PenStats:DefineSetter(function()
 			self:UpdateRoundData(ToolData, BulletData)
 
-			local Text	   = "Penetration : %s mm RHA\nAt 300m : %s mm RHA @ %s m/s\nAt 800m : %s mm RHA @ %s m/s"
-			local MaxPen   = math.Round(BulletData.MaxPen, 2)
-			local R1V, R1P = ACF.PenRanging(BulletData.MuzzleVel, BulletData.DragCoef, BulletData.ProjMass, BulletData.PenArea, BulletData.LimitVel, 300)
-			local R2V, R2P = ACF.PenRanging(BulletData.MuzzleVel, BulletData.DragCoef, BulletData.ProjMass, BulletData.PenArea, BulletData.LimitVel, 800)
+			local Text	 = "Penetration : %s mm RHA\nAt 300m : %s mm RHA @ %s m/s\nAt 800m : %s mm RHA @ %s m/s"
+			local MaxPen = math.Round(BulletData.MaxPen, 2)
+			local R1V    = ACF.PenRanging(BulletData.MuzzleVel, BulletData.DragCoef, BulletData.ProjMass, BulletData.PenArea, BulletData.LimitVel, 300)
+			local R2V    = ACF.PenRanging(BulletData.MuzzleVel, BulletData.DragCoef, BulletData.ProjMass, BulletData.PenArea, BulletData.LimitVel, 800)
 
-			R1P = math.Round((ACF_Kinetic((R1V + BulletData.SlugMV) * 39.37, BulletData.SlugMass, 999999).Penetration / BulletData.SlugPenArea) * ACF.KEtoRHA, 2)
-			R2P = math.Round((ACF_Kinetic((R2V + BulletData.SlugMV) * 39.37, BulletData.SlugMass, 999999).Penetration / BulletData.SlugPenArea) * ACF.KEtoRHA, 2)
-
-			return Text:format(MaxPen, R1P, R1V, R2P, R2V)
+			return Text:format(MaxPen, MaxPen, R1V, MaxPen, R2V)
 		end)
 
 		Base:AddLabel("Note: The penetration range data is an approximation and may not be entirely accurate.")

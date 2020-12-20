@@ -585,22 +585,6 @@ function ENT:Detonate(Destroyed)
 
 	debugoverlay.Line(BulletData.Pos, BulletData.Pos + BulletData.Flight, 10, Color(255, 128, 0))
 
-	function BulletData.OnPenetrated(Bullet)
-		ACF.ResetBulletVelocity(Bullet)
-
-		-- We only need to do either just once
-		Bullet.OnPenetrated = nil
-		Bullet.OnRicocheted = nil
-	end
-
-	function BulletData.OnRicocheted(Bullet)
-		ACF.ResetBulletVelocity(Bullet)
-
-		-- We only need to do either just once
-		Bullet.OnPenetrated = nil
-		Bullet.OnRicocheted = nil
-	end
-
 	local Bullet = ACF.CreateBullet(BulletData)
 
 	ACF.DoReplicatedPropHit(self, Bullet)
