@@ -346,31 +346,13 @@ function ENT:Disable()
 	self:UpdateOverlay()
 end
 
-local function Overlay(Ent)
-	if Ent.Disabled then
-		Ent:SetOverlayText("Disabled: " .. Ent.DisableReason .. "\n" .. Ent.DisableDescription)
-	else
-		local Title = Ent.OverlayTitle and Ent:OverlayTitle() or "Idle"
-		local Body = Ent.OverlayBody and Ent:OverlayBody()
+function ENT:UpdateOverlayText()
+	local Title = self.OverlayTitle and self:OverlayTitle() or "Idle"
+	local Body = self.OverlayBody and self:OverlayBody()
 
-		Body = Body and ("\n\n" .. Body) or ""
+	Body = Body and ("\n\n" .. Body) or ""
 
-		Ent:SetOverlayText(Title .. Body)
-	end
-end
-
-function ENT:UpdateOverlay(Instant)
-	if Instant then
-		return Overlay(self)
-	end
-
-	if timer.Exists("ACF Overlay Buffer" .. self:EntIndex()) then return end
-
-	timer.Create("ACF Overlay Buffer" .. self:EntIndex(), 0.5, 1, function()
-		if not IsValid(self) then return end
-
-		Overlay(self)
-	end)
+	return Title .. Body
 end
 
 function ENT:Think()

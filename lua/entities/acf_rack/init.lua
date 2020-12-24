@@ -449,41 +449,23 @@ do -- Entity Inputs ----------------------------
 	end)
 end ---------------------------------------------
 
-do -- Entity Overlay ---------------------------
+do -- Entity Overlay ----------------------------
 	local Text = "%s\n\nLoaded ammo: %s\nRounds remaining: %s\nReload time: %s second(s)\nFire delay: %s second(s)"
 
-	local function Overlay(Ent)
-		if Ent.Disabled then
-			Ent:SetOverlayText("Disabled: " .. Ent.DisableReason .. "\n" .. Ent.DisableDescription)
-		else
-			local Delay = math.Round(Ent.FireDelay, 2)
-			local Reload = math.Round(Ent.ReloadTime, 2)
-			local Bullet = Ent.BulletData
-			local Ammo = (Bullet.Id and (Bullet.Id .. " ") or "") .. Bullet.Type
-			local Status = Ent.State
+	function ENT:UpdateOverlayText()
+		local Delay  = math.Round(self.FireDelay, 2)
+		local Reload = math.Round(self.ReloadTime, 2)
+		local Bullet = self.BulletData
+		local Ammo   = (Bullet.Id and (Bullet.Id .. " ") or "") .. Bullet.Type
+		local Status = self.State
 
-			if Ent.Jammed then
-				Status = "Jammed!\nRepair this rack to be able to use it again."
-			elseif not next(Ent.Crates) then
-				Status = "Not linked to an ammo crate!"
-			end
-
-			Ent:SetOverlayText(Text:format(Status, Ammo, Ent.CurrentShot, Reload, Delay))
-		end
-	end
-
-	function ENT:UpdateOverlay(Instant)
-		if Instant then
-			return Overlay(self)
+		if self.Jammed then
+			Status = "Jammed!\nRepair this rack to be able to use it again."
+		elseif not next(self.Crates) then
+			Status = "Not linked to an ammo crate!"
 		end
 
-		if timer.Exists("ACF Overlay Buffer" .. self:EntIndex()) then return end
-
-		timer.Create("ACF Overlay Buffer" .. self:EntIndex(), 0.5, 1, function()
-			if not IsValid(self) then return end
-
-			Overlay(self)
-		end)
+		return Text:format(Status, Ammo, self.CurrentShot, Reload, Delay)
 	end
 end ---------------------------------------------
 
