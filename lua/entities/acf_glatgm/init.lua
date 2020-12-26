@@ -53,10 +53,13 @@ function MakeACF_GLATGM(Gun, BulletData)
 	ParticleEffectAttach("Rocket Motor GLATGM", 4, Entity, 1)
 
 	Entity.Owner        = Gun.Owner
+	Entity.Name         = Caliber .. "mm Gun Launched Missile"
+	Entity.ShortName    = Caliber .. "mmGLATGM"
+	Entity.EntType      = "Gun Launched Anti-Tank Guided Missile"
+	Entity.Caliber      = Caliber
 	Entity.Weapon       = Gun
 	Entity.BulletData   = table.Copy(BulletData)
 	Entity.ForcedArmor  = 5 -- All missiles should get 5mm
-	Entity.ForcedHealth = Caliber * 2
 	Entity.ForcedMass   = BulletData.CartMass
 	Entity.UseGuidance  = true
 	Entity.ViewCone     = math.cos(math.rad(30)) -- Number inside is on degrees
@@ -97,7 +100,7 @@ function ENT:ACF_Activate(Recalc)
 	local PhysObj = self.ACF.PhysObj
 	local Area    = PhysObj:GetSurfaceArea()
 	local Armor   = self.ForcedArmor
-	local Health  = self.ForcedHealth
+	local Health  = self.Caliber * 2
 	local Percent = 1
 
 	if Recalc and self.ACF.Health and self.ACF.MaxHealth then

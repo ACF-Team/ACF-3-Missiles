@@ -323,6 +323,7 @@ function MakeACF_Missile(Player, Pos, Ang, Rack, MountPoint, Crate)
 	local Data = Class.Lookup[BulletData.Id]
 	local Round = Data.Round
 	local Length = Data.Length
+	local Caliber = Data.Caliber
 
 	Missile:SetAngles(Rack:LocalToWorldAngles(Ang))
 	Missile:SetPos(Rack:LocalToWorld(Pos))
@@ -332,6 +333,10 @@ function MakeACF_Missile(Player, Pos, Ang, Rack, MountPoint, Crate)
 	Missile:Spawn()
 
 	Missile.Owner          = Player
+	Missile.Name           = Data.Name
+	Missile.ShortName      = Data.ID
+	Missile.EntType        = Class.Name
+	Missile.Caliber        = Caliber
 	Missile.Launcher       = Rack
 	Missile.MountPoint     = MountPoint
 	Missile.Filter         = { Rack }
@@ -343,7 +348,6 @@ function MakeACF_Missile(Player, Pos, Ang, Rack, MountPoint, Crate)
 	Missile.ReloadTime     = Data.ReloadTime or 10
 	Missile.ForcedMass     = Data.Mass or 10
 	Missile.ForcedArmor    = Round.Armor
-	Missile.ForcedHealth   = Data.Caliber * 2
 	Missile.Effect         = Data.Effect or Class.Effect
 	Missile.NoDamage       = Rack.ProtectMissile or Data.NoDamage
 	Missile.ExhaustOffset  = Data.ExhaustOffset
@@ -360,7 +364,7 @@ function MakeACF_Missile(Player, Pos, Ang, Rack, MountPoint, Crate)
 	Missile.CanDelay       = Round.CanDelayLaunch
 	Missile.MaxLength      = Round.MaxLength
 	Missile.Agility        = Data.Agility or 1
-	Missile.Inertia        = 0.08333 * Data.Mass * (3.1416 * (Data.Caliber * 0.05) ^ 2 + Length)
+	Missile.Inertia        = 0.08333 * Data.Mass * (3.1416 * (Caliber * 0.05) ^ 2 + Length)
 	Missile.Length         = Length
 	Missile.TorqueMul      = Length * 25
 	Missile.RotAxis        = Vector()
@@ -624,7 +628,7 @@ function ENT:ACF_Activate(Recalc)
 	local PhysObj = self.ACF.PhysObj
 	local Area    = PhysObj:GetSurfaceArea()
 	local Armor   = self.ForcedArmor
-	local Health  = self.ForcedHealth
+	local Health  = self.Caliber * 2
 	local Percent = 1
 
 	if Recalc and self.ACF.Health and self.ACF.MaxHealth then
