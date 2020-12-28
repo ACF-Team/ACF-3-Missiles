@@ -562,7 +562,7 @@ do -- Loading ----------------------------------
 		local Start = Select
 
 		repeat
-			if Select.Load then return Select end
+			if Select:CanConsume() then return Select end
 
 			Select = next(Rack.Crates, Select) or next(Rack.Crates)
 		until Select == Start -- If we've looped back around to the start then there's nothing to use
