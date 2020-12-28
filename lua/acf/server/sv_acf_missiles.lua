@@ -85,7 +85,7 @@ timer.Simple(1, function()
 	local Sounds = ACF.SoundToolSupport
 
 	Sounds.acf_rack = {
-			GetSound = function(ent) return { Sound = ent.SoundPath } end,
+			GetSound = function(ent) return { Sound = ent.SoundPath or "" } end,
 
 		SetSound = function(ent, soundData)
 			ent.SoundPath = soundData.Sound
@@ -95,7 +95,7 @@ timer.Simple(1, function()
 		ResetSound = function(ent)
 			local setSound = Sounds.acf_rack.SetSound
 
-			setSound(ent, { Sound = ent.DefaultSound })
+			setSound(ent, { Sound = ent.DefaultSound or "" })
 		end
 	}
 
