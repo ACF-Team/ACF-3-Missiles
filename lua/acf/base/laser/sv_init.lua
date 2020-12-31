@@ -53,14 +53,10 @@ function ACF.FilterLaserEntity(Entity)
 	net.Broadcast()
 end
 
-hook.Add("PlayerInitialSpawn", "ACF Laser Setup", function(Player)
-	timer.Simple(5, function()
-		if not IsValid(Player) then return end
-
-		net.Start("ACF_SyncLaserSources")
-			net.WriteTable(Sources)
-		net.Send(Player)
-	end)
+hook.Add("ACF_OnPlayerLoaded", "ACF Laser Setup", function(Player)
+	net.Start("ACF_SyncLaserSources")
+		net.WriteTable(Sources)
+	net.Send(Player)
 end)
 
 hook.Add("OnMissileLaunched", "ACF Laser Filter Update", function(Missile)
