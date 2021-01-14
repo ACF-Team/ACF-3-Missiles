@@ -382,6 +382,12 @@ function MakeACF_Missile(Player, Pos, Ang, Rack, MountPoint, Crate)
 		Missile:SetNoDraw(true)
 	end
 
+	if Missile.NoThrust then
+		Missile.MotorLength = 0
+	else
+		Missile.MotorLength = Missile.BulletData.PropMass / Missile.BurnRate * (1 - Missile.StarterPercent)
+	end
+
 	do -- Exhaust pos
 		local Attachment = Missile:GetAttachment(Missile:LookupAttachment("exhaust"))
 		local Offset = Missile.ExhaustOffset or (Attachment and Attachment.Pos) or Vector()
@@ -464,12 +470,6 @@ function ENT:Launch(Delay, IsMisfire)
 	self.CurDir      = Flight
 	self.Velocity    = Flight * Velocity
 	self.LastPos     = self.Position
-
-	if self.NoThrust then
-		self.MotorLength = 0
-	else
-		self.MotorLength = BulletData.PropMass / self.BurnRate * (1 - self.StarterPercent)
-	end
 
 	if self.RackModel then
 		self:UpdateModel(self.RealModel)

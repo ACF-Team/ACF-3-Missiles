@@ -237,7 +237,6 @@ do -- Spawning and Updating --------------------
 
 	function ENT:Update(Data)
 		if self.Firing then return false, "Stop firing before updating the rack!" end
-		if self.Reloading then return false, "Stop reloading before updating the rack!" end
 
 		VerifyData(Data)
 
