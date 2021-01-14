@@ -59,6 +59,16 @@ else
 		return Target or self:SeekNewTarget(Missile)
 	end
 
+	function Guidance:GetTargetPosition(Radar, Target)
+		if not Radar then return end
+		if not Target then return end
+
+		local Targets = Radar.Targets
+		local Data    = Targets[Target]
+
+		return Data and Data.Position
+	end
+
 	function Guidance:GetGuidance(Missile)
 		self:PreGuidance(Missile)
 
@@ -67,10 +77,9 @@ else
 		if Override then return Override end
 
 		local Radar = self:GetRadar("TGT-Radar")
-		local Targets = Radar and Radar.Targets
 
 		if IsValid(self.Target) then
-			local Position = self.ForcedPos or (Targets and Targets[self.Target].Position)
+			local Position = self.ForcedPos or self:GetTargetPosition(Radar, self.Target)
 
 			if Position and self:CheckConeLOS(Missile, Missile:GetPos(), Position, self.ViewConeCos) then
 				return { TargetPos = Position, ViewCone = self.ViewCone }
@@ -81,7 +90,7 @@ else
 
 		if not self.Target then return {} end
 
-		local Position = self.ForcedPos or (Targets and Targets[self.Target].Position)
+		local Position = self.ForcedPos or self:GetTargetPosition(Radar, self.Target)
 
 		return { TargetPos = Position, ViewCone = self.ViewCone }
 	end
