@@ -62,7 +62,7 @@ local function LaunchEffect(Missile)
 	if ACF_SOUND_EXT then
 		hook.Run("ACF_SOUND_MISSILE", Missile, Sound)
 	else
-		Missile:EmitSound(Sound, 511, math.random(99, 101))
+		Missile:EmitSound(Sound, 180, math.random(99, 101), ACF.Volume)
 	end
 end
 
@@ -479,7 +479,7 @@ function ENT:Launch(Delay, IsMisfire)
 		self.Filter[#self.Filter + 1] = Missile
 	end
 
-	self:EmitSound("phx/epicmetal_hard.wav", 500, math.random(99, 101))
+	self:EmitSound("phx/epicmetal_hard.wav", 70, math.random(99, 101), ACF.Volume)
 	self:SetNotSolid(false)
 	self:SetNoDraw(false)
 	self:SetParent()

@@ -75,8 +75,8 @@ local function CheckDistantLinks(Entity, Source)
 
 	for Link in pairs(Entity[Source]) do
 		if Position:DistToSqr(Link:GetPos()) > MaxDistance then
-			Entity:EmitSound(UnlinkSound:format(math.random(1, 3)), 500, 100)
-			Link:EmitSound(UnlinkSound:format(math.random(1, 3)), 500, 100)
+			Entity:EmitSound(UnlinkSound:format(math.random(1, 3)), 70, 100, ACF.Volume)
+			Link:EmitSound(UnlinkSound:format(math.random(1, 3)), 70, 100, ACF.Volume)
 
 			Entity:Unlink(Link)
 		end

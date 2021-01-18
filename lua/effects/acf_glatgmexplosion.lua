@@ -94,8 +94,8 @@ function EFFECT:Core(Direction)
 		end
 	end
 
-	sound.Play("ambient/explosions/explode_9.wav", self.Origin, math.Clamp(Radius * 25, 75, 165), math.Clamp(300 - Radius * 22, 15, 255))
-	sound.Play("ambient/explosions/explode_4.wav", self.Origin, math.Clamp(Radius * 20, 75, 165), math.Clamp(300 - Radius * 25, 15, 255))
+	sound.Play("ambient/explosions/explode_9.wav", self.Origin, math.Clamp(Radius * 25, 75, 165), math.Clamp(300 - Radius * 22, 15, 255), ACF.Volume)
+	sound.Play("ambient/explosions/explode_4.wav", self.Origin, math.Clamp(Radius * 20, 75, 165), math.Clamp(300 - Radius * 25, 15, 255), ACF.Volume)
 end
 
 

@@ -53,7 +53,7 @@ else
 			self.Rope = nil
 
 			if IsValid(self.Source) then
-				self.Source:EmitSound(SnapSound:format(math.random(3)))
+				self.Source:EmitSound(SnapSound:format(math.random(3)), nil, nil, ACF.Volume)
 			end
 		end
 	end
