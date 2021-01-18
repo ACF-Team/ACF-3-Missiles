@@ -43,7 +43,6 @@ local Sensors	  = ACF.Classes.Sensors
 local UnlinkSound = "physics/metal/metal_box_impact_bullet%s.wav"
 local MaxDistance = ACF.RefillDistance * ACF.RefillDistance
 local TraceData	  = { start = true, endpos = true, mask = MASK_SOLID_BRUSHONLY }
-local Gamemode	  = GetConVar("acf_gamemode")
 local Indexes	  = {}
 local Unused	  = {}
 local IndexCount  = 0
@@ -129,7 +128,7 @@ end
 
 local function GetEntityOwner(Owner, Entity)
 	-- If the server is competitive and the radar owner doesn't has permissions on this entity then return Unknown
-	if Gamemode:GetInt() == 2 and not Entity:CPPICanTool(Owner) then
+	if ACF.Gamemode == 3 and not Entity:CPPICanTool(Owner) then
 		return "Unknown"
 	end
 
