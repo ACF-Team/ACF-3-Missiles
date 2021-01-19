@@ -191,7 +191,6 @@ do -- Spawning and Updating --------------------
 		Rack.Spread      = 1 -- GunClass.spread
 		Rack.ReloadTime  = 1
 		Rack.FireDelay   = 1
-		Rack.LastSend    = ACF.CurTime
 		Rack.MountPoints = {}
 		Rack.Missiles    = {}
 		Rack.Crates      = {}
@@ -718,6 +717,14 @@ do -- Duplicator Support -----------------------
 end ---------------------------------------------
 
 do -- Misc -------------------------------------
+	local function GetPosition(Entity)
+		local PhysObj = Entity:GetPhysicsObject()
+
+		if not IsValid(PhysObj) then return Entity:GetPos() end
+
+		return Entity:LocalToWorld(PhysObj:GetMassCenter())
+	end
+
 	function ENT:Enable()
 		self.Firing = tobool(self.Inputs.Fire.Value)
 		self.Reloading = tobool(self.Inputs.Reload.Value)
@@ -803,6 +810,28 @@ do -- Misc -------------------------------------
 		end
 
 		self:UpdatePoint()
+	end
+
+	function ENT:Think()
+		local Time     = ACF.CurTime
+		local Previous = self.Position
+		local Current  = GetPosition(self)
+
+		self.Position = Current
+
+		if Previous then
+			local DeltaTime = Time - self.LastThink
+
+			self.Velocity = (Current - Previous) / DeltaTime
+		else
+			self.Velocity = Vector()
+		end
+
+		self:NextThink(Time)
+
+		self.LastThink = Time
+
+		return true
 	end
 
 	function ENT:OnRemove()

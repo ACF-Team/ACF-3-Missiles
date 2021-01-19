@@ -449,7 +449,6 @@ function ENT:Launch(Delay, IsMisfire)
 	local BulletData = self.BulletData
 	local Point      = self.MountPoint
 	local Rack       = self.Launcher
-	local Velocity   = ACF_GetAncestor(Rack):GetVelocity()
 	local Flight     = BulletData.Flight or self:LocalToWorldAngles(Point.Angle):Forward()
 	local DeltaTime  = engine.TickInterval()
 
@@ -468,7 +467,7 @@ function ENT:Launch(Delay, IsMisfire)
 	self.LastVel     = Flight
 	self.Position    = BulletData.Pos
 	self.CurDir      = Flight
-	self.Velocity    = Flight * Velocity
+	self.Velocity    = Flight * Rack.Velocity
 	self.LastPos     = self.Position
 
 	if self.RackModel then
