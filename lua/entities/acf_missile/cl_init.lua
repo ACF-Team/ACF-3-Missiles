@@ -1,16 +1,20 @@
 include("shared.lua")
 
-local function RenderMotorLight(Entity, LightSize)
-	if LightSize <= 0 then return end
+local LightColor = Color(255, 128, 48)
+
+local function RenderMotorLight(Entity)
+	local Size = Entity:GetNW2Float("LightSize")
+
+	if Size <= 0 then return end
 
 	local Index = Entity:EntIndex()
 	local Pos = Entity:GetPos() - Entity:GetForward() * 64
 
-	ACFM_RenderLight(Index, LightSize * 175, Color(255, 128, 48), Pos)
+	ACFM_RenderLight(Index, Size * 175, LightColor, Pos)
 end
 
 function ENT:Draw()
 	self:DrawModel()
 
-	RenderMotorLight(self, self:GetNWFloat("LightSize"))
+	RenderMotorLight(self)
 end

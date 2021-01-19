@@ -1,821 +1,867 @@
--- init.lua
-
+AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
+
 include("shared.lua")
 
-DEFINE_BASECLASS("acf_explosive")
+-- Local Vars -----------------------------------
 
-ACF.RegisterClassLink("acf_rack", "acf_ammo", function(Weapon, Target)
-	if Target.RoundType == "Refill" then return false, "Refill crates cannot be linked!" end
-	if Weapon.Crates[Target] then return false, "This rack is already linked to this crate." end
-	if Target.Weapons[Weapon] then return false, "This rack is already linked to this crate." end
+local EMPTY   = { Type = "Empty", PropMass = 0, ProjMass = 0, Tracer = 0 }
+local HookRun = hook.Run
+local ACF     = ACF
 
-	local BulletData = Target.BulletData
-	local GunClass = ACF_GetGunValue(BulletData, "gunclass")
-	local Blacklist = ACF.AmmoBlacklist[Target.RoundType]
+do -- Spawning and Updating --------------------
+	local UnlinkSound = "physics/metal/metal_box_impact_bullet%s.wav"
+	local MaxDistance = ACF.RefillDistance * ACF.RefillDistance
+	local CheckLegal  = ACF_CheckLegal
+	local Racks       = ACF.Classes.Racks
 
-	if not GunClass or table.HasValue(Blacklist, GunClass) then return false, "That round type cannot be used with this rack!" end
+	local function VerifyData(Data)
+		if not Data.Rack then
+			Data.Rack = Data.Id or "1xRK"
+		end
 
-	local Result, Message = ACF_CanLinkRack(Weapon.Id, BulletData.Id, BulletData, Weapon)
+		local Rack = Racks[Data.Rack]
 
-	if not Result then return Result, Message end
+		if not Rack then
+			Data.Rack = "1xRK"
 
-	Weapon.Crates[Target]  = true
-	Target.Weapons[Weapon] = true
+			Rack = Racks["1xRK"]
+		end
 
-	Weapon:UpdateOverlay()
-	Target:UpdateOverlay()
+		do -- External verifications
+			if Rack.VerifyData then
+				Rack.VerifyData(Data, Rack)
+			end
 
-	return true, "Rack linked successfully."
-end)
+			HookRun("ACF_VerifyData", "acf_rack", Data, Rack)
+		end
+	end
 
-ACF.RegisterClassUnlink("acf_rack", "acf_ammo", function(Weapon, Target)
-	if Weapon.Crates[Target] or Target.Weapons[Weapon] then
-		Weapon.Crates[Target]  = nil
-		Target.Weapons[Weapon] = nil
+	local function CreateInputs(Entity, Data, Rack)
+		local List = { "Fire", "Reload", "Unload", "Missile Index", "Fire Delay" }
+
+		if Rack.SetupInputs then
+			Rack.SetupInputs(List, Entity, Data, Rack)
+		end
+
+		HookRun("ACF_OnSetupInputs", "acf_rack", List, Entity, Data, Rack)
+
+		if Entity.Inputs then
+			Entity.Inputs = WireLib.AdjustInputs(Entity, List)
+		else
+			Entity.Inputs = WireLib.CreateInputs(Entity, List)
+		end
+	end
+
+	local function CreateOutputs(Entity, Data, Rack)
+		local List = { "Ready", "Shots Left", "Current Index", "Status [STRING]", "Missile [ENTITY]", "Entity [ENTITY]" }
+
+		if Rack.SetupOutputs then
+			Rack.SetupOutputs(List, Entity, Data, Rack)
+		end
+
+		HookRun("ACF_OnSetupOutputs", "acf_rack", List, Entity, Data, Rack)
+
+		if Entity.Outputs then
+			Entity.Outputs = WireLib.AdjustOutputs(Entity, List)
+		else
+			Entity.Outputs = WireLib.CreateOutputs(Entity, List)
+		end
+	end
+
+	local function UpdateRack(Entity, Data, Rack)
+		Entity:SetModel(Rack.Model)
+
+		Entity:PhysicsInit(SOLID_VPHYSICS)
+		Entity:SetMoveType(MOVETYPE_VPHYSICS)
+
+		-- Storing all the relevant information on the entity for duping
+		for _, V in ipairs(Entity.DataStore) do
+			Entity[V] = Data[V]
+		end
+
+		Entity.Name           = Rack.Name
+		Entity.ShortName      = Rack.ID
+		Entity.EntType        = Rack.EntType
+		Entity.RackData       = Rack
+		Entity.Caliber        = Rack.Caliber
+		Entity.MagSize        = Rack.MagSize or 1
+		Entity.ForcedIndex    = Entity.ForcedIndex and math.max(Entity.ForcedIndex, Entity.MagSize)
+		Entity.PointIndex     = 1
+		Entity.SoundPath      = Rack.Sound
+		Entity.DefaultSound   = Rack.Sound
+		Entity.HideMissile    = Rack.HideMissile
+		Entity.ProtectMissile = Rack.ProtectMissile
+		Entity.MissileModel   = Rack.RackModel
+		Entity.ReloadTime     = 1
+		Entity.CurrentShot    = 0
+
+		Entity:SetNWString("WireName", "ACF " .. Entity.Name)
+
+		CreateInputs(Entity, Data, Rack)
+		CreateOutputs(Entity, Data, Rack)
+
+		ACF.Activate(Entity, true)
+
+		Entity.ACF.Model		= Rack.Model
+		Entity.ACF.LegalMass	= Rack.Mass
+
+		local Phys = Entity:GetPhysicsObject()
+		if IsValid(Phys) then Phys:SetMass(Rack.Mass) end
+
+		do -- Removing old missiles
+			local Missiles = Entity.Missiles
+
+			for _, V in pairs(Missiles) do
+				V:Remove()
+			end
+		end
+
+		do -- Updating attachpoints
+			local Points = Entity.MountPoints
+
+			for K, V in pairs(Points) do
+				V.Removed = true
+
+				Points[K] = nil
+			end
+
+			for K, V in pairs(Rack.MountPoints) do
+				Points[K] = {
+					Index = K,
+					Position = V.Position,
+					Angle = V.Angle or Angle(),
+					Direction = V.Direction,
+					BulletData = EMPTY,
+					State = "Empty",
+				}
+			end
+
+			Entity:UpdatePoint()
+		end
+	end
+
+	local function CheckDistantLinks(Entity, Source)
+		local Position = Entity:GetPos()
+
+		for Link in pairs(Entity[Source]) do
+			if Position:DistToSqr(Link:GetPos()) > MaxDistance then
+				local Sound = UnlinkSound:format(math.random(1, 3))
+
+				Entity:EmitSound(Sound, 70, math.random(99, 109), ACF.Volume)
+				Link:EmitSound(Sound, 70, math.random(99, 109), ACF.Volume)
+
+				Entity:Unlink(Link)
+			end
+		end
+	end
+
+	hook.Add("ACF_OnSetupInputs", "ACF Rack Motor Delay", function(EntClass, List, _, _, Rack)
+		if EntClass ~= "acf_rack" then return end
+		if Rack.EntType ~= "Rack" then return end
+
+		List[#List + 1] = "Motor Delay"
+	end)
+
+	-------------------------------------------------------------------------------
+
+	function MakeACF_Rack(Player, Pos, Ang, Data)
+		VerifyData(Data)
+
+		local RackData = Racks[Data.Rack]
+		local Limit = RackData.LimitConVar.Name
+
+		if not Player:CheckLimit(Limit) then return end
+
+		local Rack = ents.Create("acf_rack")
+
+		if not IsValid(Rack) then return end
+
+		Rack:SetPlayer(Player)
+		Rack:SetAngles(Ang)
+		Rack:SetPos(Pos)
+		Rack:Spawn()
+
+		Player:AddCleanup("acf_rack", Rack)
+		Player:AddCount(Limit, Rack)
+
+		Rack.Owner       = Player -- MUST be stored on ent for PP
+		Rack.Firing      = false
+		Rack.Reloading   = false
+		Rack.Spread      = 1 -- GunClass.spread
+		Rack.ReloadTime  = 1
+		Rack.FireDelay   = 1
+		Rack.MountPoints = {}
+		Rack.Missiles    = {}
+		Rack.Crates      = {}
+		Rack.DataStore   = ACF.GetEntityArguments("acf_rack")
+
+		UpdateRack(Rack, Data, RackData)
+
+		if RackData.OnSpawn then
+			RackData.OnSpawn(Rack, Data, RackData)
+		end
+
+		HookRun("ACF_OnEntitySpawn", "acf_rack", Rack, Data, RackData)
+
+		WireLib.TriggerOutput(Rack, "Entity", Rack)
+
+		Rack:UpdateOverlay(true)
+
+		do -- Mass entity mod removal
+			local EntMods = Data and Data.EntityMods
+
+			if EntMods and EntMods.mass then
+				EntMods.mass = nil
+			end
+		end
+
+		CheckLegal(Rack)
+
+		timer.Create("ACF Rack Clock " .. Rack:EntIndex(), 3, 0, function()
+			if not IsValid(Rack) then return end
+
+			CheckDistantLinks(Rack, "Crates")
+		end)
+
+		return Rack
+	end
+
+	ACF.RegisterEntityClass("acf_rack", MakeACF_Rack, "Rack")
+	ACF.RegisterLinkSource("acf_rack", "Crates")
+	ACF.RegisterLinkSource("acf_rack", "Computer", true)
+	ACF.RegisterLinkSource("acf_rack", "Radar", true)
+
+	------------------- Updating ---------------------
+
+	function ENT:Update(Data)
+		if self.Firing then return false, "Stop firing before updating the rack!" end
+
+		VerifyData(Data)
+
+		local Rack    = Racks[Data.Rack]
+		local OldData = self.RackData
+
+		if OldData.OnLast then
+			OldData.OnLast(self, OldData)
+		end
+
+		HookRun("ACF_OnEntityLast", "acf_rack", self, OldData)
+
+		ACF.SaveEntity(self)
+
+		UpdateRack(self, Data, Rack)
+
+		ACF.RestoreEntity(self)
+
+		if Rack.OnUpdate then
+			Rack.OnUpdate(self, Data, Rack)
+		end
+
+		HookRun("ACF_OnEntityUpdate", "acf_rack", self, Data, Rack)
+
+		self:UpdateOverlay(true)
+
+		net.Start("ACF_UpdateEntity")
+			net.WriteEntity(self)
+		net.Broadcast()
+
+		return true, "Rack updated successfully!"
+	end
+end ---------------------------------------------
+
+do -- Custom ACF damage ------------------------
+	local SparkSound = "ambient/energy/spark%s.wav"
+
+	local function ShowDamage(Rack, Point)
+		local Position = Rack:LocalToWorld(Point.Position)
+
+		local Effect = EffectData()
+			Effect:SetMagnitude(math.Rand(0.5, 1))
+			Effect:SetRadius(1)
+			Effect:SetScale(1)
+			Effect:SetStart(Position)
+			Effect:SetOrigin(Position)
+			Effect:SetNormal(VectorRand())
+
+		util.Effect("Sparks", Effect, true, true)
+
+		Rack:EmitSound(SparkSound:format(math.random(6)), math.random(55, 65), math.random(99, 101), ACF.Volume)
+
+		timer.Simple(math.Rand(0.5, 2), function()
+			if not IsValid(Rack) then return end
+			if not Point.Disabled then return end
+			if Point.Removed then return end
+
+			ShowDamage(Rack, Point)
+		end)
+	end
+
+	function ENT:ACF_OnDamage(Energy, FrArea, Ang, Inflictor)
+		local HitRes = ACF.PropDamage(self, Energy, FrArea, Ang, Inflictor) --Calling the standard damage prop function
+
+		if not HitRes.Kill then
+			local Ratio = self.ACF.Health / self.ACF.MaxHealth
+			local Index = math.random(1, self.MagSize) -- Since we don't receive an impact position, we have to rely on RNG
+			local Point = self.MountPoints[Index]
+			local Affected
+
+			-- Missile dropping
+			if not self.ProtectMissile then
+				local Missile = Point.Missile
+
+				if Missile and math.random() > 0.9 * Ratio then
+					Missile:Launch(nil, true)
+
+					self:UpdateLoad(Point)
+
+					Affected = true
+				end
+			end
+
+			-- Mountpoint jamming
+			if not Point.Disabled and math.random() > 0.9 * Ratio then
+				Point.Disabled = true
+
+				Affected = true
+			end
+
+			if Affected then
+				if Index == self.PointIndex then
+					self.PointIndex = self:GetNextMountPoint("Loaded", Index) or 1
+				end
+
+				self:UpdatePoint()
+
+				ShowDamage(self, Point)
+			end
+		end
+
+		return HitRes -- This function needs to return HitRes
+	end
+
+	function ENT:ACF_OnRepaired(_, _, _, NewHealth)
+		local Ratio = NewHealth / self.ACF.MaxHealth
+
+		if Ratio >= 1 then
+			for _, Point in pairs(self.MountPoints) do
+				if Point.Disabled then
+					Point.Disabled = nil
+				end
+			end
+
+			self:UpdatePoint()
+		end
+	end
+end ---------------------------------------------
+
+do -- Entity Link/Unlink -----------------------
+	ACF.RegisterClassLink("acf_rack", "acf_ammo", function(Weapon, Target)
+		if Weapon.Crates[Target] then return false, "This rack is already linked to this crate." end
+		if Target.Weapons[Weapon] then return false, "This rack is already linked to this crate." end
+		if Target.IsRefill then return false, "Refill crates cannot be linked!" end
+
+		local Blacklist = Target.RoundData.Blacklist
+
+		if Blacklist[Target.Class] then
+			return false, "That round type cannot be used with this missile!"
+		end
+
+		local Result, Message = ACF.CanLinkRack(Weapon.RackData, Target.WeaponData)
+
+		if not Result then return Result, Message end
+
+		Target.Weapons[Weapon] = true
+		Weapon.Crates[Target] = true
 
 		Weapon:UpdateOverlay()
 		Target:UpdateOverlay()
 
-		return true, "Weapon unlinked successfully."
-	end
-
-	return false, "This rack is not linked to this crate."
-end)
-
--------------------------------[[ Local Functions ]]-------------------------------
-
-local CheckLegal  = ACF_CheckLegal
-local ClassLink	  = ACF.GetClassLink
-local ClassUnlink = ACF.GetClassUnlink
-local UnlinkSound = "physics/metal/metal_box_impact_bullet%s.wav"
-local EMPTY = { Type = "Empty", PropMass = 0, ProjMass = 0, Tracer = 0 }
-
-local WireTable = {
-	gmod_wire_adv_pod = true,
-	gmod_wire_joystick = true,
-	gmod_wire_expression2 = true,
-	gmod_wire_joystick_multi = true,
-	gmod_wire_pod = function(Input)
-		if Input.Pod then
-			return Input.Pod:GetDriver()
-		end
-	end,
-	gmod_wire_keyboard = function(Input)
-		if Input.ply then
-			return Input.ply
-		end
-	end
-}
-
-local function FindUser(Entity, Input, Checked)
-	local Function = WireTable[Input:GetClass()]
-
-	return Function and Function(Entity, Input, Checked or {})
-end
-
-WireTable.gmod_wire_adv_pod			= WireTable.gmod_wire_pod
-WireTable.gmod_wire_joystick		= WireTable.gmod_wire_pod
-WireTable.gmod_wire_joystick_multi	= WireTable.gmod_wire_pod
-WireTable.gmod_wire_expression2		= function(This, Input, Checked)
-	for _, V in pairs(Input.Inputs) do
-		if V.Src and not Checked[V.Src] and WireTable[V.Src:GetClass()] then
-			Checked[V.Src] = true -- We don't want to start an infinite loop
-
-			return FindUser(This, V.Src, Checked)
-		end
-	end
-end
-
-local Inputs = {
-	Fire = function(Rack, Value)
-		Rack.Firing = ACF.GunfireEnabled and tobool(Value)
-
-		if Rack.Firing and Rack.NextFire >= 1 then
-			Rack.User = Rack:GetUser(Rack.Inputs.Fire.Src)
-
-			if not IsValid(Rack.User) then
-				Rack.User = Rack.Owner
-			end
-
-			Rack:FireMissile()
-		end
-	end,
-	["Fire Delay"] = function(Rack, Value)
-		Rack.FireDelay = math.Clamp(Value, 0, 1)
-	end,
-	Reload = function(Rack, Value)
-		if tobool(Value) then
-			Rack:Reload()
-		end
-	end,
-	["Target Pos"] = function(Rack, Value)
-		Rack.TargetPos = Vector(Value[1], Value[2], Value[3])
-
-		WireLib.TriggerOutput(Rack, "Position", Value)
-	end,
-	Elevation = function(Rack, Value)
-		Rack.Elevation = -Value
-	end,
-	Azimuth = function(Rack, Value)
-		Rack.Azimuth = -Value
-	end,
-}
-
-local function CheckRackID(ID)
-	local Weapons = ACF.Weapons
-
-	ID = ID or "1xRK"
-
-	if not Weapons.Rack[ID] then
-		ID = "1xRK"
-	end
-
-	return ID
-end
-
-local function GetNextCrate(Rack)
-	if not next(Rack.Crates) then return end -- No crates linked to this gun
-
-	local Current = Rack.CurrentCrate
-	local NextKey = (IsValid(Current) and Rack.Crates[Current]) and Current or nil
-	local Select = next(Rack.Crates, NextKey) or next(Rack.Crates) -- Next crate from Start or, if at last crate, first crate
-	local Start = Select
-
-	repeat
-		if Select:CanConsume() then return Select end
-
-		Select = next(Rack.Crates, Select) or next(Rack.Crates)
-	until Select == Start -- If we've looped back around to the start then there's nothing to use
-
-	return Select:CanConsume() and Select or nil
-end
-
-local function GetNextAttachName(Rack)
-	if not next(Rack.AttachPoints) then return end
-
-	local Name = next(Rack.AttachPoints)
-	local Start = Name
-
-	repeat
-		if not Rack.Missiles[Name] then
-			return Name
-		end
-
-		Name = next(Rack.AttachPoints, Name) or next(Rack.AttachPoints)
-	until Name == Start
-end
-
-local function GetMissileAngPos(Rack, Missile, AttachName)
-	local GunData = ACF.Weapons.Guns[Missile.BulletData.Id]
-	local RackData = ACF.Weapons.Rack[Rack.Id]
-	local Position = Rack.AttachPoints[AttachName]
-
-	if GunData and RackData then
-		local Offset = (GunData.modeldiameter or GunData.caliber) / (2.54 * 2)
-		local MountPoint = RackData.mountpoints[AttachName]
-
-		Position = Position + MountPoint.offset + MountPoint.scaledir * Offset
-	end
-
-	return Position, Rack:GetAngles()
-end
-
-local function AddMissile(Rack, Crate)
-	if not IsValid(Crate) then return end
-
-	local Attach = GetNextAttachName(Rack)
-
-	if not Attach then return end
-
-	local BulletData = ACFM_CompactBulletData(Crate)
-	local Missile = ents.Create("acf_missile")
-
-	BulletData.IsShortForm = true
-	BulletData.Owner = Rack.Owner
-
-	Missile.Owner = Rack.Owner
-	Missile.Launcher = Rack
-	Missile.DisableDamage = Rack.ProtectMissile
-	Missile.Attachment = Attach
-
-	Missile.ExhaustOffset = ACF_GetGunValue(BulletData.Id, "ExhaustOffset")
-	Missile.Bodygroups = ACF_GetGunValue(BulletData.Id, "bodygroups")
-	Missile.RackModel = Rack.MissileModel or ACF_GetGunValue(BulletData.Id, "rackmdl")
-	Missile.RealModel = ACF_GetGunValue(BulletData.Id, "model")
-	Missile.RackModelApplied = Missile.RackModel and true
-
-	Missile:SetModelEasy(Missile.RackModel or Missile.RealModel)
-	Missile:SetBulletData(BulletData)
-
-	local Pos, Angles = GetMissileAngPos(Rack, Missile, Attach)
-
-	Missile.AttachPos = Pos
-
-	Missile:Spawn()
-	Missile:SetParent(Rack)
-	Missile:SetParentPhysNum(0)
-	Missile:SetAngles(Angles)
-	Missile:SetPos(Pos)
-	Missile:SetOwner(Rack.Owner)
-
-	if Rack.HideMissile then
-		Missile:SetNoDraw(true)
-	end
-
-	Rack:EmitSound("acf_missiles/fx/bomb_reload.mp3", 500, 100)
-	Rack:UpdateAmmoCount(Attach, Missile)
-
-	Rack.CurrentCrate = Crate
-
-	Crate:Consume()
-
-	return Missile
-end
-
-local function TrimDistantCrates(Rack)
-	if not next(Rack.Crates) then return end
-
-	for Crate in pairs(Rack.Crates) do
-		if Rack:GetPos():DistToSqr(Crate:GetPos()) >= 262144 then
-			Rack:EmitSound(UnlinkSound:format(math.random(1, 3)), 500, 100)
-			Rack:Unlink(Crate)
-		end
-	end
-end
-
-local function UpdateRefillBonus(Rack)
-	local SelfPos = Rack:GetPos()
-	local Efficiency = 0.11 * ACF.AmmoMod -- Copied from acf_ammo, beware of changes!
-	local MinFullEfficiency = 50000 * Efficiency -- The minimum crate volume to provide full efficiency bonus all by itself.
-	local MaxDist = ACF.RefillDistance
-	local TotalBonus = 0
-
-	for Crate in pairs(ACF.AmmoCrates) do
-		if Crate.RoundType == "Refill" and Crate:CanConsume() then
-			local CrateDist = SelfPos:Distance(Crate:GetPos())
-
-			if CrateDist <= MaxDist then
-				CrateDist = math.max(0, CrateDist * 2 - MaxDist)
-
-				local Bonus = (Crate.Volume / MinFullEfficiency) * (MaxDist - CrateDist) / MaxDist
-
-				TotalBonus = TotalBonus + Bonus
-			end
-		end
-	end
-
-	Rack.ReloadMultiplierBonus = math.min(TotalBonus, 1)
-
-	return Rack.ReloadMultiplierBonus
-end
-
--------------------------------[[ Global Functions ]]-------------------------------
-
-function MakeACF_Rack(Owner, Pos, Angle, Id, Data)
-	if not Owner:CheckLimit("_acf_gun") then return end
-
-	Id = CheckRackID(Id)
-
-	local List = ACF.Weapons.Rack
-	local Classes = ACF.Classes.Rack
-	local GunData = List[Id] or error("Couldn't find the " .. tostring(Id) .. " gun-definition!")
-	local GunClass = Classes[GunData.gunclass] or error("Couldn't find the " .. tostring(GunData.gunclass) .. " gun-class!")
-
-	local Rack = ents.Create("acf_rack")
-
-	if not IsValid(Rack) then return end
-
-	Rack:SetModel(GunData.model)
-	Rack:SetPlayer(Owner)
-	Rack:SetAngles(Angle)
-	Rack:SetPos(Pos)
-	Rack:Spawn()
-
-	Rack:PhysicsInit(SOLID_VPHYSICS)
-	Rack:SetMoveType(MOVETYPE_VPHYSICS)
-
-	Owner:AddCount("_acf_gun", Rack)
-	Owner:AddCleanup("acfmenu", Rack)
-
-	Rack.Id					= Id
-	Rack.MinCaliber			= GunData.mincaliber
-	Rack.MaxCaliber			= GunData.maxcaliber
-	Rack.Caliber			= GunData.caliber
-	Rack.Model				= GunData.model
-	Rack.Mass				= GunData.weight
-	Rack.LegalMass			= Rack.Mass
-	Rack.Class				= GunData.gunclass
-	Rack.Owner				= Owner
-	Rack.EntType			= Id
-
-	-- Custom BS for karbine: Per Rack ROF, Magazine Size, Mag reload Time
-	Rack.PGRoFmod			= GunData.rofmod and math.max(0, GunData.rofmod) or 1
-	Rack.MagSize			= GunData.magsize and math.max(1, GunData.magsize) or 1
-	Rack.MagReload 			= GunData.magreload and math.max(Rack.MagReload, GunData.magreload) or  0
-
-	Rack.Muzzleflash		= GunData.muzzleflash or GunClass.muzzleflash or ""
-	Rack.RoFmod				= GunClass.rofmod
-	Rack.SoundPath			= GunData.sound or GunClass.sound
-	Rack.Spread				= GunClass.spread
-
-	Rack.HideMissile		= GunData.hidemissile
-	Rack.ProtectMissile		= GunData.protectmissile
-	Rack.CustomArmour		= GunData.armour or GunClass.armour
-	Rack.MissileModel		= GunData.rackmdl
-
-	Rack.ReloadMultiplier   = ACF_GetRackValue(Id, "reloadmul")
-	Rack.WhitelistOnly      = ACF_GetRackValue(Id, "whitelistonly")
-
-	Rack.ReloadTime			= 1
-	Rack.Ready				= true
-	Rack.NextFire			= 1
-	Rack.PostReloadWait		= CurTime()
-	Rack.WaitFunction		= Rack.GetFireDelay
-	Rack.LastSend			= 0
-	Rack.TargetPos			= Vector()
-	Rack.Elevation			= 0
-	Rack.Azimuth			= 0
-
-	Rack.AmmoCount			= 0
-	Rack.LastThink			= CurTime()
-
-	Rack.Missiles			= {}
-	Rack.Crates				= {}
-	Rack.AttachPoints		= {}
-
-	Rack.Inputs = WireLib.CreateInputs(Rack, { "Fire", "Reload", "Elevation", "Azimuth", "Target Pos [VECTOR]" })
-	Rack.Outputs = WireLib.CreateOutputs(Rack, { "Ready", "Entity [ENTITY]", "Shots Left", "Position [VECTOR]", "Target [ENTITY]" })
-
-	Rack.BulletData	= EMPTY
-
-	Rack:SetNWString("Class", Rack.Class)
-	Rack:SetNWString("Sound", Rack.SoundPath)
-	Rack:SetNWString("WireName", "ACF " .. GunData.name)
-
-	WireLib.TriggerOutput(Rack, "Entity", Rack)
-	WireLib.TriggerOutput(Rack, "Ready", 1)
-
-	local PhysObj = Rack:GetPhysicsObject()
-
-	if IsValid(PhysObj) then
-		PhysObj:SetMass(Rack.Mass)
-	end
-
-	local MountPoints = ACF.Weapons.Rack[Rack.Id].mountpoints
-
-	for _, Info in pairs(Rack:GetAttachments()) do
-		local Attachment = Rack:GetAttachment(Info.id)
-
-		if MountPoints[Info.name] then
-			Rack.AttachPoints[Info.name] = Rack:WorldToLocal(Attachment.Pos)
-		end
-	end
-
-	ACF_Activate(Rack)
-
-	Rack:UpdateOverlay()
-
-	do -- Mass entity mod removal
-		local EntMods = Data and Data.EntityMods
-
-		if EntMods and EntMods.mass then
-			EntMods.mass = nil
-		end
-	end
-
-	CheckLegal(Rack)
-
-	return Rack
-end
-
-list.Set("ACFCvars", "acf_rack" , {"data9"})
-duplicator.RegisterEntityClass("acf_rack", MakeACF_Rack, "Pos", "Angle", "Id", "Data")
-ACF.RegisterLinkSource("acf_rack", "Crates")
-ACF.RegisterLinkSource("acf_rack", "Computer", true)
-ACF.RegisterLinkSource("acf_rack", "Radar", true)
-
-function ENT:Enable()
-	if not CheckLegal(self) then return end
-
-	self.Disabled	   = nil
-	self.DisableReason = nil
-
-	if self.Inputs["Target Pos"].Path then
-		self:TriggerInput("Target Pos", self.Inputs["Target Pos"].Value)
-	end
-
-	if self.Inputs.Elevation.Path then
-		self:TriggerInput("Elevation", self.Inputs.Elevation.Value)
-	end
-
-	if self.Inputs.Azimuth.Path then
-		self:TriggerInput("Azimuth", self.Inputs.Azimuth.Value)
-	end
-
-	self:UpdateOverlay()
-end
-
-function ENT:Disable()
-	self:TriggerInput("Target Pos", Vector())
-	self:TriggerInput("Elevation", 0)
-	self:TriggerInput("Azimuth", 0)
-
-	self.Disabled = true
-
-	self:UpdateOverlay()
-end
-
-function ENT:GetReloadTime(Missile)
-	local ReloadMult = self.ReloadMultiplier
-	local ReloadBonus = self.ReloadMultiplierBonus or 0
-	local MagSize = self.MagSize ^ 1.1
-	local DelayMult = (ReloadMult - (ReloadMult - 1) * ReloadBonus) / MagSize
-	local ReloadTime = self:GetFireDelay(Missile) * DelayMult
-
-	return ReloadTime
-end
-
-function ENT:GetFireDelay(Missile)
-	if not IsValid(Missile) then
-		return self.LastValidFireDelay or 1
-	end
-
-	local BulletData = Missile.BulletData
-	local GunData = ACF.Weapons.Guns[BulletData.Id]
-
-	if not GunData then
-		return self.LastValidFireDelay or 1
-	end
-
-	local Class = ACF.Classes.GunClass[GunData.gunclass]
-	local Interval = ((BulletData.RoundVolume / 500) ^ 0.60) * (GunData.rofmod or 1) * (Class.rofmod or 1)
-
-	self.LastValidFireDelay = Interval
-
-	return Interval
-end
-
-function ENT:ACF_Activate( Recalc )
-	local PhysObj = self.ACF.PhysObj
-
-	if not self.ACF.Area then
-		self.ACF.Area = PhysObj:GetSurfaceArea() * 6.45
-	end
-
-	if not self.ACF.Volume then
-		self.ACF.Volume = PhysObj:GetVolume() * 16.38
-	end
-
-	local ForceArmour = self.CustomArmour
-	local Armour = ForceArmour or (self.Mass * 1000 / self.ACF.Area / 0.78) --So we get the equivalent thickness of that prop in mm if all it's weight was a steel plate
-	local Health = self.ACF.Volume / ACF.Threshold							--Setting the threshold of the prop area gone
-	local Percent = 1
-
-	if Recalc and self.ACF.Health and self.ACF.MaxHealth then
-		Percent = self.ACF.Health / self.ACF.MaxHealth
-	end
-
-	self.ACF.Health = Health * Percent
-	self.ACF.MaxHealth = Health
-	self.ACF.Armour = Armour * (0.5 + Percent / 2)
-	self.ACF.MaxArmour = Armour
-	self.ACF.Mass = self.Mass
-	self.ACF.Density = PhysObj:GetMass() * 1000 / self.ACF.Volume
-	self.ACF.Type = "Prop"
-	self.ACF.LegalMass = self.Mass
-	self.ACF.Model = self.Model
-end
-
-function ENT:ACF_OnDamage(Entity, Energy, FrArea, Angle, Inflictor)
-	if self.Exploded then
-		return {
-			Damage = 0,
-			Overkill = 1,
-			Loss = 0,
-			Kill = false
-		}
-	end
-
-	local HitRes = ACF.PropDamage(Entity, Energy, FrArea, Angle, Inflictor) --Calling the standard damage prop function
-
-	-- If the rack gets destroyed, we just blow up all the missiles it carries
-	if HitRes.Kill then
-		if hook.Run("ACF_AmmoExplode", self, nil) == false then return HitRes end
-
-		self.Exploded = true
-
-		if IsValid(Inflictor) and Inflictor:IsPlayer() then
-			self.Inflictor = Inflictor
-		end
-
-		if next(self.Missiles) then
-			for _, Missile in pairs(self.Missiles) do
-				Missile:SetParent(nil)
-				Missile:Detonate(true)
-			end
-		end
-	end
-
-	return HitRes -- This function needs to return HitRes
-end
-
-function ENT:CanLoadCaliber(Caliber)
-	return ACF_RackCanLoadCaliber(self.Id, Caliber)
-end
-
-function ENT:Link(Target)
-	if not IsValid(Target) then return false, "Attempted to link an invalid entity." end
-	if self == Target then return false, "Can't link a rack to itself." end
-
-	local Function = ClassLink("acf_rack", Target:GetClass())
-
-	if Function then
-		return Function(self, Target)
-	end
-
-	return false, "Racks can't be linked to '" .. Target:GetClass() .. "'."
-end
-
-function ENT:Unlink(Target)
-	if not IsValid(Target) then return false, "Attempted to unlink an invalid entity." end
-	if self == Target then return false, "Can't unlink a rack from itself." end
-
-	local Function = ClassUnlink("acf_rack", Target:GetClass())
-
-	if Function then
-		return Function(self, Target)
-	end
-
-	return false, "Racks can't be unlinked from '" .. Target:GetClass() .. "'."
-end
-
-local function Overlay(Ent)
-	if Ent.Disabled then
-		Ent:SetOverlayText("Disabled: " .. Ent.DisableReason .. "\n" .. Ent.DisableDescription)
-	else
-		local Text = "%s\n\nLoaded ammo: %s\nRounds remaining: %s\nFire delay: %s second(s)\nReload time: %s second(s)"
-		local FireRate = math.Round(Ent.LastValidFireDelay or 1, 2)
-		local Reload = math.Round(Ent.ReloadTime or 0, 2)
-		local Bullet = Ent.BulletData
-		local Ammo = (Bullet.Id and (Bullet.Id .. " ") or "") .. Bullet.Type
-		local Status
-
-		if not next(Ent.Crates) then
-			Status = "Not linked to an ammo crate!"
-		else
-			Status = Ent.Ready and "Ready" or "Loading"
-		end
-
-		Ent:SetOverlayText(Text:format(Status, Ammo, Ent.AmmoCount, FireRate, Reload))
-	end
-end
-
-function ENT:UpdateOverlay(Instant)
-	if Instant then
-		return Overlay(self)
-	end
-
-	if timer.Exists("ACF Overlay Buffer" .. self:EntIndex()) then return end
-
-	timer.Create("ACF Overlay Buffer" .. self:EntIndex(), 0.5, 1, function()
-		if not IsValid(self) then return end
-
-		Overlay(self)
+		return true, "Rack linked successfully."
 	end)
-end
 
-function ENT:Unload()
-	-- we're ok with mixed munitions.
-end
+	ACF.RegisterClassUnlink("acf_rack", "acf_ammo", function(Weapon, Target)
+		if Weapon.Crates[Target] or Target.Weapons[Weapon] then
+			if Weapon.CurrentCrate == Target then
+				Weapon.CurrentCrate = next(Weapon.Crates, Target)
+			end
 
-function ENT:GetUser(Input)
-	if not Input then return end
+			Target.Weapons[Weapon] = nil
+			Weapon.Crates[Target] = nil
 
-	return FindUser(self, Input) or self.Owner
-end
+			Weapon:UpdateOverlay()
+			Target:UpdateOverlay()
 
-function ENT:TriggerInput(Input, Value)
-	if self.Disabled then return end
+			return true, "Weapon unlinked successfully."
+		end
 
-	if Inputs[Input] then
-		Inputs[Input](self, Value)
+		return false, "This rack is not linked to this crate."
+	end)
+end ---------------------------------------------
+
+do -- Entity Inputs ----------------------------
+	WireLib.AddInputAlias("Launch Delay", "Motor Delay")
+
+	ACF.AddInputAction("acf_rack", "Fire", function(Entity, Value)
+		if Entity.Firing == tobool(Value) then return end
+
+		Entity.Firing = tobool(Value)
+
+		if Entity:CanShoot() then
+			Entity:Shoot()
+		end
+	end)
+
+	ACF.AddInputAction("acf_rack", "Reload", function(Entity, Value)
+		if Entity.Reloading == tobool(Value) then return end
+
+		Entity.Reloading = tobool(Value)
+
+		if Entity:CanReload() then
+			Entity:Reload()
+		end
+	end)
+
+	ACF.AddInputAction("acf_rack", "Unload", function(Entity, Value)
+		if tobool(Value) then
+			Entity:Unload()
+		end
+	end)
+
+	ACF.AddInputAction("acf_rack", "Missile Index", function(Entity, Value)
+		Entity.ForcedIndex = Value > 0 and math.min(Value, Entity.MagSize) or nil
+
+		Entity:UpdatePoint()
+
+		if Entity.ForcedIndex then
+			Entity:EmitSound("buttons/blip2.wav", 70, math.random(99, 101), ACF.Volume)
+		end
+	end)
+
+	ACF.AddInputAction("acf_rack", "Fire Delay", function(Entity, Value)
+		Entity.FireDelay = math.Clamp(Value, 0.1, 1)
+	end)
+
+	ACF.AddInputAction("acf_rack", "Launch Delay", function(Entity, Value)
+		Entity.LaunchDelay = Value > 0 and math.min(Value, 1) or nil
+	end)
+end ---------------------------------------------
+
+do -- Entity Overlay ----------------------------
+	local Text = "%s\n\nLoaded ammo: %s\nRounds remaining: %s\nReload time: %s second(s)\nFire delay: %s second(s)"
+
+	function ENT:UpdateOverlayText()
+		local Delay  = math.Round(self.FireDelay, 2)
+		local Reload = math.Round(self.ReloadTime, 2)
+		local Bullet = self.BulletData
+		local Ammo   = (Bullet.Id and (Bullet.Id .. " ") or "") .. Bullet.Type
+		local Status = self.State
+
+		if self.Jammed then
+			Status = "Jammed!\nRepair this rack to be able to use it again."
+		elseif not next(self.Crates) then
+			Status = "Not linked to an ammo crate!"
+		end
+
+		return Text:format(Status, Ammo, self.CurrentShot, Reload, Delay)
+	end
+end ---------------------------------------------
+
+do -- Firing -----------------------------------
+	local function ShootMissile(Rack, Point)
+		local Ang = Rack:LocalToWorldAngles(Point.Angle)
+		local Cone = math.tan(math.rad(Rack:GetSpread()))
+		local RandDir = (Rack:GetUp() * math.Rand(-1, 1) + Rack:GetRight() * math.Rand(-1, 1)):GetNormalized()
+		local Spread = Cone * RandDir * (math.random() ^ (1 / ACF.GunInaccuracyBias))
+		local ShootDir = (Ang:Forward() + Spread):GetNormalized()
+
+		local Missile = Point.Missile
+		local BulletData = Missile.BulletData
+
+		BulletData.Flight = ShootDir
+
+		Missile:Launch(Rack.LaunchDelay)
+
+		Rack.LastFired = Missile
+		Rack:UpdateLoad(Point)
+	end
+
+	-------------------------------------------------------------------------------
+
+	function ENT:CanShoot()
+		if self.RetryShoot then return false end
+		if not self.Firing then return false end
+		if not ACF.GunfireEnabled then return false end
+
+		return true
+	end
+
+	function ENT:GetSpread()
+		return self.Spread * ACF.GunInaccuracyScale
+	end
+
+	function ENT:Shoot()
+		local Index, Point = self:GetNextMountPoint("Loaded", self.PointIndex)
+		local Delay = self.FireDelay
+
+		if Index and HookRun("ACF_FireShell", self) ~= false then
+			ShootMissile(self, Point)
+
+			self.PointIndex = self:GetNextMountPoint("Loaded", Index) or 1
+
+			self:UpdatePoint()
+		else
+			self:EmitSound("weapons/pistol/pistol_empty.wav", 70, math.random(99, 101), ACF.Volume)
+
+			Delay = 1
+		end
+
+		if not self.RetryShoot then
+			self.RetryShoot = true
+
+			timer.Simple(Delay, function()
+				if not IsValid(self) then return end
+
+				self.RetryShoot = nil
+
+				if self:CanShoot() then
+					self:Shoot()
+				end
+			end)
+		end
+	end
+end ---------------------------------------------
+
+do -- Loading ----------------------------------
+	local Missiles = ACF.Classes.Missiles
+	local NO_OFFSET = Vector()
+
+	local function GetMissileAngPos(BulletData, Point)
+		local Class    = ACF.GetClassGroup(Missiles, BulletData.Id)
+		local Data     = Class and Class.Lookup[BulletData.Id]
+		local Offset   = Data and Data.Offset or NO_OFFSET
+		local Position = Point.Position
+
+		if Data and Point.Direction then -- If no Direction is given then the point is centered
+			local Radius = (Data.Diameter or Data.Caliber) * 0.03937 * 0.5 -- Getting the radius on inches
+
+			Position = Position + Point.Direction * Radius
+		end
+
+		Position = Position + Offset
+
+		return Position, Point.Angle
+	end
+
+	local function GetNextCrate(Rack)
+		if not next(Rack.Crates) then return end -- No crates linked to this gun
+
+		local Select = next(Rack.Crates, Rack.CurrentCrate) or next(Rack.Crates)
+		local Start = Select
+
+		repeat
+			if Select:CanConsume() then return Select end
+
+			Select = next(Rack.Crates, Select) or next(Rack.Crates)
+		until Select == Start -- If we've looped back around to the start then there's nothing to use
+	end
+
+	local function AddMissile(Rack, Point, Crate)
+		local Pos, Ang = GetMissileAngPos(Crate.BulletData, Point)
+		local Missile = MakeACF_Missile(Rack.Owner, Pos, Ang, Rack, Point, Crate)
+
+		Rack:EmitSound("acf_missiles/fx/bomb_reload.mp3", 70, math.random(99, 101), ACF.Volume)
+
+		return Missile
+	end
+
+	-------------------------------------------------------------------------------
+
+	function ENT:CanReload()
+		if self.RetryReload then return false end
+		if not self.Reloading then return false end
+		if not ACF.GunfireEnabled then return false end
+
+		return true
+	end
+
+	-- TODO: Once Unloading gets implemented, racks have to unload missiles if no empty mountpoint is found.
+	function ENT:Reload()
+		local Index, Point = self:GetNextMountPoint("Empty")
+		local Crate = GetNextCrate(self)
+
+		if not self.Firing and Index and Crate then
+			local Missile = AddMissile(self, Point, Crate)
+			local Bullet  = Missile.BulletData
+			local Percent = math.max(0.5, (Bullet.ProjLength + Bullet.PropLength) / Missile.MaxLength)
+			local Time    = Missile.ReloadTime * Percent
+
+			Point.NextFire = ACF.CurTime + Time
+			Point.State    = "Loading"
+
+			self:UpdateLoad(Point, Missile)
+
+			self.CurrentCrate = Crate
+			self.ReloadTime   = Time
+
+			Crate:Consume()
+
+			timer.Simple(Time, function()
+				if not IsValid(self) or Point.Removed then
+					if IsValid(Crate) then Crate:Consume(-1) end
+
+					return
+				end
+
+				if not IsValid(Missile) then
+					Missile = nil
+				else
+					self:EmitSound("acf_missiles/fx/weapon_select.mp3", 70, math.random(99, 101), ACF.Volume)
+
+					Point.State = "Loaded"
+					Point.NextFire = nil
+				end
+
+				self:UpdateLoad(Point, Missile)
+			end)
+		end
+
+		self.RetryReload = true
+
+		timer.Simple(1, function()
+			if not IsValid(self) then return end
+
+			self.RetryReload = nil
+
+			if self:CanReload() then
+				self:Reload()
+			end
+		end)
+	end
+end ---------------------------------------------
+
+do -- Unloading --------------------------------
+	function ENT:Unload()
+		-- TODO: Implement missile unloading
+	end
+end ---------------------------------------------
+
+do -- Duplicator Support -----------------------
+	function ENT:PreEntityCopy()
+		if IsValid(self.Radar) then
+			duplicator.StoreEntityModifier(self, "ACFRadar", { self.Radar:EntIndex() })
+		end
+
+		if IsValid(self.Computer) then
+			duplicator.StoreEntityModifier(self, "ACFComputer", { self.Computer:EntIndex() })
+		end
+
+		if next(self.Crates) then
+			local Entities = {}
+
+			for Crate in pairs(self.Crates) do
+				Entities[#Entities + 1] = Crate:EntIndex()
+			end
+
+			duplicator.StoreEntityModifier(self, "ACFCrates", Entities)
+		end
+
+		-- Wire dupe info
+		self.BaseClass.PreEntityCopy(self)
+	end
+
+	function ENT:PostEntityPaste(Player, Ent, CreatedEntities)
+		local EntMods = Ent.EntityMods
+
+		if EntMods.ACFRadar then
+			local _, EntIndex = next(EntMods.ACFRadar)
+
+			self:Link(CreatedEntities[EntIndex])
+
+			EntMods.ACFRadar = nil
+		end
+
+		if EntMods.ACFComputer then
+			local _, EntIndex = next(EntMods.ACFComputer)
+
+			self:Link(CreatedEntities[EntIndex])
+
+			EntMods.ACFComputer = nil
+		end
+
+		-- Backwards compatibility
+		if EntMods.ACFAmmoLink then
+			local Entities = EntMods.ACFAmmoLink.entities
+			local Entity
+
+			for _, EntID in pairs(Entities) do
+				Entity = CreatedEntities[EntID]
+
+				self:Link(Entity)
+			end
+
+			EntMods.ACFAmmoLink = nil
+		end
+
+		if EntMods.ACFCrates then
+			for _, EntID in pairs(EntMods.ACFCrates) do
+				self:Link(CreatedEntities[EntID])
+			end
+
+			EntMods.ACFCrates = nil
+		end
+
+		-- Wire dupe info
+		self.BaseClass.PostEntityPaste(self, Player, Ent, CreatedEntities)
+	end
+end ---------------------------------------------
+
+do -- Misc -------------------------------------
+	local function GetPosition(Entity)
+		local PhysObj = Entity:GetPhysicsObject()
+
+		if not IsValid(PhysObj) then return Entity:GetPos() end
+
+		return Entity:LocalToWorld(PhysObj:GetMassCenter())
+	end
+
+	function ENT:Enable()
+		self.Firing = tobool(self.Inputs.Fire.Value)
+		self.Reloading = tobool(self.Inputs.Reload.Value)
+
+		if self:CanShoot() then
+			self:Shoot()
+		end
+
+		if self:CanReload() then
+			self:Reload()
+		end
+	end
+
+	function ENT:Disable()
+		self.Firing = false
+		self.Reloading = false
+	end
+
+	function ENT:SetState(State)
+		self.State = State
 
 		self:UpdateOverlay()
-	end
-end
 
-function ENT:FireMissile()
-	if not self.Disabled and self.Ready and self.PostReloadWait < CurTime() then
-		local Attachment, Missile = next(self.Missiles)
-		local ReloadTime = 0.5
-
-		if IsValid(Missile) then
-			if hook.Run("ACF_FireShell", self, Missile.BulletData) == false then return end
-
-			ReloadTime = self:GetFireDelay(Missile)
-
-			local Pos, Angles = GetMissileAngPos(self, Missile, Attachment)
-			local MuzzleVec = Angles:Forward()
-			local ConeAng = math.tan(math.rad(self.Spread * ACF.GunInaccuracyScale))
-			local RandDirection = (self:GetUp() * math.Rand(-1, 1) + self:GetRight() * math.Rand(-1, 1)):GetNormalized()
-			local Spread = RandDirection * ConeAng * (math.random() ^ (1 / math.Clamp(ACF.GunInaccuracyBias, 0.5, 4)))
-			local ShootVec = (MuzzleVec + Spread):GetNormalized()
-			local BulletData = Missile.BulletData
-			local BulletSpeed = BulletData.MuzzleVel or Missile.MinimumSpeed or 1
-
-			BulletData.Flight = ShootVec * BulletSpeed
-
-			Missile:SetNoDraw(false)
-			Missile:SetParent()
-
-			Missile.Filter = { self }
-
-			for _, Load in pairs(self.Missiles) do
-				Missile.Filter[#Missile.Filter + 1] = Load
-			end
-
-			if Missile.RackModelApplied then
-				Missile:SetModelEasy(Missile.RealModel)
-				Missile.RackModelApplied = nil
-			end
-
-			local PhysMissile = Missile:GetPhysicsObject()
-
-			if IsValid(PhysMissile) then
-				PhysMissile:SetMass(Missile.RoundWeight)
-			end
-
-			if self.SoundPath and self.SoundPath ~= "" then
-				Missile.BulletData.Sound = self.SoundPath
-			end
-
-			Missile:DoFlight(self:LocalToWorld(Pos), ShootVec)
-			Missile:Launch()
-
-			self:UpdateAmmoCount(Attachment)
-
-			Missile:EmitSound("phx/epicmetal_hard.wav", 500, 100)
-		else
-			self:EmitSound("weapons/pistol/pistol_empty.wav", 500, 100)
-		end
-
-		WireLib.TriggerOutput(self, "Ready", 0)
-		self.Ready = false
-		self.NextFire = 0
-		self.WaitFunction = self.GetFireDelay
-		self.ReloadTime = ReloadTime
-	else
-		self:EmitSound("weapons/pistol/pistol_empty.wav", 500, 100)
-	end
-end
-
-function ENT:Reload()
-	if not self.Ready and not GetNextAttachName(self) then return end
-	if self.AmmoCount >= self.MagSize then return end
-	if self.NextFire < 1 then return end
-
-	local Missile = AddMissile(self, GetNextCrate(self))
-
-	self.NextFire = 0
-	self.PostReloadWait = CurTime() + 5
-	self.WaitFunction = self.GetReloadTime
-	self.Ready = false
-	self.ReloadTime = IsValid(Missile) and self:GetReloadTime(Missile) or 1
-
-	WireLib.TriggerOutput(self, "Ready", 0)
-end
-
-function ENT:UpdateAmmoCount(Attachment, Missile)
-	self.Missiles[Attachment] = Missile
-	self.AmmoCount = self.AmmoCount + (Missile and 1 or -1)
-
-	self:UpdateOverlay()
-
-	WireLib.TriggerOutput(self, "Shots Left", self.AmmoCount)
-end
-
-function ENT:Think()
-	local _, Missile = next(self.Missiles)
-	local Time = CurTime()
-
-	if self.LastSend + 1 <= Time then
-		TrimDistantCrates(self)
-		UpdateRefillBonus(self)
-
-		self:GetReloadTime(Missile)
-
-		self.LastSend = Time
+		WireLib.TriggerOutput(self, "Status", State)
+		WireLib.TriggerOutput(self, "Ready", State == "Loaded" and 1 or 0)
 	end
 
-	self.NextFire = math.min(self.NextFire + (Time - self.LastThink) / self:WaitFunction(Missile), 1)
+	function ENT:GetNextMountPoint(State, CustomStart)
+		local MountPoints = self.MountPoints
 
-	if self.NextFire >= 1 then
-		if Missile then
-			self.Ready = true
+		if self.ForcedIndex then
+			local Index = self.ForcedIndex
+			local Data = MountPoints[Index]
 
-			WireLib.TriggerOutput(self, "Ready", 1)
-
-			if self.Firing then
-				self:FireMissile()
-			elseif self.Inputs.Reload and self.Inputs.Reload.Value ~= 0 then
-				self:Reload()
-			elseif self.ReloadTime and self.ReloadTime > 1 then
-				self:EmitSound("acf_missiles/fx/weapon_select.mp3", 500, 100)
-				self.ReloadTime = nil
+			if not Data.Disabled and Data.State == State then
+				return Index, Data
 			end
 		else
-			if self.Inputs.Reload and self.Inputs.Reload.Value ~= 0 then
-				self:Reload()
-			end
+			local Index = CustomStart or next(MountPoints)
+			local Data = MountPoints[Index]
+			local Start = Index
+
+			repeat
+				if not Data.Disabled and Data.State == State then
+					return Index, Data
+				end
+
+				Index = next(MountPoints, Index) or next(MountPoints)
+				Data = MountPoints[Index]
+			until Index == Start
 		end
 	end
 
-	self.BulletData = IsValid(Missile) and Missile.BulletData or EMPTY
+	function ENT:UpdatePoint()
+		local Index = self.ForcedIndex or self.PointIndex
+		local Point = self.MountPoints[Index]
 
-	self:UpdateOverlay()
+		self.BulletData = Point.BulletData
+		self.NextFire = Point.NextFire
+		self.Jammed = Point.Disabled
 
-	self:NextThink(Time + 0.5)
-	self.LastThink = Time
+		self:SetState(self.Jammed and "Jammed" or Point.State)
 
-	return true
-end
-
-function ENT:PreEntityCopy()
-	if IsValid(self.Radar) then
-		duplicator.StoreEntityModifier(self, "ACFRadar", { self.Radar:EntIndex() })
+		WireLib.TriggerOutput(self, "Current Index", Index)
+		WireLib.TriggerOutput(self, "Missile", Point.Missile)
 	end
 
-	if IsValid(self.Computer) then
-		duplicator.StoreEntityModifier(self, "ACFComputer", { self.Computer:EntIndex() })
+	function ENT:UpdateLoad(Point, Missile)
+		if Point.Removed then return end
+
+		local Index = Point.Index
+
+		Point.BulletData = Missile and Missile.BulletData or EMPTY
+		Point.NextFire = Missile and Point.NextFire or nil
+		Point.State = Missile and Point.State or "Empty"
+		Point.Missile = Missile
+
+		if self.Missiles[Index] ~= Missile then
+			self.CurrentShot = self.CurrentShot + (Missile and 1 or -1)
+			self.Missiles[Index] = Missile
+
+			WireLib.TriggerOutput(self, "Shots Left", self.CurrentShot)
+		end
+
+		self:UpdatePoint()
 	end
 
-	if next(self.Crates) then
-		local Entities = {}
+	function ENT:Think()
+		local Time     = ACF.CurTime
+		local Previous = self.Position
+		local Current  = GetPosition(self)
+
+		self.Position = Current
+
+		if Previous then
+			local DeltaTime = Time - self.LastThink
+
+			self.Velocity = (Current - Previous) / DeltaTime
+		else
+			self.Velocity = Vector()
+		end
+
+		self:NextThink(Time)
+
+		self.LastThink = Time
+
+		return true
+	end
+
+	function ENT:OnRemove()
+		local OldData = self.RackData
+
+		if OldData.OnLast then
+			OldData.OnLast(self, OldData)
+		end
+
+		HookRun("ACF_OnEntityLast", "acf_rack", self, OldData)
 
 		for Crate in pairs(self.Crates) do
-			Entities[#Entities + 1] = Crate:EntIndex()
+			self:Unlink(Crate)
 		end
 
-		duplicator.StoreEntityModifier(self, "ACFCrates", Entities)
-	end
+		self:Unlink(self.Radar)
+		self:Unlink(self.Computer)
 
-	-- Wire dupe info
-	self.BaseClass.PreEntityCopy(self)
-end
+		for _, Point in pairs(self.MountPoints) do
+			local Missile = Point.Missile
 
-function ENT:PostEntityPaste(Player, Ent, CreatedEntities)
-	local EntMods = Ent.EntityMods
+			if Missile then
+				Missile:Remove()
+			end
 
-	if EntMods.ACFRadar then
-		local _, EntIndex = next(EntMods.ACFRadar)
-
-		self:Link(CreatedEntities[EntIndex])
-
-		EntMods.ACFRadar = nil
-	end
-
-	if EntMods.ACFComputer then
-		local _, EntIndex = next(EntMods.ACFComputer)
-
-		self:Link(CreatedEntities[EntIndex])
-
-		EntMods.ACFComputer = nil
-	end
-
-	-- Backwards compatibility
-	if EntMods.ACFAmmoLink then
-		local Entities = EntMods.ACFAmmoLink.entities
-		local Entity
-
-		for _, EntID in pairs(Entities) do
-			Entity = CreatedEntities[EntID]
-
-			self:Link(Entity)
+			Point.Removed = true
 		end
 
-		EntMods.ACFAmmoLink = nil
+		timer.Remove("ACF Rack Clock " .. self:EntIndex())
+
+		WireLib.Remove(self)
 	end
-
-	if EntMods.ACFCrates then
-		for _, EntID in pairs(EntMods.ACFCrates) do
-			self:Link(CreatedEntities[EntID])
-		end
-
-		EntMods.ACFCrates = nil
-	end
-
-	-- Wire dupe info
-	self.BaseClass.PostEntityPaste(self, Player, Ent, CreatedEntities)
-end
-
-function ENT:OnRemove()
-	for Crate in pairs(self.Crates) do
-		self:Unlink(Crate)
-	end
-
-	self:Unlink(self.Radar)
-	self:Unlink(self.Computer)
-
-	WireLib.Remove(self)
-end
+end ---------------------------------------------

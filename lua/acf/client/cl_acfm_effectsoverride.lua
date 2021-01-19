@@ -58,8 +58,10 @@ hook.Add("ACF_BulletEffect", "ACF Missiles Custom Effects", function(AmmoType)
 	end
 end)
 
-function ACFM_CanEmitLight(lightSize)
-	local minLightSize = GetConVar("ACFM_MissileLights"):GetFloat()
+local Lights = GetConVar("ACFM_MissileLights")
+
+local function CanEmitLight(lightSize)
+	local minLightSize = Lights:GetFloat()
 
 	if minLightSize == 0 then return false end
 	if minLightSize == 1 then return true end
@@ -68,7 +70,7 @@ function ACFM_CanEmitLight(lightSize)
 end
 
 function ACFM_RenderLight(idx, lightSize, colour, pos)
-	if not ACFM_CanEmitLight(lightSize) then return end
+	if not CanEmitLight(lightSize) then return end
 
 	local dlight = DynamicLight( idx )
 

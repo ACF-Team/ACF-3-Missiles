@@ -1,3 +1,4 @@
+local Countermeasures = ACF.Classes.Countermeasures
 
 ACFM_Flares = {}
 ACFM_FlareUID = 0
@@ -10,7 +11,7 @@ function ACFM_RegisterFlare(BulletData)
 	ACFM_Flares[BulletData.Index] = ACFM_FlareUID
 	ACFM_FlareUID = ACFM_FlareUID + 1
 
-	local FlareObj = ACF.Countermeasure.Flare()
+	local FlareObj = Countermeasures.Flare()
 	FlareObj:Configure(BulletData)
 
 	BulletData.FlareObj = FlareObj
@@ -33,7 +34,7 @@ function ACFM_OnFlareSpawn(BulletData)
 	local Missiles = FlareObj:ApplyToAll()
 
 	for Missile in pairs(Missiles) do
-		Missile.Guidance.Override = FlareObj
+		Missile.GuidanceData.Override = FlareObj
 	end
 end
 
@@ -109,7 +110,7 @@ function ACFM_GetAllMissilesWhichCanSee(Position)
 	local Result = {}
 
 	for Missile in pairs(ACF.ActiveMissiles) do
-		local Guidance = Missile.Guidance
+		local Guidance = Missile.GuidanceData
 
 		if not Guidance or Guidance.Override or not Guidance.ViewCone then
 			continue
@@ -133,7 +134,7 @@ end
 function ACFM_ApplyCountermeasures(Missile, Guidance)
 	if Guidance.Override then return end
 
-	for _, CounterMeasure in pairs(ACF.Countermeasure) do
+	for _, CounterMeasure in pairs(Countermeasures) do
 		if not CounterMeasure.ApplyContinuous then
 			continue
 		end
@@ -147,7 +148,7 @@ end
 function ACFM_ApplySpawnCountermeasures(Missile, Guidance)
 	if Guidance.Override then return end
 
-	for _, CounterMeasure in pairs(ACF.Countermeasure) do
+	for _, CounterMeasure in pairs(Countermeasures) do
 		if CounterMeasure.ApplyContinuous then
 			continue
 		end

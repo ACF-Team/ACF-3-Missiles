@@ -1,64 +1,107 @@
-local Lasers = ACF.ActiveLasers
-local Sources = ACF.LaserSources
-local TraceLine = util.TraceLine
+
+local ACF       = ACF
+local Lasers    = ACF.ActiveLasers
+local Sources   = ACF.LaserSources
 local TraceData = { start = true, endpos = true, filter = true }
 
-local function GetSpread(Entity, Data)
-	local Name = Data.Spread
+local function GetVector(Entity, Data, Key, Default)
+	local Value = Data[Key]
 
-	if not Name then return Vector() end
-	if Name == "" then return Vector() end
+	if isvector(Value) then return Value end
+	if not isstring(Value) then return Default end
 
-	return Entity[Name] or Vector()
+	local EntValue = Entity[Value]
+
+	return isvector(EntValue) and EntValue or Entity:GetNW2Vector(Value, Default)
 end
 
-local function GetHitPos(Entity, Data)
-	TraceData.start = Entity:LocalToWorld(Data.Offset)
-	TraceData.endpos = Entity:LocalToWorld(Data.Direction * 50000)
+local function GetLaserData(Entity, Data)
+	local Offset = GetVector(Entity, Data, "Offset", Vector())
+	local Direction = GetVector(Entity, Data, "Direction", Vector(1))
+	local Origin = Entity:LocalToWorld(Offset)
+
+	TraceData.start = Origin
+	TraceData.endpos = Entity:LocalToWorld(Offset + Direction * 50000)
 	TraceData.filter = Data.Filter
 
-	return TraceLine(TraceData).HitPos + GetSpread(Entity, Data)
+	local Result = ACF.TraceF(TraceData)
+	Result.Distance = Result.Fraction * 50000
+
+	return Origin, Result.HitPos, Result
+end
+
+local function UpdateLaserData(Entity, Laser)
+	local Origin, HitPos, Result = GetLaserData(Entity, Sources[Entity])
+
+	Laser.Distance = Result.Distance
+	Laser.Origin = Origin
+	Laser.HitPos = HitPos
+	Laser.Trace = Result
+
+	return Laser
 end
 
 local function LaserTick()
-	for Entity in pairs(Lasers) do
-		Lasers[Entity] = GetHitPos(Entity, Sources[Entity])
+	for Entity, Laser in pairs(Lasers) do
+		UpdateLaserData(Entity, Laser)
 	end
 end
 
-function ACF.AddLaserSource(Entity, NetVar, Offset, Direction, Spread, Filter)
+local function RemoveLaserSource(Entity)
 	if not IsValid(Entity) then return end
+
+	Entity.IsLaserSource = nil
+
+	Sources[Entity] = nil
+	Lasers[Entity] = nil
+
+	if not next(Sources) then
+		hook.Remove("Tick", "ACF Active Lasers")
+	end
+end
+
+ACF.RemoveLaserSource = RemoveLaserSource
+
+function ACF.AddLaserSource(Entity, Data)
+	if not IsValid(Entity) then return end
+	if not istable(Data) then return end
 
 	if not next(Sources) then
 		hook.Add("Tick", "ACF Active Lasers", LaserTick)
 	end
 
-	Sources[Entity] = {
-		NetVar = NetVar,
-		Offset = Offset,
-		Direction = Direction,
-		Spread = Spread,
-		Filter = Filter or { Entity },
+	local LaserData = {
+		NetVar = Data.NetVar or "Lasing",
+		Offset = Data.Offset or Vector(),
+		Direction = Data.Direction or Vector(1),
+		Filter = Data.Filter or { Entity },
 	}
 
-	if Entity:GetNW2Bool(NetVar) then
-		Lasers[Entity] = GetHitPos(Entity, Sources[Entity])
+	Sources[Entity] = LaserData
+
+	if Entity[LaserData.NetVar] or Entity:GetNW2Bool(LaserData.NetVar) then
+		Lasers[Entity] = UpdateLaserData(Entity, {})
 	end
 
-	Entity:CallOnRemove("ACF Active Laser", function()
-		Sources[Entity] = nil
-		Lasers[Entity] = nil
+	Entity.IsLaserSource = true
 
-		if not next(Sources) then
-			hook.Remove("Tick", "ACF Active Lasers")
-		end
+	Entity:CallOnRemove("ACF Active Laser", function()
+		RemoveLaserSource(Entity)
 	end)
+
+	return LaserData
 end
 
-hook.Add("EntityNetworkedVarChanged", "ACF Laser Toggle", function(Entity, Name, Old, New)
+function ACF.GetLaserData(Entity)
+	if not IsValid(Entity) then return end
+
+	return Lasers[Entity]
+end
+
+hook.Add("EntityNetworkedVarChanged", "ACF Laser Toggle", function(Entity, Name, _, Value)
 	local Data = Sources[Entity]
 
-	if Data and Data.NetVar == Name and Old ~= New then
-		Lasers[Entity] = New and GetHitPos(Entity, Data) or nil
+	if Data and Data.NetVar == Name then
+		Lasers[Entity] = Value and UpdateLaserData(Entity, {}) or nil
 	end
 end)
