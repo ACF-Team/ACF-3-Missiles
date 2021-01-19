@@ -423,7 +423,7 @@ function ENT:CreateBulletData(Crate)
 	self.RoundData        = Ammo
 	self.BulletData       = Ammo:ServerConvert(Data)
 	self.BulletData.Crate = self:EntIndex()
-	self.BulletData.Owner = self.Owner
+	self.BulletData.Owner = self:GetPlayer()
 	self.BulletData.Gun   = self
 
 	if Ammo.OnFirst then
