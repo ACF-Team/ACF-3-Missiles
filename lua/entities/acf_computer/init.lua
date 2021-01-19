@@ -141,6 +141,8 @@ do -- Spawn and update function
 	end
 
 	local function UpdateComputer(Entity, Data, Class, Computer)
+		Entity.Updating = true
+
 		Entity:SetModel(Computer.Model)
 
 		Entity:PhysicsInit(SOLID_VPHYSICS)
@@ -189,6 +191,8 @@ do -- Spawn and update function
 		if Entity.OnDamaged then
 			Entity:OnDamaged()
 		end
+
+		Entity.Updating = nil
 	end
 
 	hook.Add("ACF_OnSetupInputs", "ACF Computer Inputs", function(Class, List, _, _, _, Computer)
@@ -324,29 +328,20 @@ function ENT:ACF_OnDamage(Energy, FrArea, Angle, Inflictor)
 end
 
 function ENT:Enable()
-	if not CheckLegal(self) then return end
-
-	self.Disabled	   = nil
-	self.DisableReason = nil
-
 	if self.OnEnabled then
 		self:OnEnabled()
 	end
-
-	self:UpdateOverlay()
 end
 
 function ENT:Disable()
 	if self.OnDisabled then
 		self:OnDisabled()
 	end
-
-	self.Disabled = true
-
-	self:UpdateOverlay()
 end
 
 function ENT:UpdateOverlayText()
+	if self.Updating then return end
+
 	local Title = self.OverlayTitle and self:OverlayTitle() or "Idle"
 	local Body = self.OverlayBody and self:OverlayBody()
 

@@ -8,6 +8,12 @@ language.Add("SBoxLimit__acf_computer", "You've reached the ACF Computer limit!"
 
 local Components = ACF.Classes.Components
 
+function ENT:Initialize(...)
+	BaseClass.Initialize(self, ...)
+
+	self:Update()
+end
+
 function ENT:Update()
 	local Id = self:GetNW2String("ID")
 	local Class = ACF.GetClassGroup(Components, Id)
@@ -27,14 +33,22 @@ function ENT:Update()
 	end
 end
 
-function ENT:Think()
+function ENT:Draw(...)
+	BaseClass.Draw(self, ...)
+
+	if self.OnDraw then
+		self:OnDraw()
+	end
+end
+
+function ENT:Think(...)
 	self:NextThink(ACF.CurTime)
 
 	if self.OnThink then
 		self:OnThink()
 	end
 
-	BaseClass.Think(self)
+	BaseClass.Think(self, ...)
 
 	return true
 end
