@@ -124,11 +124,14 @@ do -- Joystick
 			Entity.Spread		= nil
 		end,
 		OnOverlayTitle = function(Entity)
+			if not Entity.IsJoystick then return end
 			if Entity.InputPitch ~= 0 or Entity.InputYaw ~= 0 then
 				return "In use"
 			end
 		end,
 		OnOverlayBody = function(Entity)
+			if not Entity.IsJoystick then return end
+
 			local Text = "Pitch: %s degree(s)\nYaw: %s degree(s)"
 			local Pitch = math.Round(Entity.Pitch, 2)
 			local Yaw = math.Round(Entity.Yaw, 2)
@@ -356,12 +359,15 @@ do -- Optical guidance computer
 			Computers[Entity] = nil
 		end,
 		OnOverlayTitle = function(Entity)
+			if not Entity.IsComputer then return end
 			if Entity.Distance ~= Entity.TraceDist then return "Ranging" end
 			if Entity.InputPitch ~= 0 or Entity.InputYaw ~= 0 then
 				return "In use"
 			end
 		end,
 		OnOverlayBody = function(Entity)
+			if not Entity.IsComputer then return end
+
 			local Text = "Distance: %s m\nPitch: %s degree(s)\nYaw: %s degree(s)"
 			local Distance = math.Round(FloorMeters(Entity.Distance) * 0.0254)
 			local Pitch = math.Round(Entity.Pitch, 2)
@@ -555,6 +561,7 @@ do -- Laser guidance computer
 			ACF.ClearLaserSource(Entity)
 		end,
 		OnOverlayTitle = function(Entity)
+			if not Entity.IsComputer then return end
 			if Entity.OnCooldown then return "Cooling down" end
 			if Entity.Lasing then return "Lasing" end
 			if Entity.InputPitch ~= 0 or Entity.InputYaw ~= 0 then
@@ -562,6 +569,8 @@ do -- Laser guidance computer
 			end
 		end,
 		OnOverlayBody = function(Entity)
+			if not Entity.IsComputer then return end
+
 			local Text = "Distance: %s m\nPitch: %s degree(s)\nYaw: %s degree(s)"
 			local Distance = math.Round(Entity.Distance * 0.0254)
 			local Pitch = math.Round(Entity.Pitch, 2)
@@ -729,12 +738,15 @@ do -- GPS transmitter
 			Entity.Spread		= nil
 		end,
 		OnOverlayTitle = function(Entity)
+			if not Entity.IsGPS then return end
 			if Entity.IsJammed then return "Jammed" end
 			if Entity.InputCoords ~= Vector() then
 				return "Transmitting"
 			end
 		end,
 		OnOverlayBody = function(Entity)
+			if not Entity.IsGPS then return end
+
 			local Text = "Coordinates: [%s, %s, %s]"
 			local X, Y, Z = Entity.Coordinates:Unpack()
 
