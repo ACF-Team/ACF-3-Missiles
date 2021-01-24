@@ -297,8 +297,8 @@ do -- Custom ACF damage ------------------------
 		end)
 	end
 
-	function ENT:ACF_OnDamage(Energy, FrArea, Ang, Inflictor)
-		local HitRes = ACF.PropDamage(self, Energy, FrArea, Ang, Inflictor) --Calling the standard damage prop function
+	function ENT:ACF_OnDamage(Bullet, Trace)
+		local HitRes = ACF.PropDamage(Bullet, Trace) --Calling the standard damage prop function
 
 		if not HitRes.Kill then
 			local Ratio = self.ACF.Health / self.ACF.MaxHealth
