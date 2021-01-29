@@ -36,7 +36,9 @@ ACF.RegisterMissile("AT-3 ASM", "ATGM", {
 		DragCoef		= 0.005,
 		DragCoefFlight	= 0.1,
 		FinMul			= 0.1,
-		PenMul			= math.sqrt(5.39)
+		PenMul			= math.sqrt(5.39),
+		ActualLength 	= 34.5,
+		ActualWidth		= 5.2
 	},
 })
 
@@ -67,7 +69,9 @@ ACF.RegisterMissile("BGM-71E ASM", "ATGM", {
 		DragCoef		= 0.005,
 		DragCoefFlight	= 0.05,
 		FinMul			= 0.05,
-		PenMul			= math.sqrt(3.97)
+		PenMul			= math.sqrt(3.97),
+		ActualLength 	= 59,
+		ActualWidth		= 5.9
 	},
 })
 
@@ -113,7 +117,9 @@ ACF.RegisterMissile("AGM-114 ASM", "ATGM", {
 		DragCoef		= 0.001,
 		DragCoefFlight	= 0.05,
 		FinMul			= 0.05,
-		PenMul			= math.sqrt(4.175)
+		PenMul			= math.sqrt(4.175),
+		ActualLength 	= 64.7,
+		ActualWidth		= 7.9
 	},
 })
 
@@ -147,7 +153,9 @@ ACF.RegisterMissile("Ataka ASM", "ATGM", {
 		DragCoef		= 0.001,
 		DragCoefFlight	= 0.04,
 		FinMul			= 0.05,
-		PenMul			= math.sqrt(1.454)
+		PenMul			= math.sqrt(1.454),
+		ActualLength 	= 68.5,
+		ActualWidth		= 5.2
 	},
 })
 
@@ -190,7 +198,9 @@ ACF.RegisterMissile("9M113 ASM", "ATGM", {
 		DragCoef		= 0.005,
 		DragCoefFlight	= 0.05,
 		FinMul			= 0.05,
-		PenMul			= math.sqrt(4.2)
+		PenMul			= math.sqrt(4.2),
+		ActualLength 	= 55.3,
+		ActualWidth		= 7
 	},
 })
 
@@ -222,6 +232,8 @@ ACF.RegisterMissile("AT-2 ASM", "ATGM", {
 		DragCoef		= 0.01,
 		DragCoefFlight	= 0.04,
 		FinMul			= 0.1,
-		PenMul			= math.sqrt(3.025)
+		PenMul			= math.sqrt(3.025),
+		ActualLength 	= 45.5,
+		ActualWidth		= 5.5
 	},
 })

@@ -35,7 +35,9 @@ ACF.RegisterMissile("50kgBOMB", "BOMB", {
 		MinSpeed		= 1,
 		DragCoef		= 0.002,
 		FinMul			= 0.008,
-		PenMul			= math.sqrt(0.6)
+		PenMul			= math.sqrt(0.6),
+		ActualLength 	= 37,
+		ActualWidth		= 9.2
 	},
 })
 
@@ -66,7 +68,9 @@ ACF.RegisterMissile("100kgBOMB", "BOMB", {
 		MinSpeed		= 1,
 		DragCoef		= 0.002,
 		FinMul			= 0.007,
-		PenMul			= math.sqrt(0.6)
+		PenMul			= math.sqrt(0.6),
+		ActualLength 	= 44,
+		ActualWidth		= 12
 	},
 })
 
@@ -97,7 +101,9 @@ ACF.RegisterMissile("250kgBOMB", "BOMB", {
 		MinSpeed		= 1,
 		DragCoef		= 0.002,
 		FinMul			= 0.005,
-		PenMul			= math.sqrt(0.6)
+		PenMul			= math.sqrt(0.6),
+		ActualLength 	= 83,
+		ActualWidth		= 14.5
 	},
 })
 
@@ -128,7 +134,9 @@ ACF.RegisterMissile("500kgBOMB", "BOMB", {
 		MinSpeed		= 1,
 		DragCoef		= 0.002,
 		FinMul			= 0.004,
-		PenMul			= math.sqrt(0.6)
+		PenMul			= math.sqrt(0.6),
+		ActualLength 	= 85,
+		ActualWidth		= 17.5
 	},
 })
 
@@ -159,6 +167,8 @@ ACF.RegisterMissile("1000kgBOMB", "BOMB", {
 		MinSpeed		= 1,
 		DragCoef		= 0.002,
 		FinMul			= 0.004,
-		PenMul			= math.sqrt(0.6)
+		PenMul			= math.sqrt(0.6),
+		ActualLength 	= 90.5,
+		ActualWidth		= 22.7
 	},
 })
