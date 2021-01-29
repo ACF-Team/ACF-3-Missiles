@@ -70,6 +70,9 @@ do -- Spawning and Updating --------------------
 	end
 
 	local function UpdateRack(Entity, Data, Rack)
+		Entity.ACF = Entity.ACF or {}
+		Entity.ACF.Model = Rack.Model -- Must be set before changing model
+
 		Entity:SetModel(Rack.Model)
 
 		Entity:PhysicsInit(SOLID_VPHYSICS)

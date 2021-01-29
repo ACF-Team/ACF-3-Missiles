@@ -336,6 +336,9 @@ do -- Spawn and Update functions
 	end
 
 	local function UpdateRadar(Entity, Data, Class, Radar)
+		Entity.ACF = Entity.ACF or {}
+		Entity.ACF.Model = Radar.Model -- Must be set before changing model
+
 		Entity:SetModel(Radar.Model)
 
 		Entity:PhysicsInit(SOLID_VPHYSICS)

@@ -141,6 +141,9 @@ do -- Spawn and update function
 	end
 
 	local function UpdateComputer(Entity, Data, Class, Computer)
+		Entity.ACF = Entity.ACF or {}
+		Entity.ACF.Model = Computer.Model -- Must be set before changing model
+
 		Entity:SetModel(Computer.Model)
 
 		Entity:PhysicsInit(SOLID_VPHYSICS)
