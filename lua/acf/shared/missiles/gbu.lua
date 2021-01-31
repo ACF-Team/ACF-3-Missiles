@@ -36,7 +36,9 @@ ACF.RegisterMissile("WalleyeGBU", "GBU", {
 		MinSpeed		= 500,
 		DragCoef		= 0.00001,
 		FinMul			= 0.02,
-		PenMul			= math.sqrt(0.5)
+		PenMul			= math.sqrt(0.5),
+		ActualLength 	= 137,
+		ActualWidth		= 16
 	},
 })
 
@@ -85,7 +87,9 @@ ACF.RegisterMissile("227kgGBU", "GBU", {
 		MinSpeed		= 1,
 		DragCoef		= 0.002,
 		FinMul			= 0.02,
-		PenMul			= math.sqrt(0.4)
+		PenMul			= math.sqrt(0.4),
+		ActualLength 	= 86.8,
+		ActualWidth		= 9.5
 	},
 })
 
@@ -133,7 +137,9 @@ ACF.RegisterMissile("454kgGBU", "GBU", {
 		MinSpeed		= 1,
 		DragCoef		= 0.002,
 		FinMul			= 0.02,
-		PenMul			= math.sqrt(0.3)
+		PenMul			= math.sqrt(0.3),
+		ActualLength 	= 101.5,
+		ActualWidth		= 12.2
 	},
 })
 
@@ -182,6 +188,8 @@ ACF.RegisterMissile("909kgGBU", "GBU", {
 		MinSpeed		= 1,
 		DragCoef		= 0.002,
 		FinMul			= 0.01,
-		PenMul			= math.sqrt(0.2)
+		PenMul			= math.sqrt(0.2),
+		ActualLength 	= 126.1,
+		ActualWidth		= 17.8
 	},
 })
