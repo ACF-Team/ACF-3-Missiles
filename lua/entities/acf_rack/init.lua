@@ -494,7 +494,7 @@ do -- Firing -----------------------------------
 	function ENT:CanShoot()
 		if self.RetryShoot then return false end
 		if not self.Firing then return false end
-		if not ACF.GunfireEnabled then return false end
+		if not ACF.RacksCanFire then return false end
 
 		return true
 	end
@@ -583,7 +583,7 @@ do -- Loading ----------------------------------
 	function ENT:CanReload()
 		if self.RetryReload then return false end
 		if not self.Reloading then return false end
-		if not ACF.GunfireEnabled then return false end
+		if not ACF.RacksCanFire then return false end
 
 		return true
 	end
