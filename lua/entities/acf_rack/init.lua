@@ -11,7 +11,7 @@ local ACF     = ACF
 
 do -- Spawning and Updating --------------------
 	local UnlinkSound = "physics/metal/metal_box_impact_bullet%s.wav"
-	local MaxDistance = ACF.RefillDistance * ACF.RefillDistance
+	local MaxDistance = ACF.LinkDistance * ACF.LinkDistance
 	local CheckLegal  = ACF_CheckLegal
 	local Racks       = ACF.Classes.Racks
 

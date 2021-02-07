@@ -67,7 +67,7 @@ end)
 local CheckLegal  = ACF_CheckLegal
 local Components  = ACF.Classes.Components
 local UnlinkSound = "physics/metal/metal_box_impact_bullet%s.wav"
-local MaxDistance = ACF.RefillDistance * ACF.RefillDistance
+local MaxDistance = ACF.LinkDistance * ACF.LinkDistance
 local HookRun     = hook.Run
 
 local function CheckDistantLinks(Entity, Source)
@@ -75,8 +75,10 @@ local function CheckDistantLinks(Entity, Source)
 
 	for Link in pairs(Entity[Source]) do
 		if Position:DistToSqr(Link:GetPos()) > MaxDistance then
-			Entity:EmitSound(UnlinkSound:format(math.random(1, 3)), 70, 100, ACF.Volume)
-			Link:EmitSound(UnlinkSound:format(math.random(1, 3)), 70, 100, ACF.Volume)
+			local Sound = UnlinkSound:format(math.random(1, 3))
+
+			Entity:EmitSound(Sound, 70, 100, ACF.Volume)
+			Link:EmitSound(Sound, 70, 100, ACF.Volume)
 
 			Entity:Unlink(Link)
 		end
