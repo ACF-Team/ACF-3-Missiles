@@ -38,6 +38,8 @@ ACF.RegisterMissile("AGM-122 ASM", "ARM", {
 		DragCoefFlight	= 0.001,
 		FinMul			= 0.03,
 		CanDelayLaunch	= true,
+		ActualLength 	= 85,
+		ActualWidth		= 4.2
 	},
 })
 
@@ -71,5 +73,7 @@ ACF.RegisterMissile("AGM-45 ASM", "ARM", {
 		DragCoefFlight	= 0,
 		FinMul			= 0.2,
 		CanDelayLaunch	= true,
+		ActualLength 	= 151.5,
+		ActualWidth		= 7.1
 	},
 })

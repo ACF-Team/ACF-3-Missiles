@@ -36,7 +36,9 @@ ACF.RegisterMissile("Type 63 RA", "ARTY", {
 		DragCoef		= 0.002,
 		DragCoefFlight	= 0.001,
 		FinMul			= 0.02,
-		PenMul			= math.sqrt(2)
+		PenMul			= math.sqrt(2),
+		ActualLength 	= 50,
+		ActualWidth		= 7.2
 	},
 })
 
@@ -68,7 +70,9 @@ ACF.RegisterMissile("SAKR-10 RA", "ARTY", {
 		DragCoef		= 0.002,
 		DragCoefFlight	= 0.010,
 		FinMul			= 0.03,
-		PenMul			= math.sqrt(1.1)
+		PenMul			= math.sqrt(1.1),
+		ActualLength 	= 86.5,
+		ActualWidth		= 5.5
 	},
 })
 
@@ -100,6 +104,8 @@ ACF.RegisterMissile("SS-40 RA", "ARTY", {
 		DragCoef		= 0.002,
 		DragCoefFlight	= 0.009,
 		FinMul			= 0.05,
-		PenMul			= math.sqrt(2)
+		PenMul			= math.sqrt(2),
+		ActualLength 	= 151.5,
+		ActualWidth		= 7.1
 	},
 })

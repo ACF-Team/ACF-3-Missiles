@@ -11,7 +11,7 @@ local ACF     = ACF
 
 do -- Spawning and Updating --------------------
 	local UnlinkSound = "physics/metal/metal_box_impact_bullet%s.wav"
-	local MaxDistance = ACF.RefillDistance * ACF.RefillDistance
+	local MaxDistance = ACF.LinkDistance * ACF.LinkDistance
 	local CheckLegal  = ACF_CheckLegal
 	local Racks       = ACF.Classes.Racks
 
@@ -70,6 +70,9 @@ do -- Spawning and Updating --------------------
 	end
 
 	local function UpdateRack(Entity, Data, Rack)
+		Entity.ACF = Entity.ACF or {}
+		Entity.ACF.Model = Rack.Model -- Must be set before changing model
+
 		Entity:SetModel(Rack.Model)
 
 		Entity:PhysicsInit(SOLID_VPHYSICS)
@@ -491,7 +494,7 @@ do -- Firing -----------------------------------
 	function ENT:CanShoot()
 		if self.RetryShoot then return false end
 		if not self.Firing then return false end
-		if not ACF.GunfireEnabled then return false end
+		if not ACF.RacksCanFire then return false end
 
 		return true
 	end
@@ -580,7 +583,7 @@ do -- Loading ----------------------------------
 	function ENT:CanReload()
 		if self.RetryReload then return false end
 		if not self.Reloading then return false end
-		if not ACF.GunfireEnabled then return false end
+		if not ACF.RacksCanFire then return false end
 
 		return true
 	end

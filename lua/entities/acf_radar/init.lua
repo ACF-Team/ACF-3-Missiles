@@ -41,7 +41,7 @@ local Radars	  = ACF.ActiveRadars
 local CheckLegal  = ACF_CheckLegal
 local Sensors	  = ACF.Classes.Sensors
 local UnlinkSound = "physics/metal/metal_box_impact_bullet%s.wav"
-local MaxDistance = ACF.RefillDistance * ACF.RefillDistance
+local MaxDistance = ACF.LinkDistance * ACF.LinkDistance
 local TraceData	  = { start = true, endpos = true, mask = MASK_SOLID_BRUSHONLY }
 local Indexes	  = {}
 local Unused	  = {}
@@ -266,8 +266,10 @@ local function CheckDistantLinks(Entity, Source)
 
 	for Link in pairs(Entity[Source]) do
 		if Position:DistToSqr(Link:GetPos()) > MaxDistance then
-			Entity:EmitSound(UnlinkSound:format(math.random(1, 3)), 70, 100, ACF.Volume)
-			Link:EmitSound(UnlinkSound:format(math.random(1, 3)), 70, 100, ACF.Volume)
+			local Sound = UnlinkSound:format(math.random(1, 3))
+
+			Entity:EmitSound(Sound, 70, 100, ACF.Volume)
+			Link:EmitSound(Sound, 70, 100, ACF.Volume)
 
 			Entity:Unlink(Link)
 		end
@@ -336,6 +338,9 @@ do -- Spawn and Update functions
 	end
 
 	local function UpdateRadar(Entity, Data, Class, Radar)
+		Entity.ACF = Entity.ACF or {}
+		Entity.ACF.Model = Radar.Model -- Must be set before changing model
+
 		Entity:SetModel(Radar.Model)
 
 		Entity:PhysicsInit(SOLID_VPHYSICS)
