@@ -138,6 +138,7 @@ local function CalcFlight(Missile)
 	local Dir = Missile.CurDir
 	local LastVel = Missile.LastVel
 	local LastSpeed = LastVel:Length()
+	local VelNorm = LastVel / LastSpeed
 
 	Missile.LastThink = Time
 
@@ -192,7 +193,7 @@ local function CalcFlight(Missile)
 		Missile.LastLOS = LOS
 	else
 		local DirAng = Dir:Angle()
-		local AimDiff = Dir - (LastVel / LastSpeed)
+		local AimDiff = Dir - VelNorm
 		local DiffLength = AimDiff:Length()
 
 		if DiffLength >= 0.001 then
@@ -220,23 +221,18 @@ local function CalcFlight(Missile)
 		end
 	end
 
-	--Physics calculations
-	local Vel = LastVel + (Dir * Missile.Thrust - Vector(0, 0, Gravity:GetFloat())) * ACF.Scale * DeltaTime ^ 2
-	local Up = Dir:Cross(Vel):Cross(Dir):GetNormalized()
-	local Speed = Vel:Length()
-	local VelNorm = Vel / Speed
-	local DotSimple = Up.x * VelNorm.x + Up.y * VelNorm.y + Up.z * VelNorm.z
+	local Force = Dir * Missile.Thrust - Vector(0, 0, Gravity:GetFloat())
 
-	Vel = Vel - Up * Speed * DotSimple * Missile.FinMultiplier
+	local Up = Dir:Cross(LastVel):Cross(Dir):GetNormalized()
+	local DotSimple = Up.x * VelNorm.x + Up.y * VelNorm.y + Up.z * VelNorm.z
+	local Lift = Up * LastSpeed * DotSimple * Missile.FinMultiplier
 
 	local DragCoef = Missile.MotorEnabled and Missile.DragCoefFlight or Missile.DragCoef
-	local Drag = Vel:GetNormalized() * (DragCoef * Vel:LengthSqr()) / ACF.DragDiv * ACF.Scale
+	local Drag = LastVel * (DragCoef * LastSpeed) / ACF.DragDiv * ACF.Scale
 
-	Vel = Vel - Drag
-
-	local EndPos = Pos + Vel
-
-	Missile.Velocity = Vel / DeltaTime
+	local Vel = LastVel + (Force + Lift - Drag)*DeltaTime
+	local EndPos = Pos + Vel*DeltaTime
+	Missile.Velocity = Vel 
 
 	--Hit detection
 	TraceData.start = Pos
@@ -468,7 +464,7 @@ function ENT:Launch(Delay, IsMisfire)
 	self.Position    = BulletData.Pos
 	self.LastPos     = self.Position
 	self.Velocity    = Velocity
-	self.LastVel     = Velocity * DeltaTime
+	self.LastVel     = Velocity
 	self.CurDir      = Flight
 
 	if self.RackModel then
