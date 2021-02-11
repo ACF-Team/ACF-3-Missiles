@@ -230,9 +230,9 @@ local function CalcFlight(Missile)
 	local DragCoef = Missile.MotorEnabled and Missile.DragCoefFlight or Missile.DragCoef
 	local Drag = LastVel * (DragCoef * LastSpeed) / ACF.DragDiv * ACF.Scale
 
-	local Vel = LastVel + (Force + Lift - Drag)*DeltaTime
-	local EndPos = Pos + Vel*DeltaTime
-	Missile.Velocity = Vel 
+	local Vel = LastVel + (Force + Lift - Drag) * DeltaTime
+	local EndPos = Pos + Vel * DeltaTime
+	Missile.Velocity = Vel
 
 	--Hit detection
 	TraceData.start = Pos
