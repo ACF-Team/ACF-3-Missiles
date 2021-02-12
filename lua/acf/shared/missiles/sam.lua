@@ -31,7 +31,7 @@ ACF.RegisterMissile("FIM-92 SAM", "SAM", {
 		Armor			= 5,
 		PropMass		= 1.5,
 		Thrust			= 7000, -- in kg*in/s^2
-		FuelConsumption = 0.14,	-- in g/s/f
+		BurnRate		= 1000, -- in cm^3/s
 		StarterPercent	= 0.3,
 		MinSpeed		= 3000,
 		DragCoef		= 0.001,
@@ -65,7 +65,7 @@ ACF.RegisterMissile("Strela-1 SAM", "SAM", {
 		Armor			= 5,
 		PropMass		= 1,
 		Thrust			= 4000, -- in kg*in/s^2
-		FuelConsumption = 0.1,	-- in g/s/f
+		BurnRate		= 400, -- in cm^3/s
 		StarterPercent	= 0.1,
 		MinSpeed		= 4000,
 		DragCoef		= 0.003,

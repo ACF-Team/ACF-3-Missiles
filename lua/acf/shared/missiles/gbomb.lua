@@ -26,8 +26,8 @@ ACF.RegisterMissile("100kgGBOMB", "GBOMB", {
 		MaxLength		= 100,
 		Armor			= 10,
 		PropMass		= 0,
-		Thrust			= 1, 	-- in kg*in/s^2
-		FuelConsumption = 0.1,	-- in g/s/f
+		Thrust			= 1, -- in kg*in/s^2
+		BurnRate		= 1, -- in cm^3/s
 		StarterPercent	= 0.005,
 		MinSpeed		= 500,
 		DragCoef		= 0.0001,
@@ -57,8 +57,8 @@ ACF.RegisterMissile("250kgGBOMB", "GBOMB", {
 		MaxLength		= 250,
 		Armor			= 10,
 		PropMass		= 0,
-		Thrust			= 1, 	-- in kg*in/s^2
-		FuelConsumption = 0.1,	-- in g/s/f
+		Thrust			= 1, -- in kg*in/s^2
+		BurnRate		= 1, -- in cm^3/s
 		StarterPercent	= 0.005,
 		MinSpeed		= 500,
 		DragCoef		= 0.001,

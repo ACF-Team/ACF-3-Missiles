@@ -27,8 +27,8 @@ ACF.RegisterMissile("40mmFFAR", "FFAR", {
 		MaxLength		= 25,
 		Armor			= 5,
 		PropMass		= 0.2,
-		Thrust			= 10000, 	-- in kg*in/s^2
-		FuelConsumption = 0.012,	-- in g/s/f
+		Thrust			= 10000, -- in kg*in/s^2
+		BurnRate		= 120, -- in cm^3/s
 		StarterPercent	= 0.15,
 		MinSpeed		= 5000,
 		DragCoef		= 0.001,
@@ -60,8 +60,8 @@ ACF.RegisterMissile("70mmFFAR", "FFAR", {
 		MaxLength		= 25,
 		Armor			= 5,
 		PropMass		= 0.7,
-		Thrust			= 15000,	-- in kg*in/s^2
-		FuelConsumption = 0.02,		-- in g/s/f
+		Thrust			= 15000, -- in kg*in/s^2
+		BurnRate		= 300, -- in cm^3/s
 		StarterPercent	= 0.15,
 		MinSpeed		= 4000,
 		DragCoef		= 0.001,
@@ -93,8 +93,8 @@ ACF.RegisterMissile("Zuni ASR", "FFAR", {
 		MaxLength		= 60,
 		Armor			= 5,
 		PropMass		= 0.7,
-		Thrust			= 18000, 	-- in kg*in/s^2
-		FuelConsumption = 0.03,		-- in g/s/f
+		Thrust			= 18000, -- in kg*in/s^2
+		BurnRate		= 600, -- in cm^3/s
 		StarterPercent	= 0.15,
 		MinSpeed		= 6000,
 		DragCoef		= 0.001,

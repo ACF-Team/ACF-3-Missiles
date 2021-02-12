@@ -30,7 +30,7 @@ ACF.RegisterMissile("Type 63 RA", "ARTY", {
 		Armor			= 5,
 		PropMass		= 0.7,
 		Thrust			= 2400, -- in kg*in/s^2
-		FuelConsumption = 0.16, -- in g/s/f
+		BurnRate		= 400, -- in cm^3/s
 		StarterPercent	= 0.1,
 		MinSpeed		= 200,
 		DragCoef		= 0.002,
@@ -64,7 +64,7 @@ ACF.RegisterMissile("SAKR-10 RA", "ARTY", {
 		Armor			= 5,
 		PropMass		= 1.2,
 		Thrust			= 1300, -- in kg*in/s^2
-		FuelConsumption = 0.1,	-- in g/s/f
+		BurnRate		= 120, -- in cm^3/s
 		StarterPercent	= 0.1,
 		MinSpeed		= 300,
 		DragCoef		= 0.002,
@@ -97,8 +97,8 @@ ACF.RegisterMissile("SS-40 RA", "ARTY", {
 		MaxLength		= 115,
 		Armor			= 5,
 		PropMass		= 4.0,
-		Thrust			= 850,	-- in kg*in/s^2
-		FuelConsumption = 0.4,	-- in g/s/f
+		Thrust			= 850, -- in kg*in/s^2
+		BurnRate		= 200, -- in cm^3/s
 		StarterPercent	= 0.075,
 		MinSpeed		= 300,
 		DragCoef		= 0.002,

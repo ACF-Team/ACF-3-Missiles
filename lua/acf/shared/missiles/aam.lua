@@ -30,8 +30,8 @@ ACF.RegisterMissile("AIM-9 AAM", "AAM", {
 		MaxLength		= 35,
 		Armor			= 5,
 		PropMass		= 1,
-		Thrust			= 20000,	-- in kg*in/s^2
-		FuelConsumption = 0.025,	-- in g/s/f
+		Thrust			= 20000, -- in kg*in/s^2
+		BurnRate		= 500, -- in cm^3/s
 		StarterPercent	= 0.1,
 		MinSpeed		= 3000,
 		DragCoef		= 0.002,
@@ -65,8 +65,8 @@ ACF.RegisterMissile("AIM-120 AAM", "AAM", {
 		MaxLength		= 50,
 		Armor			= 5,
 		PropMass		= 2,
-		Thrust			= 24000, 	-- in kg*in/s^2
-		FuelConsumption = 0.1,		-- in g/s/f
+		Thrust			= 24000, -- in kg*in/s^2
+		BurnRate		= 2200, -- in cm^3/s
 		StarterPercent	= 0.3,
 		MinSpeed		= 2000,
 		DragCoef		= 0.002,
@@ -100,8 +100,8 @@ ACF.RegisterMissile("AIM-54 AAM", "AAM", {
 		MaxLength		= 60,
 		Armor			= 5,
 		PropMass		= 5,
-		Thrust			= 45000, 	-- in kg*in/s^2
-		FuelConsumption = 0.03,		-- in g/s/f
+		Thrust			= 45000, -- in kg*in/s^2
+		BurnRate		= 1500, -- in cm^3/s
 		StarterPercent	= 0.1,
 		MinSpeed		= 4000,
 		DragCoef		= 0.005,
