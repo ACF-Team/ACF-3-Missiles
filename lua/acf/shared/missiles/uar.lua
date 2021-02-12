@@ -41,8 +41,8 @@ ACF.RegisterMissile("RS82 ASR", "UAR", {
 		MaxLength		= 25,
 		Armor			= 5,
 		PropMass		= 0.7,
-		Thrust			= 15000, -- in kg*in/s^2
-		BurnRate		= 800, -- in cm^3/s
+		Thrust			= 15000,	-- in kg*in/s^2
+		FuelConsumption = 0.05,		-- in g/s/f
 		StarterPercent	= 0.15,
 		MinSpeed		= 6000,
 		DragCoef		= 0.002,
@@ -75,8 +75,8 @@ ACF.RegisterMissile("HVAR ASR", "UAR", {
 		MaxLength		= 25,
 		Armor			= 5,
 		PropMass		= 0.7,
-		Thrust			= 25000, -- in kg*in/s^2
-		BurnRate		= 600, -- in cm^3/s
+		Thrust			= 25000,	-- in kg*in/s^2
+		FuelConsumption = 0.024,	-- in g/s/f
 		StarterPercent	= 0.15,
 		MinSpeed		= 5000,
 		DragCoef		= 0.002,
@@ -107,8 +107,8 @@ ACF.RegisterMissile("SPG-9 ASR", "UAR", {
 		MaxLength		= 50,
 		Armor			= 5,
 		PropMass		= 0.5,
-		Thrust			= 120000, -- in kg*in/s^2 very high but only burns a brief moment, most of which is in the tube
-		BurnRate		= 1200, -- in cm^3/s
+		Thrust			= 120000,	-- in kg*in/s^2 very high but only burns a brief moment, most of which is in the tube
+		FuelConsumption = 0.01,		-- in g/s/f
 		StarterPercent	= 0.72,
 		MinSpeed		= 900,
 		DragCoefFlight	= 0.05,
@@ -141,7 +141,7 @@ ACF.RegisterMissile("S-24 ASR", "UAR", {
 		Armor			= 5,
 		PropMass		= 15,
 		Thrust			= 9000, -- in kg*in/s^2
-		BurnRate		= 1000, -- in cm^3/s
+		FuelConsumption = 0.1,	-- in g/s/f
 		StarterPercent	= 0.15,
 		MinSpeed		= 10000,
 		DragCoef		= 0.001,
@@ -176,7 +176,7 @@ ACF.RegisterMissile("RW61 ASR", "UAR", {
 		Armor			= 5,
 		PropMass		= 5,
 		Thrust			= 5000, -- in kg*in/s^2
-		BurnRate		= 5000, -- in cm^3/s
+		FuelConsumption = 1,	-- in g/s/f
 		StarterPercent	= 0.01,
 		MinSpeed		= 1,
 		DragCoef		= 0,

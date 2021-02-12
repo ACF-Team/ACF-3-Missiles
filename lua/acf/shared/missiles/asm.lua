@@ -29,8 +29,8 @@ ACF.RegisterMissile("AT-3 ASM", "ATGM", {
 		MaxLength		= 35,
 		Armor			= 5,
 		PropMass		= 0.2,
-		Thrust			= 8000, -- in kg*in/s^2
-		BurnRate		= 20, -- in cm^3/s
+		Thrust			= 8000, 	-- in kg*in/s^2
+		FuelConsumption = 0.0025,	-- in g/s/f
 		StarterPercent	= 0.2,
 		MinSpeed		= 1500,
 		DragCoef		= 0.005,
@@ -63,7 +63,7 @@ ACF.RegisterMissile("BGM-71E ASM", "ATGM", {
 		Armor			= 5,
 		PropMass		= 0.2,
 		Thrust			= 13000, -- in kg*in/s^2
-		BurnRate		= 31, -- in cm^3/s
+		FuelConsumption = 0.0025,	-- in g/s/f
 		StarterPercent	= 0.2,
 		MinSpeed		= 2000,
 		DragCoef		= 0.005,
@@ -110,8 +110,8 @@ ACF.RegisterMissile("AGM-114 ASM", "ATGM", {
 		MaxLength		= 67,
 		Armor			= 5,
 		PropMass		= 0.25,
-		Thrust			= 18000, -- in kg*in/s^2
-		BurnRate		= 80, -- in cm^3/s
+		Thrust			= 18000, 	-- in kg*in/s^2
+		FuelConsumption = 0.0045,	-- in g/s/f
 		StarterPercent	= 0.1,
 		MinSpeed		= 4000,
 		DragCoef		= 0.001,
@@ -147,7 +147,7 @@ ACF.RegisterMissile("Ataka ASM", "ATGM", {
 		Armor			= 5,
 		PropMass		= 0.11,
 		Thrust			= 20000, -- in kg*in/s^2
-		BurnRate		= 300, -- in cm^3/s
+		FuelConsumption = 0.015,	-- in g/s/f
 		StarterPercent	= 0.2,
 		MinSpeed		= 800,
 		DragCoef		= 0.001,
@@ -191,8 +191,8 @@ ACF.RegisterMissile("9M113 ASM", "ATGM", {
 		MaxLength		= 70,
 		Armor			= 5,
 		PropMass		= 0.1,
-		Thrust			= 15000, -- in kg*in/s^2
-		BurnRate		= 10, -- in cm^3/s
+		Thrust			= 15000, 	-- in kg*in/s^2
+		FuelConsumption = 0.0007,	-- in g/s/f
 		StarterPercent	= 0.2,
 		MinSpeed		= 8000,
 		DragCoef		= 0.005,
@@ -225,8 +225,8 @@ ACF.RegisterMissile("AT-2 ASM", "ATGM", {
 		MaxLength		= 60,
 		Armor			= 5,
 		PropMass		= 0.07,
-		Thrust			= 6000, -- in kg*in/s^2
-		BurnRate		= 9, -- in cm^3/s
+		Thrust			= 6000, 	-- in kg*in/s^2
+		FuelConsumption = 0.0015,	-- in g/s/f
 		StarterPercent	= 0.2,
 		MinSpeed		= 500,
 		DragCoef		= 0.01,
