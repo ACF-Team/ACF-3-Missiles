@@ -328,47 +328,47 @@ function MakeACF_Missile(Player, Pos, Ang, Rack, MountPoint, Crate)
 	Missile:SetParent(Rack)
 	Missile:Spawn()
 
-	Missile.Owner          = Player
-	Missile.Name           = Data.Name
-	Missile.ShortName      = Data.ID
-	Missile.EntType        = Class.Name
-	Missile.Caliber        = Caliber
-	Missile.Launcher       = Rack
-	Missile.MountPoint     = MountPoint
-	Missile.Filter         = { Rack }
-	Missile.SeekCone       = Data.SeekCone
-	Missile.ViewCone       = Data.ViewCone
-	Missile.SkinIndex      = Data.SkinIndex
-	Missile.NoThrust       = Data.NoThrust or Class.NoThrust
-	Missile.Sound          = Data.Sound or Class.Sound or "acf_missiles/missiles/missile_rocket.mp3"
-	Missile.ReloadTime     = Data.ReloadTime or 10
-	Missile.ForcedMass     = Data.Mass or 10
-	Missile.ForcedArmor    = Round.Armor
-	Missile.Effect         = Data.Effect or Class.Effect
-	Missile.NoDamage       = Rack.ProtectMissile or Data.NoDamage
-	Missile.ExhaustOffset  = Data.ExhaustOffset
-	Missile.Bodygroups     = Data.Bodygroups
-	Missile.RackModel      = Rack.MissileModel or Round.RackModel
-	Missile.RealModel      = Round.Model
-	Missile.DragCoef       = Round.DragCoef
-	Missile.DragCoefFlight = Round.DragCoefFlight or Round.DragCoef
-	Missile.MinimumSpeed   = Round.MinSpeed
-	Missile.MaxThrust      = Round.Thrust
-	Missile.BurnRate       = Round.BurnRate * 0.001
-	Missile.StarterPercent = Round.StarterPercent
-	Missile.FinMultiplier  = Round.FinMul
-	Missile.CanDelay       = Round.CanDelayLaunch
-	Missile.MaxLength      = Round.MaxLength
-	Missile.Agility        = Data.Agility or 1
-	Missile.Inertia        = 0.08333 * Data.Mass * (3.1416 * (Caliber * 0.05) ^ 2 + Length)
-	Missile.Length         = Length
-	Missile.TorqueMul      = Length * 25
-	Missile.RotAxis        = Vector()
-	Missile.UseGuidance    = true
-	Missile.MotorEnabled   = false
-	Missile.Thrust         = 0
-	Missile.ThinkDelay     = 0.1
-	Missile.Inputs         = WireLib.CreateInputs(Missile, { "Detonate" })
+	Missile.Owner          	= Player
+	Missile.Name           	= Data.Name
+	Missile.ShortName      	= Data.ID
+	Missile.EntType        	= Class.Name
+	Missile.Caliber        	= Caliber
+	Missile.Launcher       	= Rack
+	Missile.MountPoint     	= MountPoint
+	Missile.Filter         	= { Rack }
+	Missile.SeekCone       	= Data.SeekCone
+	Missile.ViewCone       	= Data.ViewCone
+	Missile.SkinIndex      	= Data.SkinIndex
+	Missile.NoThrust       	= Data.NoThrust or Class.NoThrust
+	Missile.Sound          	= Data.Sound or Class.Sound or "acf_missiles/missiles/missile_rocket.mp3"
+	Missile.ReloadTime     	= Data.ReloadTime or 10
+	Missile.ForcedMass     	= Data.Mass or 10
+	Missile.ForcedArmor    	= Round.Armor
+	Missile.Effect         	= Data.Effect or Class.Effect
+	Missile.NoDamage       	= Rack.ProtectMissile or Data.NoDamage
+	Missile.ExhaustOffset  	= Data.ExhaustOffset
+	Missile.Bodygroups     	= Data.Bodygroups
+	Missile.RackModel      	= Rack.MissileModel or Round.RackModel
+	Missile.RealModel      	= Round.Model
+	Missile.DragCoef       	= Round.DragCoef
+	Missile.DragCoefFlight 	= Round.DragCoefFlight or Round.DragCoef
+	Missile.MinimumSpeed   	= Round.MinSpeed
+	Missile.MaxThrust      	= Round.Thrust
+	Missile.FuelConsumption	= Round.FuelConsumption * 0.001
+	Missile.StarterPercent 	= Round.StarterPercent
+	Missile.FinMultiplier  	= Round.FinMul
+	Missile.CanDelay       	= Round.CanDelayLaunch
+	Missile.MaxLength      	= Round.MaxLength
+	Missile.Agility        	= Data.Agility or 1
+	Missile.Inertia        	= 0.08333 * Data.Mass * (3.1416 * (Caliber * 0.05) ^ 2 + Length)
+	Missile.Length         	= Length
+	Missile.TorqueMul      	= Length * 25
+	Missile.RotAxis        	= Vector()
+	Missile.UseGuidance    	= true
+	Missile.MotorEnabled   	= false
+	Missile.Thrust         	= 0
+	Missile.ThinkDelay     	= 0.1
+	Missile.Inputs         	= WireLib.CreateInputs(Missile, { "Detonate" })
 
 	Missile:UpdateModel(Missile.RackModel or Missile.RealModel)
 	Missile:CreateBulletData(Crate)
@@ -381,7 +381,7 @@ function MakeACF_Missile(Player, Pos, Ang, Rack, MountPoint, Crate)
 	if Missile.NoThrust then
 		Missile.MotorLength = 0
 	else
-		Missile.MotorLength = Missile.BulletData.PropMass / Missile.BurnRate * (1 - Missile.StarterPercent)
+		Missile.MotorLength = (1 - Missile.StarterPercent) * Missile.BulletData.PropMass / (Missile.FuelConsumption * Missile.MaxThrust)
 	end
 
 	do -- Exhaust pos
