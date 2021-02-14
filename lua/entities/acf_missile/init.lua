@@ -138,7 +138,7 @@ local function CalcFlight(Missile)
 	local Dir = Missile.CurDir
 	local LastVel = Missile.LastVel
 	local LastSpeed = LastVel:Length()
-	local VelNorm = LastVel / LastSpeed
+	local VelNorm = LastVel:GetNormalized()
 
 	Missile.LastThink = Time
 
@@ -380,8 +380,12 @@ function MakeACF_Missile(Player, Pos, Ang, Rack, MountPoint, Crate)
 
 	if Missile.NoThrust then
 		Missile.MotorLength = 0
+		Missile.SpeedBoost = 0
 	else
-		Missile.MotorLength = (1 - Missile.StarterPercent) * Missile.BulletData.PropMass / (Missile.FuelConsumption * Missile.MaxThrust)
+		local TotalLength = Missile.BulletData.PropMass / (Missile.FuelConsumption * Missile.MaxThrust)
+
+		Missile.MotorLength = (1 - Missile.StarterPercent) * TotalLength
+		Missile.SpeedBoost = Missile.StarterPercent * TotalLength * Missile.MaxThrust
 	end
 
 	do -- Exhaust pos
@@ -446,7 +450,7 @@ function ENT:Launch(Delay, IsMisfire)
 	local Point      = self.MountPoint
 	local Rack       = self.Launcher
 	local Flight     = BulletData.Flight or self:LocalToWorldAngles(Point.Angle):Forward()
-	local Velocity   = Flight + (Rack.Velocity:Length() * Flight)
+	local Velocity   = Rack.Velocity + self.SpeedBoost * Flight
 	local DeltaTime  = engine.TickInterval()
 
 	if Rack.SoundPath and Rack.SoundPath ~= "" then
