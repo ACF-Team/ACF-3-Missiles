@@ -225,7 +225,7 @@ local function CalcFlight(Missile)
 
 	local Up = Dir:Cross(LastVel):Cross(Dir):GetNormalized()
 	local DotSimple = Up.x * VelNorm.x + Up.y * VelNorm.y + Up.z * VelNorm.z
-	local Lift = Up * LastSpeed * DotSimple * Missile.FinMultiplier
+	local Lift = -Up * LastSpeed * DotSimple * Missile.FinMultiplier
 
 	local DragCoef = Missile.MotorEnabled and Missile.DragCoefFlight or Missile.DragCoef
 	local Drag = LastVel * (DragCoef * LastSpeed) / ACF.DragDiv * ACF.Scale

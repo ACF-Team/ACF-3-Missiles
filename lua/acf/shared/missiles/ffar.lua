@@ -33,7 +33,7 @@ ACF.RegisterMissile("40mmFFAR", "FFAR", {
 		MinSpeed		= 5000,
 		DragCoef		= 0.001,
 		DragCoefFlight	= 0.02,
-		FinMul			= 0.003,
+		FinMul			= 0.18,
 		PenMul			= math.sqrt(4),
 		ActualLength 	= 26.5,
 		ActualWidth		= 1.6
@@ -66,7 +66,7 @@ ACF.RegisterMissile("70mmFFAR", "FFAR", {
 		MinSpeed		= 4000,
 		DragCoef		= 0.001,
 		DragCoefFlight	= 0.02,
-		FinMul			= 0.015,
+		FinMul			= 0.9,
 		PenMul			= math.sqrt(6),
 		ActualLength 	= 46,
 		ActualWidth		= 2.6
@@ -99,7 +99,7 @@ ACF.RegisterMissile("Zuni ASR", "FFAR", {
 		MinSpeed		= 6000,
 		DragCoef		= 0.001,
 		DragCoefFlight	= 0.02,
-		FinMul			= 0.015,
+		FinMul			= 0.9,
 		PenMul			= math.sqrt(2),
 		ActualLength 	= 118,
 		ActualWidth		= 4.8
