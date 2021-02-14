@@ -32,7 +32,7 @@ ACF.RegisterMissile("AGM-122 ASM", "ARM", {
 		PropMass		= 4,
 		Thrust			= 4500,	-- in kg*in/s^2
 		FuelConsumption = 0.3,	-- in g/s/f
-		StarterPercent	= 0.4,
+		StarterPercent	= 0.1,
 		MinSpeed		= 5000,
 		DragCoef		= 0.001,
 		DragCoefFlight	= 0.001,
@@ -67,7 +67,7 @@ ACF.RegisterMissile("AGM-45 ASM", "ARM", {
 		PropMass		= 3,
 		Thrust			= 800,	-- in kg*in/s^2
 		FuelConsumption = 0.37,	-- in g/s/f
-		StarterPercent	= 0.05,
+		StarterPercent	= 0.07,
 		MinSpeed		= 4000,
 		DragCoef		= 0.001,
 		DragCoefFlight	= 0,

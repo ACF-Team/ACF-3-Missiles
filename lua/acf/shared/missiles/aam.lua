@@ -32,7 +32,7 @@ ACF.RegisterMissile("AIM-9 AAM", "AAM", {
 		PropMass		= 1,
 		Thrust			= 20000,	-- in kg*in/s^2
 		FuelConsumption = 0.025,	-- in g/s/f
-		StarterPercent	= 0.1,
+		StarterPercent	= 0.05,
 		MinSpeed		= 3000,
 		DragCoef		= 0.002,
 		DragCoefFlight	= 0.03,
@@ -67,7 +67,7 @@ ACF.RegisterMissile("AIM-120 AAM", "AAM", {
 		PropMass		= 2,
 		Thrust			= 24000, 	-- in kg*in/s^2
 		FuelConsumption = 0.1,		-- in g/s/f
-		StarterPercent	= 0.3,
+		StarterPercent	= 0.05,
 		MinSpeed		= 2000,
 		DragCoef		= 0.002,
 		DragCoefFlight	= 0.0013,
@@ -102,7 +102,7 @@ ACF.RegisterMissile("AIM-54 AAM", "AAM", {
 		PropMass		= 5,
 		Thrust			= 45000, 	-- in kg*in/s^2
 		FuelConsumption = 0.03,		-- in g/s/f
-		StarterPercent	= 0.1,
+		StarterPercent	= 0.002,
 		MinSpeed		= 4000,
 		DragCoef		= 0.005,
 		DragCoefFlight	= 0.05,

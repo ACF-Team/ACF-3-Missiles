@@ -31,7 +31,7 @@ ACF.RegisterMissile("AT-3 ASM", "ATGM", {
 		PropMass		= 0.2,
 		Thrust			= 8000, 	-- in kg*in/s^2
 		FuelConsumption = 0.0025,	-- in g/s/f
-		StarterPercent	= 0.2,
+		StarterPercent	= 0.005,
 		MinSpeed		= 1500,
 		DragCoef		= 0.005,
 		DragCoefFlight	= 0.1,
@@ -64,7 +64,7 @@ ACF.RegisterMissile("BGM-71E ASM", "ATGM", {
 		PropMass		= 0.2,
 		Thrust			= 13000, -- in kg*in/s^2
 		FuelConsumption = 0.0025,	-- in g/s/f
-		StarterPercent	= 0.2,
+		StarterPercent	= 0.003,
 		MinSpeed		= 2000,
 		DragCoef		= 0.005,
 		DragCoefFlight	= 0.05,
@@ -112,7 +112,7 @@ ACF.RegisterMissile("AGM-114 ASM", "ATGM", {
 		PropMass		= 0.25,
 		Thrust			= 18000, 	-- in kg*in/s^2
 		FuelConsumption = 0.0045,	-- in g/s/f
-		StarterPercent	= 0.1,
+		StarterPercent	= 0.005,
 		MinSpeed		= 4000,
 		DragCoef		= 0.001,
 		DragCoefFlight	= 0.05,
@@ -148,7 +148,7 @@ ACF.RegisterMissile("Ataka ASM", "ATGM", {
 		PropMass		= 0.11,
 		Thrust			= 20000, -- in kg*in/s^2
 		FuelConsumption = 0.015,	-- in g/s/f
-		StarterPercent	= 0.2,
+		StarterPercent	= 0.04,
 		MinSpeed		= 800,
 		DragCoef		= 0.001,
 		DragCoefFlight	= 0.04,
@@ -193,7 +193,7 @@ ACF.RegisterMissile("9M113 ASM", "ATGM", {
 		PropMass		= 0.1,
 		Thrust			= 15000, 	-- in kg*in/s^2
 		FuelConsumption = 0.0007,	-- in g/s/f
-		StarterPercent	= 0.2,
+		StarterPercent	= 0.002,
 		MinSpeed		= 8000,
 		DragCoef		= 0.005,
 		DragCoefFlight	= 0.05,
@@ -227,7 +227,7 @@ ACF.RegisterMissile("AT-2 ASM", "ATGM", {
 		PropMass		= 0.07,
 		Thrust			= 6000, 	-- in kg*in/s^2
 		FuelConsumption = 0.0015,	-- in g/s/f
-		StarterPercent	= 0.2,
+		StarterPercent	= 0.004,
 		MinSpeed		= 500,
 		DragCoef		= 0.01,
 		DragCoefFlight	= 0.04,
