@@ -379,10 +379,13 @@ function MakeACF_Missile(Player, Pos, Ang, Rack, MountPoint, Crate)
 	end
 
 	if Missile.NoThrust then
-		Missile.MotorLength = 0
-	else
-		Missile.MotorLength = (1 - Missile.StarterPercent) * Missile.BulletData.PropMass / (Missile.FuelConsumption * Missile.MaxThrust)
-	end
+        Missile.MotorLength = 0
+        Missile.SpeedBoost = 0
+    else
+        local TotalLength = Missile.BulletData.PropMass / (Missile.FuelConsumption * Missile.MaxThrust)
+        Missile.MotorLength = (1 - Missile.StarterPercent) * TotalLength
+        Missile.SpeedBoost = Missile.StarterPercent * TotalLength * Missile.MaxThrust
+    end
 
 	do -- Exhaust pos
 		local Attachment = Missile:GetAttachment(Missile:LookupAttachment("exhaust"))
@@ -446,7 +449,7 @@ function ENT:Launch(Delay, IsMisfire)
 	local Point      = self.MountPoint
 	local Rack       = self.Launcher
 	local Flight     = BulletData.Flight or self:LocalToWorldAngles(Point.Angle):Forward()
-	local Velocity   = Flight + (Rack.Velocity:Length() * Flight)
+    local Velocity = Rack.Velocity + self.SpeedBoost * Flight
 	local DeltaTime  = engine.TickInterval()
 
 	if Rack.SoundPath and Rack.SoundPath ~= "" then
