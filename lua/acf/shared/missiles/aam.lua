@@ -36,7 +36,7 @@ ACF.RegisterMissile("AIM-9 AAM", "AAM", {
 		MinSpeed		= 3000,
 		DragCoef		= 0.002,
 		DragCoefFlight	= 0.03,
-		FinMul			= 0.025,
+		FinMul			= 1.25,
 		CanDelayLaunch	= true,
 		ActualLength 	= 85,
 		ActualWidth		= 4.3
@@ -71,7 +71,7 @@ ACF.RegisterMissile("AIM-120 AAM", "AAM", {
 		MinSpeed		= 2000,
 		DragCoef		= 0.002,
 		DragCoefFlight	= 0.0013,
-		FinMul			= 0.027,
+		FinMul			= 1.62,
 		CanDelayLaunch	= true,
 		ActualLength 	= 129.5,
 		ActualWidth		= 6.8
@@ -106,7 +106,7 @@ ACF.RegisterMissile("AIM-54 AAM", "AAM", {
 		MinSpeed		= 4000,
 		DragCoef		= 0.005,
 		DragCoefFlight	= 0.05,
-		FinMul			= 0.02,
+		FinMul			= 1.2,
 		CanDelayLaunch	= true,
 		ActualLength 	= 139.5,
 		ActualWidth		= 13.5

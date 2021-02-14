@@ -31,7 +31,7 @@ ACF.RegisterMissile("100kgGBOMB", "GBOMB", {
 		StarterPercent	= 0.005,
 		MinSpeed		= 500,
 		DragCoef		= 0.0001,
-		FinMul			= 0.05,
+		FinMul			= 3,
 		PenMul			= math.sqrt(0.6),
 		ActualLength 	= 50,
 		ActualWidth		= 11.4
@@ -62,7 +62,7 @@ ACF.RegisterMissile("250kgGBOMB", "GBOMB", {
 		StarterPercent	= 0.005,
 		MinSpeed		= 500,
 		DragCoef		= 0.001,
-		FinMul			= 0.05,
+		FinMul			= 3,
 		PenMul			= math.sqrt(0.6),
 		ActualLength 	= 67,
 		ActualWidth		= 15

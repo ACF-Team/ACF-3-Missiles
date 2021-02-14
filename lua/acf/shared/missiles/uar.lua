@@ -47,7 +47,7 @@ ACF.RegisterMissile("RS82 ASR", "UAR", {
 		MinSpeed		= 6000,
 		DragCoef		= 0.002,
 		DragCoefFlight	= 0.025,
-		FinMul			= 0.008,
+		FinMul			= 4.8,
 		PenMul			= math.sqrt(6.63),
 		ActualLength 	= 25.2,
 		ActualWidth		= 3
@@ -81,7 +81,7 @@ ACF.RegisterMissile("HVAR ASR", "UAR", {
 		MinSpeed		= 5000,
 		DragCoef		= 0.002,
 		DragCoefFlight	= 0.02,
-		FinMul			= 0.01,
+		FinMul			= 0.6,
 		PenMul			= math.sqrt(6.25),
 		ActualLength 	= 69, -- nice
 		ActualWidth		= 5
@@ -113,7 +113,7 @@ ACF.RegisterMissile("SPG-9 ASR", "UAR", {
 		MinSpeed		= 900,
 		DragCoefFlight	= 0.05,
 		DragCoef		= 0.001,
-		FinMul			= 0.02,
+		FinMul			= 1.2,
 		PenMul			= math.sqrt(4.5),
 		ActualLength 	= 25.4,
 		ActualWidth		= 4.2
@@ -146,7 +146,7 @@ ACF.RegisterMissile("S-24 ASR", "UAR", {
 		MinSpeed		= 10000,
 		DragCoef		= 0.001,
 		DragCoefFlight	= 0.01,
-		FinMul			= 0.02,
+		FinMul			= 1.2,
 		PenMul			= math.sqrt(5),
 		ActualLength 	= 89.3,
 		ActualWidth		= 9
@@ -180,7 +180,7 @@ ACF.RegisterMissile("RW61 ASR", "UAR", {
 		StarterPercent	= 0.01,
 		MinSpeed		= 1,
 		DragCoef		= 0,
-		FinMul			= 0.001,
+		FinMul			= 0.06,
 		PenMul			= math.sqrt(2),
 		ActualLength 	= 65,
 		ActualWidth		= 16.4
