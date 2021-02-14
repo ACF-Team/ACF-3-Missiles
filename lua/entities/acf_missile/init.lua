@@ -138,7 +138,7 @@ local function CalcFlight(Missile)
 	local Dir = Missile.CurDir
 	local LastVel = Missile.LastVel
 	local LastSpeed = LastVel:Length()
-	local VelNorm = LastVel / LastSpeed
+	local VelNorm = LastVel:GetNormalized()
 
 	Missile.LastThink = Time
 
