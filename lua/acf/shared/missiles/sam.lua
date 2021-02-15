@@ -37,6 +37,7 @@ ACF.RegisterMissile("FIM-92 SAM", "SAM", {
 		DragCoef		= 0.001,
 		DragCoefFlight	= 0.0001,
 		FinMul			= 1.2,
+		TailFinMul		= 0.002,
 		ActualLength 	= 59,
 		ActualWidth		= 2.7
 	},
@@ -71,6 +72,7 @@ ACF.RegisterMissile("Strela-1 SAM", "SAM", {
 		DragCoef		= 0.003,
 		DragCoefFlight	= 0,
 		FinMul			= 1.8,
+		TailFinMul		= 0.002,
 		ActualLength 	= 86.5,
 		ActualWidth		= 5.5
 	},

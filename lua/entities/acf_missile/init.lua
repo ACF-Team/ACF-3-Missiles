@@ -193,21 +193,13 @@ local function CalcFlight(Missile)
 		Missile.LastLOS = LOS
 	else
 		local DirAng = Dir:Angle()
-		local AimDiff = Dir - VelNorm
-		local DiffLength = AimDiff:Length()
+		local Torque = Dir:Cross(LastVel) * LastSpeed * Missile.TorqueMul / Missile.Inertia
 
-		if DiffLength >= 0.001 then
-			local Torque = DiffLength * Missile.TorqueMul
-			local AngVelDiff = Torque / Missile.Inertia * DeltaTime
-			local DiffAxis = AimDiff:Cross(Dir):GetNormalized()
-
-			Missile.RotAxis = Missile.RotAxis + DiffAxis * AngVelDiff * DeltaTime
-		end
-
+		Missile.RotAxis = Missile.RotAxis + Torque * DeltaTime
+		DirAng:RotateAroundAxis(Missile.RotAxis:GetNormalized(), Missile.RotAxis:Length() * DeltaTime)
 		Missile.RotAxis = Missile.RotAxis * 0.99
-		Missile.LastLOS = nil
 
-		DirAng:RotateAroundAxis(Missile.RotAxis:GetNormalized(), Missile.RotAxis:Length())
+		Missile.LastLOS = nil
 
 		Dir = DirAng:Forward()
 	end
@@ -362,7 +354,7 @@ function MakeACF_Missile(Player, Pos, Ang, Rack, MountPoint, Crate)
 	Missile.Agility        	= Data.Agility or 1
 	Missile.Inertia        	= 0.08333 * Data.Mass * (3.1416 * (Caliber * 0.05) ^ 2 + Length)
 	Missile.Length         	= Length
-	Missile.TorqueMul      	= Length * 1500
+	Missile.TorqueMul      	= Length * 0.0005 * Round.TailFinMul
 	Missile.RotAxis        	= Vector()
 	Missile.UseGuidance    	= true
 	Missile.MotorEnabled   	= false
