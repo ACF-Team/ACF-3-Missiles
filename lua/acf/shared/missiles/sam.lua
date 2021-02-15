@@ -32,7 +32,7 @@ ACF.RegisterMissile("FIM-92 SAM", "SAM", {
 		PropMass		= 1.5,
 		Thrust			= 7000, -- in kg*in/s^2
 		FuelConsumption = 0.14,	-- in g/s/f
-		StarterPercent	= 0.3,
+		StarterPercent	= 0.1,
 		MinSpeed		= 3000,
 		DragCoef		= 0.001,
 		DragCoefFlight	= 0.0001,

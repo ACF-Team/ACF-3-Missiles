@@ -29,7 +29,7 @@ ACF.RegisterMissile("40mmFFAR", "FFAR", {
 		PropMass		= 0.2,
 		Thrust			= 10000, 	-- in kg*in/s^2
 		FuelConsumption = 0.012,	-- in g/s/f
-		StarterPercent	= 0.15,
+		StarterPercent	= 0.1,
 		MinSpeed		= 5000,
 		DragCoef		= 0.001,
 		DragCoefFlight	= 0.02,
@@ -62,7 +62,7 @@ ACF.RegisterMissile("70mmFFAR", "FFAR", {
 		PropMass		= 0.7,
 		Thrust			= 15000,	-- in kg*in/s^2
 		FuelConsumption = 0.02,		-- in g/s/f
-		StarterPercent	= 0.15,
+		StarterPercent	= 0.05,
 		MinSpeed		= 4000,
 		DragCoef		= 0.001,
 		DragCoefFlight	= 0.02,
@@ -95,7 +95,7 @@ ACF.RegisterMissile("Zuni ASR", "FFAR", {
 		PropMass		= 0.7,
 		Thrust			= 18000, 	-- in kg*in/s^2
 		FuelConsumption = 0.03,		-- in g/s/f
-		StarterPercent	= 0.15,
+		StarterPercent	= 0.05,
 		MinSpeed		= 6000,
 		DragCoef		= 0.001,
 		DragCoefFlight	= 0.02,
