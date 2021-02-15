@@ -107,12 +107,12 @@ ACF.RegisterMissile("SPG-9 ASR", "UAR", {
 		MaxLength		= 50,
 		Armor			= 5,
 		PropMass		= 0.5,
-		Thrust			= 120000,	-- in kg*in/s^2 very high but only burns a brief moment, most of which is in the tube
-		FuelConsumption = 0.01,		-- in g/s/f
-		StarterPercent	= 0.1,
+		Thrust			= 100000,	-- in kg*in/s^2 very high but only burns a brief moment, most of which is in the tube
+		FuelConsumption = 0.07,		-- in g/s/f
+		StarterPercent	= 0.9,
 		MinSpeed		= 900,
 		DragCoefFlight	= 0.05,
-		DragCoef		= 0.001,
+		DragCoef		= 0.005,
 		FinMul			= 1.2,
 		PenMul			= math.sqrt(4.5),
 		ActualLength 	= 25.4,
