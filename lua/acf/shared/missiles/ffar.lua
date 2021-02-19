@@ -14,7 +14,7 @@ ACF.RegisterMissile("40mmFFAR", "FFAR", {
 	Model		= "models/missiles/ffar_40mm.mdl",
 	Caliber		= 40,
 	Mass		= 4,
-	Length		= 2,
+	Length		= 60,
 	Year		= 1960,
 	ReloadTime	= 7.5,
 	Racks		= { ["40mm7xPOD"] = true },
@@ -24,20 +24,19 @@ ACF.RegisterMissile("40mmFFAR", "FFAR", {
 	Round = {
 		Model			= "models/missiles/ffar_40mm.mdl",
 		RackModel		= "models/missiles/ffar_40mm_closed.mdl",
-		MaxLength		= 25,
+		MaxLength		= 60,
 		Armor			= 5,
-		PropMass		= 0.2,
-		Thrust			= 10000, 	-- in kg*in/s^2
-		FuelConsumption = 0.012,	-- in g/s/f
+		PropMass		= 0.3,
+		Thrust			= 150000,	-- in kg*in/s^2
+		FuelConsumption = 0.015,	-- in g/s/f
 		StarterPercent	= 0.1,
 		MinSpeed		= 5000,
 		DragCoef		= 0.001,
-		DragCoefFlight	= 0.02,
-		FinMul			= 0.18,
-		TailFinMul		= 0.05,
+		FinMul			= 0.01,
+		TailFinMul		= 0.005,
 		PenMul			= math.sqrt(4),
-		ActualLength 	= 26.5,
-		ActualWidth		= 1.6
+		ActualLength 	= 60,
+		ActualWidth		= 4
 	},
 })
 
@@ -47,7 +46,7 @@ ACF.RegisterMissile("70mmFFAR", "FFAR", {
 	Model		= "models/missiles/ffar_70mm.mdl",
 	Caliber		= 70,
 	Mass		= 6,
-	Length		= 15,
+	Length		= 106,
 	Year		= 1960,
 	ReloadTime	= 10,
 	Racks		= { ["70mm7xPOD"] = true },
@@ -58,20 +57,19 @@ ACF.RegisterMissile("70mmFFAR", "FFAR", {
 	Round = {
 		Model			= "models/missiles/ffar_70mm.mdl",
 		RackModel		= "models/missiles/ffar_70mm_closed.mdl",
-		MaxLength		= 25,
+		MaxLength		= 106,
 		Armor			= 5,
-		PropMass		= 0.7,
-		Thrust			= 15000,	-- in kg*in/s^2
-		FuelConsumption = 0.02,		-- in g/s/f
-		StarterPercent	= 0.05,
-		MinSpeed		= 4000,
-		DragCoef		= 0.001,
-		DragCoefFlight	= 0.02,
-		FinMul			= 0.9,
-		TailFinMul		= 0.02,
-		PenMul			= math.sqrt(6),
-		ActualLength 	= 46,
-		ActualWidth		= 2.6
+		PropMass		= 1.5,
+		Thrust			= 850000,	-- in kg*in/s^2
+		FuelConsumption = 0.010,	-- in g/s/f
+		StarterPercent	= 0.1,
+		MinSpeed		= 5000,
+		DragCoef		= 0.002,
+		FinMul			= 0.01,
+		TailFinMul		= 0.005,
+		PenMul			= math.sqrt(2.3),
+		ActualLength 	= 106,
+		ActualWidth		= 7
 	},
 })
 
@@ -81,7 +79,7 @@ ACF.RegisterMissile("Zuni ASR", "FFAR", {
 	Model		= "models/ghosteh/zuni.mdl",
 	Caliber		= 127,
 	Mass		= 45,
-	Length		= 80,
+	Length		= 200,
 	Year		= 1957,
 	ReloadTime	= 15,
 	Racks		= { ["127mm4xPOD"] = true },
@@ -92,19 +90,18 @@ ACF.RegisterMissile("Zuni ASR", "FFAR", {
 	Round = {
 		Model			= "models/ghosteh/zuni.mdl",
 		RackModel		= "models/ghosteh/zuni_folded.mdl",
-		MaxLength		= 60,
+		MaxLength		= 200,
 		Armor			= 5,
-		PropMass		= 0.7,
-		Thrust			= 18000, 	-- in kg*in/s^2
-		FuelConsumption = 0.03,		-- in g/s/f
-		StarterPercent	= 0.05,
-		MinSpeed		= 6000,
-		DragCoef		= 0.001,
-		DragCoefFlight	= 0.02,
-		FinMul			= 0.9,
+		PropMass		= 16,
+		Thrust			= 800000,	-- in kg*in/s^2
+		FuelConsumption = 0.032,	-- in g/s/f
+		StarterPercent	= 0.1,
+		MinSpeed		= 5000,
+		DragCoef		= 0.004,
+		FinMul			= 0.005,
 		TailFinMul		= 0.04,
-		PenMul			= math.sqrt(2),
-		ActualLength 	= 118,
-		ActualWidth		= 4.8
+		PenMul			= math.sqrt(3.5),
+		ActualLength 	= 200,
+		ActualWidth		= 12.7
 	},
 })

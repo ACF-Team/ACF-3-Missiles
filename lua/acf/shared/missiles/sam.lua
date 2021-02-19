@@ -12,7 +12,7 @@ ACF.RegisterMissile("FIM-92 SAM", "SAM", {
 	Name		= "FIM-92 Stinger",
 	Description	= "The FIM-92 Stinger is a lightweight and versatile close-range air defense missile.",
 	Model		= "models/missiles/fim_92.mdl",
-	Length		= 66,
+	Length		= 152,
 	Caliber		= 70,
 	Mass		= 10,
 	Year		= 1978,
@@ -27,19 +27,18 @@ ACF.RegisterMissile("FIM-92 SAM", "SAM", {
 	Round = {
 		Model			= "models/missiles/fim_92.mdl",
 		RackModel		= "models/missiles/fim_92_folded.mdl",
-		MaxLength		= 100,
+		MaxLength		= 152,
 		Armor			= 5,
-		PropMass		= 1.5,
-		Thrust			= 7000, -- in kg*in/s^2
-		FuelConsumption = 0.14,	-- in g/s/f
+		PropMass		= 4,
+		Thrust			= 100000,	-- in kg*in/s^2
+		FuelConsumption = 0.03,		-- in g/s/f
 		StarterPercent	= 0.1,
 		MinSpeed		= 3000,
-		DragCoef		= 0.001,
-		DragCoefFlight	= 0.0001,
-		FinMul			= 1.2,
-		TailFinMul		= 0.002,
-		ActualLength 	= 59,
-		ActualWidth		= 2.7
+		DragCoef		= 0.003,
+		FinMul			= 0.03,
+		TailFinMul		= 0.001,
+		ActualLength 	= 152,
+		ActualWidth		= 7
 	},
 })
 

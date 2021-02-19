@@ -11,7 +11,7 @@ ACF.RegisterMissile("AGM-122 ASM", "ARM", {
 	Name		= "AGM-122 Sidearm",
 	Description	= "A refurbished early-model AIM-9, for attacking ground targets.",
 	Model		= "models/missiles/aim9.mdl",
-	Length		= 205,
+	Length		= 287,
 	Caliber		= 127,
 	Mass		= 89,
 	Diameter	= 3.5 * 25.4, -- in mm
@@ -27,20 +27,19 @@ ACF.RegisterMissile("AGM-122 ASM", "ARM", {
 	ArmDelay	= 0.2,
 	Round = {
 		Model			= "models/missiles/aim9.mdl",
-		MaxLength		= 70,
+		MaxLength		= 287,
 		Armor			= 5,
-		PropMass		= 4,
-		Thrust			= 4500,	-- in kg*in/s^2
-		FuelConsumption = 0.3,	-- in g/s/f
-		StarterPercent	= 0.1,
-		MinSpeed		= 5000,
-		DragCoef		= 0.001,
-		DragCoefFlight	= 0.001,
-		FinMul			= 1.8,
-		TailFinMul		= 0.01,
+		PropMass		= 20,
+		Thrust			= 800000,	-- in kg*in/s^2
+		FuelConsumption = 0.02,		-- in g/s/f
+		StarterPercent	= 0.05,
+		MinSpeed		= 3000,
+		DragCoef		= 0.015,
+		FinMul			= 0.1,
+		TailFinMul		= 0.001,
 		CanDelayLaunch	= true,
-		ActualLength 	= 85,
-		ActualWidth		= 4.2
+		ActualLength 	= 287,
+		ActualWidth		= 12.7
 	},
 })
 
@@ -48,7 +47,7 @@ ACF.RegisterMissile("AGM-45 ASM", "ARM", {
 	Name		= "AGM-45 Shrike",
 	Description	= "Long range anti-SAM missile, built on the body of an AIM-7 Sparrow.",
 	Model		= "models/missiles/aim120.mdl",
-	Length		= 1000,
+	Length		= 305,
 	Caliber		= 203,
 	Mass		= 177,
 	Diameter	= 6.75 * 25.4, -- in mm
@@ -63,19 +62,18 @@ ACF.RegisterMissile("AGM-45 ASM", "ARM", {
 	ArmDelay	= 0.3,
 	Round = {
 		Model			= "models/missiles/aim120.mdl",
-		MaxLength		= 120,
+		MaxLength		= 305,
 		Armor			= 5,
-		PropMass		= 3,
-		Thrust			= 800,	-- in kg*in/s^2
-		FuelConsumption = 0.37,	-- in g/s/f
-		StarterPercent	= 0.07,
-		MinSpeed		= 4000,
-		DragCoef		= 0.001,
-		DragCoefFlight	= 0,
-		FinMul			= 12,
-		TailFinMul		= 0.01,
+		PropMass		= 40,
+		Thrust			= 1500000, 	-- in kg*in/s^2
+		FuelConsumption = 0.020,		-- in g/s/f
+		StarterPercent	= 0.05,
+		MinSpeed		= 2000,
+		DragCoef		= 0.02,
+		FinMul			= 0.2,
+		TailFinMul		= 0.001,
 		CanDelayLaunch	= true,
-		ActualLength 	= 151.5,
-		ActualWidth		= 7.1
+		ActualLength 	= 305,
+		ActualWidth		= 20.3
 	},
 })

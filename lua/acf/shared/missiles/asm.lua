@@ -12,7 +12,7 @@ ACF.RegisterMissile("AT-3 ASM", "ATGM", {
 	Name		= "9M14 Malyutka",
 	Description	= "The 9M14 Malyutka (AT-3 Sagger) is a short-range wire-guided anti-tank missile.",
 	Model		= "models/missiles/at3.mdl",
-	Length		= 43,
+	Length		= 86,
 	Caliber		= 125,
 	Mass		= 11,
 	Diameter	= 4.2 * 25.4,
@@ -26,20 +26,19 @@ ACF.RegisterMissile("AT-3 ASM", "ATGM", {
 	ArmDelay	= 0.1,
 	Round = {
 		Model			= "models/missiles/at3.mdl",
-		MaxLength		= 35,
+		MaxLength		= 86,
 		Armor			= 5,
-		PropMass		= 0.2,
-		Thrust			= 8000, 	-- in kg*in/s^2
-		FuelConsumption = 0.0025,	-- in g/s/f
-		StarterPercent	= 0.005,
+		PropMass		= 5,
+		Thrust			= 11000,	-- in kg*in/s^2
+		FuelConsumption = 0.05,		-- in g/s/f
+		StarterPercent	= 0.25,
 		MinSpeed		= 1500,
-		DragCoef		= 0.005,
-		DragCoefFlight	= 0.1,
-		FinMul			= 6,
+		DragCoef		= 0.04,
+		FinMul			= 0.1,
 		TailFinMul		= 0.01,
-		PenMul			= math.sqrt(5.39),
-		ActualLength 	= 34.5,
-		ActualWidth		= 5.2
+		PenMul			= math.sqrt(4.4),
+		ActualLength 	= 86,
+		ActualWidth		= 12.5
 	},
 })
 
@@ -47,7 +46,7 @@ ACF.RegisterMissile("BGM-71E ASM", "ATGM", {
 	Name		= "BGM-71E TOW",
 	Description	= "The BGM-71E TOW is a medium-range wire guided anti-tank missile.",
 	Model		= "models/missiles/bgm_71e.mdl",
-	Length		= 46,
+	Length		= 117,	-- Length not counting the probe
 	Caliber		= 152,
 	Mass		= 23,
 	Year		= 1970,
@@ -60,20 +59,19 @@ ACF.RegisterMissile("BGM-71E ASM", "ATGM", {
 	ArmDelay	= 0.1,
 	Round = {
 		Model			= "models/missiles/bgm_71e.mdl",
-		MaxLength		= 64,
+		MaxLength		= 117,
 		Armor			= 5,
-		PropMass		= 0.2,
-		Thrust			= 13000, -- in kg*in/s^2
-		FuelConsumption = 0.0025,	-- in g/s/f
-		StarterPercent	= 0.003,
+		PropMass		= 10,
+		Thrust			= 250000,	-- in kg*in/s^2
+		FuelConsumption = 0.045,	-- in g/s/f
+		StarterPercent	= 0.2,
 		MinSpeed		= 2000,
 		DragCoef		= 0.005,
-		DragCoefFlight	= 0.05,
-		FinMul			= 3,
+		FinMul			= 0.1,
 		TailFinMul		= 0.01,
-		PenMul			= math.sqrt(3.97),
-		ActualLength 	= 59,
-		ActualWidth		= 5.9
+		PenMul			= math.sqrt(6.2),
+		ActualLength 	= 117,
+		ActualWidth		= 15.2
 	},
 })
 
@@ -81,7 +79,7 @@ ACF.RegisterMissile("AGM-114 ASM", "ATGM", {
 	Name		= "AGM-114 Hellfire",
 	Description	= "The AGM-114 Hellfire is a heavy air-to-surface missile, used often by American aircraft.",
 	Model		= "models/missiles/agm_114.mdl",
-	Length		= 66,
+	Length		= 160,
 	Caliber		= 180,
 	Mass		= 49,
 	Diameter	= 6.5 * 25.4, -- in mm
@@ -109,20 +107,19 @@ ACF.RegisterMissile("AGM-114 ASM", "ATGM", {
 	},
 	Round = {
 		Model			= "models/missiles/agm_114.mdl",
-		MaxLength		= 67,
+		MaxLength		= 160,
 		Armor			= 5,
-		PropMass		= 0.25,
-		Thrust			= 18000, 	-- in kg*in/s^2
-		FuelConsumption = 0.0045,	-- in g/s/f
-		StarterPercent	= 0.005,
+		PropMass		= 20,
+		Thrust			= 600000,	-- in kg*in/s^2
+		FuelConsumption = 0.05,		-- in g/s/f
+		StarterPercent	= 0.02,
 		MinSpeed		= 4000,
-		DragCoef		= 0.001,
-		DragCoefFlight	= 0.05,
-		FinMul			= 3,
+		DragCoef		= 0.005,
+		FinMul			= 0.1,
 		TailFinMul		= 0.01,
-		PenMul			= math.sqrt(4.175),
-		ActualLength 	= 64.7,
-		ActualWidth		= 7.9
+		PenMul			= math.sqrt(4.8),
+		ActualLength 	= 160,
+		ActualWidth		= 18
 	},
 })
 
@@ -130,7 +127,7 @@ ACF.RegisterMissile("Ataka ASM", "ATGM", {
 	Name		= "9M120 Ataka",
 	Description	= "The 9M120 Ataka (AT-9 Spiral-2) is a heavy air-to-surface missile, used often by soviet helicopters and ground vehicles.",
 	Model		= "models/missiles/9m120.mdl",
-	Length		= 85,
+	Length		= 183,
 	Caliber		= 130,
 	Mass		= 50,
 	Diameter	= 10.9 * 25.4, -- in mm
@@ -146,20 +143,19 @@ ACF.RegisterMissile("Ataka ASM", "ATGM", {
 	Round = {
 		Model			= "models/missiles/9m120.mdl",
 		RackModel		= "models/missiles/9m120_rk1.mdl",
-		MaxLength		= 120,
+		MaxLength		= 183,
 		Armor			= 5,
-		PropMass		= 0.11,
-		Thrust			= 20000, -- in kg*in/s^2
-		FuelConsumption = 0.015,	-- in g/s/f
-		StarterPercent	= 0.04,
-		MinSpeed		= 800,
-		DragCoef		= 0.001,
-		DragCoefFlight	= 0.04,
-		FinMul			= 3,
+		PropMass		= 12,
+		Thrust			= 600000,	-- in kg*in/s^2
+		FuelConsumption = 0.045,		-- in g/s/f
+		StarterPercent	= 0.02,
+		MinSpeed		= 4000,
+		DragCoef		= 0.005,
+		FinMul			= 0.1,
 		TailFinMul		= 0.01,
-		PenMul			= math.sqrt(1.454),
-		ActualLength 	= 68.5,
-		ActualWidth		= 5.2
+		PenMul			= math.sqrt(4.5),
+		ActualLength 	= 183,
+		ActualWidth		= 13
 	},
 })
 
@@ -167,7 +163,7 @@ ACF.RegisterMissile("9M113 ASM", "ATGM", {
 	Name		= "9M133 Kornet",
 	Description	= "The 9M133 Kornet (AT-14 Spriggan) is an extremely powerful antitank missile.",
 	Model		= "models/kali/weapons/kornet/parts/9m133 kornet missile.mdl",
-	Length		= 80,
+	Length		= 120,
 	Caliber		= 152,
 	Mass		= 27,
 	Year		= 1994,
@@ -192,20 +188,19 @@ ACF.RegisterMissile("9M113 ASM", "ATGM", {
 	},
 	Round = {
 		Model			= "models/kali/weapons/kornet/parts/9m133 kornet missile.mdl",
-		MaxLength		= 70,
+		MaxLength		= 120,
 		Armor			= 5,
-		PropMass		= 0.1,
-		Thrust			= 25000, 	-- in kg*in/s^2
-		FuelConsumption = 0.001,	-- in g/s/f
-		StarterPercent	= 0.002,
-		MinSpeed		= 8000,
-		DragCoef		= 0.002,
-		DragCoefFlight	= 0.02,
-		FinMul			= 3,
+		PropMass		= 8,
+		Thrust			= 230000,	-- in kg*in/s^2
+		FuelConsumption = 0.035,	-- in g/s/f
+		StarterPercent	= 0.1,
+		MinSpeed		= 2000,
+		DragCoef		= 0.005,
+		FinMul			= 0.1,
 		TailFinMul		= 0.01,
-		PenMul			= math.sqrt(4.2),
-		ActualLength 	= 55.3,
-		ActualWidth		= 7
+		PenMul			= math.sqrt(5.8),
+		ActualLength 	= 120,
+		ActualWidth		= 15.2
 	},
 })
 
@@ -213,7 +208,7 @@ ACF.RegisterMissile("AT-2 ASM", "ATGM", {
 	Name		= "9M17 Fleyta",
 	Description	= "The 9M17 Fleyta (AT-2 Sagger) is a powerful radio command medium-range antitank missile, intended for use on helicopters and anti tank vehicles. It has a more powerful warhead and longer range than the AT-3 at the cost of weight and agility.",
 	Model		= "models/missiles/at2.mdl",
-	Length		= 55,
+	Length		= 116,
 	Caliber		= 148,
 	Mass		= 27,
 	Year		= 1969,
@@ -227,19 +222,18 @@ ACF.RegisterMissile("AT-2 ASM", "ATGM", {
 	ArmDelay	= 0.1,
 	Round = {
 		Model			= "models/missiles/at2.mdl",
-		MaxLength		= 60,
+		MaxLength		= 116,
 		Armor			= 5,
-		PropMass		= 0.07,
-		Thrust			= 6000, 	-- in kg*in/s^2
-		FuelConsumption = 0.0015,	-- in g/s/f
-		StarterPercent	= 0.004,
-		MinSpeed		= 500,
-		DragCoef		= 0.01,
-		DragCoefFlight	= 0.04,
-		FinMul			= 6,
+		PropMass		= 8,
+		Thrust			= 40000,	-- in kg*in/s^2
+		FuelConsumption = 0.035,	-- in g/s/f
+		StarterPercent	= 0.25,
+		MinSpeed		= 1500,
+		DragCoef		= 0.06,
+		FinMul			= 0.1,
 		TailFinMul		= 0.01,
-		PenMul			= math.sqrt(3.025),
-		ActualLength 	= 45.5,
-		ActualWidth		= 5.5
+		PenMul			= math.sqrt(3.6),
+		ActualLength 	= 116,
+		ActualWidth		= 14.8
 	},
 })
