@@ -26,19 +26,19 @@ ACF.RegisterMissile("Type 63 RA", "ARTY", {
 	ArmDelay	= 0.2,
 	Round = {
 		Model			= "models/missiles/glatgm/mgm51.mdl",
-		MaxLength		= 50,
+		MaxLength		= 80,
 		Armor			= 5,
-		PropMass		= 0.7,
-		Thrust			= 2400, -- in kg*in/s^2
-		FuelConsumption = 0.16, -- in g/s/f
+		PropMass		= 3.2,
+		Thrust			= 240000,	-- in kg*in/s^2
+		FuelConsumption = 0.06, 	-- in g/s/f
 		StarterPercent	= 0.05,
 		MinSpeed		= 200,
-		DragCoef		= 0.002,
-		DragCoefFlight	= 0.001,
-		FinMul			= 1.2,
+		DragCoef		= 0.005,
+		FinMul			= 0,
+		TailFinMul		= 2,
 		PenMul			= math.sqrt(2),
-		ActualLength 	= 50,
-		ActualWidth		= 7.2
+		ActualLength 	= 80,
+		ActualWidth		= 10.7
 	},
 })
 
@@ -48,7 +48,7 @@ ACF.RegisterMissile("SAKR-10 RA", "ARTY", {
 	Model		= "models/missiles/9m31.mdl",
 	Caliber		= 122,
 	Mass		= 56,
-	Length		= 320,
+	Length		= 287,
 	Diameter	= 4.6 * 25.4, -- in mm
 	Year		= 1980,
 	ReloadTime	= 20,
@@ -60,19 +60,19 @@ ACF.RegisterMissile("SAKR-10 RA", "ARTY", {
 	ArmDelay	= 0.4,
 	Round = {
 		Model		= "models/missiles/9m31.mdl",
-		MaxLength		= 140,
+		MaxLength		= 287,
 		Armor			= 5,
-		PropMass		= 1.2,
-		Thrust			= 1300, -- in kg*in/s^2
-		FuelConsumption = 0.1,	-- in g/s/f
+		PropMass		= 12,
+		Thrust			= 800000, -- in kg*in/s^2
+		FuelConsumption = 0.012,	-- in g/s/f
 		StarterPercent	= 0.05,
 		MinSpeed		= 300,
-		DragCoef		= 0.002,
-		DragCoefFlight	= 0.010,
-		FinMul			= 1.8,
-		PenMul			= math.sqrt(1.1),
-		ActualLength 	= 86.5,
-		ActualWidth		= 5.5
+		DragCoef		= 0.02,
+		FinMul			= 0.06,
+		TailFinMul		= 2,
+		PenMul			= math.sqrt(0.5),
+		ActualLength 	= 287,
+		ActualWidth		= 12.2
 	},
 })
 
@@ -82,7 +82,7 @@ ACF.RegisterMissile("SS-40 RA", "ARTY", {
 	Model		= "models/missiles/aim120.mdl",
 	Caliber		= 180,
 	Mass		= 152,
-	Length		= 420,
+	Length		= 370,
 	Diameter	= 6.75 * 25.4, -- in mm
 	Year		= 1983,
 	ReloadTime	= 30,
@@ -94,18 +94,18 @@ ACF.RegisterMissile("SS-40 RA", "ARTY", {
 	ArmDelay	= 0.6,
 	Round = {
 		Model		= "models/missiles/aim120.mdl",
-		MaxLength		= 115,
+		MaxLength		= 370,
 		Armor			= 5,
-		PropMass		= 4.0,
-		Thrust			= 850,	-- in kg*in/s^2
-		FuelConsumption = 0.4,	-- in g/s/f
+		PropMass		= 40,
+		Thrust			= 2400000, -- in kg*in/s^2
+		FuelConsumption = 0.022,	-- in g/s/f
 		StarterPercent	= 0.05,
 		MinSpeed		= 300,
-		DragCoef		= 0.002,
-		DragCoefFlight	= 0.009,
-		FinMul			= 3,
-		PenMul			= math.sqrt(2),
-		ActualLength 	= 151.5,
-		ActualWidth		= 7.1
+		DragCoef		= 0.02,
+		FinMul			= 0.12,
+		TailFinMul		= 10,
+		PenMul			= math.sqrt(0.5),
+		ActualLength 	= 370,
+		ActualWidth		= 18
 	},
 })

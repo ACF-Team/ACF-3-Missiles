@@ -11,7 +11,7 @@ ACF.RegisterMissile("100kgGBOMB", "GBOMB", {
 	Name		= "100kg Glide Bomb",
 	Description	= "A 250-pound bomb, fitted with fins for a longer reach. Well suited to dive bombing, but bulkier and heavier from its fins.",
 	Model		= "models/missiles/micro.mdl",
-	Length		= 75,
+	Length		= 200,
 	Caliber		= 100,
 	Mass		= 100,
 	Year		= 1939,
@@ -29,12 +29,13 @@ ACF.RegisterMissile("100kgGBOMB", "GBOMB", {
 		Thrust			= 1, 	-- in kg*in/s^2
 		FuelConsumption = 0.1,	-- in g/s/f
 		StarterPercent	= 0.005,
-		MinSpeed		= 500,
-		DragCoef		= 0.0001,
-		FinMul			= 3,
-		PenMul			= math.sqrt(0.6),
-		ActualLength 	= 50,
-		ActualWidth		= 11.4
+		MinSpeed		= 1,
+		DragCoef		= 0.02,
+		FinMul			= 0.035,
+		TailFinMul		= 0.1,
+		PenMul			= math.sqrt(0.3),
+		ActualLength 	= 100,
+		ActualWidth		= 10
 	},
 })
 
@@ -60,10 +61,11 @@ ACF.RegisterMissile("250kgGBOMB", "GBOMB", {
 		Thrust			= 1, 	-- in kg*in/s^2
 		FuelConsumption = 0.1,	-- in g/s/f
 		StarterPercent	= 0.005,
-		MinSpeed		= 500,
-		DragCoef		= 0.001,
-		FinMul			= 3,
-		PenMul			= math.sqrt(0.6),
+		MinSpeed		= 1,
+		DragCoef		= 0.02,
+		FinMul			= 0.1,
+		TailFinMul		= 0.2,
+		PenMul			= math.sqrt(0.3),
 		ActualLength 	= 67,
 		ActualWidth		= 15
 	},

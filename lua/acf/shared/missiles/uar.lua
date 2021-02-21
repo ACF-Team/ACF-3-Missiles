@@ -14,7 +14,7 @@ ACF.RegisterMissile("RS82 ASR", "UAR", {
 	Model		= "models/missiles/rs82.mdl",
 	Caliber		= 82,
 	Mass		= 7,
-	Length		= 40,
+	Length		= 60,
 	Diameter	= 2.2 * 25.4, -- in mm
 	ReloadTime	= 5,
 	Offset		= Vector(1, 0, 0),
@@ -38,19 +38,19 @@ ACF.RegisterMissile("RS82 ASR", "UAR", {
 	},
 	Round = {
 		Model			= "models/missiles/rs82.mdl",
-		MaxLength		= 25,
+		MaxLength		= 60,
 		Armor			= 5,
-		PropMass		= 0.7,
-		Thrust			= 15000,	-- in kg*in/s^2
-		FuelConsumption = 0.05,		-- in g/s/f
+		PropMass		= 1.25,
+		Thrust			= 40000,	-- in kg*in/s^2
+		FuelConsumption = 0.08,		-- in g/s/f
 		StarterPercent	= 0.15,
 		MinSpeed		= 6000,
-		DragCoef		= 0.002,
-		DragCoefFlight	= 0.025,
-		FinMul			= 4.8,
-		PenMul			= math.sqrt(6.63),
-		ActualLength 	= 25.2,
-		ActualWidth		= 3
+		DragCoef		= 0.001,
+		FinMul			= 0.01,
+		TailFinMul		= 0.05,
+		PenMul			= math.sqrt(2),
+		ActualLength 	= 60,
+		ActualWidth		= 8.2
 	},
 })
 
@@ -60,7 +60,7 @@ ACF.RegisterMissile("HVAR ASR", "UAR", {
 	Model		= "models/missiles/hvar.mdl",
 	Caliber		= 127,
 	Mass		= 64,
-	Length		= 44,
+	Length		= 173,
 	Diameter	= 4 * 25.4, -- in mm
 	ReloadTime	= 10,
 	Offset		= Vector(2, 0, 0),
@@ -72,19 +72,19 @@ ACF.RegisterMissile("HVAR ASR", "UAR", {
 	Round = {
 		Model			= "models/missiles/hvar.mdl",
 		RackModel		= "models/missiles/hvar_folded.mdl",
-		MaxLength		= 25,
+		MaxLength		= 173,
 		Armor			= 5,
-		PropMass		= 0.7,
-		Thrust			= 25000,	-- in kg*in/s^2
-		FuelConsumption = 0.024,	-- in g/s/f
-		StarterPercent	= 0.05,
+		PropMass		= 9,
+		Thrust			= 270000,	-- in kg*in/s^2
+		FuelConsumption = 0.053,	-- in g/s/f
+		StarterPercent	= 0.15,
 		MinSpeed		= 5000,
-		DragCoef		= 0.002,
-		DragCoefFlight	= 0.02,
-		FinMul			= 0.6,
-		PenMul			= math.sqrt(6.25),
-		ActualLength 	= 69, -- nice
-		ActualWidth		= 5
+		DragCoef		= 0.005,
+		FinMul			= 0.01,
+		TailFinMul		= 0.075,
+		PenMul			= math.sqrt(1),
+		ActualLength 	= 173,
+		ActualWidth		= 12.7
 	},
 })
 
@@ -94,7 +94,7 @@ ACF.RegisterMissile("SPG-9 ASR", "UAR", {
 	Model		= "models/munitions/round_100mm_mortar_shot.mdl",
 	Caliber		= 73,
 	Mass		= 5,
-	Length		= 20,
+	Length		= 100,
 	Year		= 1962,
 	ReloadTime	= 10,
 	Racks		= { ["1x SPG9"] = true },
@@ -104,19 +104,19 @@ ACF.RegisterMissile("SPG-9 ASR", "UAR", {
 	Round = {
 		Model			= "models/missiles/glatgm/9m112f.mdl",
 		RackModel		= "models/munitions/round_100mm_mortar_shot.mdl",
-		MaxLength		= 50,
+		MaxLength		= 100,
 		Armor			= 5,
-		PropMass		= 0.5,
-		Thrust			= 100000,	-- in kg*in/s^2 very high but only burns a brief moment, most of which is in the tube
-		FuelConsumption = 0.07,		-- in g/s/f
-		StarterPercent	= 0.9,
+		PropMass		= 1.5,
+		Thrust			= 300000,	-- in kg*in/s^2
+		FuelConsumption = 0.019,		-- in g/s/f
+		StarterPercent	= 0.95,
 		MinSpeed		= 900,
-		DragCoefFlight	= 0.05,
 		DragCoef		= 0.005,
-		FinMul			= 1.2,
-		PenMul			= math.sqrt(4.5),
-		ActualLength 	= 25.4,
-		ActualWidth		= 4.2
+		FinMul			= 0.002,
+		TailFinMul		= 0.02,
+		PenMul			= math.sqrt(3),
+		ActualLength 	= 100,
+		ActualWidth		= 7.3
 	},
 })
 
@@ -126,7 +126,7 @@ ACF.RegisterMissile("S-24 ASR", "UAR", {
 	Model		= "models/missiles/s24.mdl",
 	Caliber		= 240,
 	Mass		= 235,
-	Length		= 25,
+	Length		= 233,
 	Diameter	= 8.3 * 25.4, -- in mm
 	ReloadTime	= 20,
 	Year		= 1960,
@@ -137,19 +137,19 @@ ACF.RegisterMissile("S-24 ASR", "UAR", {
 	ArmDelay	= 0.3,
 	Round = {
 		Model			= "models/missiles/s24.mdl",
-		MaxLength		= 40,
+		MaxLength		= 233,
 		Armor			= 5,
-		PropMass		= 15,
-		Thrust			= 9000, -- in kg*in/s^2
-		FuelConsumption = 0.1,	-- in g/s/f
-		StarterPercent	= 0.05,
+		PropMass		= 40,
+		Thrust			= 2000000,	-- in kg*in/s^2
+		FuelConsumption = 0.052,	-- in g/s/f
+		StarterPercent	= 0.15,
 		MinSpeed		= 10000,
-		DragCoef		= 0.001,
-		DragCoefFlight	= 0.01,
-		FinMul			= 1.2,
-		PenMul			= math.sqrt(5),
-		ActualLength 	= 89.3,
-		ActualWidth		= 9
+		DragCoef		= 0.01,
+		FinMul			= 0.1,
+		TailFinMul		= 0.3,
+		PenMul			= math.sqrt(1.5),
+		ActualLength 	= 233,
+		ActualWidth		= 24
 	},
 })
 
@@ -159,7 +159,7 @@ ACF.RegisterMissile("RW61 ASR", "UAR", {
 	Model		= "models/missiles/RW61M.mdl",
 	Caliber		= 380,
 	Mass		= 476,
-	Length		= 38,
+	Length		= 150,
 	Year		= 1960,
 	ReloadTime	= 40,
 	Racks		= { ["380mmRW61"] = true },
@@ -172,17 +172,18 @@ ACF.RegisterMissile("RW61 ASR", "UAR", {
 	Round = {
 		Model			= "models/missiles/RW61M.mdl",
 		RackModel		= "models/missiles/RW61M.mdl",
-		MaxLength		= 60,
+		MaxLength		= 150,
 		Armor			= 5,
-		PropMass		= 5,
-		Thrust			= 5000, -- in kg*in/s^2
-		FuelConsumption = 1,	-- in g/s/f
-		StarterPercent	= 0.05,
+		PropMass		= 60,
+		Thrust			= 500000,	-- in kg*in/s^2
+		FuelConsumption = 0.048,		-- in g/s/f
+		StarterPercent	= 0.2,
 		MinSpeed		= 1,
-		DragCoef		= 0,
-		FinMul			= 0.06,
-		PenMul			= math.sqrt(2),
-		ActualLength 	= 65,
-		ActualWidth		= 16.4
+		DragCoef		= 0.02,
+		FinMul			= 0,
+		TailFinMul		= 10,
+		PenMul			= math.sqrt(1),
+		ActualLength 	= 150,
+		ActualWidth		= 38
 	},
 })
