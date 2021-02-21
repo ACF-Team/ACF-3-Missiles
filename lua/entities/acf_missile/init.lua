@@ -6,7 +6,8 @@ include("shared.lua")
 
 local ACF            = ACF
 local TraceData      = { start = true, endpos = true, filter = true }
-local Gravity        = Vector(0, 0, -GetConVar("sv_gravity"):GetFloat())
+local GravityCvar    = GetConVar("sv_gravity")
+local GravityVector  = Vector(0, 0, -GravityCvar:GetFloat())
 local GhostPeriod    = GetConVar("ACFM_GhostPeriod")
 local ActiveMissiles = ACF.ActiveMissiles
 local Missiles       = ACF.Classes.Missiles
@@ -148,7 +149,7 @@ local function CalcFlight(Missile)
 	if TargetPos then
 		local Dist = Pos:Distance(TargetPos)
 
-		TargetPos = TargetPos + Vector(0, 0, Gravity:GetFloat() * Dist / 100000)
+		TargetPos = TargetPos + Vector(0, 0, GravityCvar:GetFloat() * Dist / 100000)
 
 		local LOS = (TargetPos - Pos):GetNormalized()
 		local LastLOS = Missile.LastLOS
@@ -222,7 +223,7 @@ local function CalcFlight(Missile)
 	local DotSimple = Up.x * LastVel.x + Up.y * LastVel.y + Up.z * LastVel.z
 	local Lift      = -Up * LastSpeed * DotSimple * Missile.FinMultiplier
 	local Drag      = LastVel * (Missile.DragCoef * LastSpeed) / ACF.DragDiv * ACF.Scale
-	local Vel       = LastVel + (Gravity + (Thrust + Lift - Drag) / Missile.Mass) * DeltaTime
+	local Vel       = LastVel + (GravityVector + (Thrust + Lift - Drag) / Missile.Mass) * DeltaTime
 	local EndPos    = Pos + Vel * DeltaTime
 
 	Missile.Velocity = Vel
@@ -275,7 +276,7 @@ local function DetonateMissile(Missile, Inflictor)
 end
 
 cvars.AddChangeCallback("sv_gravity", function(_, _, Value)
-	Gravity.z = -Value
+	GravityVector.z = -Value
 end, "ACF Missile Gravity")
 
 hook.Add("CanDrive", "acf_missile_CanDrive", function(_, Entity)
