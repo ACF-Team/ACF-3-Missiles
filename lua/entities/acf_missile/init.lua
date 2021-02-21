@@ -6,7 +6,7 @@ include("shared.lua")
 
 local ACF            = ACF
 local TraceData      = { start = true, endpos = true, filter = true }
-local Gravity        = GetConVar("sv_gravity")
+local Gravity        = Vector(0, 0, -GetConVar("sv_gravity"):GetFloat())
 local GhostPeriod    = GetConVar("ACFM_GhostPeriod")
 local ActiveMissiles = ACF.ActiveMissiles
 local Missiles       = ACF.Classes.Missiles
@@ -134,11 +134,10 @@ local function CalcFlight(Missile)
 
 	if DeltaTime <= 0 then return end
 
-	local Pos = Missile.Position
-	local Dir = Missile.CurDir
-	local LastVel = Missile.LastVel
+	local Pos       = Missile.Position
+	local Dir       = Missile.CurDir
+	local LastVel   = Missile.LastVel
 	local LastSpeed = LastVel:Length()
-	local VelNorm = LastVel:GetNormalized()
 
 	Missile.LastThink = Time
 
@@ -192,14 +191,15 @@ local function CalcFlight(Missile)
 
 		Missile.LastLOS = LOS
 	else
-		local DirAng = Dir:Angle()
+		local DirAng  = Dir:Angle()
 		local Inertia = Missile.Inertia
-		local Torque = Dir:Cross(LastVel) * LastSpeed * Missile.TorqueMul / Inertia
+		local Torque  = Dir:Cross(LastVel) * LastSpeed * Missile.TorqueMul / Inertia
 
 		Missile.RotAxis = Missile.RotAxis + Torque * DeltaTime
-		DirAng:RotateAroundAxis(Missile.RotAxis:GetNormalized(), Missile.RotAxis:Length() * DeltaTime)
-		Missile.RotAxis = Missile.RotAxis * (1 - 0.7 * DeltaTime)
 
+		DirAng:RotateAroundAxis(Missile.RotAxis:GetNormalized(), Missile.RotAxis:Length() * DeltaTime)
+
+		Missile.RotAxis = Missile.RotAxis * (1 - 0.7 * DeltaTime)
 		Missile.LastLOS = nil
 
 		Dir = DirAng:Forward()
@@ -209,7 +209,7 @@ local function CalcFlight(Missile)
 		Missile.MotorLength = Missile.MotorLength - DeltaTime
 
 		-- Update the missile's mass and inertia according to the remaining fuel
-		Missile.Mass = Missile.ProjMass + Missile.PropMass * math.max(Missile.MotorLength / Missile.MaxMotorLength, 0) 
+		Missile.Mass = Missile.ProjMass + Missile.PropMass * math.max(Missile.MotorLength / Missile.MaxMotorLength, 0)
 		Missile.Inertia	= Missile.AreaOfInertia * Missile.Mass
 
 		if Missile.MotorLength <= 0 then
@@ -217,18 +217,14 @@ local function CalcFlight(Missile)
 		end
 	end
 
-	local Thrust = Dir * Missile.Thrust 
-	local Gravity = -Vector(0, 0, Gravity:GetFloat())
-
-	local Up = Dir:Cross(LastVel):Cross(Dir):GetNormalized()
+	local Thrust    = Dir * Missile.Thrust
+	local Up        = Dir:Cross(LastVel):Cross(Dir):GetNormalized()
 	local DotSimple = Up.x * LastVel.x + Up.y * LastVel.y + Up.z * LastVel.z
-	local Lift = -Up * LastSpeed * DotSimple * Missile.FinMultiplier
+	local Lift      = -Up * LastSpeed * DotSimple * Missile.FinMultiplier
+	local Drag      = LastVel * (Missile.DragCoef * LastSpeed) / ACF.DragDiv * ACF.Scale
+	local Vel       = LastVel + (Gravity + (Thrust + Lift - Drag) / Missile.Mass) * DeltaTime
+	local EndPos    = Pos + Vel * DeltaTime
 
-	local DragCoef = Missile.DragCoef
-	local Drag = LastVel * (DragCoef * LastSpeed) / ACF.DragDiv * ACF.Scale
-
-	local Vel = LastVel + (Gravity + (Thrust + Lift - Drag) / Missile.Mass) * DeltaTime
-	local EndPos = Pos + Vel * DeltaTime
 	Missile.Velocity = Vel
 
 	--Hit detection
@@ -278,6 +274,10 @@ local function DetonateMissile(Missile, Inflictor)
 	Missile:Detonate(true)
 end
 
+cvars.AddChangeCallback("sv_gravity", function(_, _, Value)
+	Gravity.z = -Value
+end, "ACF Missile Gravity")
+
 hook.Add("CanDrive", "acf_missile_CanDrive", function(_, Entity)
 	if ActiveMissiles[Entity] then return false end
 end)
@@ -325,51 +325,51 @@ function MakeACF_Missile(Player, Pos, Ang, Rack, MountPoint, Crate)
 	Missile:SetParent(Rack)
 	Missile:Spawn()
 
-	Missile.Owner			= Player
-	Missile.Name			= Data.Name
-	Missile.ShortName		= Data.ID
-	Missile.EntType			= Class.Name
-	Missile.Caliber			= Caliber
-	Missile.Launcher		= Rack
-	Missile.MountPoint		= MountPoint
-	Missile.Filter			= { Rack }
-	Missile.SeekCone		= Data.SeekCone
-	Missile.ViewCone		= Data.ViewCone
-	Missile.SkinIndex		= Data.SkinIndex
-	Missile.NoThrust		= Data.NoThrust or Class.NoThrust
-	Missile.Sound			= Data.Sound or Class.Sound or "acf_missiles/missiles/missile_rocket.mp3"
-	Missile.ReloadTime		= Data.ReloadTime or 10
-	Missile.ForcedMass		= Data.Mass or 10
-	Missile.ForcedArmor		= Round.Armor
-	Missile.Effect			= Data.Effect or Class.Effect
-	Missile.NoDamage		= Rack.ProtectMissile or Data.NoDamage
-	Missile.ExhaustOffset	= Data.ExhaustOffset
-	Missile.Bodygroups		= Data.Bodygroups
-	Missile.RackModel		= Rack.MissileModel or Round.RackModel
-	Missile.RealModel		= Round.Model
-	Missile.DragCoef		= Round.DragCoef
-	Missile.DragCoefFlight	= Round.DragCoefFlight or Round.DragCoef
-	Missile.MinimumSpeed	= Round.MinSpeed
-	Missile.MaxThrust		= Round.Thrust
-	Missile.FuelConsumption	= Round.FuelConsumption * 0.001
-	Missile.StarterPercent	= Round.StarterPercent
-	Missile.FinMultiplier	= Round.FinMul
-	Missile.CanDelay		= Round.CanDelayLaunch
-	Missile.MaxLength		= Round.MaxLength
-	Missile.Agility			= Data.Agility or 1
-	Missile.ProjMass		= BulletData.ProjMass
-	Missile.PropMass		= BulletData.PropMass
-	Missile.Mass			= Missile.ProjMass + Missile.PropMass
-	Missile.AreaOfInertia	= (3 * Caliber^2 + Length^2) / 12
-	Missile.Inertia			= Missile.AreaOfInertia * Missile.Mass
-	Missile.Length			= Length
-	Missile.TorqueMul		= Length * 0.15 * Round.TailFinMul
-	Missile.RotAxis			= Vector()
-	Missile.UseGuidance		= true
-	Missile.MotorEnabled	= false
-	Missile.Thrust			= 0
-	Missile.ThinkDelay		= 0.1
-	Missile.Inputs			= WireLib.CreateInputs(Missile, { "Detonate" })
+	Missile.Owner           = Player
+	Missile.Name            = Data.Name
+	Missile.ShortName       = Data.ID
+	Missile.EntType         = Class.Name
+	Missile.Caliber         = Caliber
+	Missile.Launcher        = Rack
+	Missile.MountPoint      = MountPoint
+	Missile.Filter          = { Rack }
+	Missile.SeekCone        = Data.SeekCone
+	Missile.ViewCone        = Data.ViewCone
+	Missile.SkinIndex       = Data.SkinIndex
+	Missile.NoThrust        = Data.NoThrust or Class.NoThrust
+	Missile.Sound           = Data.Sound or Class.Sound or "acf_missiles/missiles/missile_rocket.mp3"
+	Missile.ReloadTime      = Data.ReloadTime or 10
+	Missile.ForcedMass      = Data.Mass or 10
+	Missile.ForcedArmor     = Round.Armor
+	Missile.Effect          = Data.Effect or Class.Effect
+	Missile.NoDamage        = Rack.ProtectMissile or Data.NoDamage
+	Missile.ExhaustOffset   = Data.ExhaustOffset
+	Missile.Bodygroups      = Data.Bodygroups
+	Missile.RackModel       = Rack.MissileModel or Round.RackModel
+	Missile.RealModel       = Round.Model
+	Missile.DragCoef        = Round.DragCoef
+	Missile.DragCoefFlight  = Round.DragCoefFlight or Round.DragCoef
+	Missile.MinimumSpeed    = Round.MinSpeed
+	Missile.MaxThrust       = Round.Thrust
+	Missile.FuelConsumption = Round.FuelConsumption * 0.001
+	Missile.StarterPercent  = Round.StarterPercent
+	Missile.FinMultiplier   = Round.FinMul
+	Missile.CanDelay        = Round.CanDelayLaunch
+	Missile.MaxLength       = Round.MaxLength
+	Missile.Agility         = Data.Agility or 1
+	Missile.ProjMass        = BulletData.ProjMass
+	Missile.PropMass        = BulletData.PropMass
+	Missile.Mass            = Missile.ProjMass + Missile.PropMass
+	Missile.AreaOfInertia   = (3 * Caliber ^ 2 + Length ^ 2) / 12
+	Missile.Inertia         = Missile.AreaOfInertia * Missile.Mass
+	Missile.Length          = Length
+	Missile.TorqueMul       = Length * 0.15 * Round.TailFinMul
+	Missile.RotAxis         = Vector()
+	Missile.UseGuidance     = true
+	Missile.MotorEnabled    = false
+	Missile.Thrust          = 0
+	Missile.ThinkDelay      = 0.1
+	Missile.Inputs          = WireLib.CreateInputs(Missile, { "Detonate" })
 
 	Missile:UpdateModel(Missile.RackModel or Missile.RealModel)
 	Missile:CreateBulletData(Crate)
@@ -384,10 +384,10 @@ function MakeACF_Missile(Player, Pos, Ang, Rack, MountPoint, Crate)
 		Missile.SpeedBoost = 0
 	else
 		local TotalLength = Missile.BulletData.PropMass / (Missile.FuelConsumption * Missile.MaxThrust)
+
 		Missile.MaxMotorLength = TotalLength
 		Missile.MotorLength = (1 - Missile.StarterPercent) * TotalLength
-		Missile.SpeedBoost = Missile.StarterPercent * TotalLength * Missile.MaxThrust / (Missile.ProjMass + Missile.PropMass / 2)
-
+		Missile.SpeedBoost = Missile.StarterPercent * TotalLength * Missile.MaxThrust / (Missile.ProjMass + Missile.PropMass * 0.5)
 	end
 
 	do -- Exhaust pos
