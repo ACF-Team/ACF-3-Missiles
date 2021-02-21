@@ -28,7 +28,7 @@ ACF.RegisterMissile("AT-3 ASM", "ATGM", {
 		Model			= "models/missiles/at3.mdl",
 		MaxLength		= 86,
 		Armor			= 5,
-		PropMass		= 5,
+		PropMass		= 4,
 		Thrust			= 11000,	-- in kg*in/s^2
 		FuelConsumption = 0.05,		-- in g/s/f
 		StarterPercent	= 0.25,
@@ -36,7 +36,7 @@ ACF.RegisterMissile("AT-3 ASM", "ATGM", {
 		DragCoef		= 0.04,
 		FinMul			= 0.1,
 		TailFinMul		= 0.01,
-		PenMul			= math.sqrt(4.4),
+		PenMul			= math.sqrt(2),
 		ActualLength 	= 86,
 		ActualWidth		= 12.5
 	},
@@ -61,7 +61,7 @@ ACF.RegisterMissile("BGM-71E ASM", "ATGM", {
 		Model			= "models/missiles/bgm_71e.mdl",
 		MaxLength		= 117,
 		Armor			= 5,
-		PropMass		= 10,
+		PropMass		= 9,
 		Thrust			= 250000,	-- in kg*in/s^2
 		FuelConsumption = 0.045,	-- in g/s/f
 		StarterPercent	= 0.2,
@@ -69,7 +69,7 @@ ACF.RegisterMissile("BGM-71E ASM", "ATGM", {
 		DragCoef		= 0.005,
 		FinMul			= 0.1,
 		TailFinMul		= 0.01,
-		PenMul			= math.sqrt(6.2),
+		PenMul			= math.sqrt(3),
 		ActualLength 	= 117,
 		ActualWidth		= 15.2
 	},
@@ -109,7 +109,7 @@ ACF.RegisterMissile("AGM-114 ASM", "ATGM", {
 		Model			= "models/missiles/agm_114.mdl",
 		MaxLength		= 160,
 		Armor			= 5,
-		PropMass		= 20,
+		PropMass		= 16,
 		Thrust			= 600000,	-- in kg*in/s^2
 		FuelConsumption = 0.05,		-- in g/s/f
 		StarterPercent	= 0.02,
@@ -117,7 +117,7 @@ ACF.RegisterMissile("AGM-114 ASM", "ATGM", {
 		DragCoef		= 0.005,
 		FinMul			= 0.1,
 		TailFinMul		= 0.01,
-		PenMul			= math.sqrt(4.8),
+		PenMul			= math.sqrt(2),
 		ActualLength 	= 160,
 		ActualWidth		= 18
 	},
@@ -145,7 +145,7 @@ ACF.RegisterMissile("Ataka ASM", "ATGM", {
 		RackModel		= "models/missiles/9m120_rk1.mdl",
 		MaxLength		= 183,
 		Armor			= 5,
-		PropMass		= 12,
+		PropMass		= 9,
 		Thrust			= 600000,	-- in kg*in/s^2
 		FuelConsumption = 0.045,		-- in g/s/f
 		StarterPercent	= 0.02,
@@ -153,7 +153,7 @@ ACF.RegisterMissile("Ataka ASM", "ATGM", {
 		DragCoef		= 0.005,
 		FinMul			= 0.1,
 		TailFinMul		= 0.01,
-		PenMul			= math.sqrt(4.5),
+		PenMul			= math.sqrt(2),
 		ActualLength 	= 183,
 		ActualWidth		= 13
 	},
@@ -198,7 +198,7 @@ ACF.RegisterMissile("9M113 ASM", "ATGM", {
 		DragCoef		= 0.005,
 		FinMul			= 0.1,
 		TailFinMul		= 0.01,
-		PenMul			= math.sqrt(5.8),
+		PenMul			= math.sqrt(3.5),
 		ActualLength 	= 120,
 		ActualWidth		= 15.2
 	},
@@ -232,7 +232,7 @@ ACF.RegisterMissile("AT-2 ASM", "ATGM", {
 		DragCoef		= 0.06,
 		FinMul			= 0.1,
 		TailFinMul		= 0.01,
-		PenMul			= math.sqrt(3.6),
+		PenMul			= math.sqrt(2),
 		ActualLength 	= 116,
 		ActualWidth		= 14.8
 	},

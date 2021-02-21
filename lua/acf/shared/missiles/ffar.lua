@@ -34,7 +34,7 @@ ACF.RegisterMissile("40mmFFAR", "FFAR", {
 		DragCoef		= 0.001,
 		FinMul			= 0.01,
 		TailFinMul		= 0.005,
-		PenMul			= math.sqrt(4),
+		PenMul			= math.sqrt(2),
 		ActualLength 	= 60,
 		ActualWidth		= 4
 	},
@@ -67,7 +67,7 @@ ACF.RegisterMissile("70mmFFAR", "FFAR", {
 		DragCoef		= 0.002,
 		FinMul			= 0.01,
 		TailFinMul		= 0.005,
-		PenMul			= math.sqrt(2.3),
+		PenMul			= math.sqrt(1),
 		ActualLength 	= 106,
 		ActualWidth		= 7
 	},
@@ -92,7 +92,7 @@ ACF.RegisterMissile("Zuni ASR", "FFAR", {
 		RackModel		= "models/ghosteh/zuni_folded.mdl",
 		MaxLength		= 200,
 		Armor			= 5,
-		PropMass		= 16,
+		PropMass		= 8,
 		Thrust			= 800000,	-- in kg*in/s^2
 		FuelConsumption = 0.032,	-- in g/s/f
 		StarterPercent	= 0.1,
@@ -100,7 +100,7 @@ ACF.RegisterMissile("Zuni ASR", "FFAR", {
 		DragCoef		= 0.004,
 		FinMul			= 0.005,
 		TailFinMul		= 0.04,
-		PenMul			= math.sqrt(3.5),
+		PenMul			= math.sqrt(1),
 		ActualLength 	= 200,
 		ActualWidth		= 12.7
 	},

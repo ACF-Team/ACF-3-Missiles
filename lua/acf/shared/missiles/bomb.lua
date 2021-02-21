@@ -36,7 +36,7 @@ ACF.RegisterMissile("50kgBOMB", "BOMB", {
 		DragCoef		= 0.01,
 		FinMul			= 0.001,
 		TailFinMul		= 0.1,
-		PenMul			= math.sqrt(0.6),
+		PenMul			= math.sqrt(0.3),
 		ActualLength 	= 50,
 		ActualWidth		= 5
 	},
@@ -70,7 +70,7 @@ ACF.RegisterMissile("100kgBOMB", "BOMB", {
 		DragCoef		= 0.02,
 		FinMul			= 0.002,
 		TailFinMul		= 2,
-		PenMul			= math.sqrt(0.6),
+		PenMul			= math.sqrt(0.3),
 		ActualLength 	= 100,
 		ActualWidth		= 10
 	},
@@ -94,7 +94,7 @@ ACF.RegisterMissile("250kgBOMB", "BOMB", {
 	ArmDelay	= 1,
 	Round = {
 		Model			= "models/bombs/fab250.mdl",
-		MaxLength		= 250,
+		MaxLength		= 200,
 		Armor			= 10,
 		PropMass		= 0,
 		Thrust			= 1, 	-- in kg*in/s^2
@@ -104,8 +104,8 @@ ACF.RegisterMissile("250kgBOMB", "BOMB", {
 		DragCoef		= 0.03,
 		FinMul			= 0.003,
 		TailFinMul		= 4,
-		PenMul			= math.sqrt(0.6),
-		ActualLength 	= 250,
+		PenMul			= math.sqrt(0.3),
+		ActualLength 	= 200,
 		ActualWidth		= 12.5
 	},
 })
@@ -128,7 +128,7 @@ ACF.RegisterMissile("500kgBOMB", "BOMB", {
 	ArmDelay	= 2,
 	Round = {
 		Model			= "models/bombs/fab500.mdl",
-		MaxLength		= 200,
+		MaxLength		= 250,
 		Armor			= 10,
 		PropMass		= 0,
 		Thrust			= 1, 	-- in kg*in/s^2
@@ -138,8 +138,8 @@ ACF.RegisterMissile("500kgBOMB", "BOMB", {
 		DragCoef		= 0.05,
 		FinMul			= 0.005,
 		TailFinMul		= 40,
-		PenMul			= math.sqrt(0.6),
-		ActualLength 	= 200,
+		PenMul			= math.sqrt(0.3),
+		ActualLength 	= 250,
 		ActualWidth		= 30
 	},
 })
@@ -148,7 +148,7 @@ ACF.RegisterMissile("1000kgBOMB", "BOMB", {
 	Name		= "1000kg Free Falling Bomb",
 	Description	= "A 2000lb bomb. As close to a nuke as you can get in ACF, this munition will turn everything it touches to ashes. Handle with care.",
 	Model		= "models/bombs/an_m66.mdl",
-	Length		= 400,
+	Length		= 375,
 	Caliber		= 300,
 	Mass		= 1000,
 	Year		= 1945,
@@ -172,7 +172,7 @@ ACF.RegisterMissile("1000kgBOMB", "BOMB", {
 		DragCoef		= 0.1,
 		FinMul			= 0.01,
 		TailFinMul		= 60,
-		PenMul			= math.sqrt(0.6),
+		PenMul			= math.sqrt(0.3),
 		ActualLength 	= 375,
 		ActualWidth		= 30
 	},
