@@ -20,7 +20,7 @@ local function GetRackList(Data)
 end
 
 local BaseText = "Caliber : %s\nMass : %s kg"
-local RackText = BaseText .. "\nMunitions : %s%s\n\nThis entity can be fully parented."
+local RackText = BaseText .. "\nMunitions : %s%s\n"
 local MissileText = BaseText .. "\nArming Delay : %ss%s%s"
 
 local function GetMissileText(Data)
