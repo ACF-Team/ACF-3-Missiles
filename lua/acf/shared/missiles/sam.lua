@@ -36,6 +36,7 @@ ACF.RegisterMissile("FIM-92 SAM", "SAM", {
 		MinSpeed		= 3000,
 		DragCoef		= 0.003,
 		FinMul			= 0.03,
+		ControlSurfMul  = 1e-9,
 		TailFinMul		= 0.001,
 		ActualLength 	= 152,
 		ActualWidth		= 7
@@ -46,7 +47,7 @@ ACF.RegisterMissile("Strela-1 SAM", "SAM", {
 	Name		= "9M31 Strela-1",
 	Description	= "The 9M31 Strela-1 (SA-9 Gaskin) is a medium-range homing SAM, best suited to ground vehicles or stationary units.",
 	Model		= "models/missiles/9m31.mdl",
-	Length		= 60,
+	Length		= 180,
 	Caliber		= 120,
 	Mass		= 30,
 	Year		= 1960,
@@ -61,18 +62,18 @@ ACF.RegisterMissile("Strela-1 SAM", "SAM", {
 	Round = {
 		Model			= "models/missiles/9m31.mdl",
 		RackModel		= "models/missiles/9m31f.mdl",
-		MaxLength		= 105,
+		MaxLength		= 180,
 		Armor			= 5,
-		PropMass		= 1,
-		Thrust			= 4000, -- in kg*in/s^2
-		FuelConsumption = 0.1,	-- in g/s/f
+		PropMass		= 13,
+		Thrust			= 500000,	-- in kg*in/s^2
+		FuelConsumption = 0.033,	-- in g/s/f
 		StarterPercent	= 0.1,
-		MinSpeed		= 4000,
+		MinSpeed		= 3000,
 		DragCoef		= 0.003,
-		DragCoefFlight	= 0,
-		FinMul			= 1.8,
-		TailFinMul		= 0.002,
-		ActualLength 	= 86.5,
-		ActualWidth		= 5.5
+		FinMul			= 0.04,
+		ControlSurfMul  = 1e-9,
+		TailFinMul		= 0.001,
+		ActualLength 	= 180,
+		ActualWidth		= 12
 	},
 })

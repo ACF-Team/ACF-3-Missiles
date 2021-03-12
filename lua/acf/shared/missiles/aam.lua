@@ -23,7 +23,7 @@ ACF.RegisterMissile("AIM-9 AAM", "AAM", {
 	Fuzes		= { Contact = true, Radio = true },
 	SeekCone	= 10,
 	ViewCone	= 30,
-	Agility		= 0.25,
+	Agility		= 1,
 	ArmDelay	= 0.2,
 	Round = {
 		Model			= "models/missiles/aim9m.mdl",
@@ -36,6 +36,7 @@ ACF.RegisterMissile("AIM-9 AAM", "AAM", {
 		MinSpeed		= 3000,
 		DragCoef		= 0.015,
 		FinMul			= 0.1,
+		ControlSurfMul  = 8e-9,
 		TailFinMul		= 0.001,
 		CanDelayLaunch	= true,
 		ActualLength 	= 289,
