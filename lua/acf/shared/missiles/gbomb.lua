@@ -37,6 +37,9 @@ ACF.RegisterMissile("100kgGBOMB", "GBOMB", {
 		ActualLength 	= 100,
 		ActualWidth		= 10
 	},
+	Preview = {
+		FOV = 65,
+	},
 })
 
 ACF.RegisterMissile("250kgGBOMB", "GBOMB", {
@@ -68,5 +71,8 @@ ACF.RegisterMissile("250kgGBOMB", "GBOMB", {
 		PenMul			= math.sqrt(0.3),
 		ActualLength 	= 67,
 		ActualWidth		= 15
+	},
+	Preview = {
+		FOV = 70,
 	},
 })

@@ -52,6 +52,9 @@ ACF.RegisterMissile("RS82 ASR", "UAR", {
 		ActualLength 	= 60,
 		ActualWidth		= 8.2
 	},
+	Preview = {
+		FOV = 70,
+	},
 })
 
 ACF.RegisterMissile("HVAR ASR", "UAR", {
@@ -86,6 +89,9 @@ ACF.RegisterMissile("HVAR ASR", "UAR", {
 		ActualLength 	= 173,
 		ActualWidth		= 12.7
 	},
+	Preview = {
+		FOV = 60,
+	},
 })
 
 ACF.RegisterMissile("SPG-9 ASR", "UAR", {
@@ -117,6 +123,9 @@ ACF.RegisterMissile("SPG-9 ASR", "UAR", {
 		PenMul			= math.sqrt(3),
 		ActualLength 	= 100,
 		ActualWidth		= 7.3
+	},
+	Preview = {
+		FOV = 60,
 	},
 })
 
@@ -150,6 +159,9 @@ ACF.RegisterMissile("S-24 ASR", "UAR", {
 		PenMul			= math.sqrt(1.5),
 		ActualLength 	= 233,
 		ActualWidth		= 24
+	},
+	Preview = {
+		FOV = 70,
 	},
 })
 
@@ -185,5 +197,8 @@ ACF.RegisterMissile("RW61 ASR", "UAR", {
 		PenMul			= math.sqrt(1),
 		ActualLength 	= 150,
 		ActualWidth		= 38
+	},
+	Preview = {
+		FOV = 75,
 	},
 })

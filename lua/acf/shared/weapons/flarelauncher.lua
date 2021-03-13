@@ -32,7 +32,10 @@ ACF.RegisterWeapon("40mmFGL", "FGL", {
 	Round = {
 		MaxLength = 9,
 		PropMass  = 0.007,
-	}
+	},
+	Preview = {
+		FOV = 115,
+	},
 })
 
 ACF.SetCustomAttachment("models/missiles/blackjellypod.mdl", "muzzle", Vector(6, 0, 3.2))

@@ -41,6 +41,9 @@ ACF.RegisterMissile("WalleyeGBU", "GBU", {
 		ActualLength 	= 345,
 		ActualWidth		= 31.8
 	},
+	Preview = {
+		FOV = 75,
+	},
 })
 
 ACF.RegisterMissile("227kgGBU", "GBU", {
@@ -93,6 +96,10 @@ ACF.RegisterMissile("227kgGBU", "GBU", {
 		ActualLength 	= 327,
 		ActualWidth		= 27.3
 	},
+	Preview = {
+		Height = 90,
+		FOV    = 60,
+	},
 })
 
 ACF.RegisterMissile("454kgGBU", "GBU", {
@@ -143,6 +150,9 @@ ACF.RegisterMissile("454kgGBU", "GBU", {
 		PenMul			= math.sqrt(0.2),
 		ActualLength 	= 370,
 		ActualWidth		= 36
+	},
+	Preview = {
+		FOV = 65,
 	},
 })
 
@@ -195,5 +205,8 @@ ACF.RegisterMissile("909kgGBU", "GBU", {
 		PenMul			= math.sqrt(0.2),
 		ActualLength 	= 434,
 		ActualWidth		= 46
+	},
+	Preview = {
+		FOV = 70,
 	},
 })

@@ -41,6 +41,10 @@ ACF.RegisterMissile("AIM-9 AAM", "AAM", {
 		ActualLength 	= 289,
 		ActualWidth		= 12.7
 	},
+	Preview = {
+		Height = 100,
+		FOV    = 60,
+	},
 })
 
 ACF.RegisterMissile("AIM-120 AAM", "AAM", {
@@ -76,6 +80,10 @@ ACF.RegisterMissile("AIM-120 AAM", "AAM", {
 		ActualLength 	= 370,
 		ActualWidth		= 18
 	},
+	Preview = {
+		Height = 60,
+		FOV    = 60,
+	},
 })
 
 ACF.RegisterMissile("AIM-54 AAM", "AAM", {
@@ -110,5 +118,9 @@ ACF.RegisterMissile("AIM-54 AAM", "AAM", {
 		CanDelayLaunch	= true,
 		ActualLength 	= 400,
 		ActualWidth		= 38
+	},
+	Preview = {
+		Height = 100,
+		FOV    = 60,
 	},
 })

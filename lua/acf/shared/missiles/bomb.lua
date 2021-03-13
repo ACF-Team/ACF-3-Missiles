@@ -40,6 +40,9 @@ ACF.RegisterMissile("50kgBOMB", "BOMB", {
 		ActualLength 	= 50,
 		ActualWidth		= 5
 	},
+	Preview = {
+		FOV = 75,
+	},
 })
 
 ACF.RegisterMissile("100kgBOMB", "BOMB", {
@@ -73,6 +76,9 @@ ACF.RegisterMissile("100kgBOMB", "BOMB", {
 		PenMul			= math.sqrt(0.3),
 		ActualLength 	= 100,
 		ActualWidth		= 10
+	},
+	Preview = {
+		FOV = 80,
 	},
 })
 
@@ -108,6 +114,9 @@ ACF.RegisterMissile("250kgBOMB", "BOMB", {
 		ActualLength 	= 200,
 		ActualWidth		= 12.5
 	},
+	Preview = {
+		FOV = 70,
+	},
 })
 
 ACF.RegisterMissile("500kgBOMB", "BOMB", {
@@ -142,6 +151,9 @@ ACF.RegisterMissile("500kgBOMB", "BOMB", {
 		ActualLength 	= 250,
 		ActualWidth		= 30
 	},
+	Preview = {
+		FOV = 70,
+	},
 })
 
 ACF.RegisterMissile("1000kgBOMB", "BOMB", {
@@ -175,5 +187,8 @@ ACF.RegisterMissile("1000kgBOMB", "BOMB", {
 		PenMul			= math.sqrt(0.3),
 		ActualLength 	= 375,
 		ActualWidth		= 30
+	},
+	Preview = {
+		FOV = 80,
 	},
 })

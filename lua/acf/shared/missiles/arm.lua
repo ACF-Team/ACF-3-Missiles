@@ -41,6 +41,9 @@ ACF.RegisterMissile("AGM-122 ASM", "ARM", {
 		ActualLength 	= 287,
 		ActualWidth		= 12.7
 	},
+	Preview = {
+		FOV = 60,
+	},
 })
 
 ACF.RegisterMissile("AGM-45 ASM", "ARM", {
@@ -75,5 +78,9 @@ ACF.RegisterMissile("AGM-45 ASM", "ARM", {
 		CanDelayLaunch	= true,
 		ActualLength 	= 305,
 		ActualWidth		= 20.3
+	},
+	Preview = {
+		Height = 80,
+		FOV    = 60,
 	},
 })

@@ -40,6 +40,10 @@ ACF.RegisterMissile("Type 63 RA", "ARTY", {
 		ActualLength 	= 80,
 		ActualWidth		= 10.7
 	},
+	Preview = {
+		Height = 100,
+		FOV    = 60,
+	},
 })
 
 ACF.RegisterMissile("SAKR-10 RA", "ARTY", {
@@ -74,6 +78,10 @@ ACF.RegisterMissile("SAKR-10 RA", "ARTY", {
 		ActualLength 	= 287,
 		ActualWidth		= 12.2
 	},
+	Preview = {
+		Height = 60,
+		FOV    = 60,
+	},
 })
 
 ACF.RegisterMissile("SS-40 RA", "ARTY", {
@@ -107,5 +115,9 @@ ACF.RegisterMissile("SS-40 RA", "ARTY", {
 		PenMul			= math.sqrt(0.5),
 		ActualLength 	= 370,
 		ActualWidth		= 18
+	},
+	Preview = {
+		Height = 80,
+		FOV    = 60,
 	},
 })

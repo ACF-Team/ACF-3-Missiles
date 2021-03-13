@@ -40,6 +40,9 @@ ACF.RegisterMissile("AT-3 ASM", "ATGM", {
 		ActualLength 	= 86,
 		ActualWidth		= 12.5
 	},
+	Preview = {
+		FOV = 100,
+	},
 })
 
 ACF.RegisterMissile("BGM-71E ASM", "ATGM", {
@@ -72,6 +75,9 @@ ACF.RegisterMissile("BGM-71E ASM", "ATGM", {
 		PenMul			= math.sqrt(3),
 		ActualLength 	= 117,
 		ActualWidth		= 15.2
+	},
+	Preview = {
+		FOV = 60,
 	},
 })
 
@@ -121,6 +127,10 @@ ACF.RegisterMissile("AGM-114 ASM", "ATGM", {
 		ActualLength 	= 160,
 		ActualWidth		= 18
 	},
+	Preview = {
+		Height = 90,
+		FOV    = 60,
+	},
 })
 
 ACF.RegisterMissile("Ataka ASM", "ATGM", {
@@ -156,6 +166,10 @@ ACF.RegisterMissile("Ataka ASM", "ATGM", {
 		PenMul			= math.sqrt(2),
 		ActualLength 	= 183,
 		ActualWidth		= 13
+	},
+	Preview = {
+		Height = 90,
+		FOV    = 60,
 	},
 })
 
@@ -202,6 +216,10 @@ ACF.RegisterMissile("9M113 ASM", "ATGM", {
 		ActualLength 	= 120,
 		ActualWidth		= 15.2
 	},
+	Preview = {
+		Height = 90,
+		FOV    = 60,
+	},
 })
 
 ACF.RegisterMissile("AT-2 ASM", "ATGM", {
@@ -235,5 +253,8 @@ ACF.RegisterMissile("AT-2 ASM", "ATGM", {
 		PenMul			= math.sqrt(2),
 		ActualLength 	= 116,
 		ActualWidth		= 14.8
+	},
+	Preview = {
+		FOV = 80,
 	},
 })

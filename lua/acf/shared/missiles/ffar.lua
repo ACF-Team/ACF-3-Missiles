@@ -38,6 +38,10 @@ ACF.RegisterMissile("40mmFFAR", "FFAR", {
 		ActualLength 	= 60,
 		ActualWidth		= 4
 	},
+	Preview = {
+		Height = 100,
+		FOV    = 60,
+	},
 })
 
 ACF.RegisterMissile("70mmFFAR", "FFAR", {
@@ -71,6 +75,10 @@ ACF.RegisterMissile("70mmFFAR", "FFAR", {
 		ActualLength 	= 106,
 		ActualWidth		= 7
 	},
+	Preview = {
+		Height = 100,
+		FOV    = 60,
+	},
 })
 
 ACF.RegisterMissile("Zuni ASR", "FFAR", {
@@ -103,5 +111,9 @@ ACF.RegisterMissile("Zuni ASR", "FFAR", {
 		PenMul			= math.sqrt(1),
 		ActualLength 	= 200,
 		ActualWidth		= 12.7
+	},
+	Preview = {
+		Height = 100,
+		FOV    = 60,
 	},
 })

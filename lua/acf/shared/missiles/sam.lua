@@ -40,6 +40,10 @@ ACF.RegisterMissile("FIM-92 SAM", "SAM", {
 		ActualLength 	= 152,
 		ActualWidth		= 7
 	},
+	Preview = {
+		Height = 80,
+		FOV    = 60,
+	},
 })
 
 ACF.RegisterMissile("Strela-1 SAM", "SAM", {
@@ -74,5 +78,9 @@ ACF.RegisterMissile("Strela-1 SAM", "SAM", {
 		TailFinMul		= 0.002,
 		ActualLength 	= 86.5,
 		ActualWidth		= 5.5
+	},
+	Preview = {
+		Height = 60,
+		FOV    = 60,
 	},
 })

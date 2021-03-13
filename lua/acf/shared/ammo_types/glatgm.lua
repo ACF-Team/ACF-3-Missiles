@@ -113,17 +113,23 @@ else
 		Ammo.BaseClass.AddAmmoPreview(self, Preview, Setup, ToolData, BulletData)
 
 		local Caliber = BulletData.Caliber
-		local Model
+		local Model, FOV, Height
 
 		if Caliber < 12 then
-			Model = "models/missiles/glatgm/9m117f.mdl"
+			Model = "models/missiles/glatgm/9m117.mdl"
+			FOV   = 65
 		elseif Caliber > 12 then
-			Model = "models/missiles/glatgm/mgm51.mdl"
+			Model  = "models/missiles/glatgm/mgm51.mdl"
+			Height = 100
+			FOV    = 60
 		else
 			Model = "models/missiles/glatgm/9m112.mdl"
+			FOV   = 80
 		end
 
-		Setup.Model = Model
+		Setup.Model  = Model
+		Setup.FOV    = FOV
+		Setup.Height = Height or Setup.Height
 	end
 
 	function Ammo:AddAmmoInformation(Base, ToolData, BulletData)
