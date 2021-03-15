@@ -29,7 +29,7 @@ ACF.RegisterMissile("WalleyeGBU", "GBU", {
 		Model			= "models/bombs/gbu/agm62.mdl",
 		MaxLength		= 345,
 		Armor			= 10,
-		PropMass		= 1,
+		PropLength		= 0,
 		Thrust			= 1,	-- in kg*in/s^2
 		FuelConsumption = 0.1,	-- in g/s/f
 		StarterPercent	= 0.005,
@@ -84,7 +84,7 @@ ACF.RegisterMissile("227kgGBU", "GBU", {
 		RackModel		= "models/bombs/gbu/gbu12.mdl",
 		MaxLength		= 220,
 		Armor			= 10,
-		PropMass		= 0,
+		PropLength		= 0,
 		Thrust			= 1, 	-- in kg*in/s^2
 		FuelConsumption = 0.1,	-- in g/s/f
 		StarterPercent	= 0.005,
@@ -139,7 +139,7 @@ ACF.RegisterMissile("454kgGBU", "GBU", {
 		RackModel		= "models/bombs/gbu/gbu16.mdl",
 		MaxLength		= 250,
 		Armor			= 10,
-		PropMass		= 0,
+		PropLength		= 0,
 		Thrust			= 1, 	-- in kg*in/s^2
 		FuelConsumption = 0.1,	-- in g/s/f
 		StarterPercent	= 0.005,
@@ -194,7 +194,7 @@ ACF.RegisterMissile("909kgGBU", "GBU", {
 		RackModel		= "models/bombs/gbu/gbu10.mdl",
 		MaxLength		= 320,
 		Armor			= 10,
-		PropMass		= 0,
+		PropLength		= 0,
 		Thrust			= 1, 	-- in kg*in/s^2
 		FuelConsumption = 0.1,	-- in g/s/f
 		StarterPercent	= 0.005,

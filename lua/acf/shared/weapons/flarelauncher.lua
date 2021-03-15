@@ -13,10 +13,6 @@ ACF.RegisterWeaponClass("FGL", {
 		Amount = 4,
 		Text = "Maximum amount of ACF Flare Launchers a player can create."
 	},
-	Caliber	= {
-		Min = 25,
-		Max = 40,
-	},
 })
 
 ACF.RegisterWeapon("40mmFGL", "FGL", {
@@ -27,11 +23,11 @@ ACF.RegisterWeapon("40mmFGL", "FGL", {
 	Mass		= 75,
 	Year		= 1970,
 	MagSize		= 30,
-	MagReload	= 20,
+	MagReload	= 10,
 	Cyclic		= 300,
 	Round = {
-		MaxLength = 9,
-		PropMass  = 0.007,
+		MaxLength  = 9,
+		PropLength = 0.025,
 	},
 	Preview = {
 		FOV = 115,
