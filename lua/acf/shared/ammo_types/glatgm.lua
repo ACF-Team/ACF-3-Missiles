@@ -109,16 +109,27 @@ else
 		Settings.SuppressTracer = true
 	end
 
-	function Ammo:AddAmmoPreview(Preview, _, BulletData)
-		local Model = "models/missiles/glatgm/9m117.mdl"
+	function Ammo:AddAmmoPreview(Preview, Setup, ToolData, BulletData)
+		Ammo.BaseClass.AddAmmoPreview(self, Preview, Setup, ToolData, BulletData)
 
-		if BulletData.Caliber == 12 then
+		local Caliber = BulletData.Caliber
+		local Model, FOV, Height
+
+		if Caliber < 12 then
+			Model = "models/missiles/glatgm/9m117.mdl"
+			FOV   = 65
+		elseif Caliber > 12 then
+			Model  = "models/missiles/glatgm/mgm51.mdl"
+			Height = 100
+			FOV    = 60
+		else
 			Model = "models/missiles/glatgm/9m112.mdl"
-		elseif BulletData.Caliber > 12 then
-			Model = "models/missiles/glatgm/mgm51.mdl"
+			FOV   = 80
 		end
 
-		Preview:SetModel(Model)
+		Setup.Model  = Model
+		Setup.FOV    = FOV
+		Setup.Height = Height or Setup.Height
 	end
 
 	function Ammo:AddAmmoInformation(Base, ToolData, BulletData)

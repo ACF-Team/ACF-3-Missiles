@@ -63,7 +63,7 @@ local function CreateMenu(Menu)
 	local MissileBase = Menu:AddCollapsible("Missile Information")
 	local MissileClass = MissileBase:AddLabel()
 	local MissileDesc = MissileBase:AddLabel()
-	local MissilePreview = MissileBase:AddModelPreview()
+	local MissilePreview = MissileBase:AddModelPreview(nil, true)
 	local MissileInfo = MissileBase:AddLabel()
 
 	Menu:AddTitle("Rack Settings")
@@ -72,7 +72,7 @@ local function CreateMenu(Menu)
 
 	local RackBase = Menu:AddCollapsible("Rack Information")
 	local RackDesc = RackBase:AddLabel()
-	local RackPreview = RackBase:AddModelPreview()
+	local RackPreview = RackBase:AddModelPreview(nil, true)
 	local RackInfo = RackBase:AddLabel()
 
 	local AmmoList = ACF.CreateAmmoMenu(Menu, Settings)
@@ -103,8 +103,6 @@ local function CreateMenu(Menu)
 		self.ListData.Index = Index
 		self.Selected = Data
 
-		local Preview = Data.Preview
-
 		ACF.SetClientData("Weapon", Data.ID)
 		ACF.SetClientData("Destiny", Data.Destiny or "Missiles")
 
@@ -112,11 +110,8 @@ local function CreateMenu(Menu)
 
 		MissileDesc:SetText(Data.Description)
 
-		MissilePreview:SetModel(Data.Model)
-		MissilePreview:SetCamPos(Preview and Preview.Offset or Vector(45, 60, 45))
-		MissilePreview:SetLookAt(Preview and Preview.Position or Vector())
-		MissilePreview:SetHeight(Preview and Preview.Height or 80)
-		MissilePreview:SetFOV(Preview and Preview.FOV or 75)
+		MissilePreview:UpdateModel(Data.Model)
+		MissilePreview:UpdateSettings(Data.Preview)
 
 		MissileInfo:SetText(GetMissileText(Data))
 
@@ -131,18 +126,13 @@ local function CreateMenu(Menu)
 		self.ListData.Index = Index
 		self.Selected = Data
 
-		local Preview = Data.Preview
-
 		ACF.SetClientData("Rack", Data.ID)
 
 		RackDesc:SetText(Data.Description)
 		RackInfo:SetText(GetRackText(Data))
 
-		RackPreview:SetModel(Data.Model)
-		RackPreview:SetCamPos(Preview and Preview.Offset or Vector(45, 60, 45))
-		RackPreview:SetLookAt(Preview and Preview.Position or Vector())
-		RackPreview:SetHeight(Preview and Preview.Height or 80)
-		RackPreview:SetFOV(Preview and Preview.FOV or 75)
+		RackPreview:UpdateModel(Data.Model)
+		RackPreview:UpdateSettings(Data.Preview)
 	end
 
 	ACF.LoadSortedList(MissileTypes, Missiles, "ID")

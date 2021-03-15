@@ -28,7 +28,7 @@ ACF.RegisterMissile("Type 63 RA", "ARTY", {
 		Model			= "models/missiles/glatgm/mgm51.mdl",
 		MaxLength		= 80,
 		Armor			= 5,
-		PropMass		= 3.2,
+		PropLength		= 45,
 		Thrust			= 240000,	-- in kg*in/s^2
 		FuelConsumption = 0.06, 	-- in g/s/f
 		StarterPercent	= 0.05,
@@ -39,6 +39,10 @@ ACF.RegisterMissile("Type 63 RA", "ARTY", {
 		PenMul			= math.sqrt(2),
 		ActualLength 	= 80,
 		ActualWidth		= 10.7
+	},
+	Preview = {
+		Height = 100,
+		FOV    = 60,
 	},
 })
 
@@ -62,7 +66,7 @@ ACF.RegisterMissile("SAKR-10 RA", "ARTY", {
 		Model		= "models/missiles/9m31.mdl",
 		MaxLength		= 287,
 		Armor			= 5,
-		PropMass		= 12,
+		PropLength		= 160,
 		Thrust			= 800000, -- in kg*in/s^2
 		FuelConsumption = 0.012,	-- in g/s/f
 		StarterPercent	= 0.05,
@@ -73,6 +77,10 @@ ACF.RegisterMissile("SAKR-10 RA", "ARTY", {
 		PenMul			= math.sqrt(0.5),
 		ActualLength 	= 287,
 		ActualWidth		= 12.2
+	},
+	Preview = {
+		Height = 60,
+		FOV    = 60,
 	},
 })
 
@@ -96,7 +104,7 @@ ACF.RegisterMissile("SS-40 RA", "ARTY", {
 		Model		= "models/missiles/aim120.mdl",
 		MaxLength		= 370,
 		Armor			= 5,
-		PropMass		= 40,
+		PropLength		= 200,
 		Thrust			= 2400000, -- in kg*in/s^2
 		FuelConsumption = 0.022,	-- in g/s/f
 		StarterPercent	= 0.05,
@@ -107,5 +115,9 @@ ACF.RegisterMissile("SS-40 RA", "ARTY", {
 		PenMul			= math.sqrt(0.5),
 		ActualLength 	= 370,
 		ActualWidth		= 18
+	},
+	Preview = {
+		Height = 80,
+		FOV    = 60,
 	},
 })

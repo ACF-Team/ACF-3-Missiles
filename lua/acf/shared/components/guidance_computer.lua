@@ -72,9 +72,6 @@ do -- Joystick
 		Offset		= Vector(0, -1.5, -0.25),
 		Inputs		= { "Pitch", "Yaw" },
 		Outputs		= { "Current Pitch", "Current Yaw" },
-		Preview = {
-			FOV = 20,
-		},
 		Stick = {
 			Model = "models/props_c17/trappropeller_lever.mdl",
 			Scale = 0.5,
@@ -286,7 +283,7 @@ do -- Optical guidance computer
 			Yaw = 20,
 		},
 		Preview = {
-			FOV = 35,
+			FOV = 110,
 		},
 		CreateMenu = function(Data, Menu)
 			local Pitch = Data.Bounds.Pitch
@@ -471,7 +468,7 @@ do -- Laser guidance computer
 			Yaw = 15,
 		},
 		Preview = {
-			FOV = 35,
+			FOV = 110,
 		},
 		CreateMenu = function(Data, Menu)
 			local Pitch = Data.Bounds.Pitch
@@ -706,7 +703,7 @@ do -- GPS transmitter
 		Inputs		= { "Coordinates [VECTOR]" },
 		Outputs		= { "Transmitting", "Jammed", "Current Coordinates [VECTOR]" },
 		Preview = {
-			FOV = 35,
+			FOV = 80,
 		},
 		CreateMenu = function(Data, Menu)
 			Menu:AddLabel("Mass : " .. Data.Mass .. " kg")

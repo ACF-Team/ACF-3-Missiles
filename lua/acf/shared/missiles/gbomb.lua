@@ -25,7 +25,7 @@ ACF.RegisterMissile("100kgGBOMB", "GBOMB", {
 		Model			= "models/missiles/micro.mdl",
 		MaxLength		= 100,
 		Armor			= 10,
-		PropMass		= 0,
+		PropLength		= 0,
 		Thrust			= 1, 	-- in kg*in/s^2
 		FuelConsumption = 0.1,	-- in g/s/f
 		StarterPercent	= 0.005,
@@ -36,6 +36,9 @@ ACF.RegisterMissile("100kgGBOMB", "GBOMB", {
 		PenMul			= math.sqrt(0.3),
 		ActualLength 	= 100,
 		ActualWidth		= 10
+	},
+	Preview = {
+		FOV = 65,
 	},
 })
 
@@ -57,7 +60,7 @@ ACF.RegisterMissile("250kgGBOMB", "GBOMB", {
 		Model			= "models/missiles/fab250.mdl",
 		MaxLength		= 250,
 		Armor			= 10,
-		PropMass		= 0,
+		PropLength		= 0,
 		Thrust			= 1, 	-- in kg*in/s^2
 		FuelConsumption = 0.1,	-- in g/s/f
 		StarterPercent	= 0.005,
@@ -68,5 +71,8 @@ ACF.RegisterMissile("250kgGBOMB", "GBOMB", {
 		PenMul			= math.sqrt(0.3),
 		ActualLength 	= 67,
 		ActualWidth		= 15
+	},
+	Preview = {
+		FOV = 70,
 	},
 })
