@@ -163,39 +163,42 @@ local function CalcFlight(Missile)
 		local Dist          = RelPos:Length()
 		local RelSpd        = RelVel:Length()
 		local TimeToHit     = math.min(Dist / RelSpd, 60)
-		local PredSpeed     = RelSpd + Missile.Thrust / Missile.Mass * math.min(Missile.MotorLength, TimeToHit)* 0.9 -- Obligatory bullshit tuning variable
+		local PredSpeed     = RelSpd + Missile.Thrust / Missile.Mass * math.min(Missile.MotorLength, TimeToHit) * 0.5
 		print(RelSpd, PredSpeed)
 		TimeToHit           = math.min(Dist / PredSpeed, 60)
-		-- APN formula - Augmented proportional navigation
-		local Scalar = 3 / TimeToHit^2
-		local Pos    = RelPos
-		local Vel    = RelVel * TimeToHit
-		local Acc    = (Missile.FilteredAcc * 0.015) * TimeToHit^2 * 0.5
-		local APN    = Scalar * (Pos + Vel + Acc)
+		-- Guidance
+		local Scalar = 9 / TimeToHit^2
+		-- Chase component
+		local Nav    = RelPos
+		-- Proportional navigation component (relative velocity)
+		if Missile.GuidanceVel   == true then Nav = Nav + RelVel * TimeToHit end
+		-- Augmented proportional navigation component (relative acceleration)
+		if Missile.GuidanceAccel == true then Nav = Nav + (Missile.FilteredAcc * 0.015) * TimeToHit^2 * 0.5 end
+		Nav = Nav * Scalar
 		-- Making the acceleration perpendicular to the velocity and limiting it
-		APN = APN - APN:Dot(VelNorm) * VelNorm
-		local GLimit = (Missile.GLimit or 10 * 9.8 * 39.37) -- 10 Gs
-		if APN:Length() > GLimit then
-			APN = APN:GetNormalized() * GLimit
+		Nav = Nav - Nav:Dot(VelNorm) * VelNorm
+		if Nav:Length() > Missile.GLimit then
+			Nav = Nav:GetNormalized() * Missile.GLimit
 		end
 		-- Calculating the AoA (and subsequent direction) that produces the desired acceleration
-		local TargetAoA = math.deg(math.asin(math.min(APN:Length() / LiftMultiplier, 1)))
-		local AoAAxis   = VelNorm:Cross(APN):GetNormalized()
+		local TargetAoA = math.deg(math.asin(math.min(Nav:Length() / LiftMultiplier, 1)))
+		local AoAAxis   = VelNorm:Cross(Nav):GetNormalized()
 		local TargetAng = VelNorm:Angle()
 		TargetAng:RotateAroundAxis(AoAAxis, TargetAoA)
 		local TargetDir = TargetAng:Forward()
 		-- Turning the missile to the target direction
 		local Agility    = Missile.Agility * math.min(1, Missile.ControlSurfMul * LastSpeedSqr)
 		local TurnTorque = Dir:Cross(TargetDir) * Agility
-		Torque = Torque + TurnTorque
+		local DampTorque = -Missile.RotAxis * Inertia * 15
+		Torque = Torque + TurnTorque + DampTorque
 
 		-- Updating persistent variables
 		Missile.LastRelPos = RelPos
 		Missile.LastRelVel = RelVel
 	end
 
+	Missile.RotAxis = Missile.RotAxis * (1 - 0.7 * DeltaTime)
 	Missile.RotAxis = Missile.RotAxis + Torque / Inertia * DeltaTime
-	Missile.RotAxis = Missile.RotAxis * (1 - 8 * DeltaTime)
 	local DirAng  = Dir:Angle()
 	DirAng:RotateAroundAxis(Missile.RotAxis:GetNormalized(), Missile.RotAxis:Length() * DeltaTime)
 	Dir = DirAng:Forward()
@@ -345,12 +348,11 @@ function MakeACF_Missile(Player, Pos, Ang, Rack, MountPoint, Crate)
 	Missile.RackModel       = Rack.MissileModel or Round.RackModel
 	Missile.RealModel       = Round.Model
 	Missile.DragCoef        = Round.DragCoef
-	Missile.DragCoefFlight  = Round.DragCoefFlight or Round.DragCoef
-	Missile.MinimumSpeed    = Round.MinSpeed
 	Missile.MaxThrust       = Round.Thrust
 	Missile.FuelConsumption = Round.FuelConsumption * 0.001
 	Missile.StarterPercent  = Round.StarterPercent
 	Missile.FinMultiplier   = Round.FinMul
+	Missile.GLimit          = Round.GLimit * 9.81 * 39.37
 	Missile.CanDelay        = Round.CanDelayLaunch
 	Missile.MaxLength       = Round.MaxLength
 	Missile.Agility         = Data.Agility * 1e10 or 1
@@ -361,7 +363,9 @@ function MakeACF_Missile(Player, Pos, Ang, Rack, MountPoint, Crate)
 	Missile.Inertia         = Missile.AreaOfInertia * Missile.Mass
 	Missile.Length          = Length
 	Missile.TorqueMul       = Length * 0.15 * Round.TailFinMul
-	Missile.ControlSurfMul  = Round.ControlSurfMul
+	Missile.ControlSurfMul  = (Round.MaxAgilitySpeed * 39.37)^-2
+	Missile.GuidanceVel     = (Data.Navigation.APN or Data.Navigation.PN) and true or false
+	Missile.GuidanceAccel   = Data.Navigation.APN and true or false
 	Missile.RotAxis         = Vector()
 	Missile.UseGuidance     = true
 	Missile.MotorEnabled    = false
