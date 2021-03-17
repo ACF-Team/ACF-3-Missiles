@@ -24,6 +24,9 @@ do -- Directional radars
 		SwitchDelay	= 2,
 		ThinkDelay	= 0.05,
 		Detect		= DetectEntities,
+		Preview = {
+			FOV = 105,
+		},
 	})
 
 	ACF.RegisterSensor("MediumDIR-AM", "AM-Radar", {
@@ -36,6 +39,9 @@ do -- Directional radars
 		SwitchDelay	= 4,
 		ThinkDelay	= 0.05,
 		Detect		= DetectEntities,
+		Preview = {
+			FOV = 110,
+		},
 	})
 
 	ACF.RegisterSensor("LargeDIR-AM", "AM-Radar", {
@@ -48,6 +54,9 @@ do -- Directional radars
 		SwitchDelay	= 8,
 		ThinkDelay	= 0.05,
 		Detect		= DetectEntities,
+		Preview = {
+			FOV = 110,
+		},
 	})
 end
 
@@ -66,6 +75,9 @@ do -- Spherical radars
 		SwitchDelay	= 3,
 		ThinkDelay	= 0.15,
 		Detect		= DetectEntities,
+		Preview = {
+			FOV = 120,
+		},
 	})
 
 	ACF.RegisterSensor("MediumOMNI-AM", "AM-Radar", {
@@ -78,6 +90,9 @@ do -- Spherical radars
 		SwitchDelay	= 6,
 		ThinkDelay	= 0.15,
 		Detect		= DetectEntities,
+		Preview = {
+			FOV = 120,
+		},
 	})
 
 	ACF.RegisterSensor("LargeOMNI-AM", "AM-Radar", {
@@ -90,5 +105,8 @@ do -- Spherical radars
 		SwitchDelay	= 12,
 		ThinkDelay	= 0.15,
 		Detect		= DetectEntities,
+		Preview = {
+			FOV = 120,
+		},
 	})
 end

@@ -1,4 +1,4 @@
-local Text = "View Cone : %s degrees\nView Range : %s\nMass : %s kg\n\nThis entity can be fully parented."
+local Text = "View Cone : %s degrees\nView Range : %s\nMass : %s kg\n"
 
 function ACF.CreateRadarMenu(Data, Menu)
 	local ViewCone = (Data.ViewCone or 180) * 2

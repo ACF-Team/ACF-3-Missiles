@@ -28,7 +28,7 @@ ACF.RegisterMissile("AT-3 ASM", "ATGM", {
 		Model			= "models/missiles/at3.mdl",
 		MaxLength		= 86,
 		Armor			= 5,
-		PropMass		= 4,
+		PropLength		= 45,
 		Thrust			= 11000,	-- in kg*in/s^2
 		FuelConsumption = 0.05,		-- in g/s/f
 		StarterPercent	= 0.25,
@@ -39,6 +39,9 @@ ACF.RegisterMissile("AT-3 ASM", "ATGM", {
 		PenMul			= math.sqrt(2),
 		ActualLength 	= 86,
 		ActualWidth		= 12.5
+	},
+	Preview = {
+		FOV = 100,
 	},
 })
 
@@ -61,7 +64,7 @@ ACF.RegisterMissile("BGM-71E ASM", "ATGM", {
 		Model			= "models/missiles/bgm_71e.mdl",
 		MaxLength		= 117,
 		Armor			= 5,
-		PropMass		= 9,
+		PropLength		= 70,
 		Thrust			= 250000,	-- in kg*in/s^2
 		FuelConsumption = 0.045,	-- in g/s/f
 		StarterPercent	= 0.2,
@@ -72,6 +75,9 @@ ACF.RegisterMissile("BGM-71E ASM", "ATGM", {
 		PenMul			= math.sqrt(3),
 		ActualLength 	= 117,
 		ActualWidth		= 15.2
+	},
+	Preview = {
+		FOV = 60,
 	},
 })
 
@@ -109,7 +115,7 @@ ACF.RegisterMissile("AGM-114 ASM", "ATGM", {
 		Model			= "models/missiles/agm_114.mdl",
 		MaxLength		= 160,
 		Armor			= 5,
-		PropMass		= 16,
+		PropLength		= 90,
 		Thrust			= 600000,	-- in kg*in/s^2
 		FuelConsumption = 0.05,		-- in g/s/f
 		StarterPercent	= 0.02,
@@ -120,6 +126,10 @@ ACF.RegisterMissile("AGM-114 ASM", "ATGM", {
 		PenMul			= math.sqrt(2),
 		ActualLength 	= 160,
 		ActualWidth		= 18
+	},
+	Preview = {
+		Height = 90,
+		FOV    = 60,
 	},
 })
 
@@ -145,7 +155,7 @@ ACF.RegisterMissile("Ataka ASM", "ATGM", {
 		RackModel		= "models/missiles/9m120_rk1.mdl",
 		MaxLength		= 183,
 		Armor			= 5,
-		PropMass		= 9,
+		PropLength		= 100,
 		Thrust			= 600000,	-- in kg*in/s^2
 		FuelConsumption = 0.045,		-- in g/s/f
 		StarterPercent	= 0.02,
@@ -156,6 +166,10 @@ ACF.RegisterMissile("Ataka ASM", "ATGM", {
 		PenMul			= math.sqrt(2),
 		ActualLength 	= 183,
 		ActualWidth		= 13
+	},
+	Preview = {
+		Height = 90,
+		FOV    = 60,
 	},
 })
 
@@ -190,7 +204,7 @@ ACF.RegisterMissile("9M113 ASM", "ATGM", {
 		Model			= "models/kali/weapons/kornet/parts/9m133 kornet missile.mdl",
 		MaxLength		= 120,
 		Armor			= 5,
-		PropMass		= 8,
+		PropLength		= 70,
 		Thrust			= 230000,	-- in kg*in/s^2
 		FuelConsumption = 0.035,	-- in g/s/f
 		StarterPercent	= 0.1,
@@ -201,6 +215,10 @@ ACF.RegisterMissile("9M113 ASM", "ATGM", {
 		PenMul			= math.sqrt(3.5),
 		ActualLength 	= 120,
 		ActualWidth		= 15.2
+	},
+	Preview = {
+		Height = 90,
+		FOV    = 60,
 	},
 })
 
@@ -224,7 +242,7 @@ ACF.RegisterMissile("AT-2 ASM", "ATGM", {
 		Model			= "models/missiles/at2.mdl",
 		MaxLength		= 116,
 		Armor			= 5,
-		PropMass		= 8,
+		PropLength		= 70,
 		Thrust			= 40000,	-- in kg*in/s^2
 		FuelConsumption = 0.035,	-- in g/s/f
 		StarterPercent	= 0.25,
@@ -235,5 +253,8 @@ ACF.RegisterMissile("AT-2 ASM", "ATGM", {
 		PenMul			= math.sqrt(2),
 		ActualLength 	= 116,
 		ActualWidth		= 14.8
+	},
+	Preview = {
+		FOV = 80,
 	},
 })

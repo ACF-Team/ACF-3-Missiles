@@ -72,9 +72,6 @@ do -- Joystick
 		Offset		= Vector(0, -1.5, -0.25),
 		Inputs		= { "Pitch", "Yaw" },
 		Outputs		= { "Current Pitch", "Current Yaw" },
-		Preview = {
-			FOV = 20,
-		},
 		Stick = {
 			Model = "models/props_c17/trappropeller_lever.mdl",
 			Scale = 0.5,
@@ -86,7 +83,6 @@ do -- Joystick
 			local Mass = Data.Mass
 
 			Menu:AddLabel(MenuText:format(Angle, Speed, Mass))
-			Menu:AddLabel("This entity can be fully parented.")
 
 			ACF.SetClientData("PrimaryClass", "acf_computer")
 		end,
@@ -287,7 +283,7 @@ do -- Optical guidance computer
 			Yaw = 20,
 		},
 		Preview = {
-			FOV = 35,
+			FOV = 110,
 		},
 		CreateMenu = function(Data, Menu)
 			local Pitch = Data.Bounds.Pitch
@@ -297,7 +293,6 @@ do -- Optical guidance computer
 			local Mass = Data.Mass
 
 			Menu:AddLabel(MenuText:format(Pitch, Yaw, Speed, Focus, Mass))
-			Menu:AddLabel("This entity can be fully parented.")
 
 			ACF.SetClientData("PrimaryClass", "acf_computer")
 		end,
@@ -473,7 +468,7 @@ do -- Laser guidance computer
 			Yaw = 15,
 		},
 		Preview = {
-			FOV = 35,
+			FOV = 110,
 		},
 		CreateMenu = function(Data, Menu)
 			local Pitch = Data.Bounds.Pitch
@@ -485,7 +480,6 @@ do -- Laser guidance computer
 
 			Menu:AddLabel(MenuText:format(Pitch, Yaw, Speed, Mass))
 			Menu:AddLabel(LaserText:format(LaseTime, Cooldown))
-			Menu:AddLabel("This entity can be fully parented.")
 
 			ACF.SetClientData("PrimaryClass", "acf_computer")
 		end,
@@ -709,12 +703,11 @@ do -- GPS transmitter
 		Inputs		= { "Coordinates [VECTOR]" },
 		Outputs		= { "Transmitting", "Jammed", "Current Coordinates [VECTOR]" },
 		Preview = {
-			FOV = 35,
+			FOV = 80,
 		},
 		CreateMenu = function(Data, Menu)
 			Menu:AddLabel("Mass : " .. Data.Mass .. " kg")
 			--Menu:AddLabel("This entity can be jammed.") -- Not yet
-			Menu:AddLabel("This entity can be fully parented.")
 
 			ACF.SetClientData("PrimaryClass", "acf_computer")
 		end,

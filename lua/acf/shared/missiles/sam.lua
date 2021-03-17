@@ -29,7 +29,7 @@ ACF.RegisterMissile("FIM-92 SAM", "SAM", {
 		RackModel		= "models/missiles/fim_92_folded.mdl",
 		MaxLength		= 152,
 		Armor			= 5,
-		PropMass		= 4,
+		PropLength		= 85,
 		Thrust			= 100000,	-- in kg*in/s^2
 		FuelConsumption = 0.03,		-- in g/s/f
 		StarterPercent	= 0.1,
@@ -40,6 +40,10 @@ ACF.RegisterMissile("FIM-92 SAM", "SAM", {
 		TailFinMul		= 0.001,
 		ActualLength 	= 152,
 		ActualWidth		= 7
+	},
+	Preview = {
+		Height = 80,
+		FOV    = 60,
 	},
 })
 
@@ -64,7 +68,7 @@ ACF.RegisterMissile("Strela-1 SAM", "SAM", {
 		RackModel		= "models/missiles/9m31f.mdl",
 		MaxLength		= 180,
 		Armor			= 5,
-		PropMass		= 13,
+		PropLength		= 80,
 		Thrust			= 500000,	-- in kg*in/s^2
 		FuelConsumption = 0.033,	-- in g/s/f
 		StarterPercent	= 0.1,
@@ -75,5 +79,9 @@ ACF.RegisterMissile("Strela-1 SAM", "SAM", {
 		TailFinMul		= 0.001,
 		ActualLength 	= 180,
 		ActualWidth		= 12
+	},
+	Preview = {
+		Height = 60,
+		FOV    = 60,
 	},
 })

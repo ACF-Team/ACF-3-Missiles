@@ -8,6 +8,9 @@ ACF.RegisterRack("40mm7xPOD", {
 	Year		= 1940,
 	MagSize		= 7,
 	Armor		= 5,
+	Preview = {
+		FOV = 77,
+	},
 
 	ProtectMissile = true,
 
@@ -32,6 +35,9 @@ ACF.RegisterRack("70mm7xPOD", {
 	Year		= 1940,
 	MagSize		= 7,
 	Armor		= 5,
+	Preview = {
+		FOV = 77,
+	},
 
 	ProtectMissile = true,
 
@@ -56,6 +62,10 @@ ACF.RegisterRack("1x BGM-71E", {
 	Year		= 1970,
 	MagSize		= 1,
 	Armor		= 2.5,
+	Preview = {
+		Height = 110,
+		FOV    = 60,
+	},
 
 	ProtectMissile = true,
 	HideMissile = true,
@@ -75,6 +85,10 @@ ACF.RegisterRack("2x BGM-71E", {
 	Year		= 1970,
 	MagSize		= 2,
 	Armor		= 2.5,
+	Preview = {
+		Height = 95,
+		FOV    = 60,
+	},
 
 	ProtectMissile = true,
 	HideMissile = true,
@@ -95,6 +109,9 @@ ACF.RegisterRack("4x BGM-71E", {
 	Year		= 1970,
 	MagSize		= 4,
 	Armor		= 2.5,
+	Preview = {
+		FOV = 85,
+	},
 
 	ProtectMissile = true,
 	HideMissile = true,
@@ -127,13 +144,17 @@ ACF.RegisterRack("380mmRW61", {
 
 ACF.RegisterRack("3xUARRK", {
 	Name		= "Triple Launch Tube",
-	Description	= "A lightweight rack for bombs which is vulnerable to shots and explosions.\nNice generic description bro.",
+	Description	= "A lightweight rack for bombs which is vulnerable to shots and explosions.",
 	Model		= "models/missiles/rk3uar.mdl",
 	EntType		= "Pod",
 	Mass		= 61,
 	Year		= 1941,
 	Armor		= 5,
 	MagSize		= 3,
+	Preview = {
+		Height = 115,
+		FOV    = 60,
+	},
 
 	ProtectMissile = true,
 
@@ -154,6 +175,9 @@ ACF.RegisterRack("6xUARRK", {
 	Year		= 1980,
 	Armor		= 5,
 	MagSize		= 6,
+	Preview = {
+		FOV = 60,
+	},
 
 	ProtectMissile = true,
 
@@ -177,6 +201,10 @@ ACF.RegisterRack("1x FIM-92", {
 	Year		= 1984,
 	MagSize		= 1,
 	Armor		= 2.5,
+	Preview = {
+		Height = 70,
+		FOV    = 60,
+	},
 
 	ProtectMissile = true,
 
@@ -195,6 +223,10 @@ ACF.RegisterRack("2x FIM-92", {
 	Year		= 1984,
 	MagSize		= 2,
 	Armor		= 16,
+	Preview = {
+		Height = 90,
+		FOV    = 60,
+	},
 
 	ProtectMissile = true,
 
@@ -214,6 +246,9 @@ ACF.RegisterRack("4x FIM-92", {
 	Year		= 1984,
 	MagSize		= 4,
 	Armor		= 5,
+	Preview = {
+		FOV = 65,
+	},
 
 	ProtectMissile = true,
 
@@ -235,6 +270,9 @@ ACF.RegisterRack("1x Strela-1", {
 	Year		= 1968,
 	MagSize		= 1,
 	Armor		= 5,
+	Preview = {
+		FOV = 60,
+	},
 
 	ProtectMissile = true,
 
@@ -253,6 +291,9 @@ ACF.RegisterRack("2x Strela-1", {
 	Year		= 1968,
 	MagSize		= 2,
 	Armor		= 5,
+	Preview = {
+		FOV = 65,
+	},
 
 	ProtectMissile = true,
 
@@ -272,6 +313,9 @@ ACF.RegisterRack("4x Strela-1", {
 	Year		= 1968,
 	MagSize		= 4,
 	Armor		= 5,
+	Preview = {
+		FOV = 60,
+	},
 
 	ProtectMissile = true,
 
@@ -294,6 +338,10 @@ ACF.RegisterRack("1x Ataka", {
 	Year		= 1968,
 	MagSize		= 1,
 	Armor		= 2.5,
+	Preview = {
+		Height = 60,
+		FOV    = 60,
+	},
 
 	ProtectMissile = true,
 	HideMissile = true,
@@ -313,6 +361,10 @@ ACF.RegisterRack("1x SPG9", {
 	Year		= 1968,
 	MagSize		= 1,
 	Armor		= 5,
+	Preview = {
+		Height = 80,
+		FOV    = 60,
+	},
 
 	ProtectMissile = true,
 	HideMissile = true,
@@ -332,6 +384,9 @@ ACF.RegisterRack("1x Kornet", {
 	Year		= 1994,
 	MagSize		= 1,
 	Armor		= 2.5,
+	Preview = {
+		FOV = 60,
+	},
 
 	ProtectMissile = true,
 	HideMissile = true,
@@ -351,6 +406,10 @@ ACF.RegisterRack("127mm4xPOD", {
 	Year		= 1957,
 	MagSize		= 4,
 	Armor		= 5,
+	Preview = {
+		Height = 100,
+		FOV    = 60,
+	},
 
 	ProtectMissile = true,
 

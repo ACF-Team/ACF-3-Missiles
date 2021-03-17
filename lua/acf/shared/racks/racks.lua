@@ -6,6 +6,10 @@ ACF.RegisterRack("1xRK", {
 	Year		= 1915,
 	MagSize		= 1,
 	Armor		= 10,
+	Preview = {
+		Height = 50,
+		FOV    = 60,
+	},
 
 	MountPoints = {
 		{ Name = "missile1", Position = Vector(0, 0, 2.5), Direction = Vector(0, 0, -1) }
@@ -20,6 +24,10 @@ ACF.RegisterRack("1xRK_small", {
 	Year		= 1915,
 	MagSize		= 1,
 	Armor		= 10,
+	Preview = {
+		Height = 100,
+		FOV    = 60,
+	},
 
 	MountPoints = {
 		{ Name = "missile1", Position = Vector(0, 0, 2.5), Direction = Vector(0, 0, -1) }
@@ -33,7 +41,10 @@ ACF.RegisterRack("2xRK", {
 	Mass		= 160,
 	Year		= 1915,
 	MagSize		= 2,
-	Armor		= 20,
+	Armor		= 10,
+	Preview = {
+		FOV = 85,
+	},
 
 	MountPoints = {
 		{ Name = "missile1", Position = Vector(4, -14, -1.7), Direction = Vector(0, -1, 0), Angle = Angle(0, 0, -90) },
@@ -43,12 +54,15 @@ ACF.RegisterRack("2xRK", {
 
 ACF.RegisterRack("3xRK", {
 	Name		= "Triple Munitions Rack",
-	Description	= "Based on the BRU-42 Triple Ejector Rack, it can hold up to three missiles or bombs.",
+	Description	= "Based on the BRU-42 Triple Ejector Rack, it can hold up to three bombs.",
 	Model		= "models/missiles/bomb_3xrk.mdl",
 	Mass		= 61,
 	Year		= 1936,
 	Armor		= 10,
 	MagSize		= 3,
+	Preview = {
+		FOV = 75,
+	},
 
 	MountPoints = {
 		{ Name = "missile1", Position = Vector(-4, 0, -8.8), Direction = Vector(0, 0, -1) },
@@ -65,6 +79,9 @@ ACF.RegisterRack("4xRK", {
 	Year		= 1936,
 	Armor		= 10,
 	MagSize		= 4,
+	Preview = {
+		FOV = 115,
+	},
 
 	MountPoints = {
 		{ Name = "missile1", Position = Vector(0, -12.5, -4.5), Direction = Vector(0, 0, -1) },
@@ -82,6 +99,10 @@ ACF.RegisterRack("2x AGM-114", {
 	Year		= 1984,
 	MagSize		= 2,
 	Armor		= 5,
+	Preview = {
+		Height = 90,
+		FOV    = 60,
+	},
 
 	MountPoints = {
 		{ Name = "missile1", Position = Vector(0, -7.85, 4.9), Direction = Vector(0, 0, -1) },
@@ -97,6 +118,9 @@ ACF.RegisterRack("4x AGM-114", {
 	Year		= 1984,
 	MagSize		= 4,
 	Armor		= 5,
+	Preview = {
+		FOV = 100,
+	},
 
 	MountPoints = {
 		{ Name = "missile1", Position = Vector(0, -7.85, 4.9), Direction = Vector(0, 0, -1) },
@@ -114,6 +138,9 @@ ACF.RegisterRack("1xAT3RK", {
 	Year		= 1969,
 	MagSize		= 1,
 	Armor		= 2.5,
+	Preview = {
+		FOV = 110,
+	},
 
 	MountPoints = {
 		{ Name = "missile1", Position = Vector(3.4, -0.2, 0.95) }
@@ -128,6 +155,9 @@ ACF.RegisterRack("1xAT3RKS", {
 	Year		= 1972,
 	MagSize		= 1,
 	Armor		= 2.5,
+	Preview = {
+		FOV = 80,
+	},
 
 	MountPoints = {
 		{ Name = "missile1", Position = Vector(21, -0.2, 6.1) }

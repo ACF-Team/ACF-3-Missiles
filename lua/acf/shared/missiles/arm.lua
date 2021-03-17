@@ -29,7 +29,7 @@ ACF.RegisterMissile("AGM-122 ASM", "ARM", {
 		Model			= "models/missiles/aim9.mdl",
 		MaxLength		= 287,
 		Armor			= 5,
-		PropMass		= 20,
+		PropLength		= 160,
 		Thrust			= 800000,	-- in kg*in/s^2
 		FuelConsumption = 0.02,		-- in g/s/f
 		StarterPercent	= 0.05,
@@ -40,6 +40,9 @@ ACF.RegisterMissile("AGM-122 ASM", "ARM", {
 		CanDelayLaunch	= true,
 		ActualLength 	= 287,
 		ActualWidth		= 12.7
+	},
+	Preview = {
+		FOV = 60,
 	},
 })
 
@@ -64,7 +67,7 @@ ACF.RegisterMissile("AGM-45 ASM", "ARM", {
 		Model			= "models/missiles/aim120.mdl",
 		MaxLength		= 305,
 		Armor			= 5,
-		PropMass		= 40,
+		PropLength		= 200,
 		Thrust			= 1500000, 	-- in kg*in/s^2
 		FuelConsumption = 0.020,		-- in g/s/f
 		StarterPercent	= 0.05,
@@ -75,5 +78,9 @@ ACF.RegisterMissile("AGM-45 ASM", "ARM", {
 		CanDelayLaunch	= true,
 		ActualLength 	= 305,
 		ActualWidth		= 20.3
+	},
+	Preview = {
+		Height = 80,
+		FOV    = 60,
 	},
 })
