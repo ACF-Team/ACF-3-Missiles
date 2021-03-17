@@ -580,7 +580,8 @@ function ENT:Detonate(Destroyed)
 		PhysObj:EnableMotion(false)
 	end
 
-	timer.Simple(1, function()
+	-- Absolutely terrible
+	timer.Simple(3, function()
 		if not IsValid(self) then return end
 
 		self:Remove()
