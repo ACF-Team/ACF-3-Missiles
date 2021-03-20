@@ -391,13 +391,6 @@ function MakeACF_Missile(Player, Pos, Ang, Rack, MountPoint, Crate)
 		Missile.SpeedBoost = Missile.StarterPercent * TotalLength * Missile.MaxThrust / (Missile.ProjMass + Missile.PropMass * 0.5)
 	end
 
-	do -- Exhaust pos
-		local Attachment = Missile:GetAttachment(Missile:LookupAttachment("exhaust"))
-		local Offset = Missile.ExhaustOffset or (Attachment and Attachment.Pos) or Vector()
-
-		Missile.ExhaustPos = Missile:WorldToLocal(Offset)
-	end
-
 	local PhysObj = Missile:GetPhysicsObject()
 
 	if IsValid(PhysObj) then
@@ -480,6 +473,13 @@ function ENT:Launch(Delay, IsMisfire)
 
 	for _, Missile in pairs(Rack.Missiles) do
 		self.Filter[#self.Filter + 1] = Missile
+	end
+
+	do -- Exhaust pos
+		local Attachment = self:GetAttachment(self:LookupAttachment("exhaust"))
+		local Offset = self.ExhaustOffset or Attachment and Attachment.Pos
+
+		self.ExhaustPos = self:WorldToLocal(Offset or Vector())
 	end
 
 	self:EmitSound("phx/epicmetal_hard.wav", 70, math.random(99, 101), ACF.Volume)
