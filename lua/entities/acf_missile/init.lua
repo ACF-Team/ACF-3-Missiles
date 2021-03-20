@@ -125,6 +125,34 @@ local function Dud(Missile)
 	end)
 end
 
+local Navigation = {}
+
+-- Chase - Simply steers itself towards the target
+-- Applicable to anti radiation missiles, and others not needing lead
+function Navigation.Chase(TimeToHit, RelPos)
+	local Scalar = 9 / TimeToHit^2
+	return Scalar * RelPos
+end
+
+-- Proportional navigation - Takes the relative position and velocity into account
+-- Applicable to early generation missiles
+function Navigation.PN(TimeToHit, RelPos, RelVel)
+	local Scalar = 9 / TimeToHit^2
+	local Pos    = RelPos
+	local Vel    = RelVel * TimeToHit
+	return Scalar * (Pos + Vel)
+end
+
+-- Augmented proportional navigation - Takes the relative position, velocity and acceleration into account
+-- Applicable to most modern missiles
+function Navigation.APN(TimeToHit, RelPos, RelVel, RelAcc)
+	local Scalar = 9 / TimeToHit^2
+	local Pos    = RelPos
+	local Vel    = RelVel * TimeToHit
+	local Acc    = RelAcc * 0.015 * TimeToHit^2 * 0.5
+	return Scalar * (Pos + Vel + Acc)
+end
+
 -- TODO: Missiles must base their movement off an ACF bullet
 local function CalcFlight(Missile)
 	if not Missile.Launched then return end
@@ -175,6 +203,7 @@ local function CalcFlight(Missile)
 		-- Augmented proportional navigation component (relative acceleration)
 		if Missile.GuidanceAccel == true then Nav = Nav + (Missile.FilteredAcc * 0.015) * TimeToHit^2 * 0.5 end
 		Nav = Nav * Scalar
+		Nav = Missile.Navigation(TimeToHit, RelPos, RelVel, Missile.FilteredAcc)
 		-- Making the acceleration perpendicular to the velocity and limiting it
 		Nav = Nav - Nav:Dot(VelNorm) * VelNorm
 		if Nav:Length() > Missile.GLimit then
@@ -364,8 +393,7 @@ function MakeACF_Missile(Player, Pos, Ang, Rack, MountPoint, Crate)
 	Missile.Length          = Length
 	Missile.TorqueMul       = Length * 0.15 * Round.TailFinMul
 	Missile.ControlSurfMul  = (Round.MaxAgilitySpeed * 39.37)^-2
-	Missile.GuidanceVel     = (Data.Navigation.APN or Data.Navigation.PN) and true or false
-	Missile.GuidanceAccel   = Data.Navigation.APN and true or false
+	Missile.Navigation      = Navigation[Data.Navigation]
 	Missile.RotAxis         = Vector()
 	Missile.UseGuidance     = true
 	Missile.MotorEnabled    = false
