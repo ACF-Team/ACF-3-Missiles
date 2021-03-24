@@ -21,7 +21,9 @@ ACF.RegisterMissile("RS82 ASR", "UAR", {
 	Year		= 1933,
 	Racks		= { ["1xRK_small"] = true, ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true },
 	Guidance	= { Dumb = true },
-	Fuzes		= { Contact = true, Timed = true },
+	Navigation  = "Chase",
+	Fuzes		= { Contact = true, Timed = true },`
+	Agility     = 1,
 	ArmDelay	= 0.3,
 	Bodygroups = {
 		warhead = {
@@ -41,12 +43,13 @@ ACF.RegisterMissile("RS82 ASR", "UAR", {
 		MaxLength		= 60,
 		Armor			= 5,
 		PropLength		= 35,
-		Thrust			= 40000,	-- in kg*in/s^2
-		FuelConsumption = 0.08,		-- in g/s/f
+		Thrust			= 40000,    -- in kg*in/s^2
+		FuelConsumption = 0.08,     -- in g/s/f
 		StarterPercent	= 0.15,
-		MinSpeed		= 6000,
+		MaxAgilitySpeed = 1,        -- in m/s
 		DragCoef		= 0.001,
 		FinMul			= 0.01,
+		GLimit          = 1,
 		TailFinMul		= 0.05,
 		PenMul			= math.sqrt(2),
 		ActualLength 	= 60,
@@ -70,7 +73,9 @@ ACF.RegisterMissile("HVAR ASR", "UAR", {
 	Year		= 1933,
 	Racks		= { ["1xRK_small"] = true, ["1xRK"] = true, ["2xRK"] = true, ["3xUARRK"] = true, ["4xRK"] = true },
 	Guidance	= { Dumb = true },
+	Navigation  = "Chase",
 	Fuzes		= { Contact = true, Timed = true },
+	Agility     = 1,
 	ArmDelay	= 0.3,
 	Round = {
 		Model			= "models/missiles/hvar.mdl",
@@ -78,12 +83,13 @@ ACF.RegisterMissile("HVAR ASR", "UAR", {
 		MaxLength		= 173,
 		Armor			= 5,
 		PropLength		= 95,
-		Thrust			= 270000,	-- in kg*in/s^2
-		FuelConsumption = 0.053,	-- in g/s/f
+		Thrust			= 270000,   -- in kg*in/s^2
+		FuelConsumption = 0.053,    -- in g/s/f
 		StarterPercent	= 0.15,
-		MinSpeed		= 5000,
+		MaxAgilitySpeed = 1,        -- in m/s
 		DragCoef		= 0.005,
 		FinMul			= 0.01,
+		GLimit          = 1,
 		TailFinMul		= 0.075,
 		PenMul			= math.sqrt(1),
 		ActualLength 	= 173,
@@ -105,7 +111,9 @@ ACF.RegisterMissile("SPG-9 ASR", "UAR", {
 	ReloadTime	= 10,
 	Racks		= { ["1x SPG9"] = true },
 	Guidance	= { Dumb = true },
+	Navigation  = "Chase",
 	Fuzes		= { Contact = true, Optical = true },
+	Agility     = 1,
 	ArmDelay	= 0.05,
 	Round = {
 		Model			= "models/missiles/glatgm/9m112f.mdl",
@@ -113,12 +121,13 @@ ACF.RegisterMissile("SPG-9 ASR", "UAR", {
 		MaxLength		= 100,
 		Armor			= 5,
 		PropLength		= 55,
-		Thrust			= 300000,	-- in kg*in/s^2
-		FuelConsumption = 0.019,		-- in g/s/f
+		Thrust			= 300000,   -- in kg*in/s^2
+		FuelConsumption = 0.019,    -- in g/s/f
 		StarterPercent	= 0.95,
-		MinSpeed		= 900,
+		MaxAgilitySpeed = 1,        -- in m/s
 		DragCoef		= 0.005,
 		FinMul			= 0.002,
+		GLimit          = 1,
 		TailFinMul		= 0.02,
 		PenMul			= math.sqrt(3),
 		ActualLength 	= 100,
@@ -141,20 +150,23 @@ ACF.RegisterMissile("S-24 ASR", "UAR", {
 	Year		= 1960,
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true },
 	Guidance	= { Dumb = true },
+	Navigation  = "Chase",
 	Fuzes		= { Contact = true, Timed = true },
 	SkinIndex	= { HEAT = 0, HE = 1 },
+	Agility     = 1,
 	ArmDelay	= 0.3,
 	Round = {
 		Model			= "models/missiles/s24.mdl",
 		MaxLength		= 233,
 		Armor			= 5,
 		PropLength		= 130,
-		Thrust			= 2000000,	-- in kg*in/s^2
-		FuelConsumption = 0.052,	-- in g/s/f
+		Thrust			= 2000000,  -- in kg*in/s^2
+		FuelConsumption = 0.052,    -- in g/s/f
 		StarterPercent	= 0.15,
-		MinSpeed		= 10000,
+		MaxAgilitySpeed = 1,        -- in m/s
 		DragCoef		= 0.01,
 		FinMul			= 0.1,
+		GLimit          = 1,
 		TailFinMul		= 0.3,
 		PenMul			= math.sqrt(1.5),
 		ActualLength 	= 233,
@@ -176,9 +188,8 @@ ACF.RegisterMissile("RW61 ASR", "UAR", {
 	ReloadTime	= 40,
 	Racks		= { ["380mmRW61"] = true },
 	Guidance	= { Dumb = true },
+	Navigation  = "Chase",
 	Fuzes		= { Contact = true, Optical = true },
-	SeekCone	= 35,
-	ViewCone	= 55,
 	Agility		= 1,
 	ArmDelay	= 0.5,
 	Round = {
@@ -187,12 +198,13 @@ ACF.RegisterMissile("RW61 ASR", "UAR", {
 		MaxLength		= 150,
 		Armor			= 5,
 		PropLength		= 85,
-		Thrust			= 500000,	-- in kg*in/s^2
-		FuelConsumption = 0.048,		-- in g/s/f
+		Thrust			= 500000,   -- in kg*in/s^2
+		FuelConsumption = 0.048,    -- in g/s/f
 		StarterPercent	= 0.2,
-		MinSpeed		= 1,
+		MaxAgilitySpeed = 1,        -- in m/s
 		DragCoef		= 0.02,
 		FinMul			= 0,
+		GLimit          = 1,
 		TailFinMul		= 10,
 		PenMul			= math.sqrt(1),
 		ActualLength 	= 150,

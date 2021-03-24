@@ -597,7 +597,7 @@ do -- Loading ----------------------------------
 			local Missile = AddMissile(self, Point, Crate)
 			local Bullet  = Missile.BulletData
 			local Percent = math.max(0.5, (Bullet.ProjLength + Bullet.PropLength) / Missile.MaxLength)
-			local Time    = 1--Missile.ReloadTime * Percent
+			local Time    = 0.1--Missile.ReloadTime * Percent
 
 			Point.NextFire = ACF.CurTime + Time
 			Point.State    = "Loading"

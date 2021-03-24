@@ -383,7 +383,7 @@ function MakeACF_Missile(Player, Pos, Ang, Rack, MountPoint, Crate)
 	Missile.GLimit          = Round.GLimit * 9.81 * 39.37
 	Missile.CanDelay        = Round.CanDelayLaunch
 	Missile.MaxLength       = Round.MaxLength
-	Missile.Agility         = Data.Agility * 1e10 or 1
+	Missile.Agility         = (Data.Agility or 1) * 1e10
 	Missile.ProjMass        = BulletData.ProjMass
 	Missile.PropMass        = BulletData.PropMass
 	Missile.Mass            = Missile.ProjMass + Missile.PropMass
