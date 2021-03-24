@@ -24,7 +24,7 @@ ACF.RegisterMissile("AIM-9 AAM", "AAM", {
 	Fuzes		= { Contact = true, Radio = true },
 	SeekCone	= 10,
 	ViewCone	= 30,
-	Agility		= 1,
+	Agility		= 0.0035,
 	ArmDelay	= 0.2,
 	Round = {
 		Model			= "models/missiles/aim9m.mdl",
@@ -34,7 +34,7 @@ ACF.RegisterMissile("AIM-9 AAM", "AAM", {
 		Thrust			= 800000,	-- in kg*in/s^2
 		FuelConsumption = 0.02,		-- in g/s/f
 		StarterPercent	= 0.05,
-		MaxAgilitySpeed = 350,      -- in m/s
+		MaxAgilitySpeed = 300,      -- in m/s
 		DragCoef		= 0.015,
 		FinMul			= 0.1,
 		GLimit          = 20,
@@ -65,7 +65,7 @@ ACF.RegisterMissile("AIM-120 AAM", "AAM", {
 	Fuzes		= { Contact = true, Radio = true },
 	SeekCone	= 10,
 	ViewCone	= 30,
-	Agility		= 3,
+	Agility		= 0.015,
 	ArmDelay	= 0.2,
 	Round = {
 		Model			= "models/missiles/aim120c.mdl",
@@ -104,22 +104,22 @@ ACF.RegisterMissile("AIM-54 AAM", "AAM", {
 	Guidance	= { Dumb = true, ["Semi-Active Radar"] = true, ["Active Radar"] = true },
 	Navigation  = "PN",
 	Fuzes		= { Contact = true, Radio = true },
-	SeekCone	= 5,
+	SeekCone	= 10,
 	ViewCone	= 20,
-	Agility		= 4,
+	Agility		= 0.04,
 	ArmDelay	= 0.4,
 	Round = {
 		Model			= "models/missiles/aim54.mdl",
 		MaxLength		= 400,
 		Armor			= 5,
 		PropLength		= 250,
-		Thrust			= 3200000,	-- in kg*in/s^2
-		FuelConsumption = 0.05,		-- in g/s/f
+		Thrust			= 5200000,	-- in kg*in/s^2
+		FuelConsumption = 0.04,		-- in g/s/f
 		StarterPercent	= 0.01,
-		MaxAgilitySpeed = 350,      -- in m/s
+		MaxAgilitySpeed = 300,      -- in m/s
 		DragCoef		= 0.1,
-		FinMul			= 0.15,
-		GLimit          = 20,
+		FinMul			= 0.3,
+		GLimit          = 12,
 		TailFinMul		= 0.001,
 		CanDelayLaunch	= true,
 		ActualLength 	= 400,

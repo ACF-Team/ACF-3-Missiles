@@ -4,69 +4,116 @@ local Guidance = ACF.RegisterGuidance("Anti-missile", "Anti-radiation")
 if CLIENT then
 	Guidance.Description = "This guidance package uses a radar to detect missiles and guides the munition towards the most centered one it can find."
 else
-	function Guidance:GetRadar(Type)
+	Guidance.RadarType = "AM-Radar"
+
+	function Guidance:GetRadar()
 		if not IsValid(self.Source) then return end
 
 		local Radar = self.Source.Radar
 
 		if not IsValid(Radar) then return end
 		if not Radar.Scanning then return end
-		if Radar.ClassType ~= Type then return end
+		if Radar.ClassType ~= self.RadarType then return end
 
 		return Radar
 	end
 
-	function Guidance:FindNewTarget(Missile, Radar)
-		if not Radar then return end
-		if Radar.TargetCount == 0 then return end
-
-		local Targets = Radar.Targets
-		local Position = Missile:GetPos()
+	function Guidance:SeekTarget(Missile)
+		local Position   = Missile.Position
+		local Targets    = ACFM_GetMissilesInCone(Position, Missile:GetForward(), self.SeekCone)
 		local HighestDot = 0
-		local CurrentDot, Target
+		local Target, TargetPos
 
-		for Entity, Data in pairs(Targets) do
-			local TargetPos = Data.Position
-			local Distance  = Position:DistToSqr(TargetPos)
+		for Entity in pairs(Targets) do
+			if Missile == Entity then continue end
 
-			if Distance >= self.MinDistance and self:CheckConeLOS(Missile, Position, TargetPos, self.SeekConeCos) then
-				CurrentDot = self.GetDirectionDot(Missile, TargetPos)
+			local EntPos   = Entity.Position
+			local Distance = Position:DistToSqr(EntPos)
 
-				if CurrentDot > HighestDot then
-					HighestDot = CurrentDot
-					Target = Entity
-				end
+			if Distance < self.MinDistance then continue end
+			if not self:CheckConeLOS(Missile, Position, EntPos, self.SeekConeCos) then continue end
+
+			local CurrentDot = self.GetDirectionDot(Missile, EntPos)
+
+			if CurrentDot > HighestDot then
+				HighestDot = CurrentDot
+				TargetPos  = EntPos
+				Target     = Entity
 			end
 		end
 
-		return Target
+		self.Target  = Target
+		self.OnRadar = nil
+
+		return TargetPos
+	end
+
+	function Guidance:UpdateTarget(Missile, Radar)
+		if not Radar or Radar.TargetCount == 0 then
+			return self:SeekTarget(Missile)
+		end
+
+		local Targets    = Radar.Targets
+		local Position   = Missile.Position
+		local HighestDot = 0
+		local Target, TargetPos
+
+		for Entity, Data in pairs(Targets) do
+			if Missile == Entity then continue end
+
+			local EntPos   = Data.Position
+			local Distance = Position:DistToSqr(EntPos)
+
+			if Distance < self.MinDistance then continue end
+			if not self:CheckConeLOS(Missile, Position, EntPos, self.SeekConeCos) then continue end
+
+			local CurrentDot = self.GetDirectionDot(Missile, EntPos)
+
+			if CurrentDot > HighestDot then
+				HighestDot = CurrentDot
+				TargetPos  = EntPos
+				Target     = Entity
+			end
+		end
+
+		self.Target  = Target
+		self.OnRadar = true
+
+		return TargetPos
 	end
 
 	function Guidance:OnLaunched(Missile)
-		self.Target = self:FindNewTarget(Missile, self:GetRadar("AM-Radar"))
+		self:UpdateTarget(Missile, self:GetRadar())
+	end
+
+	function Guidance:GetTargetPosition(Radar)
+		local Target = self.Target
+
+		if not IsValid(Target) then return end
+
+		if self.OnRadar then
+			if not Radar then return end
+
+			local Data = Radar.Targets[Target]
+
+			return Data and Data.Position
+		end
+
+		return Target.Position
 	end
 
 	function Guidance:GetGuidance(Missile)
-		local Radar = self:GetRadar("AM-Radar")
+		local Radar     = self:GetRadar()
+		local TargetPos = self:GetTargetPosition(Radar)
 
-		if not Radar then return {} end
-
-		local Targets = Radar.Targets
-
-		if IsValid(self.Target) and Targets[self.Target] then
-			local Position = Targets[self.Target].Position
-
-			if self:CheckConeLOS(Missile, Missile:GetPos(), Position, self.ViewConeCos) then
-				return { TargetPos = Position, ViewCone = self.ViewCone }
-			end
+		if TargetPos and self:CheckConeLOS(Missile, Missile.Position, TargetPos, self.ViewConeCos) then
+			return { TargetPos = TargetPos, ViewCone = self.ViewCone }
 		end
 
-		self.Target = self:FindNewTarget(Missile, Radar)
+		local NewTarget = self:UpdateTarget(Missile, Radar)
 
-		if not self.Target then return {} end
+		if not NewTarget then return {} end
 
-		local Position = Targets[self.Target].Position
-
-		return { TargetPos = Position, ViewCone = self.ViewCone }
+		return { TargetPos = NewTarget, ViewCone = self.ViewCone }
 	end
 end

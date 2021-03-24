@@ -19,10 +19,11 @@ ACF.RegisterMissile("FIM-92 SAM", "SAM", {
 	ReloadTime	= 10,
 	Racks		= { ["1x FIM-92"] = true, ["2x FIM-92"] = true, ["4x FIM-92"] = true },
 	Guidance	= { Dumb = true, Infrared = true, ["Anti-missile"] = true },
+	Navigation  = "APN",
 	Fuzes		= { Contact = true, Radio = true },
 	SeekCone	= 7.5,
 	ViewCone	= 30,
-	Agility		= 3,
+	Agility		= 0.00023,
 	ArmDelay	= 0.2,
 	Round = {
 		Model			= "models/missiles/fim_92.mdl",
@@ -33,10 +34,10 @@ ACF.RegisterMissile("FIM-92 SAM", "SAM", {
 		Thrust			= 100000,	-- in kg*in/s^2
 		FuelConsumption = 0.03,		-- in g/s/f
 		StarterPercent	= 0.1,
-		MinSpeed		= 3000,
+		MaxAgilitySpeed = 200,      -- in m/s
 		DragCoef		= 0.003,
 		FinMul			= 0.03,
-		ControlSurfMul  = 1e-9,
+		GLimit          = 20,
 		TailFinMul		= 0.001,
 		ActualLength 	= 152,
 		ActualWidth		= 7
@@ -58,24 +59,25 @@ ACF.RegisterMissile("Strela-1 SAM", "SAM", {
 	ReloadTime	= 25,
 	Racks		= { ["1x Strela-1"] = true, ["2x Strela-1"] = true, ["4x Strela-1"] = true },
 	Guidance	= { Dumb = true, Infrared = true, ["Anti-missile"] = true },
+	Navigation  = "APN",
 	Fuzes		= { Contact = true, Radio = true },
 	SeekCone	= 20,
 	ViewCone	= 40,
-	Agility		= 2,
+	Agility		= 0.001,
 	ArmDelay	= 0.2,
 	Round = {
 		Model			= "models/missiles/9m31.mdl",
 		RackModel		= "models/missiles/9m31f.mdl",
 		MaxLength		= 180,
 		Armor			= 5,
-		PropLength		= 80,
-		Thrust			= 500000,	-- in kg*in/s^2
-		FuelConsumption = 0.033,	-- in g/s/f
+		PropLength		= 100,
+		Thrust			= 400000,	-- in kg*in/s^2
+		FuelConsumption = 0.025,	-- in g/s/f
 		StarterPercent	= 0.1,
-		MinSpeed		= 3000,
+		MaxAgilitySpeed = 300,      -- in m/s
 		DragCoef		= 0.003,
 		FinMul			= 0.04,
-		ControlSurfMul  = 1e-9,
+		GLimit          = 20,
 		TailFinMul		= 0.001,
 		ActualLength 	= 180,
 		ActualWidth		= 12

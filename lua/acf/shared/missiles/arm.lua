@@ -20,10 +20,11 @@ ACF.RegisterMissile("AGM-122 ASM", "ARM", {
 	ReloadTime	= 10,
 	Racks		= { ["1xRK_small"] = true, ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true },
 	Guidance	= { Dumb = true, ["Anti-radiation"] = true },
+	Navigation  = "Chase",
 	Fuzes		= { Contact = true, Optical = true },
 	SeekCone	= 10,
 	ViewCone	= 20,
-	Agility		= 0.3,
+	Agility		= 0.0035,
 	ArmDelay	= 0.2,
 	Round = {
 		Model			= "models/missiles/aim9.mdl",
@@ -33,9 +34,10 @@ ACF.RegisterMissile("AGM-122 ASM", "ARM", {
 		Thrust			= 800000,	-- in kg*in/s^2
 		FuelConsumption = 0.02,		-- in g/s/f
 		StarterPercent	= 0.05,
-		MinSpeed		= 3000,
+		MaxAgilitySpeed = 350,      -- in m/s
 		DragCoef		= 0.015,
 		FinMul			= 0.1,
+		GLimit          = 20,
 		TailFinMul		= 0.001,
 		CanDelayLaunch	= true,
 		ActualLength 	= 287,
@@ -58,10 +60,11 @@ ACF.RegisterMissile("AGM-45 ASM", "ARM", {
 	ReloadTime	= 25,
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true },
 	Guidance	= { Dumb = true, ["Anti-radiation"] = true },
+	Navigation  = "Chase",
 	Fuzes		= { Contact = true, Timed = true },
 	SeekCone	= 5,
 	ViewCone	= 10,
-	Agility		= 0.08,
+	Agility		= 0.015,
 	ArmDelay	= 0.3,
 	Round = {
 		Model			= "models/missiles/aim120.mdl",
@@ -71,9 +74,10 @@ ACF.RegisterMissile("AGM-45 ASM", "ARM", {
 		Thrust			= 1500000, 	-- in kg*in/s^2
 		FuelConsumption = 0.020,		-- in g/s/f
 		StarterPercent	= 0.05,
-		MinSpeed		= 2000,
+		MaxAgilitySpeed = 350,      -- in m/s
 		DragCoef		= 0.02,
 		FinMul			= 0.2,
+		GLimit          = 20,
 		TailFinMul		= 0.001,
 		CanDelayLaunch	= true,
 		ActualLength 	= 305,

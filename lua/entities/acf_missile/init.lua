@@ -130,8 +130,9 @@ local Navigation = {}
 -- Chase - Simply steers itself towards the target
 -- Applicable to anti radiation missiles, and others not needing lead
 function Navigation.Chase(TimeToHit, RelPos)
-	local Scalar = 9 / TimeToHit^2
-	return Scalar * RelPos
+	local Scalar   = 9 / TimeToHit^2
+	local Pos      = RelPos
+	return Scalar * RelPos - GravityVector
 end
 
 -- Proportional navigation - Takes the relative position and velocity into account
@@ -140,7 +141,7 @@ function Navigation.PN(TimeToHit, RelPos, RelVel)
 	local Scalar = 9 / TimeToHit^2
 	local Pos    = RelPos
 	local Vel    = RelVel * TimeToHit
-	return Scalar * (Pos + Vel)
+	return Scalar * (Pos + Vel) - GravityVector
 end
 
 -- Augmented proportional navigation - Takes the relative position, velocity and acceleration into account
@@ -149,8 +150,8 @@ function Navigation.APN(TimeToHit, RelPos, RelVel, RelAcc)
 	local Scalar = 9 / TimeToHit^2
 	local Pos    = RelPos
 	local Vel    = RelVel * TimeToHit
-	local Acc    = RelAcc * 0.015 * TimeToHit^2 * 0.5
-	return Scalar * (Pos + Vel + Acc)
+	local Acc    = RelAcc * TimeToHit^2 * 0.5
+	return Scalar * (Pos + Vel + Acc) - GravityVector
 end
 
 -- TODO: Missiles must base their movement off an ACF bullet
@@ -182,6 +183,7 @@ local function CalcFlight(Missile)
 	local TargetPos   = Guidance and Guidance.TargetPos
 
 	if TargetPos then
+		print("TargetPos: " .. TargetPos:Length())
 		-- Getting the relative position, velocity and acceleration
 		local RelPos = TargetPos - Pos
 		local RelVel = (RelPos - (Missile.LastRelPos or RelPos)) / DeltaTime
@@ -192,45 +194,42 @@ local function CalcFlight(Missile)
 		local RelSpd        = RelVel:Length()
 		local TimeToHit     = math.min(Dist / RelSpd, 60)
 		local PredSpeed     = RelSpd + Missile.Thrust / Missile.Mass * math.min(Missile.MotorLength, TimeToHit) * 0.5
-		print(RelSpd, PredSpeed)
 		TimeToHit           = math.min(Dist / PredSpeed, 60)
 		-- Guidance
-		local Scalar = 9 / TimeToHit^2
-		-- Chase component
-		local Nav    = RelPos
-		-- Proportional navigation component (relative velocity)
-		if Missile.GuidanceVel   == true then Nav = Nav + RelVel * TimeToHit end
-		-- Augmented proportional navigation component (relative acceleration)
-		if Missile.GuidanceAccel == true then Nav = Nav + (Missile.FilteredAcc * 0.015) * TimeToHit^2 * 0.5 end
-		Nav = Nav * Scalar
-		Nav = Missile.Navigation(TimeToHit, RelPos, RelVel, Missile.FilteredAcc)
+		local Nav = Missile.Navigation(TimeToHit, RelPos, RelVel, Missile.FilteredAcc)
 		-- Making the acceleration perpendicular to the velocity and limiting it
 		Nav = Nav - Nav:Dot(VelNorm) * VelNorm
 		if Nav:Length() > Missile.GLimit then
 			Nav = Nav:GetNormalized() * Missile.GLimit
 		end
+		print("Nav: " .. Nav:Length()/ 39.37 / 9.81)
 		-- Calculating the AoA (and subsequent direction) that produces the desired acceleration
 		local TargetAoA = math.deg(math.asin(math.min(Nav:Length() / LiftMultiplier, 1)))
+		print("Target AoA: "..TargetAoA)
 		local AoAAxis   = VelNorm:Cross(Nav):GetNormalized()
 		local TargetAng = VelNorm:Angle()
 		TargetAng:RotateAroundAxis(AoAAxis, TargetAoA)
 		local TargetDir = TargetAng:Forward()
 		-- Turning the missile to the target direction
-		local Agility    = Missile.Agility * math.min(1, Missile.ControlSurfMul * LastSpeedSqr)
-		local TurnTorque = Dir:Cross(TargetDir) * Agility
-		local DampTorque = -Missile.RotAxis * Inertia * 15
+		local Agility   = Missile.Agility * math.min(1, Missile.ControlSurfMul * LastSpeedSqr) / Inertia
+		local Axis      = Dir:Cross(TargetDir):GetNormalized()
+		local AngDiff   = math.deg(math.acos(math.Clamp(TargetDir:Dot(Dir), -1, 1)))
+		print("Deg/s: " .. Agility)
+		Missile.RotAxis = Axis * math.min(Agility, AngDiff / DeltaTime)
+		--[[
+		local DampTorque = -Missile.RotAxis * Inertia * Missile.Agility * 10
 		Torque = Torque + TurnTorque + DampTorque
-
+		]]
 		-- Updating persistent variables
 		Missile.LastRelPos = RelPos
 		Missile.LastRelVel = RelVel
 	end
 
-	Missile.RotAxis = Missile.RotAxis * (1 - 0.7 * DeltaTime)
 	Missile.RotAxis = Missile.RotAxis + Torque / Inertia * DeltaTime
 	local DirAng  = Dir:Angle()
 	DirAng:RotateAroundAxis(Missile.RotAxis:GetNormalized(), Missile.RotAxis:Length() * DeltaTime)
 	Dir = DirAng:Forward()
+	Missile.RotAxis = Missile.RotAxis * (1 - 0.7 * DeltaTime)
 
 	if Missile.MotorEnabled then
 		Missile.MotorLength = Missile.MotorLength - DeltaTime
