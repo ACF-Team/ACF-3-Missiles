@@ -38,9 +38,8 @@ function Ammo:BaseConvert(ToolData)
 
 	Data.SlugRicochet	= 500 -- Base ricochet angle (The HEAT slug shouldn't ricochet at all)
 	Data.ShovePower		= 0.1
-	Data.PenArea		= Data.FrArea ^ ACF.PenAreaMod
+	Data.PenArea		= Data.ProjArea ^ ACF.PenAreaMod
 	Data.LimitVel		= 100 -- Most efficient penetration speed in m/s
-	Data.KETransfert	= 0.1 -- Kinetic energy transfert to the target for movement purposes
 	Data.Ricochet		= 60 -- Base ricochet angle
 	Data.DetonatorAngle	= 75
 	Data.Detonated		= false
