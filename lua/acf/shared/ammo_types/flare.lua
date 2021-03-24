@@ -32,7 +32,7 @@ function Ammo:UpdateRoundData(ToolData, Data, GUIData)
 	local ProjMass	= math.max(GUIData.ProjVolume - ToolData.FillerMass, 0) * 0.0079 + math.min(ToolData.FillerMass, GUIData.ProjVolume) * ACF.HEDensity / 1000 --Volume of the projectile as a cylinder - Volume of the filler * density of steel + Volume of the filler * density of TNT
 	local MuzzleVel	= ACF_MuzzleVelocity(Data.PropMass, ProjMass)
 	local Energy	= ACF_Kinetic(MuzzleVel * 39.37, ProjMass, Data.LimitVel)
-	local MaxVolume	= ACF.RoundShellCapacity(Energy.Momentum, Data.FrArea, Data.Caliber, Data.ProjLength)
+	local MaxVolume	= ACF.RoundShellCapacity(Energy.Momentum, Data.ProjArea, Data.Caliber, Data.ProjLength)
 
 	GUIData.MaxFillerVol = math.Round(math.min(GUIData.ProjVolume, MaxVolume * 0.9), 2)
 	GUIData.FillerVol	 = math.Round(math.Clamp(ToolData.FillerMass, GUIData.MinFillerVol, GUIData.MaxFillerVol), 2)
@@ -40,7 +40,7 @@ function Ammo:UpdateRoundData(ToolData, Data, GUIData)
 	Data.FillerMass	= GUIData.FillerVol * ACF.HEDensity * 0.001
 	Data.ProjMass	= math.max(GUIData.ProjVolume - GUIData.FillerVol, 0) * 0.0079 + Data.FillerMass
 	Data.MuzzleVel	= ACF_MuzzleVelocity(Data.PropMass, Data.ProjMass)
-	Data.DragCoef	= Data.FrArea * 0.0027 / Data.ProjMass
+	Data.DragCoef	= Data.ProjArea * 0.0027 / Data.ProjMass
 	Data.BurnTime	= Data.FillerMass / Data.BurnRate
 	Data.CartMass	= Data.PropMass + Data.ProjMass
 
@@ -57,12 +57,12 @@ function Ammo:BaseConvert(ToolData)
 	GUIData.MinFillerVol = 0
 
 	Data.ShovePower		= 0.1
-	Data.PenArea		= Data.FrArea ^ ACF.PenAreaMod
+	Data.PenArea		= Data.ProjArea ^ ACF.PenAreaMod
 	Data.LimitVel		= 700 -- Most efficient penetration speed in m/s
 	Data.KETransfert	= 0.1 -- Kinetic energy transfert to the target for movement purposes
 	Data.Ricochet		= 75 -- Base ricochet angle
-	Data.BurnRate		= Data.FrArea * ACFM.FlareBurnMultiplier
-	Data.DistractChance	= (2 / math.pi) * math.atan(Data.FrArea * ACFM.FlareDistractMultiplier)	* 0.5 -- Reduced effectiveness 50% -red
+	Data.BurnRate		= Data.ProjArea * ACFM.FlareBurnMultiplier
+	Data.DistractChance	= (2 / math.pi) * math.atan(Data.ProjArea * ACFM.FlareDistractMultiplier)	* 0.5 -- Reduced effectiveness 50% -red
 
 	self:UpdateRoundData(ToolData, Data, GUIData)
 
