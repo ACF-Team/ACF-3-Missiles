@@ -22,7 +22,7 @@ ACF.RegisterMissile("RS82 ASR", "UAR", {
 	Racks		= { ["1xRK_small"] = true, ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true },
 	Guidance	= { Dumb = true },
 	Navigation  = "Chase",
-	Fuzes		= { Contact = true, Timed = true },`
+	Fuzes		= { Contact = true, Timed = true },
 	Agility     = 1,
 	ArmDelay	= 0.3,
 	Bodygroups = {

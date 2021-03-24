@@ -132,7 +132,7 @@ local Navigation = {}
 function Navigation.Chase(TimeToHit, RelPos)
 	local Scalar   = 9 / TimeToHit^2
 	local Pos      = RelPos
-	return Scalar * RelPos - GravityVector
+	return Scalar * Pos - GravityVector
 end
 
 -- Proportional navigation - Takes the relative position and velocity into account
@@ -380,7 +380,7 @@ function MakeACF_Missile(Player, Pos, Ang, Rack, MountPoint, Crate)
 	Missile.Inertia         = Missile.AreaOfInertia * Missile.Mass
 	Missile.Length          = Length
 	Missile.TorqueMul       = Length * 0.15 * Round.TailFinMul
-	Missile.ControlSurfMul  = (Round.MaxAgilitySpeed * 39.37)^-2
+	Missile.ControlSurfMul  = (Round.MaxAgilitySpeed * 39.37) ^ -2
 	Missile.Navigation      = Navigation[Data.Navigation]
 	Missile.RotAxis         = Vector()
 	Missile.UseGuidance     = true
