@@ -169,7 +169,6 @@ local function CalcFlight(Missile)
 	local Dir            = Missile.CurDir
 	local LastVel        = Missile.LastVel
 	local LastSpeed      = LastVel:Length()
-	print("Speed: " .. LastSpeed / 39.37)
 	local LastSpeedSqr   = LastVel:LengthSqr()
 	local VelNorm        = LastVel:GetNormalized()
 	local LiftMultiplier = LastSpeedSqr * Missile.FinMultiplier / Missile.Mass -- Lift per sin(AoA)
@@ -183,7 +182,6 @@ local function CalcFlight(Missile)
 	local TargetPos   = Guidance and Guidance.TargetPos
 
 	if TargetPos then
-		print("TargetPos: " .. TargetPos:Length())
 		-- Getting the relative position, velocity and acceleration
 		local RelPos = TargetPos - Pos
 		local RelVel = (RelPos - (Missile.LastRelPos or RelPos)) / DeltaTime
@@ -202,10 +200,8 @@ local function CalcFlight(Missile)
 		if Nav:Length() > Missile.GLimit then
 			Nav = Nav:GetNormalized() * Missile.GLimit
 		end
-		print("Nav: " .. Nav:Length()/ 39.37 / 9.81)
 		-- Calculating the AoA (and subsequent direction) that produces the desired acceleration
 		local TargetAoA = math.deg(math.asin(math.min(Nav:Length() / LiftMultiplier, 1)))
-		print("Target AoA: "..TargetAoA)
 		local AoAAxis   = VelNorm:Cross(Nav):GetNormalized()
 		local TargetAng = VelNorm:Angle()
 		TargetAng:RotateAroundAxis(AoAAxis, TargetAoA)
@@ -214,13 +210,8 @@ local function CalcFlight(Missile)
 		local Agility   = Missile.Agility * math.min(1, Missile.ControlSurfMul * LastSpeedSqr) / Inertia
 		local Axis      = Dir:Cross(TargetDir):GetNormalized()
 		local AngDiff   = math.deg(math.acos(math.Clamp(TargetDir:Dot(Dir), -1, 1)))
-		print("Deg/s: " .. Agility)
 		Missile.RotAxis = Axis * math.min(Agility, AngDiff / DeltaTime)
-		--[[
-		local DampTorque = -Missile.RotAxis * Inertia * Missile.Agility * 10
-		Torque = Torque + TurnTorque + DampTorque
-		]]
-		-- Updating persistent variables
+
 		Missile.LastRelPos = RelPos
 		Missile.LastRelVel = RelVel
 	end
@@ -250,8 +241,6 @@ local function CalcFlight(Missile)
 	local Drag      = LastVel * (Missile.DragCoef * LastSpeed) / ACF.DragDiv * ACF.Scale / Missile.Mass
 	local Vel       = LastVel + (GravityVector + Thrust + Lift - Drag) * DeltaTime
 	local EndPos    = Pos + Vel * DeltaTime
-
-	print("Lift: " .. Lift:Length() / 39.37 / 9.8)
 
 	Missile.Velocity = Vel
 
