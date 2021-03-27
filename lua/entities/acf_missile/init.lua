@@ -125,6 +125,35 @@ local function Dud(Missile)
 	end)
 end
 
+local Navigation = {}
+
+-- Chase - Simply steers itself towards the target
+-- Applicable to anti radiation missiles, and others not needing lead
+function Navigation.Chase(TimeToHit, RelPos)
+	local Scalar   = 9 / TimeToHit^2
+	local Pos      = RelPos
+	return Scalar * Pos - GravityVector
+end
+
+-- Proportional navigation - Takes the relative position and velocity into account
+-- Applicable to early generation missiles
+function Navigation.PN(TimeToHit, RelPos, RelVel)
+	local Scalar = 9 / TimeToHit^2
+	local Pos    = RelPos
+	local Vel    = RelVel * TimeToHit
+	return Scalar * (Pos + Vel) - GravityVector
+end
+
+-- Augmented proportional navigation - Takes the relative position, velocity and acceleration into account
+-- Applicable to most modern missiles
+function Navigation.APN(TimeToHit, RelPos, RelVel, RelAcc)
+	local Scalar = 9 / TimeToHit^2
+	local Pos    = RelPos
+	local Vel    = RelVel * TimeToHit
+	local Acc    = RelAcc * TimeToHit^2 * 0.5
+	return Scalar * (Pos + Vel + Acc) - GravityVector
+end
+
 -- TODO: Missiles must base their movement off an ACF bullet
 local function CalcFlight(Missile)
 	if not Missile.Launched then return end
@@ -132,79 +161,66 @@ local function CalcFlight(Missile)
 
 	local Time = ACF.CurTime
 	local DeltaTime = Time - Missile.LastThink
+	Missile.LastThink = Time
 
 	if DeltaTime <= 0 then return end
 
-	local Pos       = Missile.Position
-	local Dir       = Missile.CurDir
-	local LastVel   = Missile.LastVel
-	local LastSpeed = LastVel:Length()
+	local Pos            = Missile.Position
+	local Dir            = Missile.CurDir
+	local LastVel        = Missile.LastVel
+	local LastSpeed      = LastVel:Length()
+	local LastSpeedSqr   = LastVel:LengthSqr()
+	local VelNorm        = LastVel:GetNormalized()
+	local LiftMultiplier = LastSpeedSqr * Missile.FinMultiplier / Missile.Mass -- Lift per sin(AoA)
 
-	Missile.LastThink = Time
+	-- Torque from the back fins
+	local Inertia = Missile.Inertia
+	local Torque  = Dir:Cross(LastVel) * LastSpeed * Missile.TorqueMul
 
 	--Guidance calculations
-	local Guidance = Missile.UseGuidance and Missile.GuidanceData:GetGuidance(Missile)
-	local TargetPos = Guidance and Guidance.TargetPos
+	local Guidance    = Missile.UseGuidance and Missile.GuidanceData:GetGuidance(Missile)
+	local TargetPos   = Guidance and Guidance.TargetPos
 
 	if TargetPos then
-		local Dist = Pos:Distance(TargetPos)
-
-		TargetPos = TargetPos + Vector(0, 0, GravityCvar:GetFloat() * Dist / 100000)
-
-		local LOS = (TargetPos - Pos):GetNormalized()
-		local LastLOS = Missile.LastLOS
-		local NewDir = Dir
-		local DirDiff = 0
-
-		if LastLOS then
-			local SpeedMul = math.min((LastSpeed / Missile.MinimumSpeed) ^ 3, 1)
-			local LOSDiff = math.deg(math.acos(LastLOS:Dot(LOS))) * 20
-			local MaxTurn = Missile.Agility * SpeedMul * 3
-
-			if LOSDiff > 0.01 and MaxTurn > 0.1 then
-				local LOSNormal = LastLOS:Cross(LOS):GetNormalized()
-				local Ang = NewDir:Angle()
-
-				Ang:RotateAroundAxis(LOSNormal, math.min(LOSDiff, MaxTurn))
-
-				NewDir = Ang:Forward()
-			end
-
-			DirDiff = math.deg(math.acos(NewDir:Dot(LOS)))
-
-			if DirDiff > 0.01 then
-				local DirNormal = NewDir:Cross(LOS):GetNormalized()
-				local TurnAng = math.min(DirDiff, MaxTurn) / 10
-				local Ang = NewDir:Angle()
-
-				Ang:RotateAroundAxis(DirNormal, TurnAng)
-
-				NewDir = Ang:Forward()
-				DirDiff = DirDiff - TurnAng
-			end
+		-- Getting the relative position, velocity and acceleration
+		local RelPos = TargetPos - Pos
+		local RelVel = (RelPos - (Missile.LastRelPos or RelPos)) / DeltaTime
+		local RelAcc = (RelVel - (Missile.LastRelVel or RelVel)) / DeltaTime
+		-- Filtering the acceleration
+		Missile.FilteredAcc = (Missile.FilteredAcc or RelAcc) * 0.8 + RelAcc * 0.2
+		local Dist          = RelPos:Length()
+		local RelSpd        = RelVel:Length()
+		local TimeToHit     = math.min(Dist / RelSpd, 60)
+		local PredSpeed     = RelSpd + Missile.Thrust / Missile.Mass * math.min(Missile.MotorLength, TimeToHit) * 0.5
+		TimeToHit           = math.min(Dist / PredSpeed, 60)
+		-- Guidance
+		local Nav = Missile.Navigation(TimeToHit, RelPos, RelVel, Missile.FilteredAcc)
+		-- Making the acceleration perpendicular to the velocity and limiting it
+		Nav = Nav - Nav:Dot(VelNorm) * VelNorm
+		if Nav:Length() > Missile.GLimit then
+			Nav = Nav:GetNormalized() * Missile.GLimit
 		end
+		-- Calculating the AoA (and subsequent direction) that produces the desired acceleration
+		local TargetAoA = math.deg(math.asin(math.min(Nav:Length() / LiftMultiplier, 1)))
+		local AoAAxis   = VelNorm:Cross(Nav):GetNormalized()
+		local TargetAng = VelNorm:Angle()
+		TargetAng:RotateAroundAxis(AoAAxis, TargetAoA)
+		local TargetDir = TargetAng:Forward()
+		-- Turning the missile to the target direction
+		local Agility   = Missile.Agility * math.min(1, Missile.ControlSurfMul * LastSpeedSqr) / Inertia
+		local Axis      = Dir:Cross(TargetDir):GetNormalized()
+		local AngDiff   = math.deg(math.acos(math.Clamp(TargetDir:Dot(Dir), -1, 1)))
+		Missile.RotAxis = Axis * math.min(Agility, AngDiff / DeltaTime)
 
-		-- FOV check
-		-- ViewCone is active-seeker specific
-		if not Guidance.ViewCone or DirDiff <= Guidance.ViewCone then
-			Dir = NewDir
-		end
-
-		Missile.LastLOS = LOS
-	else
-		local DirAng  = Dir:Angle()
-		local Inertia = Missile.Inertia
-		local Torque  = Dir:Cross(LastVel) * LastSpeed * Missile.TorqueMul / Inertia
-
-		Missile.RotAxis = Missile.RotAxis + Torque * DeltaTime
-
-		DirAng:RotateAroundAxis(Missile.RotAxis:GetNormalized(), Missile.RotAxis:Length() * DeltaTime)
-
-		Missile.RotAxis = Missile.RotAxis * (1 - 0.7 * DeltaTime)
-		Missile.LastLOS = nil
-
-		Dir = DirAng:Forward()
+		Missile.LastRelPos = RelPos
+		Missile.LastRelVel = RelVel
 	end
+
+	Missile.RotAxis = Missile.RotAxis + Torque / Inertia * DeltaTime
+	local DirAng  = Dir:Angle()
+	DirAng:RotateAroundAxis(Missile.RotAxis:GetNormalized(), Missile.RotAxis:Length() * DeltaTime)
+	Dir = DirAng:Forward()
+	Missile.RotAxis = Missile.RotAxis * (1 - 0.7 * DeltaTime)
 
 	if Missile.MotorEnabled then
 		Missile.MotorLength = Missile.MotorLength - DeltaTime
@@ -218,12 +234,12 @@ local function CalcFlight(Missile)
 		end
 	end
 
-	local Thrust    = Dir * Missile.Thrust
+	local Thrust    = Dir * Missile.Thrust / Missile.Mass
 	local Up        = Dir:Cross(LastVel):Cross(Dir):GetNormalized()
-	local DotSimple = Up.x * LastVel.x + Up.y * LastVel.y + Up.z * LastVel.z
-	local Lift      = -Up * LastSpeed * DotSimple * Missile.FinMultiplier
-	local Drag      = LastVel * (Missile.DragCoef * LastSpeed) / ACF.DragDiv * ACF.Scale
-	local Vel       = LastVel + (GravityVector + (Thrust + Lift - Drag) / Missile.Mass) * DeltaTime
+	local DotSimple = Up.x * VelNorm.x + Up.y * VelNorm.y + Up.z * VelNorm.z
+	local Lift      = -Up * DotSimple * LiftMultiplier
+	local Drag      = LastVel * (Missile.DragCoef * LastSpeed) / ACF.DragDiv * ACF.Scale / Missile.Mass
+	local Vel       = LastVel + (GravityVector + Thrust + Lift - Drag) * DeltaTime
 	local EndPos    = Pos + Vel * DeltaTime
 
 	Missile.Velocity = Vel
@@ -349,15 +365,14 @@ function MakeACF_Missile(Player, Pos, Ang, Rack, MountPoint, Crate)
 	Missile.RackModel       = Rack.MissileModel or Round.RackModel
 	Missile.RealModel       = Round.Model
 	Missile.DragCoef        = Round.DragCoef
-	Missile.DragCoefFlight  = Round.DragCoefFlight or Round.DragCoef
-	Missile.MinimumSpeed    = Round.MinSpeed
 	Missile.MaxThrust       = Round.Thrust
 	Missile.FuelConsumption = Round.FuelConsumption * 0.001
 	Missile.StarterPercent  = Round.StarterPercent
 	Missile.FinMultiplier   = Round.FinMul
+	Missile.GLimit          = Round.GLimit * 9.81 * 39.37
 	Missile.CanDelay        = Round.CanDelayLaunch
 	Missile.MaxLength       = Round.MaxLength
-	Missile.Agility         = Data.Agility or 1
+	Missile.Agility         = (Data.Agility or 1) * 1e10
 	Missile.ProjMass        = BulletData.ProjMass
 	Missile.PropMass        = BulletData.PropMass
 	Missile.Mass            = Missile.ProjMass + Missile.PropMass
@@ -365,6 +380,8 @@ function MakeACF_Missile(Player, Pos, Ang, Rack, MountPoint, Crate)
 	Missile.Inertia         = Missile.AreaOfInertia * Missile.Mass
 	Missile.Length          = Length
 	Missile.TorqueMul       = Length * 0.15 * Round.TailFinMul
+	Missile.ControlSurfMul  = (Round.MaxAgilitySpeed * 39.37) ^ -2
+	Missile.Navigation      = Navigation[Data.Navigation]
 	Missile.RotAxis         = Vector()
 	Missile.UseGuidance     = true
 	Missile.MotorEnabled    = false
@@ -389,6 +406,13 @@ function MakeACF_Missile(Player, Pos, Ang, Rack, MountPoint, Crate)
 		Missile.MaxMotorLength = TotalLength
 		Missile.MotorLength = (1 - Missile.StarterPercent) * TotalLength
 		Missile.SpeedBoost = Missile.StarterPercent * TotalLength * Missile.MaxThrust / (Missile.ProjMass + Missile.PropMass * 0.5)
+	end
+
+	do -- Exhaust pos
+		local Attachment = Missile:GetAttachment(Missile:LookupAttachment("exhaust"))
+		local Offset = Missile.ExhaustOffset or (Attachment and Attachment.Pos) or Vector()
+
+		Missile.ExhaustPos = Missile:WorldToLocal(Offset)
 	end
 
 	local PhysObj = Missile:GetPhysicsObject()
@@ -473,13 +497,6 @@ function ENT:Launch(Delay, IsMisfire)
 
 	for _, Missile in pairs(Rack.Missiles) do
 		self.Filter[#self.Filter + 1] = Missile
-	end
-
-	do -- Exhaust pos
-		local Attachment = self:GetAttachment(self:LookupAttachment("exhaust"))
-		local Offset = self.ExhaustOffset or Attachment and Attachment.Pos
-
-		self.ExhaustPos = self:WorldToLocal(Offset or Vector())
 	end
 
 	self:EmitSound("phx/epicmetal_hard.wav", 70, math.random(99, 101), ACF.Volume)
@@ -580,8 +597,7 @@ function ENT:Detonate(Destroyed)
 		PhysObj:EnableMotion(false)
 	end
 
-	-- Absolutely terrible
-	timer.Simple(3, function()
+	timer.Simple(1, function()
 		if not IsValid(self) then return end
 
 		self:Remove()

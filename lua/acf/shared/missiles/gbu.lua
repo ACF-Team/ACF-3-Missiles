@@ -20,10 +20,11 @@ ACF.RegisterMissile("WalleyeGBU", "GBU", {
 	ReloadTime	= 30,
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true },
 	Guidance	= { Dumb = true, ["Radio (MCLOS)"] = true },
+	Navigation  = "Chase",
 	Fuzes		= { Contact = true, Timed = true, Optical = true },
 	SeekCone	= 90,
 	ViewCone	= 120,
-	Agility		= 2,
+	Agility		= 0.04,
 	ArmDelay	= 1,
 	Round = {
 		Model			= "models/bombs/gbu/agm62.mdl",
@@ -33,9 +34,10 @@ ACF.RegisterMissile("WalleyeGBU", "GBU", {
 		Thrust			= 1,	-- in kg*in/s^2
 		FuelConsumption = 0.1,	-- in g/s/f
 		StarterPercent	= 0.005,
-		MinSpeed		= 500,
+		MaxAgilitySpeed = 50,      -- in m/s
 		DragCoef		= 0.06,
 		FinMul			= 0.3,
+		GLimit          = 3,
 		TailFinMul		= 1,
 		PenMul			= math.sqrt(0.2),
 		ActualLength 	= 345,
@@ -59,10 +61,11 @@ ACF.RegisterMissile("227kgGBU", "GBU", {
 	Offset		= Vector(12, 0, 0),
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true },
 	Guidance	= { Dumb = true, Laser = true, ["GPS Guided"] = true },
+	Navigation  = "PN",
 	Fuzes		= { Contact = true, Timed = true, Optical = true, Cluster = true },
 	SeekCone	= 60,
 	ViewCone	= 80,
-	Agility		= 1,
+	Agility		= 0.007,
 	ArmDelay	= 1,
 	Bodygroups = {
 		guidance = {
@@ -85,12 +88,13 @@ ACF.RegisterMissile("227kgGBU", "GBU", {
 		MaxLength		= 220,
 		Armor			= 10,
 		PropLength		= 0,
-		Thrust			= 1, 	-- in kg*in/s^2
-		FuelConsumption = 0.1,	-- in g/s/f
+		Thrust			= 1,       -- in kg*in/s^2
+		FuelConsumption = 0.1,     -- in g/s/f
 		StarterPercent	= 0.005,
-		MinSpeed		= 1,
+		MaxAgilitySpeed = 50,      -- in m/s
 		DragCoef		= 0.03,
 		FinMul			= 0.15,
+		GLimit          = 3,
 		TailFinMul		= 0.5,
 		PenMul			= math.sqrt(0.2),
 		ActualLength 	= 327,
@@ -114,10 +118,11 @@ ACF.RegisterMissile("454kgGBU", "GBU", {
 	ReloadTime	= 40,
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true },
 	Guidance	= { Dumb = true, Laser = true, ["GPS Guided"] = true },
+	Navigation  = "PN",
 	Fuzes		= { Contact = true, Timed = true, Optical = true, Cluster = true },
 	SeekCone	= 60,
 	ViewCone	= 80,
-	Agility		= 1,
+	Agility		= 0.02,
 	ArmDelay	= 1,
 	Bodygroups = {
 		guidance = {
@@ -140,12 +145,13 @@ ACF.RegisterMissile("454kgGBU", "GBU", {
 		MaxLength		= 250,
 		Armor			= 10,
 		PropLength		= 0,
-		Thrust			= 1, 	-- in kg*in/s^2
-		FuelConsumption = 0.1,	-- in g/s/f
+		Thrust			= 1,       -- in kg*in/s^2
+		FuelConsumption = 0.1,     -- in g/s/f
 		StarterPercent	= 0.005,
-		MinSpeed		= 1,
+		MaxAgilitySpeed = 50,      -- in m/s
 		DragCoef		= 0.04,
 		FinMul			= 0.3,
+		GLimit          = 3,
 		TailFinMul		= 2,
 		PenMul			= math.sqrt(0.2),
 		ActualLength 	= 370,
@@ -169,10 +175,11 @@ ACF.RegisterMissile("909kgGBU", "GBU", {
 	Offset		= Vector(15, 0, 0),
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true },
 	Guidance	= { Dumb = true, Laser = true, ["GPS Guided"] = true },
+	Navigation  = "PN",
 	Fuzes		= { Contact = true, Timed = true, Optical = true, Cluster = true },
 	SeekCone	= 60,
 	ViewCone	= 80,
-	Agility		= 1,
+	Agility		= 0.05,
 	ArmDelay	= 3,
 	Bodygroups = {
 		guidance = {
@@ -195,12 +202,13 @@ ACF.RegisterMissile("909kgGBU", "GBU", {
 		MaxLength		= 320,
 		Armor			= 10,
 		PropLength		= 0,
-		Thrust			= 1, 	-- in kg*in/s^2
-		FuelConsumption = 0.1,	-- in g/s/f
+		Thrust			= 1,       -- in kg*in/s^2
+		FuelConsumption = 0.1,     -- in g/s/f
 		StarterPercent	= 0.005,
-		MinSpeed		= 1,
+		MaxAgilitySpeed = 50,      -- in m/s
 		DragCoef		= 0.5,
 		FinMul			= 0.5,
+		GLimit          = 3,
 		TailFinMul		= 4,
 		PenMul			= math.sqrt(0.2),
 		ActualLength 	= 434,

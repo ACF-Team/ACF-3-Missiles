@@ -19,6 +19,7 @@ ACF.RegisterMissile("100kgGBOMB", "GBOMB", {
 	ReloadTime	= 15,
 	Racks		= { ["1xRK_small"] = true, ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true },
 	Guidance	= { Dumb = true },
+	Navigation  = "Chase",
 	Fuzes		= { Contact = true, Optical = true, Cluster = true },
 	ArmDelay	= 1,
 	Round = {
@@ -26,12 +27,13 @@ ACF.RegisterMissile("100kgGBOMB", "GBOMB", {
 		MaxLength		= 100,
 		Armor			= 10,
 		PropLength		= 0,
-		Thrust			= 1, 	-- in kg*in/s^2
-		FuelConsumption = 0.1,	-- in g/s/f
+		Thrust			= 1,    -- in kg*in/s^2
+		FuelConsumption = 0.1,  -- in g/s/f
 		StarterPercent	= 0.005,
-		MinSpeed		= 1,
+		MaxAgilitySpeed = 1,    -- in m/s
 		DragCoef		= 0.02,
 		FinMul			= 0.035,
+		GLimit          = 1,
 		TailFinMul		= 0.1,
 		PenMul			= math.sqrt(0.3),
 		ActualLength 	= 100,
@@ -54,6 +56,7 @@ ACF.RegisterMissile("250kgGBOMB", "GBOMB", {
 	ReloadTime	= 25,
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true },
 	Guidance	= { Dumb = true },
+	Navigation  = "Chase",
 	Fuzes		= { Contact = true, Optical = true, Cluster = true },
 	ArmDelay	= 1,
 	Round = {
@@ -61,12 +64,13 @@ ACF.RegisterMissile("250kgGBOMB", "GBOMB", {
 		MaxLength		= 250,
 		Armor			= 10,
 		PropLength		= 0,
-		Thrust			= 1, 	-- in kg*in/s^2
-		FuelConsumption = 0.1,	-- in g/s/f
+		Thrust			= 1,    -- in kg*in/s^2
+		FuelConsumption = 0.1,  -- in g/s/f
 		StarterPercent	= 0.005,
-		MinSpeed		= 1,
+		MaxAgilitySpeed = 1,    -- in m/s
 		DragCoef		= 0.02,
 		FinMul			= 0.1,
+		GLimit          = 1,
 		TailFinMul		= 0.2,
 		PenMul			= math.sqrt(0.3),
 		ActualLength 	= 67,

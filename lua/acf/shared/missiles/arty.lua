@@ -19,7 +19,8 @@ ACF.RegisterMissile("Type 63 RA", "ARTY", {
 	Year		= 1960,
 	ReloadTime	= 10,
 	Racks		= { ["1xRK_small"] = true, ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true, ["6xUARRK"] = true },
-	Guidance	= { Dumb = true, Laser = true, ["GPS Guided"] = true },
+	Guidance	= { Dumb = true },
+	Navigation  = "Chase",
 	Fuzes		= { Contact = true, Timed = true, Optical = true, Cluster = true },
 	ViewCone	= 180,
 	Agility		= 0.08,
@@ -32,9 +33,10 @@ ACF.RegisterMissile("Type 63 RA", "ARTY", {
 		Thrust			= 240000,	-- in kg*in/s^2
 		FuelConsumption = 0.06, 	-- in g/s/f
 		StarterPercent	= 0.05,
-		MinSpeed		= 200,
+		MaxAgilitySpeed = 100,      -- in m/s
 		DragCoef		= 0.005,
 		FinMul			= 0,
+		GLimit          = 10,
 		TailFinMul		= 2,
 		PenMul			= math.sqrt(2),
 		ActualLength 	= 80,
@@ -58,21 +60,23 @@ ACF.RegisterMissile("SAKR-10 RA", "ARTY", {
 	ReloadTime	= 20,
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true, ["6xUARRK"] = true },
 	Guidance	= { Dumb = true, Laser = true, ["GPS Guided"] = true },
+	Navigation  = "PN",
 	Fuzes		= { Contact = true, Timed = true, Optical = true, Cluster = true },
-	Agility		= 0.07,
-	ViewCone	= 180,
+	Agility		= 0.0008,
+	ViewCone	= 45,
 	ArmDelay	= 0.4,
 	Round = {
 		Model		= "models/missiles/9m31.mdl",
 		MaxLength		= 287,
 		Armor			= 5,
 		PropLength		= 160,
-		Thrust			= 800000, -- in kg*in/s^2
-		FuelConsumption = 0.012,	-- in g/s/f
+		Thrust			= 800000,   -- in kg*in/s^2
+		FuelConsumption = 0.012,    -- in g/s/f
 		StarterPercent	= 0.05,
-		MinSpeed		= 300,
+		MaxAgilitySpeed = 100,      -- in m/s
 		DragCoef		= 0.02,
-		FinMul			= 0.06,
+		FinMul			= 0.1,
+		GLimit          = 5,
 		TailFinMul		= 2,
 		PenMul			= math.sqrt(0.5),
 		ActualLength 	= 287,
@@ -96,21 +100,23 @@ ACF.RegisterMissile("SS-40 RA", "ARTY", {
 	ReloadTime	= 30,
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true, ["6xUARRK"] = true },
 	Guidance	= { Dumb = true, Laser = true, ["GPS Guided"] = true },
+	Navigation  = "PN",
 	Fuzes		= { Contact = true, Timed = true, Optical = true, Cluster = true },
-	Agility		= 0.04,
-	ViewCone	= 180,
+	Agility		= 0.004,
+	ViewCone	= 45,
 	ArmDelay	= 0.6,
 	Round = {
 		Model		= "models/missiles/aim120.mdl",
 		MaxLength		= 370,
 		Armor			= 5,
 		PropLength		= 200,
-		Thrust			= 2400000, -- in kg*in/s^2
+		Thrust			= 2400000,	-- in kg*in/s^2
 		FuelConsumption = 0.022,	-- in g/s/f
 		StarterPercent	= 0.05,
-		MinSpeed		= 300,
+		MaxAgilitySpeed = 100,      -- in m/s
 		DragCoef		= 0.02,
 		FinMul			= 0.12,
+		GLimit          = 5,
 		TailFinMul		= 10,
 		PenMul			= math.sqrt(0.5),
 		ActualLength 	= 370,

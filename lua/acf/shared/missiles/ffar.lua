@@ -19,7 +19,9 @@ ACF.RegisterMissile("40mmFFAR", "FFAR", {
 	ReloadTime	= 7.5,
 	Racks		= { ["40mm7xPOD"] = true },
 	Guidance	= { Dumb = true },
+	Navigation  = "Chase",
 	Fuzes		= { Contact = true, Timed = true },
+	Agility     = 1,
 	ArmDelay	= 0.3,
 	Round = {
 		Model			= "models/missiles/ffar_40mm.mdl",
@@ -27,12 +29,13 @@ ACF.RegisterMissile("40mmFFAR", "FFAR", {
 		MaxLength		= 60,
 		Armor			= 5,
 		PropLength		= 35,
-		Thrust			= 150000,	-- in kg*in/s^2
-		FuelConsumption = 0.015,	-- in g/s/f
+		Thrust			= 150000,   -- in kg*in/s^2
+		FuelConsumption = 0.015,    -- in g/s/f
 		StarterPercent	= 0.1,
-		MinSpeed		= 5000,
+		MaxAgilitySpeed = 1,        -- in m/s
 		DragCoef		= 0.001,
 		FinMul			= 0.01,
+		GLimit          = 1,
 		TailFinMul		= 0.005,
 		PenMul			= math.sqrt(2),
 		ActualLength 	= 60,
@@ -55,6 +58,7 @@ ACF.RegisterMissile("70mmFFAR", "FFAR", {
 	ReloadTime	= 10,
 	Racks		= { ["70mm7xPOD"] = true },
 	Guidance	= { Dumb = true },
+	Navigation  = "Chase",
 	Fuzes		= { Contact = true, Timed = true },
 	Agility		= 0.05,
 	ArmDelay	= 0.3,
@@ -67,9 +71,10 @@ ACF.RegisterMissile("70mmFFAR", "FFAR", {
 		Thrust			= 850000,	-- in kg*in/s^2
 		FuelConsumption = 0.010,	-- in g/s/f
 		StarterPercent	= 0.1,
-		MinSpeed		= 5000,
+		MaxAgilitySpeed = 1,        -- in m/s
 		DragCoef		= 0.002,
 		FinMul			= 0.01,
+		GLimit          = 1,
 		TailFinMul		= 0.005,
 		PenMul			= math.sqrt(1),
 		ActualLength 	= 106,
@@ -92,6 +97,7 @@ ACF.RegisterMissile("Zuni ASR", "FFAR", {
 	ReloadTime	= 15,
 	Racks		= { ["127mm4xPOD"] = true },
 	Guidance	= { Dumb = true },
+	Navigation  = "Chase",
 	Fuzes		= { Contact = true, Timed = true, Optical = true, Radio = true },
 	Agility		= 0.05,
 	ArmDelay	= 0.1,
@@ -101,12 +107,13 @@ ACF.RegisterMissile("Zuni ASR", "FFAR", {
 		MaxLength		= 200,
 		Armor			= 5,
 		PropLength		= 110,
-		Thrust			= 800000,	-- in kg*in/s^2
-		FuelConsumption = 0.032,	-- in g/s/f
+		Thrust			= 800000,   -- in kg*in/s^2
+		FuelConsumption = 0.032,    -- in g/s/f
 		StarterPercent	= 0.1,
-		MinSpeed		= 5000,
+		MaxAgilitySpeed = 1,        -- in m/s
 		DragCoef		= 0.004,
 		FinMul			= 0.005,
+		GLimit          = 1,
 		TailFinMul		= 0.04,
 		PenMul			= math.sqrt(1),
 		ActualLength 	= 200,
