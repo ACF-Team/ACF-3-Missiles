@@ -8,6 +8,7 @@ ACF.RegisterWeaponClass("FGL", {
 	Sound       = "acf_missiles/missiles/flare_launch.mp3",
 	Cleanup     = "acf_flarelauncher",
 	Blacklist   = { "AP", "APHE", "FL", "HE", "HEAT", "HP", "SM" },
+	DefaultAmmo = "FLR",
 	LimitConVar = {
 		Name = "_acf_flarelauncher",
 		Amount = 4,
