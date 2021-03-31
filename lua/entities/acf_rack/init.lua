@@ -445,7 +445,7 @@ do -- Entity Inputs ----------------------------
 		Entity.FireDelay = math.Clamp(Value, 0.1, 1)
 	end)
 
-	ACF.AddInputAction("acf_rack", "Launch Delay", function(Entity, Value)
+	ACF.AddInputAction("acf_rack", "Motor Delay", function(Entity, Value)
 		Entity.LaunchDelay = Value > 0 and math.min(Value, 1) or nil
 	end)
 end ---------------------------------------------
