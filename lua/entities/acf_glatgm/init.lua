@@ -62,13 +62,13 @@ function MakeACF_GLATGM(Gun, BulletData)
 	Entity.ForcedArmor  = 5 -- All missiles should get 5mm
 	Entity.ForcedMass   = BulletData.CartMass
 	Entity.UseGuidance  = true
-	Entity.ViewCone     = math.cos(math.rad(30)) -- Number inside is on degrees
+	Entity.ViewCone     = math.cos(math.rad(50)) -- Number inside is on degrees
 	Entity.MaxRange     = BulletData.MuzzleVel * 2 * 39.37 / ACF.Scale -- optical fuze distance
 	Entity.KillTime     = ACF.CurTime + 20
-	Entity.GuideDelay   = ACF.CurTime + 2 -- Missile won't be guided for the first two seconds
+	Entity.GuideDelay   = ACF.CurTime + 0.25 -- Missile won't be guided for the first quarter of a second
 	Entity.LastThink    = ACF.CurTime
 	Entity.Filter       = Entity.BulletData.Filter
-	Entity.Agility      = 10 -- Magic multiplier that controls the agility of the missile
+	Entity.Agility      = 50 -- Magic multiplier that controls the agility of the missile
 	Entity.IsSubcaliber = Caliber < 100
 	Entity.Speed        = Entity.IsSubcaliber and 2500 or 5000 -- gmu/s
 	Entity.SpiralRadius = Entity.IsSubcaliber and 3.5 or nil
@@ -202,7 +202,7 @@ function ENT:Think()
 		local CanSee   = CheckViewCone(self, HitPos)
 
 		if CanSee and Position:Distance(StartPos) <= self.MaxRange then
-			local Desired = self:WorldToLocalAngles(Computer.TraceDir:Angle()) + AngleRand() * 0.01
+			local Desired = self:WorldToLocalAngles(Computer.TraceDir:Angle()) + AngleRand() * 0.005
 			local Agility = self.Agility
 
 			Direction  = ClampAng(Desired, -Agility, Agility) * DeltaTime
