@@ -17,11 +17,12 @@ else
 		local Velocity   = BulletData.Flight
 
 		BulletData.Caliber    = BulletData.Caliber / Bomblets
-		BulletData.Diameter   = BulletData.Diameter
-		BulletData.DragCoef   = BulletData.DragCoef / Bomblets
-		BulletData.FillerMass = FillerMass / Bomblets
+		BulletData.Diameter   = BulletData.Diameter / Bomblets
+		BulletData.ProjArea   = math.pi * (BulletData.Diameter * 0.5) ^ 2
 		BulletData.ProjLength = BulletData.ProjLength / Bomblets
 		BulletData.ProjMass   = BulletData.ProjMass / Bomblets
+		BulletData.DragCoef   = BulletData.ProjArea * 0.0001 / BulletData.ProjMass
+		BulletData.FillerMass = FillerMass / Bomblets
 		BulletData.Tracer     = 0
 
 		if BulletData.Type == "HEAT" then
