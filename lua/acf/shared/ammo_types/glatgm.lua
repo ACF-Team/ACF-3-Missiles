@@ -15,10 +15,9 @@ function Ammo:OnLoaded()
 end
 
 function Ammo:GetDisplayData(Data)
-	local Energy    = ACF_Kinetic(Data.MuzzleVel * 39.37 + Data.SlugMV * 39.37 , Data.SlugMass, 999999)
 	local Fragments = math.max(math.floor(Data.BoomFillerMass / Data.CasingMass * ACF.HEFrag), 2)
 	local Display   = {
-		MaxPen		= Energy.Penetration / Data.SlugPenArea * ACF.KEtoRHA,
+		MaxPen		= self:GetPenetration(Data, Data.MuzzleVel, true),
 		BlastRadius	= Data.BoomFillerMass ^ 0.33 * 8,
 		Fragments	= Fragments,
 		FragMass	= Data.CasingMass / Fragments,
@@ -38,7 +37,6 @@ function Ammo:BaseConvert(ToolData)
 
 	Data.SlugRicochet	= 500 -- Base ricochet angle (The HEAT slug shouldn't ricochet at all)
 	Data.ShovePower		= 0.1
-	Data.PenArea		= Data.ProjArea ^ ACF.PenAreaMod
 	Data.LimitVel		= 100 -- Most efficient penetration speed in m/s
 	Data.Ricochet		= 60 -- Base ricochet angle
 	Data.DetonatorAngle	= 75
@@ -187,10 +185,10 @@ else
 		PenStats:DefineSetter(function()
 			self:UpdateRoundData(ToolData, BulletData)
 
-			local Text	 = "Penetration : %s mm RHA\nAt 300m : %s mm RHA @ %s m/s\nAt 800m : %s mm RHA @ %s m/s"
+			local Text   = "Penetration : %s mm RHA\nAt 300m : %s mm RHA @ %s m/s\nAt 800m : %s mm RHA @ %s m/s"
 			local MaxPen = math.Round(BulletData.MaxPen, 2)
-			local R1V    = ACF.PenRanging(BulletData.MuzzleVel, BulletData.DragCoef, BulletData.ProjMass, BulletData.PenArea, BulletData.LimitVel, 300)
-			local R2V    = ACF.PenRanging(BulletData.MuzzleVel, BulletData.DragCoef, BulletData.ProjMass, BulletData.PenArea, BulletData.LimitVel, 800)
+			local _, R1V = self:GetRangedPenetration(BulletData, 300)
+			local _, R2V = self:GetRangedPenetration(BulletData, 800)
 
 			return Text:format(MaxPen, MaxPen, R1V, MaxPen, R2V)
 		end)

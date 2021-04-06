@@ -17,9 +17,9 @@ else
 		local Velocity   = BulletData.Flight
 
 		BulletData.Caliber    = BulletData.Caliber / Bomblets
+		BulletData.Diameter   = BulletData.Diameter
 		BulletData.DragCoef   = BulletData.DragCoef / Bomblets
 		BulletData.FillerMass = FillerMass / Bomblets
-		BulletData.PenArea    = BulletData.PenArea / Bomblets
 		BulletData.ProjLength = BulletData.ProjLength / Bomblets
 		BulletData.ProjMass   = BulletData.ProjMass / Bomblets
 		BulletData.Tracer     = 0
@@ -29,7 +29,6 @@ else
 			BulletData.SlugCaliber    = BulletData.SlugCaliber / Bomblets
 			BulletData.SlugDragCoef   = BulletData.SlugDragCoef / Bomblets
 			BulletData.SlugMV         = BulletData.SlugMV / Bomblets
-			BulletData.SlugPenArea    = BulletData.SlugPenArea / Bomblets
 			BulletData.CasingMass     = BulletData.CasingMass / Bomblets
 			BulletData.BoomFillerMass = BulletData.BoomFillerMass / Bomblets
 		end
