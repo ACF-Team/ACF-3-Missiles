@@ -24,18 +24,19 @@ ACF.RegisterMissile("AIM-9 AAM", "AAM", {
 	Fuzes		= { Contact = true, Radio = true },
 	SeekCone	= 10,
 	ViewCone	= 30,
-	Agility		= 0.0035,
+	Agility		= 0.0017,
 	ArmDelay	= 0.2,
 	Round = {
 		Model			= "models/missiles/aim9m.mdl",
 		MaxLength		= 289,
+		ProjLength		= 68,
 		Armor			= 5,
 		PropLength		= 160,
 		Thrust			= 800000,	-- in kg*in/s^2
 		FuelConsumption = 0.02,		-- in g/s/f
 		StarterPercent	= 0.05,
 		MaxAgilitySpeed = 300,      -- in m/s
-		DragCoef		= 0.015,
+		DragCoef		= 0.005,
 		FinMul			= 0.1,
 		GLimit          = 20,
 		TailFinMul		= 0.001,
@@ -65,18 +66,19 @@ ACF.RegisterMissile("AIM-120 AAM", "AAM", {
 	Fuzes		= { Contact = true, Radio = true },
 	SeekCone	= 10,
 	ViewCone	= 30,
-	Agility		= 0.015,
+	Agility		= 0.006,
 	ArmDelay	= 0.2,
 	Round = {
 		Model			= "models/missiles/aim120c.mdl",
 		MaxLength		= 370,
 		Armor			= 5,
-		PropLength		= 200,
-		Thrust			= 1200000, 	-- in kg*in/s^2
+		ProjLength		= 70,
+		PropLength		= 140,
+		Thrust			= 1500000, 	-- in kg*in/s^2
 		FuelConsumption = 0.02,		-- in g/s/f
 		StarterPercent	= 0.05,
 		MaxAgilitySpeed = 350,      -- in m/s
-		DragCoef		= 0.02,
+		DragCoef		= 0.01,
 		FinMul			= 0.2,
 		GLimit          = 20,
 		TailFinMul		= 0.001,
@@ -102,22 +104,23 @@ ACF.RegisterMissile("AIM-54 AAM", "AAM", {
 	ReloadTime	= 40,
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true },
 	Guidance	= { Dumb = true, ["Semi-Active Radar"] = true, ["Active Radar"] = true },
-	Navigation  = "PN",
+	Navigation  = "APN",
 	Fuzes		= { Contact = true, Radio = true },
 	SeekCone	= 10,
 	ViewCone	= 20,
-	Agility		= 0.04,
+	Agility		= 0.02,
 	ArmDelay	= 0.4,
 	Round = {
 		Model			= "models/missiles/aim54.mdl",
 		MaxLength		= 400,
 		Armor			= 5,
-		PropLength		= 250,
-		Thrust			= 5200000,	-- in kg*in/s^2
+		ProjLength		= 60,
+		PropLength		= 220,
+		Thrust			= 4000000,	-- in kg*in/s^2
 		FuelConsumption = 0.04,		-- in g/s/f
-		StarterPercent	= 0.01,
+		StarterPercent	= 0.05,
 		MaxAgilitySpeed = 300,      -- in m/s
-		DragCoef		= 0.1,
+		DragCoef		= 0.03,
 		FinMul			= 0.3,
 		GLimit          = 12,
 		TailFinMul		= 0.001,

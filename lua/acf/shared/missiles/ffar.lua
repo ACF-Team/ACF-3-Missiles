@@ -28,16 +28,17 @@ ACF.RegisterMissile("40mmFFAR", "FFAR", {
 		RackModel		= "models/missiles/ffar_40mm_closed.mdl",
 		MaxLength		= 60,
 		Armor			= 5,
+		ProjLength		= 25,
 		PropLength		= 35,
 		Thrust			= 150000,   -- in kg*in/s^2
 		FuelConsumption = 0.015,    -- in g/s/f
 		StarterPercent	= 0.1,
 		MaxAgilitySpeed = 1,        -- in m/s
-		DragCoef		= 0.001,
+		DragCoef		= 0.0005,
 		FinMul			= 0.01,
 		GLimit          = 1,
 		TailFinMul		= 0.005,
-		PenMul			= math.sqrt(2),
+		PenMul			= 0.8,
 		ActualLength 	= 60,
 		ActualWidth		= 4
 	},
@@ -67,16 +68,17 @@ ACF.RegisterMissile("70mmFFAR", "FFAR", {
 		RackModel		= "models/missiles/ffar_70mm_closed.mdl",
 		MaxLength		= 106,
 		Armor			= 5,
-		PropLength		= 35,
+		ProjLength		= 66,
+		PropLength		= 40,
 		Thrust			= 850000,	-- in kg*in/s^2
-		FuelConsumption = 0.010,	-- in g/s/f
+		FuelConsumption = 0.005,	-- in g/s/f
 		StarterPercent	= 0.1,
 		MaxAgilitySpeed = 1,        -- in m/s
 		DragCoef		= 0.002,
 		FinMul			= 0.01,
 		GLimit          = 1,
 		TailFinMul		= 0.005,
-		PenMul			= math.sqrt(1),
+		PenMul			= 0.85,
 		ActualLength 	= 106,
 		ActualWidth		= 7
 	},
@@ -115,7 +117,7 @@ ACF.RegisterMissile("Zuni ASR", "FFAR", {
 		FinMul			= 0.005,
 		GLimit          = 1,
 		TailFinMul		= 0.04,
-		PenMul			= math.sqrt(1),
+		PenMul			= 0.8,
 		ActualLength 	= 200,
 		ActualWidth		= 12.7
 	},

@@ -24,12 +24,13 @@ ACF.RegisterMissile("AGM-122 ASM", "ARM", {
 	Fuzes		= { Contact = true, Optical = true },
 	SeekCone	= 10,
 	ViewCone	= 20,
-	Agility		= 0.0035,
+	Agility		= 0.0018,
 	ArmDelay	= 0.2,
 	Round = {
 		Model			= "models/missiles/aim9.mdl",
 		MaxLength		= 287,
 		Armor			= 5,
+		ProjLength		= 68,
 		PropLength		= 160,
 		Thrust			= 800000,	-- in kg*in/s^2
 		FuelConsumption = 0.02,		-- in g/s/f
@@ -64,12 +65,13 @@ ACF.RegisterMissile("AGM-45 ASM", "ARM", {
 	Fuzes		= { Contact = true, Timed = true },
 	SeekCone	= 5,
 	ViewCone	= 10,
-	Agility		= 0.015,
+	Agility		= 0.012,
 	ArmDelay	= 0.3,
 	Round = {
 		Model			= "models/missiles/aim120.mdl",
 		MaxLength		= 305,
 		Armor			= 5,
+		ProjLength		= 70,
 		PropLength		= 200,
 		Thrust			= 1500000, 	-- in kg*in/s^2
 		FuelConsumption = 0.020,		-- in g/s/f

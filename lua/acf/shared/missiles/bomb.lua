@@ -29,6 +29,7 @@ ACF.RegisterMissile("50kgBOMB", "BOMB", {
 		Model			= "models/bombs/fab50.mdl",
 		MaxLength		= 50,
 		Armor			= 10,
+		ProjLength		= 50,
 		PropLength		= 0,
 		Thrust			= 1,    -- in kg*in/s^2
 		FuelConsumption = 0.1,  -- in g/s/f
@@ -68,6 +69,7 @@ ACF.RegisterMissile("100kgBOMB", "BOMB", {
 		Model			= "models/bombs/fab100.mdl",
 		MaxLength		= 100,
 		Armor			= 10,
+		ProjLength		= 100,
 		PropLength		= 0,
 		Thrust			= 1,    -- in kg*in/s^2
 		FuelConsumption = 0.1,  -- in g/s/f
@@ -107,6 +109,7 @@ ACF.RegisterMissile("250kgBOMB", "BOMB", {
 		Model			= "models/bombs/fab250.mdl",
 		MaxLength		= 200,
 		Armor			= 10,
+		ProjLength		= 200,
 		PropLength		= 0,
 		Thrust			= 1,    -- in kg*in/s^2
 		FuelConsumption = 0.1,  -- in g/s/f
@@ -146,6 +149,7 @@ ACF.RegisterMissile("500kgBOMB", "BOMB", {
 		Model			= "models/bombs/fab500.mdl",
 		MaxLength		= 250,
 		Armor			= 10,
+		ProjLength		= 250,
 		PropLength		= 0,
 		Thrust			= 1,    -- in kg*in/s^2
 		FuelConsumption = 0.1,  -- in g/s/f
@@ -185,6 +189,7 @@ ACF.RegisterMissile("1000kgBOMB", "BOMB", {
 		Model			= "models/bombs/an_m66.mdl",
 		MaxLength		= 375,
 		Armor			= 10,
+		ProjLength		= 375,
 		PropLength		= 0,
 		Thrust			= 1,    -- in kg*in/s^2
 		FuelConsumption = 0.1,  -- in g/s/f

@@ -30,6 +30,7 @@ ACF.RegisterMissile("WalleyeGBU", "GBU", {
 		Model			= "models/bombs/gbu/agm62.mdl",
 		MaxLength		= 345,
 		Armor			= 10,
+		ProjLength		= 89,
 		PropLength		= 0,
 		Thrust			= 1,	-- in kg*in/s^2
 		FuelConsumption = 0.1,	-- in g/s/f
@@ -39,7 +40,7 @@ ACF.RegisterMissile("WalleyeGBU", "GBU", {
 		FinMul			= 0.3,
 		GLimit          = 3,
 		TailFinMul		= 1,
-		PenMul			= math.sqrt(0.2),
+		PenMul			= 1,
 		ActualLength 	= 345,
 		ActualWidth		= 31.8
 	},
@@ -87,6 +88,7 @@ ACF.RegisterMissile("227kgGBU", "GBU", {
 		RackModel		= "models/bombs/gbu/gbu12.mdl",
 		MaxLength		= 220,
 		Armor			= 10,
+		ProjLength		= 180,
 		PropLength		= 0,
 		Thrust			= 1,       -- in kg*in/s^2
 		FuelConsumption = 0.1,     -- in g/s/f
@@ -96,7 +98,7 @@ ACF.RegisterMissile("227kgGBU", "GBU", {
 		FinMul			= 0.15,
 		GLimit          = 3,
 		TailFinMul		= 0.5,
-		PenMul			= math.sqrt(0.2),
+		PenMul			= 1,
 		ActualLength 	= 327,
 		ActualWidth		= 27.3
 	},
@@ -144,6 +146,7 @@ ACF.RegisterMissile("454kgGBU", "GBU", {
 		RackModel		= "models/bombs/gbu/gbu16.mdl",
 		MaxLength		= 250,
 		Armor			= 10,
+		ProjLength		= 210,
 		PropLength		= 0,
 		Thrust			= 1,       -- in kg*in/s^2
 		FuelConsumption = 0.1,     -- in g/s/f
@@ -153,7 +156,7 @@ ACF.RegisterMissile("454kgGBU", "GBU", {
 		FinMul			= 0.3,
 		GLimit          = 3,
 		TailFinMul		= 2,
-		PenMul			= math.sqrt(0.2),
+		PenMul			= 1,
 		ActualLength 	= 370,
 		ActualWidth		= 36
 	},
@@ -201,6 +204,7 @@ ACF.RegisterMissile("909kgGBU", "GBU", {
 		RackModel		= "models/bombs/gbu/gbu10.mdl",
 		MaxLength		= 320,
 		Armor			= 10,
+		ProjLength		= 260,
 		PropLength		= 0,
 		Thrust			= 1,       -- in kg*in/s^2
 		FuelConsumption = 0.1,     -- in g/s/f
@@ -210,7 +214,7 @@ ACF.RegisterMissile("909kgGBU", "GBU", {
 		FinMul			= 0.5,
 		GLimit          = 3,
 		TailFinMul		= 4,
-		PenMul			= math.sqrt(0.2),
+		PenMul			= 1,
 		ActualLength 	= 434,
 		ActualWidth		= 46
 	},
