@@ -15,7 +15,6 @@ else
 		local Layers     = math.Clamp(math.Round(FillerMass * 0.5 / 7), 1, 4)
 		local Bomblets   = Layers * 7
 		local Density    = 0.77778  -- Volume density of the circle packing
-		local MuzzleVec  = BulletData.Flight:GetNormalized()
 		local RoundData  = Entity.RoundData
 
 		BulletData.Caliber    = BulletData.Caliber / 3
