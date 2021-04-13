@@ -42,16 +42,17 @@ ACF.RegisterMissile("RS82 ASR", "UAR", {
 		Model			= "models/missiles/rs82.mdl",
 		MaxLength		= 60,
 		Armor			= 5,
+		ProjLength		= 25,
 		PropLength		= 35,
-		Thrust			= 40000,    -- in kg*in/s^2
-		FuelConsumption = 0.08,     -- in g/s/f
+		Thrust			= 50000,    -- in kg*in/s^2
+		FuelConsumption = 0.033,    -- in g/s/f
 		StarterPercent	= 0.15,
 		MaxAgilitySpeed = 1,        -- in m/s
 		DragCoef		= 0.001,
 		FinMul			= 0.01,
 		GLimit          = 1,
 		TailFinMul		= 0.05,
-		PenMul			= math.sqrt(2),
+		PenMul			= 0.8,
 		ActualLength 	= 60,
 		ActualWidth		= 8.2
 	},
@@ -82,16 +83,17 @@ ACF.RegisterMissile("HVAR ASR", "UAR", {
 		RackModel		= "models/missiles/hvar_folded.mdl",
 		MaxLength		= 173,
 		Armor			= 5,
+		ProjLength		= 78,
 		PropLength		= 95,
-		Thrust			= 270000,   -- in kg*in/s^2
-		FuelConsumption = 0.053,    -- in g/s/f
+		Thrust			= 800000,   -- in kg*in/s^2
+		FuelConsumption = 0.016,    -- in g/s/f
 		StarterPercent	= 0.15,
 		MaxAgilitySpeed = 1,        -- in m/s
 		DragCoef		= 0.005,
 		FinMul			= 0.01,
 		GLimit          = 1,
 		TailFinMul		= 0.075,
-		PenMul			= math.sqrt(1),
+		PenMul			= 0.65,
 		ActualLength 	= 173,
 		ActualWidth		= 12.7
 	},
@@ -120,16 +122,17 @@ ACF.RegisterMissile("SPG-9 ASR", "UAR", {
 		RackModel		= "models/munitions/round_100mm_mortar_shot.mdl",
 		MaxLength		= 100,
 		Armor			= 5,
+		ProjLength		= 45,
 		PropLength		= 55,
-		Thrust			= 300000,   -- in kg*in/s^2
-		FuelConsumption = 0.019,    -- in g/s/f
-		StarterPercent	= 0.95,
+		Thrust			= 200000,   -- in kg*in/s^2
+		FuelConsumption = 0.012,    -- in g/s/f
+		StarterPercent	= 0.6,
 		MaxAgilitySpeed = 1,        -- in m/s
-		DragCoef		= 0.005,
+		DragCoef		= 0.001,
 		FinMul			= 0.002,
 		GLimit          = 1,
 		TailFinMul		= 0.02,
-		PenMul			= math.sqrt(3),
+		PenMul			= 1.32,
 		ActualLength 	= 100,
 		ActualWidth		= 7.3
 	},
@@ -159,16 +162,17 @@ ACF.RegisterMissile("S-24 ASR", "UAR", {
 		Model			= "models/missiles/s24.mdl",
 		MaxLength		= 233,
 		Armor			= 5,
+		ProjLength		= 103,
 		PropLength		= 130,
 		Thrust			= 2000000,  -- in kg*in/s^2
-		FuelConsumption = 0.052,    -- in g/s/f
+		FuelConsumption = 0.02,    -- in g/s/f
 		StarterPercent	= 0.15,
 		MaxAgilitySpeed = 1,        -- in m/s
 		DragCoef		= 0.01,
 		FinMul			= 0.1,
 		GLimit          = 1,
 		TailFinMul		= 0.3,
-		PenMul			= math.sqrt(1.5),
+		PenMul			= 1.05,
 		ActualLength 	= 233,
 		ActualWidth		= 24
 	},
@@ -197,8 +201,9 @@ ACF.RegisterMissile("RW61 ASR", "UAR", {
 		RackModel		= "models/missiles/RW61M.mdl",
 		MaxLength		= 150,
 		Armor			= 5,
-		PropLength		= 85,
-		Thrust			= 500000,   -- in kg*in/s^2
+		ProjLength		= 60,
+		PropLength		= 90,
+		Thrust			= 700000,   -- in kg*in/s^2
 		FuelConsumption = 0.048,    -- in g/s/f
 		StarterPercent	= 0.2,
 		MaxAgilitySpeed = 1,        -- in m/s
@@ -206,7 +211,7 @@ ACF.RegisterMissile("RW61 ASR", "UAR", {
 		FinMul			= 0,
 		GLimit          = 1,
 		TailFinMul		= 10,
-		PenMul			= math.sqrt(1),
+		PenMul			= 1.2,
 		ActualLength 	= 150,
 		ActualWidth		= 38
 	},

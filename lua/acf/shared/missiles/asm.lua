@@ -23,22 +23,23 @@ ACF.RegisterMissile("AT-3 ASM", "ATGM", {
 	Guidance	= { Dumb = true, ["Wire (MCLOS)"] = true, ["Wire (SACLOS)"] = true },
 	Fuzes		= { Contact = true, Optical = true },
 	SkinIndex	= { HEAT = 0, HE = 1 },
-	Agility		= 0.0002,
+	Agility		= 0.00022,
 	ArmDelay	= 0.1,
 	Round = {
 		Model			= "models/missiles/at3.mdl",
 		MaxLength		= 86,
 		Armor			= 5,
+		ProjLength		= 30,
 		PropLength		= 45,
-		Thrust			= 11000,    -- in kg*in/s^2
+		Thrust			= 4000,     -- in kg*in/s^2
 		FuelConsumption = 0.05,     -- in g/s/f
-		StarterPercent	= 0.25,
+		StarterPercent	= 0.45,
 		MaxAgilitySpeed = 70,       -- in m/s
-		DragCoef		= 0.04,
+		DragCoef		= 0.01,
 		FinMul			= 0.1,
-		GLimit          = 5,
+		GLimit          = 10,
 		TailFinMul		= 0.01,
-		PenMul			= math.sqrt(2),
+		PenMul			= 2.64,
 		ActualLength 	= 86,
 		ActualWidth		= 12.5
 	},
@@ -61,22 +62,23 @@ ACF.RegisterMissile("BGM-71E ASM", "ATGM", {
 	Guidance	= { Dumb = true, ["Wire (SACLOS)"] = true },
 	Navigation  = "PN",
 	Fuzes		= { Contact = true, Optical = true },
-	Agility		= 0.0005,
+	Agility		= 0.00018,
 	ArmDelay	= 0.1,
 	Round = {
 		Model			= "models/missiles/bgm_71e.mdl",
 		MaxLength		= 117,
 		Armor			= 5,
-		PropLength		= 70,
-		Thrust			= 250000,	-- in kg*in/s^2
-		FuelConsumption = 0.045,	-- in g/s/f
+		ProjLength		= 35,
+		PropLength		= 35,
+		Thrust			= 200000,	-- in kg*in/s^2
+		FuelConsumption = 0.027,	-- in g/s/f
 		StarterPercent	= 0.2,
-		MaxAgilitySpeed = 200,      -- in m/s
+		MaxAgilitySpeed = 150,      -- in m/s
 		DragCoef		= 0.005,
 		FinMul			= 0.1,
-		GLimit          = 5,
+		GLimit          = 10,
 		TailFinMul		= 0.01,
-		PenMul			= math.sqrt(3),
+		PenMul			= 3.86,
 		ActualLength 	= 117,
 		ActualWidth		= 15.2
 	},
@@ -101,7 +103,7 @@ ACF.RegisterMissile("AGM-114 ASM", "ATGM", {
 	Fuzes		= { Contact = true, Optical = true },
 	ViewCone	= 40,
 	SeekCone	= 10,
-	Agility		= 0.00075,
+	Agility		= 0.0005,
 	ArmDelay	= 0.5,
 	Bodygroups = {
 		guidance = {
@@ -120,16 +122,17 @@ ACF.RegisterMissile("AGM-114 ASM", "ATGM", {
 		Model			= "models/missiles/agm_114.mdl",
 		MaxLength		= 160,
 		Armor			= 5,
-		PropLength		= 90,
-		Thrust			= 600000,   -- in kg*in/s^2
-		FuelConsumption = 0.05,     -- in g/s/f
-		StarterPercent	= 0.02,
-		MaxAgilitySpeed = 150,      -- in m/s
+		ProjLength		= 50,
+		PropLength		= 50,
+		Thrust			= 400000,   -- in kg*in/s^2
+		FuelConsumption = 0.018,     -- in g/s/f
+		StarterPercent	= 0.01,
+		MaxAgilitySpeed = 100,      -- in m/s
 		DragCoef		= 0.005,
 		FinMul			= 0.1,
-		GLimit          = 5,
+		GLimit          = 10,
 		TailFinMul		= 0.01,
-		PenMul			= math.sqrt(2),
+		PenMul			= 3.22,
 		ActualLength 	= 160,
 		ActualWidth		= 18
 	},
@@ -151,10 +154,10 @@ ACF.RegisterMissile("Ataka ASM", "ATGM", {
 	ReloadTime	= 20,
 	Racks		= { ["1x Ataka"] = true, ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true },
 	Guidance	= { Dumb = true, ["Radio (SACLOS)"] = true },
-	Navigation  = "PN",
+	Navigation  = "Chase",
 	Fuzes		= { Contact = true, Optical = true },
 	ViewCone	= 45,
-	Agility		= 0.00075,
+	Agility		= 0.0003,
 	ArmDelay	= 0.1,
 	NoDamage    = true,
 	Round = {
@@ -162,16 +165,17 @@ ACF.RegisterMissile("Ataka ASM", "ATGM", {
 		RackModel		= "models/missiles/9m120_rk1.mdl",
 		MaxLength		= 183,
 		Armor			= 5,
+		ProjLength		= 50,
 		PropLength		= 100,
-		Thrust			= 600000,   -- in kg*in/s^2
-		FuelConsumption = 0.045,    -- in g/s/f
+		Thrust			= 800000,   -- in kg*in/s^2
+		FuelConsumption = 0.03,    -- in g/s/f
 		StarterPercent	= 0.02,
 		MaxAgilitySpeed = 200,      -- in m/s
-		DragCoef		= 0.005,
+		DragCoef		= 0.002,
 		FinMul			= 0.1,
-		GLimit          = 5,
+		GLimit          = 10,
 		TailFinMul		= 0.01,
-		PenMul			= math.sqrt(2),
+		PenMul			= 3.09,
 		ActualLength 	= 183,
 		ActualWidth		= 13
 	},
@@ -193,10 +197,10 @@ ACF.RegisterMissile("9M113 ASM", "ATGM", {
 	ExhaustOffset = Vector(-29.1, 0, 0),
 	Racks		= { ["1x Kornet"] = true },
 	Guidance	= { Dumb = true, Laser = true },
-	Navigation  = "PN",
+	Navigation  = "Chase",
 	Fuzes		= { Contact = true, Optical = true },
 	ViewCone	= 20,
-	Agility		= 0.0005,
+	Agility		= 0.0002,
 	ArmDelay	= 0.1,
 	Bodygroups = {
 		fins = {
@@ -213,16 +217,17 @@ ACF.RegisterMissile("9M113 ASM", "ATGM", {
 		Model			= "models/kali/weapons/kornet/parts/9m133 kornet missile.mdl",
 		MaxLength		= 120,
 		Armor			= 5,
-		PropLength		= 70,
-		Thrust			= 230000,   -- in kg*in/s^2
-		FuelConsumption = 0.035,    -- in g/s/f
+		ProjLength		= 40,
+		PropLength		= 50,
+		Thrust			= 430000,   -- in kg*in/s^2
+		FuelConsumption = 0.030,    -- in g/s/f
 		StarterPercent	= 0.1,
 		MaxAgilitySpeed = 200,      -- in m/s
 		DragCoef		= 0.005,
 		FinMul			= 0.1,
 		GLimit          = 8,
 		TailFinMul		= 0.01,
-		PenMul			= math.sqrt(3.5),
+		PenMul			= 3.88,
 		ActualLength 	= 120,
 		ActualWidth		= 15.2
 	},
@@ -247,20 +252,21 @@ ACF.RegisterMissile("AT-2 ASM", "ATGM", {
 	Navigation  = "Chase",
 	Fuzes		= { Contact = true, Optical = true },
 	ViewCone	= 90,
-	Agility		= 0.0005,
+	Agility		= 0.0006,
 	ArmDelay	= 0.1,
 	Round = {
 		Model			= "models/missiles/at2.mdl",
 		MaxLength		= 116,
 		Armor			= 5,
-		PropLength		= 70,
-		Thrust			= 40000,    -- in kg*in/s^2
+		ProjLength		= 35,
+		PropLength		= 35,
+		Thrust			= 10000,    -- in kg*in/s^2
 		FuelConsumption = 0.035,    -- in g/s/f
-		StarterPercent	= 0.25,
+		StarterPercent	= 0.50,
 		MaxAgilitySpeed = 100,      -- in m/s
-		DragCoef		= 0.06,
+		DragCoef		= 0.015,
 		FinMul			= 0.1,
-		GLimit          = 5,
+		GLimit          = 10,
 		TailFinMul		= 0.01,
 		PenMul			= math.sqrt(2),
 		ActualLength 	= 116,
