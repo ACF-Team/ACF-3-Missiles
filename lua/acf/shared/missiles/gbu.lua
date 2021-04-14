@@ -30,7 +30,7 @@ ACF.RegisterMissile("WalleyeGBU", "GBU", {
 		Model			= "models/bombs/gbu/agm62.mdl",
 		MaxLength		= 345,
 		Armor			= 10,
-		ProjLength		= 89,
+		ProjLength		= 155,
 		PropLength		= 0,
 		Thrust			= 1,	-- in kg*in/s^2
 		FuelConsumption = 0.1,	-- in g/s/f
@@ -41,6 +41,7 @@ ACF.RegisterMissile("WalleyeGBU", "GBU", {
 		GLimit          = 3,
 		TailFinMul		= 1,
 		PenMul			= 1,
+		FillerRatio     = 0.63,
 		ActualLength 	= 345,
 		ActualWidth		= 31.8
 	},
@@ -66,7 +67,7 @@ ACF.RegisterMissile("227kgGBU", "GBU", {
 	Fuzes		= { Contact = true, Timed = true, Optical = true, Cluster = true },
 	SeekCone	= 60,
 	ViewCone	= 80,
-	Agility		= 0.007,
+	Agility		= 0.015,
 	ArmDelay	= 1,
 	Bodygroups = {
 		guidance = {
@@ -88,7 +89,7 @@ ACF.RegisterMissile("227kgGBU", "GBU", {
 		RackModel		= "models/bombs/gbu/gbu12.mdl",
 		MaxLength		= 220,
 		Armor			= 10,
-		ProjLength		= 180,
+		ProjLength		= 155,
 		PropLength		= 0,
 		Thrust			= 1,       -- in kg*in/s^2
 		FuelConsumption = 0.1,     -- in g/s/f
@@ -99,6 +100,7 @@ ACF.RegisterMissile("227kgGBU", "GBU", {
 		GLimit          = 3,
 		TailFinMul		= 0.5,
 		PenMul			= 1,
+		FillerRatio     = 0.89,
 		ActualLength 	= 327,
 		ActualWidth		= 27.3
 	},
@@ -124,7 +126,7 @@ ACF.RegisterMissile("454kgGBU", "GBU", {
 	Fuzes		= { Contact = true, Timed = true, Optical = true, Cluster = true },
 	SeekCone	= 60,
 	ViewCone	= 80,
-	Agility		= 0.02,
+	Agility		= 0.03,
 	ArmDelay	= 1,
 	Bodygroups = {
 		guidance = {
@@ -146,7 +148,7 @@ ACF.RegisterMissile("454kgGBU", "GBU", {
 		RackModel		= "models/bombs/gbu/gbu16.mdl",
 		MaxLength		= 250,
 		Armor			= 10,
-		ProjLength		= 210,
+		ProjLength		= 170,
 		PropLength		= 0,
 		Thrust			= 1,       -- in kg*in/s^2
 		FuelConsumption = 0.1,     -- in g/s/f
@@ -157,6 +159,7 @@ ACF.RegisterMissile("454kgGBU", "GBU", {
 		GLimit          = 3,
 		TailFinMul		= 2,
 		PenMul			= 1,
+		FillerRatio     = 0.82,
 		ActualLength 	= 370,
 		ActualWidth		= 36
 	},
@@ -204,7 +207,7 @@ ACF.RegisterMissile("909kgGBU", "GBU", {
 		RackModel		= "models/bombs/gbu/gbu10.mdl",
 		MaxLength		= 320,
 		Armor			= 10,
-		ProjLength		= 260,
+		ProjLength		= 205,
 		PropLength		= 0,
 		Thrust			= 1,       -- in kg*in/s^2
 		FuelConsumption = 0.1,     -- in g/s/f
@@ -215,6 +218,7 @@ ACF.RegisterMissile("909kgGBU", "GBU", {
 		GLimit          = 3,
 		TailFinMul		= 4,
 		PenMul			= 1,
+		FillerRatio     = 0.85,
 		ActualLength 	= 434,
 		ActualWidth		= 46
 	},
