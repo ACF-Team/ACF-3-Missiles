@@ -87,7 +87,7 @@ else
 
 			util.Effect("ACF_Penetration", Data)
 		else
-			local _, _, BoomFillerMass = self:CrushCalc(Bullet.SimFlight:Length() * 0.0254, Bullet.FillerMass)
+			local BoomFillerMass = Bullet.FillerMass * ACF.HEATBoomConvert
 
 			Data:SetOrigin(Bullet.SimPos)
 			Data:SetNormal(Bullet.SimFlight:GetNormalized())
@@ -133,7 +133,7 @@ else
 		local RoundStats = Base:AddLabel()
 		RoundStats:TrackClientData("Projectile", "SetText")
 		RoundStats:TrackClientData("Propellant")
-		RoundStats:TrackClientData("FillerMass")
+		RoundStats:TrackClientData("FillerRatio")
 		RoundStats:TrackClientData("LinerAngle")
 		RoundStats:DefineSetter(function()
 			self:UpdateRoundData(ToolData, BulletData)
@@ -148,7 +148,7 @@ else
 		end)
 
 		local FillerStats = Base:AddLabel()
-		FillerStats:TrackClientData("FillerMass", "SetText")
+		FillerStats:TrackClientData("FillerRatio", "SetText")
 		FillerStats:TrackClientData("LinerAngle")
 		FillerStats:DefineSetter(function()
 			self:UpdateRoundData(ToolData, BulletData)
@@ -164,7 +164,7 @@ else
 		local Penetrator = Base:AddLabel()
 		Penetrator:TrackClientData("Projectile", "SetText")
 		Penetrator:TrackClientData("Propellant")
-		Penetrator:TrackClientData("FillerMass")
+		Penetrator:TrackClientData("FillerRatio")
 		Penetrator:TrackClientData("LinerAngle")
 		Penetrator:DefineSetter(function()
 			self:UpdateRoundData(ToolData, BulletData)
@@ -180,7 +180,7 @@ else
 		local PenStats = Base:AddLabel()
 		PenStats:TrackClientData("Projectile", "SetText")
 		PenStats:TrackClientData("Propellant")
-		PenStats:TrackClientData("FillerMass")
+		PenStats:TrackClientData("FillerRatio")
 		PenStats:TrackClientData("LinerAngle")
 		PenStats:DefineSetter(function()
 			self:UpdateRoundData(ToolData, BulletData)
