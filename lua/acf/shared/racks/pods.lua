@@ -36,7 +36,6 @@ ACF.RegisterRack("57mm16xPOD", {
 	ProtectMissile = true,
 
 	MountPoints = {
-	
 		{ Name = "missile1", Position = Vector(3.5,3.1179842073128,0.71984337390037) },
 		{ Name = "missile2", Position = Vector(3.5,1.6481218397122,-2.7429353622468) },
 		{ Name = "missile3", Position = Vector(3.5,-2.0993888927696,-2.4150706567129) },
@@ -53,7 +52,6 @@ ACF.RegisterRack("57mm16xPOD", {
 		{ Name = "missile14", Position = Vector(3.5,5.0559316696992,-2.1650761998907) },
 		{ Name = "missile15", Position = Vector(3.5,3.0827918123249,-4.5548210329125) },
 		{ Name = "missile16", Position = Vector(3.5,0.13088733650359,-5.4984423708122) },
-
 	}
 })
 
@@ -71,7 +69,6 @@ ACF.RegisterRack("57mm32xPOD", {
 	ProtectMissile = true,
 
 	MountPoints = {
-
 		{ Name = "missile1", Position = Vector(-8,0,3.5) },
 		{ Name = "missile2", Position = Vector(-8,3.3286979198456,1.0815595388412) },
 		{ Name = "missile3", Position = Vector(-8,2.0572483539581,-2.831559419632) },
@@ -104,7 +101,6 @@ ACF.RegisterRack("57mm32xPOD", {
 		{ Name = "missile30", Position = Vector(-8,-10.336618423462,3.7622215747833) },
 		{ Name = "missile31", Position = Vector(-8,-8.4264888763428,7.0706639289856) },
 		{ Name = "missile32", Position = Vector(-8,-5.5,9.5262794494629) },
-
 	}
 })
 
@@ -158,7 +154,7 @@ ACF.RegisterRack("70mm19xPOD", {
 		{ Name = "missile10", Position = Vector(5,0,0) },
 		{ Name = "missile11", Position = Vector(5,4.2,0) },
 		{ Name = "missile12", Position = Vector(5,8.4,0) },
-		{ Name = "missile13", Position = Vector(5,-6.3,-3.6) }, 
+		{ Name = "missile13", Position = Vector(5,-6.3,-3.6) },
 		{ Name = "missile14", Position = Vector(5,-1.9,-3.6) },
 		{ Name = "missile15", Position = Vector(5,1.9,-3.6) },
 		{ Name = "missile16", Position = Vector(5,6.3,-3.6) },
@@ -202,7 +198,6 @@ ACF.RegisterRack("80mm20xPOD", {
 		{ Name = "missile18", Position = Vector(4,-10.236743077909,2.3364698065413) },
 		{ Name = "missile19", Position = Vector(4,-8.2092305659143,6.5466429195167) },
 		{ Name = "missile20", Position = Vector(4,-4.5557792607344,9.4601731129754) },
-
 	}
 })
 
