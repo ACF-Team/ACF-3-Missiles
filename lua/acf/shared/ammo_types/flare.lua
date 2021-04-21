@@ -29,16 +29,10 @@ function Ammo:UpdateRoundData(ToolData, Data, GUIData)
 
 	ACF.UpdateRoundSpecs(ToolData, Data, GUIData)
 
-	local ProjMass	= math.max(GUIData.ProjVolume - ToolData.FillerMass, 0) * 0.0079 + math.min(ToolData.FillerMass, GUIData.ProjVolume) * ACF.HEDensity --Volume of the projectile as a cylinder - Volume of the filler * density of steel + Volume of the filler * density of TNT
-	local MuzzleVel	= ACF.MuzzleVelocity(Data.PropMass, ProjMass, Data.Efficiency)
-	local Energy	= ACF.Kinetic(MuzzleVel * 39.37, ProjMass)
-	local MaxVolume	= ACF.RoundShellCapacity(Energy.Momentum, Data.ProjArea, Data.Caliber, Data.ProjLength)
-
-	GUIData.MaxFillerVol = math.Round(math.min(GUIData.ProjVolume, MaxVolume * 0.9), 2)
-	GUIData.FillerVol	 = math.Round(math.Clamp(ToolData.FillerMass, GUIData.MinFillerVol, GUIData.MaxFillerVol), 2)
-
-	Data.FillerMass	= GUIData.FillerVol * ACF.HEDensity
-	Data.ProjMass	= math.max(GUIData.ProjVolume - GUIData.FillerVol, 0) * 0.0079 + Data.FillerMass
+	local FreeVol   = ACF.RoundShellCapacity(Data.PropMass, Data.ProjArea, Data.Caliber, Data.ProjLength)
+	local FillerVol = FreeVol * ToolData.FillerRatio
+	Data.FillerMass	= FillerVol * ACF.HEDensity
+	Data.ProjMass	= math.max(GUIData.ProjVolume - FillerVol, 0) * ACF.SteelDensity + Data.FillerMass
 	Data.MuzzleVel	= ACF.MuzzleVelocity(Data.PropMass, Data.ProjMass, Data.Efficiency)
 	Data.DragCoef	= Data.ProjArea * 0.0027 / Data.ProjMass
 	Data.BurnTime	= Data.FillerMass / Data.BurnRate
@@ -71,10 +65,10 @@ end
 function Ammo:VerifyData(ToolData)
 	Ammo.BaseClass.VerifyData(self, ToolData)
 
-	if not ToolData.FillerMass then
+	if not ToolData.FillerRatio then
 		local Data5 = ToolData.RoundData5
 
-		ToolData.FillerMass = Data5 and tonumber(Data5) or 0
+		ToolData.FillerRatiod = Data5 and tonumber(Data5) or 0
 	end
 end
 
@@ -130,18 +124,14 @@ else
 	end
 
 	function Ammo:AddAmmoControls(Base, ToolData, BulletData)
-		local FillerMass = Base:AddSlider("Flare Filler", 0, BulletData.MaxFillerVol, 2)
-		FillerMass:SetClientData("FillerMass", "OnValueChanged")
-		FillerMass:TrackClientData("Projectile")
-		FillerMass:DefineSetter(function(Panel, _, Key, Value)
-			if Key == "FillerMass" then
-				ToolData.FillerMass = math.Round(Value, 2)
+		local FillerRatio = Base:AddSlider("Filler Ratio", 0, 1, 2)
+		FillerRatio:SetClientData("FillerRatio", "OnValueChanged")
+		FillerRatio:DefineSetter(function(_, _, Key, Value)
+			if Key == "FillerRatio" then
+				ToolData.FillerRatio = math.Round(Value, 2)
 			end
 
 			self:UpdateRoundData(ToolData, BulletData)
-
-			Panel:SetMax(BulletData.MaxFillerVol)
-			Panel:SetValue(BulletData.FillerVol)
 
 			return BulletData.FillerVol
 		end)
@@ -150,14 +140,14 @@ else
 	function Ammo:AddCrateDataTrackers(Trackers, ...)
 		Ammo.BaseClass.AddCrateDataTrackers(self, Trackers, ...)
 
-		Trackers.FillerMass = true
+		Trackers.FillerRatio = true
 	end
 
 	function Ammo:AddAmmoInformation(Base, ToolData, BulletData)
 		local RoundStats = Base:AddLabel()
 		RoundStats:TrackClientData("Projectile", "SetText")
 		RoundStats:TrackClientData("Propellant")
-		RoundStats:TrackClientData("FillerMass")
+		RoundStats:TrackClientData("FillerRatio")
 		RoundStats:DefineSetter(function()
 			self:UpdateRoundData(ToolData, BulletData)
 
@@ -171,7 +161,7 @@ else
 		end)
 
 		local FillerStats = Base:AddLabel()
-		FillerStats:TrackClientData("FillerMass", "SetText")
+		FillerStats:TrackClientData("FillerRatio", "SetText")
 		FillerStats:DefineSetter(function()
 			self:UpdateRoundData(ToolData, BulletData)
 
