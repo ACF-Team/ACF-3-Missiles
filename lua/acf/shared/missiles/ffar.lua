@@ -48,6 +48,46 @@ ACF.RegisterMissile("40mmFFAR", "FFAR", {
 	},
 })
 
+ACF.RegisterMissile("57mmFFAR", "FFAR", {
+	Name		= "57mm Pod Rocket",
+	Description	= "A small, spammy rocket with light anti-armor capabilities. Works well on technicals.",
+	Model		= "models/missiles/ffar_40mm.mdl",
+	Caliber		= 57,
+	Mass		= 4,
+	Length		= 2,
+	Year		= 1956,
+	ReloadTime	= 0.1,
+	Racks		= { ["57mm32xPOD"] = true , ["57mm16xPOD"] = true},
+	Navigation	= "Chase",
+	Guidance	= { Dumb = true },
+	Fuzes		= { Contact = true, Timed = true },
+	Agility		= 1,
+	ArmDelay	= 0.3,
+	Round = {
+		Model			= "models/missiles/ffar_70mm.mdl",
+		RackModel		= "models/missiles/ffar_70mm_closed.mdl",
+		MaxLength		= 85,
+		Armor			= 5,
+		ProjLength		= 35,
+		PropLength		= 50,
+		Thrust			= 214750, -- in kg*in/s^2
+		FuelConsumption	= 0.021,
+		StarterPercent 	= 0.14,
+		MaxAgilitySpeed	= 1.425,
+		DragCoef		= 0.0007125,
+		FinMul			= 0.01425,
+		GLimit			= 1,
+		TailFinMul		= 0.005,
+		PenMul			= 1.3,
+		ActualLength	= 85,
+		ActualWidth		= 5.7,
+	},
+	Preview = {
+		Height = 100,
+		FOV    = 60,
+	},
+})
+
 ACF.RegisterMissile("70mmFFAR", "FFAR", {
 	Name		= "70mm Pod Rocket",
 	Description	= "A small, unguided rocket. Useful against light vehicles and infantry. Folding fins allow the rocket to be stored in pods, which defend them from damage.",
@@ -81,6 +121,47 @@ ACF.RegisterMissile("70mmFFAR", "FFAR", {
 		PenMul			= 0.85,
 		ActualLength 	= 106,
 		ActualWidth		= 7
+	},
+	Preview = {
+		Height = 100,
+		FOV    = 60,
+	},
+})
+
+ACF.RegisterMissile("80mmFFAR", "FFAR", {
+	Name		= "80mm Rocket Pod",
+	Description	= "A large aerial rocket designed for use against ground targets. Good HEAT performance.",
+	Model		= "models/missiles/ffar_70mm.mdl",
+	Caliber		= 80,
+	Mass		= 6,
+	Length		= 15,
+	Year		= 1960,
+	ReloadTime	= 0.5,
+	Racks		= { ["80mm20xPOD"] = true },
+	Navigation	= "Chase",
+	Guidance	= { Dumb = true },
+	Fuzes		= { Contact = true, Timed = true },
+	Agility		= 0.05,
+	ArmDelay	= 0.3,
+	
+	Round = {
+		Model			= "models/missiles/ffar_70mm.mdl",
+		RackModel		= "models/missiles/ffar_70mm_closed.mdl",
+		MaxLength		= 127,
+		Armor			= 5,
+		ProjLength		= 76,
+		PropLength		= 46,
+		Thrust			= 98357,	-- in kg*in/s^2
+		FuelConsumption = 0.0057,	-- in g/s/f
+		StarterPercent	= 0.1,
+		MaxAgilitySpeed = 1,        -- in m/s
+		DragCoef		= 0.0023,
+		FinMul			= 0.01,
+		GLimit          = 1,
+		TailFinMul		= 0.005,
+		PenMul			= 0.85,
+		ActualLength 	= 127,
+		ActualWidth		= 8
 	},
 	Preview = {
 		Height = 100,
