@@ -143,7 +143,6 @@ ACF.RegisterMissile("80mmFFAR", "FFAR", {
 	Fuzes		= { Contact = true, Timed = true },
 	Agility		= 0.05,
 	ArmDelay	= 0.3,
-	
 	Round = {
 		Model			= "models/missiles/ffar_70mm.mdl",
 		RackModel		= "models/missiles/ffar_70mm_closed.mdl",
