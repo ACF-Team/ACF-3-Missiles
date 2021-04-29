@@ -38,10 +38,10 @@ function MakeACF_GLATGM(Gun, BulletData)
 	Entity:SetPlayer(Gun.Owner)
 	Entity:Spawn()
 
-	if Caliber == 120 then
-		Entity:SetModel("models/missiles/glatgm/9m112.mdl")
-	elseif Caliber > 120 then
+	if Caliber >= 150 then
 		Entity:SetModel("models/missiles/glatgm/mgm51.mdl")
+	elseif Caliber >= 120 then
+		Entity:SetModel("models/missiles/glatgm/9m112.mdl")
 	else
 		Entity:SetModel("models/missiles/glatgm/9m117.mdl")
 		Entity:SetModelScale(Caliber * 0.01, 0)
@@ -197,7 +197,7 @@ function ENT:Think()
 	local Position  = self.Position
 
 	if not IsDelayed and IsValid(Computer) then
-		local StartPos = Computer:LocalToWorld(Computer.Offset)
+		local StartPos = Computer:LocalToWorld(Computer.Offset or Vector(6, -1, 0))
 		local HitPos   = Computer.HitPos
 		local CanSee   = CheckViewCone(self, HitPos)
 
