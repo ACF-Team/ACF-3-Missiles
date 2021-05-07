@@ -35,6 +35,9 @@ ACF.RegisterRack("57mm16xPOD", {
 	Year		= 1956,
 	MagSize		= 16,
 	Armor		= 5,
+	Preview = {
+		FOV = 60,
+	},
 
 	ProtectMissile = true,
 
@@ -68,6 +71,9 @@ ACF.RegisterRack("57mm32xPOD", {
 	Year		= 1956,
 	MagSize		= 32,
 	Armor		= 5,
+	Preview = {
+		FOV = 85,
+	},
 
 	ProtectMissile = true,
 
@@ -144,6 +150,9 @@ ACF.RegisterRack("70mm19xPOD", {
 	Year		= 1960,
 	MagSize		= 19,
 	Armor		= 5,
+	Preview = {
+		FOV = 105,
+	},
 
 	ProtectMissile = true,
 
@@ -180,6 +189,9 @@ ACF.RegisterRack("80mm20xPOD", {
 	Year		= 1970,
 	MagSize		= 20,
 	Armor		= 5,
+	Preview = {
+		FOV = 105,
+	},
 
 	ProtectMissile = true,
 

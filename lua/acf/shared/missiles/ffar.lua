@@ -97,7 +97,7 @@ ACF.RegisterMissile("70mmFFAR", "FFAR", {
 	Length		= 106,
 	Year		= 1960,
 	ReloadTime	= 10,
-	Racks		= { ["70mm7xPOD"] = true },
+	Racks		= { ["70mm7xPOD"] = true, ["70mm19xPOD"] = true },
 	Guidance	= { Dumb = true },
 	Navigation  = "Chase",
 	Fuzes		= { Contact = true, Timed = true },
