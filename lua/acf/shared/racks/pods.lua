@@ -25,6 +25,88 @@ ACF.RegisterRack("40mm7xPOD", {
 	}
 })
 
+ACF.RegisterRack("57mm16xPOD", {
+	Name		= "16x 57mm FFAR Pod",
+	Description	= "A lightweight pod for small rockets which is vulnerable to shots and explosions.",
+	Model		= "models/failz/ub_16.mdl",
+	EntType		= "Pod",
+	Caliber		= 57,
+	Mass		= 30,
+	Year		= 1956,
+	MagSize		= 16,
+	Armor		= 5,
+
+	ProtectMissile = true,
+
+	MountPoints = {
+		{ Name = "missile1", Position = Vector(3.5, 2.61, 0.96) },
+		{ Name = "missile2", Position = Vector(3.5, 1.65, -2.34) },
+		{ Name = "missile3", Position = Vector(3.5, -1.65, -2.34) },
+		{ Name = "missile4", Position = Vector(3.5, -2.61, 0.96) },
+		{ Name = "missile5", Position = Vector(3.5, 0, 2.55) },
+		{ Name = "missile6", Position = Vector(3.5, -2.86, -5) },
+		{ Name = "missile7", Position = Vector(3.5, -5.3, -2.6) },
+		{ Name = "missile8", Position = Vector(3.5, -5.9, 0.65) },
+		{ Name = "missile9", Position = Vector(3.5, -4.6, 3.5) },
+		{ Name = "missile10", Position = Vector(3.5, -1.9, 5.5) },
+		{ Name = "missile11", Position = Vector(3.5, 1.9, 5.5) },
+		{ Name = "missile12", Position = Vector(3.5, 4.6, 3.5) },
+		{ Name = "missile13", Position = Vector(3.5, 5.9, 0.65) },
+		{ Name = "missile14", Position = Vector(3.5, 5.3, -2.6) },
+		{ Name = "missile15", Position = Vector(3.5, 2.86, -5) },
+		{ Name = "missile16", Position = Vector(3.5, 0, -5.8) },
+	}
+})
+
+ACF.RegisterRack("57mm32xPOD", {
+	Name		= "32x 57mm FFAR Pod",
+	Description	= "A lightweight pod for small rockets which is vulnerable to shots and explosions.",
+	Model		= "models/failz/ub_32.mdl",
+	EntType		= "Pod",
+	Caliber		= 57,
+	Mass		= 130,
+	Year		= 1956,
+	MagSize		= 32,
+	Armor		= 5,
+
+	ProtectMissile = true,
+
+	MountPoints = {
+		{ Name = "missile1", Position = Vector(-8, 0, 3.3) },
+		{ Name = "missile2", Position = Vector(-8, 3.1, 0.8) },
+		{ Name = "missile3", Position = Vector(-8, 1.8, -2.8) },
+		{ Name = "missile4", Position = Vector(-8, -1.8, -2.8) },
+		{ Name = "missile5", Position = Vector(-8, -3.1, 0.8) },
+		{ Name = "missile6", Position = Vector(-8, 2.9, 6.2) },
+		{ Name = "missile7", Position = Vector(-8, 5.8, 3.8) },
+		{ Name = "missile8", Position = Vector(-8, 6.9, 0.2) },
+		{ Name = "missile9", Position = Vector(-8, 6.1, -3.4) },
+		{ Name = "missile10", Position = Vector(-8, 3.6, -6.1) },
+		{ Name = "missile11", Position = Vector(-8, 0, -7.2) },
+		{ Name = "missile12", Position = Vector(-8, -3.6, -6.1) },
+		{ Name = "missile13", Position = Vector(-8, -6.1, -3.4) },
+		{ Name = "missile14", Position = Vector(-8, -6.9, 0.2) },
+		{ Name = "missile15", Position = Vector(-8, -5.8, 3.8) },
+		{ Name = "missile16", Position = Vector(-8, -2.9, 6.2) },
+		{ Name = "missile17", Position = Vector(-8, 5.3, 9.1) },
+		{ Name = "missile18", Position = Vector(-8, 8.2, 6.75) },
+		{ Name = "missile19", Position = Vector(-8, 10.2, 3.7) },
+		{ Name = "missile20", Position = Vector(-8, 10.7, -0.1) },
+		{ Name = "missile21", Position = Vector(-8, 10.1, -3.9) },
+		{ Name = "missile22", Position = Vector(-8, 8.1, -7.1) },
+		{ Name = "missile23", Position = Vector(-8, 5.3, -9.6) },
+		{ Name = "missile24", Position = Vector(-8, 1.9, -10.7) },
+		{ Name = "missile25", Position = Vector(-8, -1.9, -10.7) },
+		{ Name = "missile26", Position = Vector(-8, -5.3, -9.6) },
+		{ Name = "missile27", Position = Vector(-8, -8.1, -7.1) },
+		{ Name = "missile28", Position = Vector(-8, -10.1, -3.9) },
+		{ Name = "missile29", Position = Vector(-8, -10.7, -0.1) },
+		{ Name = "missile30", Position = Vector(-8, -10.2, 3.7) },
+		{ Name = "missile31", Position = Vector(-8, -8.2, 6.75) },
+		{ Name = "missile32", Position = Vector(-8, -5.3, 9.1) },
+	}
+})
+
 ACF.RegisterRack("70mm7xPOD", {
 	Name		= "7x 70mm FFAR Pod",
 	Description	= "A lightweight pod for rockets which is vulnerable to shots and explosions.",
@@ -43,12 +125,85 @@ ACF.RegisterRack("70mm7xPOD", {
 
 	MountPoints = {
 		{ Name = "missile1", Position = Vector() },
-		{ Name = "missile2", Position = Vector(0, -3.5, 0) },
+		{ Name = "missile2", Position = Vector(0, -3.5) },
 		{ Name = "missile3", Position = Vector(0, -1.75, -3.03) },
 		{ Name = "missile4", Position = Vector(0, 1.75, -3.03) },
-		{ Name = "missile5", Position = Vector(0, 3.5, 0) },
+		{ Name = "missile5", Position = Vector(0, 3.5) },
 		{ Name = "missile6", Position = Vector(0, 1.75, 3.04) },
 		{ Name = "missile7", Position = Vector(0, -1.75, 3.04) }
+	}
+})
+
+ACF.RegisterRack("70mm19xPOD", {
+	Name		= "19x 70mm FFAR Pod",
+	Description	= "A lightweight pod for rockets which is vulnerable to shots and explosions.",
+	Model		= "models/failz/lau_61.mdl",
+	EntType		= "Pod",
+	Caliber		= 70,
+	Mass		= 90,
+	Year		= 1960,
+	MagSize		= 19,
+	Armor		= 5,
+
+	ProtectMissile = true,
+
+	MountPoints = {
+		{ Name = "missile1", Position = Vector(5, -3.9, 7) },
+		{ Name = "missile2", Position = Vector(5, 0, 7) },
+		{ Name = "missile3", Position = Vector(5, 3.9, 7) },
+		{ Name = "missile4", Position = Vector(5, -6.1, 3.4) },
+		{ Name = "missile5", Position = Vector(5, -2.1, 3.4) },
+		{ Name = "missile6", Position = Vector(5, 2.1, 3.4) },
+		{ Name = "missile7", Position = Vector(5, 6.1, 3.4) },
+		{ Name = "missile8", Position = Vector(5, -8) },
+		{ Name = "missile9", Position = Vector(5, -4) },
+		{ Name = "missile10", Position = Vector(5) },
+		{ Name = "missile11", Position = Vector(5, 4) },
+		{ Name = "missile12", Position = Vector(5, 8) },
+		{ Name = "missile13", Position = Vector(5, -6.1, -3.6) },
+		{ Name = "missile14", Position = Vector(5, -2.1, -3.6) },
+		{ Name = "missile15", Position = Vector(5, 2.1, -3.6) },
+		{ Name = "missile16", Position = Vector(5, 6.1, -3.6) },
+		{ Name = "missile17", Position = Vector(5, -3.9, -7.2) },
+		{ Name = "missile18", Position = Vector(5, 0, -7.2) },
+		{ Name = "missile19", Position = Vector(5, 3.9, -7.2) },
+	}
+})
+
+ACF.RegisterRack("80mm20xPOD", {
+	Name		= "20x 80mm FFAR Pod",
+	Description	= "A lightweight pod for rockets which is vulnerable to shots and explosions.",
+	Model		= "models/failz/b8.mdl",
+	EntType		= "Pod",
+	Caliber		= 80,
+	Mass		= 120,
+	Year		= 1970,
+	MagSize		= 20,
+	Armor		= 5,
+
+	ProtectMissile = true,
+
+	MountPoints = {
+		{ Name = "missile1", Position = Vector(4, 2.8, 4.8) },
+		{ Name = "missile2", Position = Vector(4, 5.6, 0.8) },
+		{ Name = "missile3", Position = Vector(4, 4.2, -3.94) },
+		{ Name = "missile4", Position = Vector(4, 0, -5.8) },
+		{ Name = "missile5", Position = Vector(4, -4.2, -3.94) },
+		{ Name = "missile6", Position = Vector(4, -5.6, 0.8) },
+		{ Name = "missile7", Position = Vector(4, -2.8, 4.8) },
+		{ Name = "missile8", Position = Vector(4, 3.8, 10) },
+		{ Name = "missile9", Position = Vector(4, 8.0, 6.8) },
+		{ Name = "missile10", Position = Vector(4, 10.1, 2.7) },
+		{ Name = "missile11", Position = Vector(4, 10.23, -2.1) },
+		{ Name = "missile12", Position = Vector(4, 8.20, -6.4) },
+		{ Name = "missile13", Position = Vector(4, 4.55, -9.46) },
+		{ Name = "missile14", Position = Vector(4, 0, -10.8) },
+		{ Name = "missile15", Position = Vector(4, -4.55, -9.46) },
+		{ Name = "missile16", Position = Vector(4, -8.20, -6.4) },
+		{ Name = "missile17", Position = Vector(4, -10.23, -2.1) },
+		{ Name = "missile18", Position = Vector(4, -10.1, 2.7) },
+		{ Name = "missile19", Position = Vector(4, -8.0, 6.8) },
+		{ Name = "missile20", Position = Vector(4, -3.8, 10) },
 	}
 })
 
