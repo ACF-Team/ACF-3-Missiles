@@ -68,7 +68,7 @@ function Ammo:VerifyData(ToolData)
 	if not ToolData.FillerRatio then
 		local Data5 = ToolData.RoundData5
 
-		ToolData.FillerRatiod = Data5 and tonumber(Data5) or 0
+		ToolData.FillerRatio = Data5 and tonumber(Data5) or 0
 	end
 end
 
