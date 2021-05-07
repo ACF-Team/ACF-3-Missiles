@@ -2,10 +2,14 @@ local ACF       = ACF
 local Guidances = ACF.Classes.Guidances
 local Fuzes     = ACF.Classes.Fuzes
 
-hook.Add("ACF_UpdateRoundData", "ACF Missile Ammo", function(_, ToolData, Data)
+hook.Add("ACF_UpdateRoundData", "ACF Missile Ammo", function(Ammo, ToolData, Data)
 	if ToolData.Destiny ~= "Missiles" then return end
+	if not Ammo.CalcSlugMV then return end
 
-	Data.SlugPenMul = ACF_GetGunValue(ToolData.Weapon, "PenMul")
+	local SlugPen = ACF_GetGunValue(ToolData.Weapon, "PenMul")
+
+	Data.SlugPenMul = SlugPen
+	Data.SlugMV     = Ammo:CalcSlugMV(Data) * (SlugPen or 1)
 end)
 
 if CLIENT then
