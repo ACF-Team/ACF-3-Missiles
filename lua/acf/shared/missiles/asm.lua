@@ -219,8 +219,8 @@ ACF.RegisterMissile("9M113 ASM", "ATGM", {
 		Armor			= 5,
 		ProjLength		= 40,
 		PropLength		= 50,
-		Thrust			= 90000,   -- in kg*in/s^2
-		FuelConsumption = 0.04,    -- in g/s/f
+		Thrust			= 180000,   -- in kg*in/s^2
+		FuelConsumption = 0.032,    -- in g/s/f
 		StarterPercent	= 0.15,
 		MaxAgilitySpeed = 200,      -- in m/s
 		DragCoef		= 0.013,
