@@ -23,7 +23,7 @@ ACF.RegisterMissile("AT-3 ASM", "ATGM", {
 	Guidance	= { Dumb = true, ["Wire (MCLOS)"] = true, ["Wire (SACLOS)"] = true },
 	Fuzes		= { Contact = true, Optical = true },
 	SkinIndex	= { HEAT = 0, HE = 1 },
-	Agility		= 0.0006,
+	Agility		= 0.0005,
 	ArmDelay	= 0.1,
 	Round = {
 		Model			= "models/missiles/at3.mdl",
@@ -31,11 +31,11 @@ ACF.RegisterMissile("AT-3 ASM", "ATGM", {
 		Armor			= 5,
 		ProjLength		= 30,
 		PropLength		= 45,
-		Thrust			= 3020,     -- in kg*in/s^2
+		Thrust			= 8020,     -- in kg*in/s^2
 		FuelConsumption = 0.05,     -- in g/s/f
-		StarterPercent	= 0.61,
-		MaxAgilitySpeed = 70,       -- in m/s
-		DragCoef		= 0.0112,
+		StarterPercent	= 0.12,
+		MaxAgilitySpeed = 100,       -- in m/s
+		DragCoef		= 0.02,
 		FinMul			= 0.1,
 		GLimit          = 10,
 		TailFinMul		= 0.01,
@@ -200,7 +200,7 @@ ACF.RegisterMissile("9M113 ASM", "ATGM", {
 	Navigation  = "Chase",
 	Fuzes		= { Contact = true, Optical = true },
 	ViewCone	= 20,
-	Agility		= 0.00077,
+	Agility		= 0.0004,
 	ArmDelay	= 0.1,
 	Bodygroups = {
 		fins = {
@@ -219,11 +219,11 @@ ACF.RegisterMissile("9M113 ASM", "ATGM", {
 		Armor			= 5,
 		ProjLength		= 40,
 		PropLength		= 50,
-		Thrust			= 430000,   -- in kg*in/s^2
-		FuelConsumption = 0.030,    -- in g/s/f
-		StarterPercent	= 0.1,
+		Thrust			= 90000,   -- in kg*in/s^2
+		FuelConsumption = 0.04,    -- in g/s/f
+		StarterPercent	= 0.15,
 		MaxAgilitySpeed = 200,      -- in m/s
-		DragCoef		= 0.005,
+		DragCoef		= 0.013,
 		FinMul			= 0.1,
 		GLimit          = 8,
 		TailFinMul		= 0.01,
@@ -252,7 +252,7 @@ ACF.RegisterMissile("AT-2 ASM", "ATGM", {
 	Navigation  = "Chase",
 	Fuzes		= { Contact = true, Optical = true },
 	ViewCone	= 90,
-	Agility		= 0.00014,
+	Agility		= 0.00008,
 	ArmDelay	= 0.1,
 	Round = {
 		Model			= "models/missiles/at2.mdl",
@@ -260,11 +260,11 @@ ACF.RegisterMissile("AT-2 ASM", "ATGM", {
 		Armor			= 5,
 		ProjLength		= 35,
 		PropLength		= 35,
-		Thrust			= 6000,    -- in kg*in/s^2
+		Thrust			= 120000,    -- in kg*in/s^2
 		FuelConsumption = 0.035,    -- in g/s/f
-		StarterPercent	= 0.7,
-		MaxAgilitySpeed = 100,      -- in m/s
-		DragCoef		= 0.015,
+		StarterPercent	= 0.08,
+		MaxAgilitySpeed = 200,      -- in m/s
+		DragCoef		= 0.005,
 		FinMul			= 0.1,
 		GLimit          = 10,
 		TailFinMul		= 0.01,
