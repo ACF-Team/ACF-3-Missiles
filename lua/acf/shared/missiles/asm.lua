@@ -23,7 +23,7 @@ ACF.RegisterMissile("AT-3 ASM", "ATGM", {
 	Guidance	= { Dumb = true, ["Wire (MCLOS)"] = true, ["Wire (SACLOS)"] = true },
 	Fuzes		= { Contact = true, Optical = true },
 	SkinIndex	= { HEAT = 0, HE = 1 },
-	Agility		= 0.00022,
+	Agility		= 0.0005,
 	ArmDelay	= 0.1,
 	Round = {
 		Model			= "models/missiles/at3.mdl",
@@ -31,11 +31,11 @@ ACF.RegisterMissile("AT-3 ASM", "ATGM", {
 		Armor			= 5,
 		ProjLength		= 30,
 		PropLength		= 45,
-		Thrust			= 4000,     -- in kg*in/s^2
+		Thrust			= 8020,     -- in kg*in/s^2
 		FuelConsumption = 0.05,     -- in g/s/f
-		StarterPercent	= 0.45,
-		MaxAgilitySpeed = 70,       -- in m/s
-		DragCoef		= 0.01,
+		StarterPercent	= 0.12,
+		MaxAgilitySpeed = 100,       -- in m/s
+		DragCoef		= 0.02,
 		FinMul			= 0.1,
 		GLimit          = 10,
 		TailFinMul		= 0.01,
@@ -62,7 +62,7 @@ ACF.RegisterMissile("BGM-71E ASM", "ATGM", {
 	Guidance	= { Dumb = true, ["Wire (SACLOS)"] = true },
 	Navigation  = "PN",
 	Fuzes		= { Contact = true, Optical = true },
-	Agility		= 0.00018,
+	Agility		= 0.00024,
 	ArmDelay	= 0.1,
 	Round = {
 		Model			= "models/missiles/bgm_71e.mdl",
@@ -96,14 +96,14 @@ ACF.RegisterMissile("AGM-114 ASM", "ATGM", {
 	Mass		= 49,
 	Diameter	= 6.5 * 25.4, -- in mm
 	Year		= 1984,
-	ReloadTime	= 25,
+	ReloadTime	= 30,
 	Racks		= { ["1xRK"] = true, ["2x AGM-114"] = true, ["4x AGM-114"] = true },
 	Guidance	= { Dumb = true, Laser = true, ["Active Radar"] = true },
 	Navigation  = "PN",
 	Fuzes		= { Contact = true, Optical = true },
 	ViewCone	= 40,
 	SeekCone	= 10,
-	Agility		= 0.0005,
+	Agility		= 0.0008,
 	ArmDelay	= 0.5,
 	Bodygroups = {
 		guidance = {
@@ -130,7 +130,7 @@ ACF.RegisterMissile("AGM-114 ASM", "ATGM", {
 		MaxAgilitySpeed = 100,      -- in m/s
 		DragCoef		= 0.005,
 		FinMul			= 0.1,
-		GLimit          = 10,
+		GLimit          = 14,
 		TailFinMul		= 0.01,
 		PenMul			= 3.22,
 		ActualLength 	= 160,
@@ -151,13 +151,13 @@ ACF.RegisterMissile("Ataka ASM", "ATGM", {
 	Mass		= 50,
 	Diameter	= 10.9 * 25.4, -- in mm
 	Year		= 1984,
-	ReloadTime	= 20,
+	ReloadTime	= 25,
 	Racks		= { ["1x Ataka"] = true, ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true },
 	Guidance	= { Dumb = true, ["Radio (SACLOS)"] = true },
 	Navigation  = "Chase",
 	Fuzes		= { Contact = true, Optical = true },
 	ViewCone	= 45,
-	Agility		= 0.0003,
+	Agility		= 0.00072,
 	ArmDelay	= 0.1,
 	NoDamage    = true,
 	Round = {
@@ -167,13 +167,13 @@ ACF.RegisterMissile("Ataka ASM", "ATGM", {
 		Armor			= 5,
 		ProjLength		= 50,
 		PropLength		= 100,
-		Thrust			= 800000,   -- in kg*in/s^2
-		FuelConsumption = 0.03,    -- in g/s/f
-		StarterPercent	= 0.02,
+		Thrust			= 700000,   -- in kg*in/s^2
+		FuelConsumption = 0.022,    -- in g/s/f
+		StarterPercent	= 0.05,
 		MaxAgilitySpeed = 200,      -- in m/s
-		DragCoef		= 0.002,
+		DragCoef		= 0.024,
 		FinMul			= 0.1,
-		GLimit          = 10,
+		GLimit          = 13.8,
 		TailFinMul		= 0.01,
 		PenMul			= 3.09,
 		ActualLength 	= 183,
@@ -200,7 +200,7 @@ ACF.RegisterMissile("9M113 ASM", "ATGM", {
 	Navigation  = "Chase",
 	Fuzes		= { Contact = true, Optical = true },
 	ViewCone	= 20,
-	Agility		= 0.0002,
+	Agility		= 0.0004,
 	ArmDelay	= 0.1,
 	Bodygroups = {
 		fins = {
@@ -219,11 +219,11 @@ ACF.RegisterMissile("9M113 ASM", "ATGM", {
 		Armor			= 5,
 		ProjLength		= 40,
 		PropLength		= 50,
-		Thrust			= 430000,   -- in kg*in/s^2
-		FuelConsumption = 0.030,    -- in g/s/f
-		StarterPercent	= 0.1,
+		Thrust			= 180000,   -- in kg*in/s^2
+		FuelConsumption = 0.032,    -- in g/s/f
+		StarterPercent	= 0.15,
 		MaxAgilitySpeed = 200,      -- in m/s
-		DragCoef		= 0.005,
+		DragCoef		= 0.013,
 		FinMul			= 0.1,
 		GLimit          = 8,
 		TailFinMul		= 0.01,
@@ -252,7 +252,7 @@ ACF.RegisterMissile("AT-2 ASM", "ATGM", {
 	Navigation  = "Chase",
 	Fuzes		= { Contact = true, Optical = true },
 	ViewCone	= 90,
-	Agility		= 0.0006,
+	Agility		= 0.00008,
 	ArmDelay	= 0.1,
 	Round = {
 		Model			= "models/missiles/at2.mdl",
@@ -260,11 +260,11 @@ ACF.RegisterMissile("AT-2 ASM", "ATGM", {
 		Armor			= 5,
 		ProjLength		= 35,
 		PropLength		= 35,
-		Thrust			= 10000,    -- in kg*in/s^2
+		Thrust			= 120000,    -- in kg*in/s^2
 		FuelConsumption = 0.035,    -- in g/s/f
-		StarterPercent	= 0.50,
-		MaxAgilitySpeed = 100,      -- in m/s
-		DragCoef		= 0.015,
+		StarterPercent	= 0.08,
+		MaxAgilitySpeed = 200,      -- in m/s
+		DragCoef		= 0.005,
 		FinMul			= 0.1,
 		GLimit          = 10,
 		TailFinMul		= 0.01,
