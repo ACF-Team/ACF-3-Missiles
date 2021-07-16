@@ -270,7 +270,8 @@ function ENT:Detonate()
 
 	local Bullet = ACF.CreateBullet(BulletData)
 
-	ACF.DoReplicatedPropHit(self, Bullet)
+	local BulletClass = ACF.Classes.AmmoTypes[BulletData.Type]
+	BulletClass:Detonate(Bullet, self.Position)
 
 	self:Remove()
 end
