@@ -1,4 +1,4 @@
-local Ammo = ACF.RegisterAmmoType("GLATGM", "HEAT")
+local Ammo = ACF.RegisterAmmoType("GLATGM", "HEATFS")
 
 function Ammo:OnLoaded()
 	Ammo.BaseClass.OnLoaded(self)
@@ -113,7 +113,7 @@ else
 			return BulletData.ConeAng
 		end)
 
-		local StandoffRatio = Base:AddSlider("Extra Standoff Ratio", 0, 0.75, 2)
+		local StandoffRatio = Base:AddSlider("Extra Standoff Ratio", 0, 0.25, 2)
 		StandoffRatio:SetClientData("StandoffRatio", "OnValueChanged")
 		StandoffRatio:DefineSetter(function(_, _, _, Value)
 			ToolData.StandoffRatio = math.Round(Value, 2)
