@@ -578,13 +578,6 @@ function ENT:Detonate(Destroyed)
 		end
 	end
 
-	-- Workaround for HEAT jets that can travel the entire map on destroyed missiles
-	if Destroyed and BulletData.Type == "HEAT" then
-		BulletData.Type = "HE"
-
-		self:SetNW2String("AmmoType", "HE")
-	end
-
 	BulletData.Flight = self.Velocity
 
 	if Filter then
@@ -611,7 +604,12 @@ function ENT:Detonate(Destroyed)
 
 	local Bullet = ACF.CreateBullet(BulletData)
 
-	ACF.DoReplicatedPropHit(self, Bullet)
+	local BulletClass = ACF.Classes.AmmoTypes[BulletData.Type]
+	if BulletData.Type == "HEAT" then
+		BulletClass:Detonate(Bullet, self.Position)
+	else
+		ACF.DoReplicatedPropHit(self, Bullet)
+	end
 end
 
 function ENT:Think()

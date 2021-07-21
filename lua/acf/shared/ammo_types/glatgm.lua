@@ -1,4 +1,4 @@
-local Ammo = ACF.RegisterAmmoType("GLATGM", "HEAT")
+local Ammo = ACF.RegisterAmmoType("GLATGM", "HEATFS")
 
 function Ammo:OnLoaded()
 	Ammo.BaseClass.OnLoaded(self)
@@ -14,34 +14,16 @@ function Ammo:OnLoaded()
 	})
 end
 
-function Ammo:GetDisplayData(Data)
-	local Fragments = math.max(math.floor(Data.BoomFillerMass / Data.CasingMass * ACF.HEFrag), 2)
-	local Display   = {
-		MaxPen		= self:GetPenetration(Data, Data.MuzzleVel, true),
-		BlastRadius	= Data.BoomFillerMass ^ 0.33 * 8,
-		Fragments	= Fragments,
-		FragMass	= Data.CasingMass / Fragments,
-		FragVel		= (Data.BoomFillerMass * ACF.HEPower * 1000 / Data.CasingMass / Fragments) ^ 0.5,
-	}
-
-	hook.Run("ACF_GetDisplayData", self, Data, Display)
-
-	return Display
-end
-
 function Ammo:BaseConvert(ToolData)
 	local Data, GUIData = ACF.RoundBaseGunpowder(ToolData, {})
 
 	GUIData.MinConeAng	 = 0
 	GUIData.MinFillerVol = 0
 
-	Data.SlugRicochet	= 500 -- Base ricochet angle (The HEAT slug shouldn't ricochet at all)
 	Data.ShovePower		= 0.1
 	Data.LimitVel		= 100 -- Most efficient penetration speed in m/s
 	Data.Ricochet		= 60 -- Base ricochet angle
 	Data.DetonatorAngle	= 75
-	Data.Detonated		= false
-	Data.NotFirstPen	= false
 
 	self:UpdateRoundData(ToolData, Data, GUIData)
 
@@ -69,37 +51,20 @@ if SERVER then
 
 		return Text:format(math.Round(BulletData.MuzzleVel * 2 / ACF.Scale, 2), math.floor(Data.MaxPen), math.Round(Data.BlastRadius, 2), math.floor(BulletData.BoomFillerMass * ACF.HEPower))
 	end
+
+	function Ammo:HEATExplosionEffect(Bullet, Pos)
+		local Data = EffectData()
+		Data:SetOrigin(Pos)
+		Data:SetNormal(Bullet.Flight:GetNormalized())
+		Data:SetRadius(math.max(Bullet.FillerMass ^ 0.33 * 8 * 39.37, 1))
+
+		util.Effect("ACF_GLATGMExplosion", Data)
+	end
 else
 	ACF.RegisterAmmoDecal("GLATGM", "damage/heat_pen", "damage/heat_rico", function(Caliber) return Caliber * 0.1667 end)
 
-	local DecalIndex = ACF.GetAmmoDecalIndex
-
-	function Ammo:PenetrationEffect(Effect, Bullet)
-		local Data = EffectData()
-
-		if Bullet.Detonated then
-			Data:SetOrigin(Bullet.SimPos)
-			Data:SetNormal(Bullet.SimFlight:GetNormalized())
-			Data:SetScale(Bullet.SimFlight:Length())
-			Data:SetMagnitude(Bullet.RoundMass)
-			Data:SetRadius(Bullet.Caliber)
-			Data:SetDamageType(DecalIndex(Bullet.AmmoType))
-
-			util.Effect("ACF_Penetration", Data)
-		else
-			local BoomFillerMass = Bullet.FillerMass * ACF.HEATBoomConvert
-
-			Data:SetOrigin(Bullet.SimPos)
-			Data:SetNormal(Bullet.SimFlight:GetNormalized())
-			Data:SetScale(math.max(BoomFillerMass ^ 0.33 * 3 * 39.37, 1))
-			Data:SetRadius(Bullet.Caliber)
-
-			util.Effect("ACF_GLATGMExplosion", Data)
-
-			Bullet.Detonated = true
-
-			Effect:SetModel("models/Gibs/wood_gib01e.mdl")
-		end
+	function Ammo:PenetrationEffect()
+		return
 	end
 
 	function Ammo:SetupAmmoMenuSettings(Settings)
@@ -129,12 +94,40 @@ else
 		Setup.Height = Height or Setup.Height
 	end
 
+	function Ammo:AddAmmoControls(Base, ToolData, BulletData)
+		local LinerAngle = Base:AddSlider("Liner Angle", BulletData.MinConeAng, 90, 1)
+		LinerAngle:SetClientData("LinerAngle", "OnValueChanged")
+		LinerAngle:TrackClientData("Projectile")
+		LinerAngle:DefineSetter(function(Panel, _, Key, Value)
+			if Key == "LinerAngle" then
+				ToolData.LinerAngle = math.Round(Value, 2)
+			end
+
+			self:UpdateRoundData(ToolData, BulletData)
+
+			Panel:SetMin(BulletData.MinConeAng)
+			Panel:SetValue(BulletData.ConeAng)
+
+			return BulletData.ConeAng
+		end)
+
+		local StandoffRatio = Base:AddSlider("Extra Standoff Ratio", 0, 0.25, 2)
+		StandoffRatio:SetClientData("StandoffRatio", "OnValueChanged")
+		StandoffRatio:DefineSetter(function(_, _, _, Value)
+			ToolData.StandoffRatio = math.Round(Value, 2)
+
+			self:UpdateRoundData(ToolData, BulletData)
+
+			return ToolData.StandoffRatio
+		end)
+	end
+
 	function Ammo:AddAmmoInformation(Base, ToolData, BulletData)
 		local RoundStats = Base:AddLabel()
 		RoundStats:TrackClientData("Projectile", "SetText")
 		RoundStats:TrackClientData("Propellant")
-		RoundStats:TrackClientData("FillerRatio")
 		RoundStats:TrackClientData("LinerAngle")
+		RoundStats:TrackClientData("StandoffRatio")
 		RoundStats:DefineSetter(function()
 			self:UpdateRoundData(ToolData, BulletData)
 
@@ -150,6 +143,7 @@ else
 		local FillerStats = Base:AddLabel()
 		FillerStats:TrackClientData("FillerRatio", "SetText")
 		FillerStats:TrackClientData("LinerAngle")
+		FillerStats:TrackClientData("StandoffRatio")
 		FillerStats:DefineSetter(function()
 			self:UpdateRoundData(ToolData, BulletData)
 
@@ -164,35 +158,35 @@ else
 		local Penetrator = Base:AddLabel()
 		Penetrator:TrackClientData("Projectile", "SetText")
 		Penetrator:TrackClientData("Propellant")
-		Penetrator:TrackClientData("FillerRatio")
 		Penetrator:TrackClientData("LinerAngle")
+		Penetrator:TrackClientData("StandoffRatio")
 		Penetrator:DefineSetter(function()
 			self:UpdateRoundData(ToolData, BulletData)
 
-			local Text	   = "Penetrator Caliber : %s mm\nPenetrator Mass : %s\nPenetrator Velocity : %s m/s"
-			local Caliber  = math.Round(BulletData.SlugCaliber * 10, 2)
-			local Mass	   = ACF.GetProperMass(BulletData.SlugMass)
-			local Velocity = math.Round(BulletData.MuzzleVel + BulletData.SlugMV, 2)
+			local Text     = "Copper mass : %s g\nJet mass : %s g\nJet velocity : %s m/s - %s m/s"
+			local CuMass   = math.Round(BulletData.LinerMass * 1e3, 0)
+			local JetMass  = math.Round(BulletData.JetMass * 1e3, 0)
+			local MinVel   = math.Round(BulletData.JetMinVel, 0)
+			local MaxVel   = math.Round(BulletData.JetMaxVel, 0)
 
-			return Text:format(Caliber, Mass, Velocity)
+			return Text:format(CuMass, JetMass, MinVel, MaxVel)
 		end)
 
 		local PenStats = Base:AddLabel()
 		PenStats:TrackClientData("Projectile", "SetText")
 		PenStats:TrackClientData("Propellant")
-		PenStats:TrackClientData("FillerRatio")
 		PenStats:TrackClientData("LinerAngle")
+		PenStats:TrackClientData("StandoffRatio")
 		PenStats:DefineSetter(function()
 			self:UpdateRoundData(ToolData, BulletData)
 
-			local Text   = "Penetration : %s mm RHA\nAt 300m : %s mm RHA @ %s m/s\nAt 800m : %s mm RHA @ %s m/s"
-			local MaxPen = math.Round(BulletData.MaxPen, 2)
-			local _, R1V = self:GetRangedPenetration(BulletData, 300)
-			local _, R2V = self:GetRangedPenetration(BulletData, 800)
+			local Text   = "Penetration at passive standoff :\nAt %s mm : %s mm RHA\nMaximum penetration :\nAt %s mm : %s mm RHA"
+			local Standoff1 = math.Round(BulletData.Standoff * 1e3, 0)
+			local Pen1 = math.Round(self:GetPenetration(BulletData, BulletData.Standoff), 1)
+			local Standoff2 = math.Round(BulletData.BreakupDist * 1e3, 0)
+			local Pen2 = math.Round(self:GetPenetration(BulletData, BulletData.BreakupDist), 1)
 
-			return Text:format(MaxPen, MaxPen, R1V, MaxPen, R2V)
+			return Text:format(Standoff1, Pen1, Standoff2, Pen2)
 		end)
-
-		Base:AddLabel("Note: The penetration range data is an approximation and may not be entirely accurate.")
 	end
 end
