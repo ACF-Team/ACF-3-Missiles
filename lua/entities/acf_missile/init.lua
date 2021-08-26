@@ -601,6 +601,7 @@ function ENT:Detonate(Destroyed)
 
 	debugoverlay.Line(BulletData.Pos, BulletData.Pos + BulletData.Flight, 10, Color(255, 128, 0))
 
+	BulletData.DetonatorAngle = 91
 	local Bullet = ACF.CreateBullet(BulletData)
 	if BulletData.Type ~= "HEAT" then
 		ACF.DoReplicatedPropHit(self, Bullet)
