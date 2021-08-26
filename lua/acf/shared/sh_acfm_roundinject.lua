@@ -2,7 +2,7 @@ local ACF       = ACF
 local Guidances = ACF.Classes.Guidances
 local Fuzes     = ACF.Classes.Fuzes
 
-hook.Add("ACF_UpdateRoundData", "ACF Missile Ammo", function(ToolData, Data)
+hook.Add("ACF_UpdateRoundData", "ACF Missile Ammo", function(Ammo, ToolData, Data) --Ammo will remain regardless of linter's whining
 	if ToolData.Destiny ~= "Missiles" then return end
 
 	local PenMul   = ACF_GetGunValue(ToolData.Weapon, "PenMul")
