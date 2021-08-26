@@ -560,7 +560,6 @@ function ENT:Detonate(Destroyed)
 	local BulletData = self.BulletData
 	local Filter = BulletData.Filter
 	local Fuze = self.FuzeData
-
 	self:SetNotSolid(true)
 	self:SetNoDraw(true)
 
@@ -602,12 +601,10 @@ function ENT:Detonate(Destroyed)
 
 	debugoverlay.Line(BulletData.Pos, BulletData.Pos + BulletData.Flight, 10, Color(255, 128, 0))
 
+	
 	local Bullet = ACF.CreateBullet(BulletData)
-
 	local BulletClass = ACF.Classes.AmmoTypes[BulletData.Type]
-	if BulletData.Type == "HEAT" then
-		BulletClass:Detonate(Bullet, self.Position)
-	else
+	if BulletData.Type != "HEAT" then
 		ACF.DoReplicatedPropHit(self, Bullet)
 	end
 end
