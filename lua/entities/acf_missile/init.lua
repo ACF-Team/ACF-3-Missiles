@@ -560,7 +560,6 @@ function ENT:Detonate(Destroyed)
 	local BulletData = self.BulletData
 	local Filter = BulletData.Filter
 	local Fuze = self.FuzeData
-
 	self:SetNotSolid(true)
 	self:SetNoDraw(true)
 
@@ -602,12 +601,9 @@ function ENT:Detonate(Destroyed)
 
 	debugoverlay.Line(BulletData.Pos, BulletData.Pos + BulletData.Flight, 10, Color(255, 128, 0))
 
+	BulletData.DetonatorAngle = 91
 	local Bullet = ACF.CreateBullet(BulletData)
-
-	local BulletClass = ACF.Classes.AmmoTypes[BulletData.Type]
-	if BulletData.Type == "HEAT" then
-		BulletClass:Detonate(Bullet, self.Position)
-	else
+	if BulletData.Type ~= "HEAT" then
 		ACF.DoReplicatedPropHit(self, Bullet)
 	end
 end
@@ -676,7 +672,7 @@ function ENT:ACF_OnDamage(Bullet, Trace)
 	local HitRes = ACF.PropDamage(Bullet, Trace) --Calling the standard damage prop function
 	local Owner  = Bullet.Owner
 
-	-- If the missile was destroyed, then we detonate it.
+-- If the missile was destroyed, then we detonate it.
 	if HitRes.Kill then
 		DetonateMissile(self, Owner)
 
