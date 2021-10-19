@@ -1,8 +1,6 @@
 
 local Guidance = ACF.RegisterGuidance("Anti-radiation", "Laser")
 
-Guidance.MinDistance = 38750 -- Squared, ~5 meters
-
 function Guidance:Configure(Missile)
 	Guidance.BaseClass.Configure(self, Missile)
 
@@ -22,49 +20,60 @@ if CLIENT then
 else
 	local Radars = ACF.ActiveRadars
 
-	function Guidance:FindNewTarget(Missile)
+	Guidance.MinDistance = 38750 -- Squared, ~5 meters
+
+	function Guidance:UpdateTarget(Missile)
 		if not next(Radars) then return end
 
-		local Position = Missile:GetPos()
+		local Position = Missile.Position
 		local HighestDot = 0
-		local CurrentDot, RadarPos, Distance, Target
+		local Target, TargetPos
 
 		for Radar in pairs(Radars) do
-			RadarPos = Radar:LocalToWorld(Radar.Origin)
-			Distance = Position:DistToSqr(RadarPos)
+			local RadarPos = Radar:LocalToWorld(Radar.Origin)
+			local Distance = Position:DistToSqr(RadarPos)
 
-			if Distance >= self.MinDistance and self:CheckConeLOS(Missile, Position, RadarPos, self.SeekConeCos) then
-				CurrentDot = self.GetDirectionDot(Missile, RadarPos)
+			if Distance < self.MinDistance then continue end
+			if not self:CheckConeLOS(Missile, Position, RadarPos, self.SeekConeCos) then continue end
 
-				if CurrentDot > HighestDot then
-					HighestDot = CurrentDot
-					Target = Radar
-				end
+			local CurrentDot = self.GetDirectionDot(Missile, RadarPos)
+
+			if CurrentDot > HighestDot then
+				HighestDot = CurrentDot
+				TargetPos  = RadarPos
+				Target     = Radar
 			end
 		end
 
-		return Target
+		self.Target = Target
+
+		return TargetPos
 	end
 
 	function Guidance:OnLaunched(Missile)
-		self.Target = self:FindNewTarget(Missile)
+		self:UpdateTarget(Missile)
+	end
+
+	function Guidance:GetTargetPosition()
+		local Target = self.Target
+
+		if not IsValid(Target) then return end
+		if not Target.Active then return end
+
+		return Target:LocalToWorld(Target.Origin)
 	end
 
 	function Guidance:GetGuidance(Missile)
-		if IsValid(self.Target) then
-			local Position = Missile:GetPos()
-			local RadarPos = self.Target:GetPos()
-			local HasLOS = self:CheckConeLOS(Missile, Position, RadarPos, self.ViewConeCos)
+		local TargetPos = self:GetTargetPosition()
 
-			if HasLOS and self.Target.Active then
-				return { TargetPos = RadarPos, ViewCone = self.ViewCone }
-			end
+		if TargetPos and self:CheckConeLOS(Missile, Missile.Position, TargetPos, self.ViewConeCos) then
+			return { TargetPos = TargetPos, ViewCone = self.ViewCone }
 		end
 
-		self.Target = self:FindNewTarget(Missile)
+		local NewTarget = self:UpdateTarget(Missile)
 
-		if not self.Target then return {} end
+		if not NewTarget then return {} end
 
-		return { TargetPos = self.Target:GetPos(), ViewCone = self.ViewCone }
+		return { TargetPos = NewTarget, ViewCone = self.ViewCone }
 	end
 end

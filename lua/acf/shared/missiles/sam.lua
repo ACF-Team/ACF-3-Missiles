@@ -12,33 +12,40 @@ ACF.RegisterMissile("FIM-92 SAM", "SAM", {
 	Name		= "FIM-92 Stinger",
 	Description	= "The FIM-92 Stinger is a lightweight and versatile close-range air defense missile.",
 	Model		= "models/missiles/fim_92.mdl",
-	Length		= 66,
+	Length		= 152,
 	Caliber		= 70,
 	Mass		= 10,
 	Year		= 1978,
 	ReloadTime	= 10,
 	Racks		= { ["1x FIM-92"] = true, ["2x FIM-92"] = true, ["4x FIM-92"] = true },
 	Guidance	= { Dumb = true, Infrared = true, ["Anti-missile"] = true },
+	Navigation  = "PN",
 	Fuzes		= { Contact = true, Radio = true },
 	SeekCone	= 7.5,
 	ViewCone	= 30,
-	Agility		= 3,
+	Agility		= 0.0002,
 	ArmDelay	= 0.2,
 	Round = {
 		Model			= "models/missiles/fim_92.mdl",
 		RackModel		= "models/missiles/fim_92_folded.mdl",
-		MaxLength		= 100,
+		MaxLength		= 152,
 		Armor			= 5,
-		PropMass		= 1.5,
-		Thrust			= 7000, -- in kg*in/s^2
-		BurnRate		= 1000, -- in cm^3/s
-		StarterPercent	= 0.3,
-		MinSpeed		= 3000,
-		DragCoef		= 0.001,
-		DragCoefFlight	= 0.0001,
-		FinMul			= 0.02,
-		ActualLength 	= 59,
-		ActualWidth		= 2.7
+		ProjLength		= 60,
+		PropLength		= 80,
+		Thrust			= 200000,	-- in kg*in/s^2
+		FuelConsumption = 0.012,    -- in g/s/f
+		StarterPercent	= 0.1,
+		MaxAgilitySpeed = 200,      -- in m/s
+		DragCoef		= 0.0015,
+		FinMul			= 0.03,
+		GLimit          = 20,
+		TailFinMul		= 0.001,
+		ActualLength 	= 152,
+		ActualWidth		= 7
+	},
+	Preview = {
+		Height = 80,
+		FOV    = 60,
 	},
 })
 
@@ -46,32 +53,39 @@ ACF.RegisterMissile("Strela-1 SAM", "SAM", {
 	Name		= "9M31 Strela-1",
 	Description	= "The 9M31 Strela-1 (SA-9 Gaskin) is a medium-range homing SAM, best suited to ground vehicles or stationary units.",
 	Model		= "models/missiles/9m31.mdl",
-	Length		= 60,
+	Length		= 180,
 	Caliber		= 120,
 	Mass		= 30,
 	Year		= 1960,
 	ReloadTime	= 25,
 	Racks		= { ["1x Strela-1"] = true, ["2x Strela-1"] = true, ["4x Strela-1"] = true },
 	Guidance	= { Dumb = true, Infrared = true, ["Anti-missile"] = true },
+	Navigation  = "APN",
 	Fuzes		= { Contact = true, Radio = true },
 	SeekCone	= 20,
 	ViewCone	= 40,
-	Agility		= 2,
+	Agility		= 0.0006,
 	ArmDelay	= 0.2,
 	Round = {
 		Model			= "models/missiles/9m31.mdl",
 		RackModel		= "models/missiles/9m31f.mdl",
-		MaxLength		= 105,
+		MaxLength		= 180,
 		Armor			= 5,
-		PropMass		= 1,
-		Thrust			= 4000, -- in kg*in/s^2
-		BurnRate		= 400, -- in cm^3/s
+		ProjLength		= 60,
+		PropLength		= 100,
+		Thrust			= 800000,	-- in kg*in/s^2
+		FuelConsumption = 0.018,	-- in g/s/f
 		StarterPercent	= 0.1,
-		MinSpeed		= 4000,
+		MaxAgilitySpeed = 300,      -- in m/s
 		DragCoef		= 0.003,
-		DragCoefFlight	= 0,
-		FinMul			= 0.03,
-		ActualLength 	= 86.5,
-		ActualWidth		= 5.5
+		FinMul			= 0.04,
+		GLimit          = 20,
+		TailFinMul		= 0.001,
+		ActualLength 	= 180,
+		ActualWidth		= 12
+	},
+	Preview = {
+		Height = 60,
+		FOV    = 60,
 	},
 })

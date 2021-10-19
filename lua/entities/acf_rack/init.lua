@@ -300,8 +300,8 @@ do -- Custom ACF damage ------------------------
 		end)
 	end
 
-	function ENT:ACF_OnDamage(Energy, FrArea, Ang, Inflictor)
-		local HitRes = ACF.PropDamage(self, Energy, FrArea, Ang, Inflictor) --Calling the standard damage prop function
+	function ENT:ACF_OnDamage(Bullet, Trace)
+		local HitRes = ACF.PropDamage(Bullet, Trace) --Calling the standard damage prop function
 
 		if not HitRes.Kill then
 			local Ratio = self.ACF.Health / self.ACF.MaxHealth
@@ -445,7 +445,7 @@ do -- Entity Inputs ----------------------------
 		Entity.FireDelay = math.Clamp(Value, 0.1, 1)
 	end)
 
-	ACF.AddInputAction("acf_rack", "Launch Delay", function(Entity, Value)
+	ACF.AddInputAction("acf_rack", "Motor Delay", function(Entity, Value)
 		Entity.LaunchDelay = Value > 0 and math.min(Value, 1) or nil
 	end)
 end ---------------------------------------------

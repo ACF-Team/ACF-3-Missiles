@@ -10,9 +10,9 @@ ACF.RegisterMissileClass("GBU", {
 
 ACF.RegisterMissile("WalleyeGBU", "GBU", {
 	Name		= "AGM-62 Walleye",
-	Description	= "An early guided bomb of yield roughly between the 454kg and 227kg, used over Vietnam by American strike aircraft.",
+	Description	= "An early TV guided bomb, used over Vietnam by American strike aircraft.",
 	Model		= "models/bombs/gbu/agm62.mdl",
-	Length		= 3450,
+	Length		= 345,
 	Caliber		= 318,
 	Mass		= 510,
 	Year		= 1967,
@@ -20,25 +20,33 @@ ACF.RegisterMissile("WalleyeGBU", "GBU", {
 	ReloadTime	= 30,
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true },
 	Guidance	= { Dumb = true, ["Radio (MCLOS)"] = true },
+	Navigation  = "Chase",
 	Fuzes		= { Contact = true, Timed = true, Optical = true },
 	SeekCone	= 90,
 	ViewCone	= 120,
-	Agility		= 2,
+	Agility		= 0.04,
 	ArmDelay	= 1,
 	Round = {
 		Model			= "models/bombs/gbu/agm62.mdl",
-		MaxLength		= 80,
+		MaxLength		= 345,
 		Armor			= 10,
-		PropMass		= 1,
-		Thrust			= 1,
-		BurnRate		= 1, -- in cm^3/s
+		ProjLength		= 155,
+		PropLength		= 0,
+		Thrust			= 1,	-- in kg*in/s^2
+		FuelConsumption = 0.1,	-- in g/s/f
 		StarterPercent	= 0.005,
-		MinSpeed		= 500,
-		DragCoef		= 0.00001,
-		FinMul			= 0.02,
-		PenMul			= math.sqrt(0.5),
-		ActualLength 	= 137,
-		ActualWidth		= 16
+		MaxAgilitySpeed = 50,      -- in m/s
+		DragCoef		= 0.06,
+		FinMul			= 0.3,
+		GLimit          = 3,
+		TailFinMul		= 1,
+		PenMul			= 1,
+		FillerRatio     = 0.63,
+		ActualLength 	= 345,
+		ActualWidth		= 31.8
+	},
+	Preview = {
+		FOV = 75,
 	},
 })
 
@@ -46,8 +54,8 @@ ACF.RegisterMissile("227kgGBU", "GBU", {
 	Name		= "227kg GBU-12 Paveway II",
 	Description	= "Based on the Mk 82 500-pound general-purpose bomb, but with the addition of a nose-mounted laser seeker and fins for guidance.",
 	Model		= "models/bombs/gbu/gbu12.mdl",
-	Length		= 5000,
-	Caliber		= 105,
+	Length		= 327,
+	Caliber		= 273,
 	Mass		= 227,
 	Year		= 1976,
 	Diameter	= 10 * 25.4, -- in mm
@@ -55,10 +63,11 @@ ACF.RegisterMissile("227kgGBU", "GBU", {
 	Offset		= Vector(12, 0, 0),
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true },
 	Guidance	= { Dumb = true, Laser = true, ["GPS Guided"] = true },
+	Navigation  = "PN",
 	Fuzes		= { Contact = true, Timed = true, Optical = true, Cluster = true },
 	SeekCone	= 60,
 	ViewCone	= 80,
-	Agility		= 1,
+	Agility		= 0.015,
 	ArmDelay	= 1,
 	Bodygroups = {
 		guidance = {
@@ -78,18 +87,26 @@ ACF.RegisterMissile("227kgGBU", "GBU", {
 	Round = {
 		Model			= "models/bombs/gbu/gbu12_fold.mdl",
 		RackModel		= "models/bombs/gbu/gbu12.mdl",
-		MaxLength		= 250,
+		MaxLength		= 220,
 		Armor			= 10,
-		PropMass		= 0,
-		Thrust			= 1, -- in kg*in/s^2
-		BurnRate		= 1, -- in cm^3/s
+		ProjLength		= 155,
+		PropLength		= 0,
+		Thrust			= 1,       -- in kg*in/s^2
+		FuelConsumption = 0.1,     -- in g/s/f
 		StarterPercent	= 0.005,
-		MinSpeed		= 1,
-		DragCoef		= 0.002,
-		FinMul			= 0.02,
-		PenMul			= math.sqrt(0.4),
-		ActualLength 	= 86.8,
-		ActualWidth		= 9.5
+		MaxAgilitySpeed = 50,      -- in m/s
+		DragCoef		= 0.03,
+		FinMul			= 0.15,
+		GLimit          = 3,
+		TailFinMul		= 0.5,
+		PenMul			= 1,
+		FillerRatio     = 0.89,
+		ActualLength 	= 327,
+		ActualWidth		= 27.3
+	},
+	Preview = {
+		Height = 90,
+		FOV    = 60,
 	},
 })
 
@@ -97,18 +114,19 @@ ACF.RegisterMissile("454kgGBU", "GBU", {
 	Name		= "454kg GBU-16 Paveway II",
 	Description	= "Based on the Mk 83 general-purpose bomb, but with laser seeker and wings for guidance.",
 	Model		= "models/bombs/gbu/gbu16.mdl",
-	Length		= 15000,
-	Caliber		= 170,
+	Length		= 370,
+	Caliber		= 360,
 	Mass		= 454,
 	Year		= 1976,
 	Diameter	= 11.5 * 25.4, -- in mm
 	ReloadTime	= 40,
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true },
 	Guidance	= { Dumb = true, Laser = true, ["GPS Guided"] = true },
+	Navigation  = "PN",
 	Fuzes		= { Contact = true, Timed = true, Optical = true, Cluster = true },
 	SeekCone	= 60,
 	ViewCone	= 80,
-	Agility		= 1,
+	Agility		= 0.03,
 	ArmDelay	= 1,
 	Bodygroups = {
 		guidance = {
@@ -128,18 +146,25 @@ ACF.RegisterMissile("454kgGBU", "GBU", {
 	Round = {
 		Model			= "models/bombs/gbu/gbu16_fold.mdl",
 		RackModel		= "models/bombs/gbu/gbu16.mdl",
-		MaxLength		= 500,
+		MaxLength		= 250,
 		Armor			= 10,
-		PropMass		= 0,
-		Thrust			= 1, -- in kg*in/s^2
-		BurnRate		= 1, -- in cm^3/s
+		ProjLength		= 170,
+		PropLength		= 0,
+		Thrust			= 1,       -- in kg*in/s^2
+		FuelConsumption = 0.1,     -- in g/s/f
 		StarterPercent	= 0.005,
-		MinSpeed		= 1,
-		DragCoef		= 0.002,
-		FinMul			= 0.02,
-		PenMul			= math.sqrt(0.3),
-		ActualLength 	= 101.5,
-		ActualWidth		= 12.2
+		MaxAgilitySpeed = 50,      -- in m/s
+		DragCoef		= 0.04,
+		FinMul			= 0.3,
+		GLimit          = 3,
+		TailFinMul		= 2,
+		PenMul			= 1,
+		FillerRatio     = 0.82,
+		ActualLength 	= 370,
+		ActualWidth		= 36
+	},
+	Preview = {
+		FOV = 65,
 	},
 })
 
@@ -147,8 +172,8 @@ ACF.RegisterMissile("909kgGBU", "GBU", {
 	Name		= "909kg GBU-10 Paveway II",
 	Description	= "Based on the Mk 84 general-purpose bomb, but with laser seeker and wings for guidance.",
 	Model		= "models/bombs/gbu/gbu10.mdl",
-	Length		= 30000,
-	Caliber		= 200,
+	Length		= 434,
+	Caliber		= 460,
 	Mass		= 909,
 	Year		= 1976,
 	Diameter	= 17 * 25.4, -- in mm
@@ -156,10 +181,11 @@ ACF.RegisterMissile("909kgGBU", "GBU", {
 	Offset		= Vector(15, 0, 0),
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true },
 	Guidance	= { Dumb = true, Laser = true, ["GPS Guided"] = true },
+	Navigation  = "PN",
 	Fuzes		= { Contact = true, Timed = true, Optical = true, Cluster = true },
 	SeekCone	= 60,
 	ViewCone	= 80,
-	Agility		= 1,
+	Agility		= 0.05,
 	ArmDelay	= 3,
 	Bodygroups = {
 		guidance = {
@@ -179,17 +205,24 @@ ACF.RegisterMissile("909kgGBU", "GBU", {
 	Round = {
 		Model			= "models/bombs/gbu/gbu10_fold.mdl",
 		RackModel		= "models/bombs/gbu/gbu10.mdl",
-		MaxLength		= 510,
+		MaxLength		= 320,
 		Armor			= 10,
-		PropMass		= 0,
-		Thrust			= 1, -- in kg*in/s^2
-		BurnRate		= 1, -- in cm^3/s
+		ProjLength		= 205,
+		PropLength		= 0,
+		Thrust			= 1,       -- in kg*in/s^2
+		FuelConsumption = 0.1,     -- in g/s/f
 		StarterPercent	= 0.005,
-		MinSpeed		= 1,
-		DragCoef		= 0.002,
-		FinMul			= 0.01,
-		PenMul			= math.sqrt(0.2),
-		ActualLength 	= 126.1,
-		ActualWidth		= 17.8
+		MaxAgilitySpeed = 50,      -- in m/s
+		DragCoef		= 0.5,
+		FinMul			= 0.5,
+		GLimit          = 3,
+		TailFinMul		= 4,
+		PenMul			= 1,
+		FillerRatio     = 0.85,
+		ActualLength 	= 434,
+		ActualWidth		= 46
+	},
+	Preview = {
+		FOV = 70,
 	},
 })

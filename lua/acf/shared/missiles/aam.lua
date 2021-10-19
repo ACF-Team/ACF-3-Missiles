@@ -12,7 +12,7 @@ ACF.RegisterMissile("AIM-9 AAM", "AAM", {
 	Name		= "AIM-9 Sidewinder",
 	Description	= "Agile and reliable with a rather underwhelming effective range, this homing missile is the weapon of choice for dogfights.",
 	Model		= "models/missiles/aim9m.mdl",
-	Length		= 200,
+	Length		= 289,
 	Caliber		= 127,
 	Mass		= 85,
 	Year		= 1953,
@@ -20,26 +20,33 @@ ACF.RegisterMissile("AIM-9 AAM", "AAM", {
 	ReloadTime	= 10,
 	Racks		= { ["1xRK_small"] = true, ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true },
 	Guidance	= { Dumb = true, Infrared = true, ["Semi-Active Radar"] = true },
+	Navigation  = "APN",
 	Fuzes		= { Contact = true, Radio = true },
 	SeekCone	= 10,
 	ViewCone	= 30,
-	Agility		= 5,
+	Agility		= 0.0017,
 	ArmDelay	= 0.2,
 	Round = {
 		Model			= "models/missiles/aim9m.mdl",
-		MaxLength		= 35,
+		MaxLength		= 289,
+		ProjLength		= 68,
 		Armor			= 5,
-		PropMass		= 1,
-		Thrust			= 20000, -- in kg*in/s^2
-		BurnRate		= 500, -- in cm^3/s
-		StarterPercent	= 0.1,
-		MinSpeed		= 3000,
-		DragCoef		= 0.002,
-		DragCoefFlight	= 0.03,
-		FinMul			= 0.025,
+		PropLength		= 160,
+		Thrust			= 800000,	-- in kg*in/s^2
+		FuelConsumption = 0.02,		-- in g/s/f
+		StarterPercent	= 0.05,
+		MaxAgilitySpeed = 300,      -- in m/s
+		DragCoef		= 0.005,
+		FinMul			= 0.1,
+		GLimit          = 20,
+		TailFinMul		= 0.001,
 		CanDelayLaunch	= true,
-		ActualLength 	= 85,
-		ActualWidth		= 4.3
+		ActualLength 	= 289,
+		ActualWidth		= 12.7
+	},
+	Preview = {
+		Height = 100,
+		FOV    = 60,
 	},
 })
 
@@ -47,7 +54,7 @@ ACF.RegisterMissile("AIM-120 AAM", "AAM", {
 	Name		= "AIM-120 AMRAAM",
 	Description	= "Burns hot and fast, with a good reach, but harder to lock with. This long-range missile is sure to deliver one heck of a blast upon impact.",
 	Model		= "models/missiles/aim120c.mdl",
-	Length		= 1000,
+	Length		= 370,
 	Caliber		= 180,
 	Mass		= 152,
 	Year		= 1991,
@@ -55,26 +62,33 @@ ACF.RegisterMissile("AIM-120 AAM", "AAM", {
 	ReloadTime	= 25,
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true },
 	Guidance	= { Dumb = true, ["Semi-Active Radar"] = true, ["Active Radar"] = true },
+	Navigation  = "APN",
 	Fuzes		= { Contact = true, Radio = true },
-	SeekCone	= 5,
-	ViewCone	= 20,
-	Agility		= 0.173,
+	SeekCone	= 10,
+	ViewCone	= 30,
+	Agility		= 0.006,
 	ArmDelay	= 0.2,
 	Round = {
 		Model			= "models/missiles/aim120c.mdl",
-		MaxLength		= 50,
+		MaxLength		= 370,
 		Armor			= 5,
-		PropMass		= 2,
-		Thrust			= 24000, -- in kg*in/s^2
-		BurnRate		= 2200, -- in cm^3/s
-		StarterPercent	= 0.3,
-		MinSpeed		= 2000,
-		DragCoef		= 0.002,
-		DragCoefFlight	= 0.0013,
-		FinMul			= 0.027,
+		ProjLength		= 70,
+		PropLength		= 140,
+		Thrust			= 1500000, 	-- in kg*in/s^2
+		FuelConsumption = 0.02,		-- in g/s/f
+		StarterPercent	= 0.05,
+		MaxAgilitySpeed = 350,      -- in m/s
+		DragCoef		= 0.01,
+		FinMul			= 0.2,
+		GLimit          = 20,
+		TailFinMul		= 0.001,
 		CanDelayLaunch	= true,
-		ActualLength 	= 129.5,
-		ActualWidth		= 6.8
+		ActualLength 	= 370,
+		ActualWidth		= 18
+	},
+	Preview = {
+		Height = 60,
+		FOV    = 60,
 	},
 })
 
@@ -82,7 +96,7 @@ ACF.RegisterMissile("AIM-54 AAM", "AAM", {
 	Name		= "AIM-54 Phoenix",
 	Description	= "A BEEFY god-tier anti-bomber weapon, made with Jimmy Carter's repressed rage. Getting hit with one of these is a significant emotional event that is hard to avoid if you're flying high.",
 	Model		= "models/missiles/aim54.mdl",
-	Length		= 1000,
+	Length		= 400,
 	Caliber		= 380,
 	Mass		= 453,
 	Year		= 1974,
@@ -90,25 +104,32 @@ ACF.RegisterMissile("AIM-54 AAM", "AAM", {
 	ReloadTime	= 40,
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true },
 	Guidance	= { Dumb = true, ["Semi-Active Radar"] = true, ["Active Radar"] = true },
+	Navigation  = "APN",
 	Fuzes		= { Contact = true, Radio = true },
-	SeekCone	= 5,
+	SeekCone	= 10,
 	ViewCone	= 20,
-	Agility		= 0.05,
+	Agility		= 0.02,
 	ArmDelay	= 0.4,
 	Round = {
 		Model			= "models/missiles/aim54.mdl",
-		MaxLength		= 60,
+		MaxLength		= 400,
 		Armor			= 5,
-		PropMass		= 5,
-		Thrust			= 45000, -- in kg*in/s^2
-		BurnRate		= 1500, -- in cm^3/s
-		StarterPercent	= 0.1,
-		MinSpeed		= 4000,
-		DragCoef		= 0.005,
-		DragCoefFlight	= 0.05,
-		FinMul			= 0.02,
+		ProjLength		= 60,
+		PropLength		= 220,
+		Thrust			= 4000000,	-- in kg*in/s^2
+		FuelConsumption = 0.04,		-- in g/s/f
+		StarterPercent	= 0.05,
+		MaxAgilitySpeed = 300,      -- in m/s
+		DragCoef		= 0.03,
+		FinMul			= 0.3,
+		GLimit          = 12,
+		TailFinMul		= 0.001,
 		CanDelayLaunch	= true,
-		ActualLength 	= 139.5,
-		ActualWidth		= 13.5
+		ActualLength 	= 400,
+		ActualWidth		= 38
+	},
+	Preview = {
+		Height = 100,
+		FOV    = 60,
 	},
 })

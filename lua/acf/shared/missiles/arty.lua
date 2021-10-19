@@ -19,26 +19,33 @@ ACF.RegisterMissile("Type 63 RA", "ARTY", {
 	Year		= 1960,
 	ReloadTime	= 10,
 	Racks		= { ["1xRK_small"] = true, ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true, ["6xUARRK"] = true },
-	Guidance	= { Dumb = true, Laser = true, ["GPS Guided"] = true },
+	Guidance	= { Dumb = true },
+	Navigation  = "Chase",
 	Fuzes		= { Contact = true, Timed = true, Optical = true, Cluster = true },
 	ViewCone	= 180,
 	Agility		= 0.08,
 	ArmDelay	= 0.2,
 	Round = {
 		Model			= "models/missiles/glatgm/mgm51.mdl",
-		MaxLength		= 50,
+		MaxLength		= 80,
 		Armor			= 5,
-		PropMass		= 0.7,
-		Thrust			= 2400, -- in kg*in/s^2
-		BurnRate		= 400, -- in cm^3/s
-		StarterPercent	= 0.1,
-		MinSpeed		= 200,
-		DragCoef		= 0.002,
-		DragCoefFlight	= 0.001,
-		FinMul			= 0.02,
-		PenMul			= math.sqrt(2),
-		ActualLength 	= 50,
-		ActualWidth		= 7.2
+		ProjLength		= 35,
+		PropLength		= 45,
+		Thrust			= 240000,	-- in kg*in/s^2
+		FuelConsumption = 0.06, 	-- in g/s/f
+		StarterPercent	= 0.05,
+		MaxAgilitySpeed = 100,      -- in m/s
+		DragCoef		= 0.005,
+		FinMul			= 0,
+		GLimit          = 10,
+		TailFinMul		= 2,
+		PenMul			= 2,
+		ActualLength 	= 80,
+		ActualWidth		= 10.7
+	},
+	Preview = {
+		Height = 100,
+		FOV    = 60,
 	},
 })
 
@@ -48,31 +55,38 @@ ACF.RegisterMissile("SAKR-10 RA", "ARTY", {
 	Model		= "models/missiles/9m31.mdl",
 	Caliber		= 122,
 	Mass		= 56,
-	Length		= 320,
+	Length		= 287,
 	Diameter	= 4.6 * 25.4, -- in mm
 	Year		= 1980,
 	ReloadTime	= 20,
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true, ["6xUARRK"] = true },
 	Guidance	= { Dumb = true, Laser = true, ["GPS Guided"] = true },
+	Navigation  = "PN",
 	Fuzes		= { Contact = true, Timed = true, Optical = true, Cluster = true },
-	Agility		= 0.07,
-	ViewCone	= 180,
+	Agility		= 0.0008,
+	ViewCone	= 45,
 	ArmDelay	= 0.4,
 	Round = {
 		Model		= "models/missiles/9m31.mdl",
-		MaxLength		= 140,
+		MaxLength		= 287,
 		Armor			= 5,
-		PropMass		= 1.2,
-		Thrust			= 1300, -- in kg*in/s^2
-		BurnRate		= 120, -- in cm^3/s
-		StarterPercent	= 0.1,
-		MinSpeed		= 300,
-		DragCoef		= 0.002,
-		DragCoefFlight	= 0.010,
-		FinMul			= 0.03,
-		PenMul			= math.sqrt(1.1),
-		ActualLength 	= 86.5,
-		ActualWidth		= 5.5
+		ProjLength		= 100,
+		PropLength		= 160,
+		Thrust			= 800000,   -- in kg*in/s^2
+		FuelConsumption = 0.012,    -- in g/s/f
+		StarterPercent	= 0.05,
+		MaxAgilitySpeed = 100,      -- in m/s
+		DragCoef		= 0.02,
+		FinMul			= 0.1,
+		GLimit          = 5,
+		TailFinMul		= 2,
+		PenMul			= 1.2,
+		ActualLength 	= 287,
+		ActualWidth		= 12.2
+	},
+	Preview = {
+		Height = 60,
+		FOV    = 60,
 	},
 })
 
@@ -82,30 +96,37 @@ ACF.RegisterMissile("SS-40 RA", "ARTY", {
 	Model		= "models/missiles/aim120.mdl",
 	Caliber		= 180,
 	Mass		= 152,
-	Length		= 420,
+	Length		= 370,
 	Diameter	= 6.75 * 25.4, -- in mm
 	Year		= 1983,
 	ReloadTime	= 30,
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true, ["6xUARRK"] = true },
 	Guidance	= { Dumb = true, Laser = true, ["GPS Guided"] = true },
+	Navigation  = "PN",
 	Fuzes		= { Contact = true, Timed = true, Optical = true, Cluster = true },
-	Agility		= 0.04,
-	ViewCone	= 180,
+	Agility		= 0.004,
+	ViewCone	= 45,
 	ArmDelay	= 0.6,
 	Round = {
 		Model		= "models/missiles/aim120.mdl",
-		MaxLength		= 115,
+		MaxLength		= 370,
 		Armor			= 5,
-		PropMass		= 4.0,
-		Thrust			= 850, -- in kg*in/s^2
-		BurnRate		= 200, -- in cm^3/s
-		StarterPercent	= 0.075,
-		MinSpeed		= 300,
-		DragCoef		= 0.002,
-		DragCoefFlight	= 0.009,
-		FinMul			= 0.05,
-		PenMul			= math.sqrt(2),
-		ActualLength 	= 151.5,
-		ActualWidth		= 7.1
+		ProjLength		= 140,
+		PropLength		= 200,
+		Thrust			= 2400000,	-- in kg*in/s^2
+		FuelConsumption = 0.022,	-- in g/s/f
+		StarterPercent	= 0.05,
+		MaxAgilitySpeed = 100,      -- in m/s
+		DragCoef		= 0.02,
+		FinMul			= 0.12,
+		GLimit          = 5,
+		TailFinMul		= 10,
+		PenMul			= 1.4,
+		ActualLength 	= 370,
+		ActualWidth		= 18
+	},
+	Preview = {
+		Height = 80,
+		FOV    = 60,
 	},
 })

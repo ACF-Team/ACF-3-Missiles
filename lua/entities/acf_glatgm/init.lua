@@ -38,10 +38,10 @@ function MakeACF_GLATGM(Gun, BulletData)
 	Entity:SetPlayer(Gun.Owner)
 	Entity:Spawn()
 
-	if Caliber == 120 then
-		Entity:SetModel("models/missiles/glatgm/9m112.mdl")
-	elseif Caliber > 120 then
+	if Caliber >= 150 then
 		Entity:SetModel("models/missiles/glatgm/mgm51.mdl")
+	elseif Caliber >= 120 then
+		Entity:SetModel("models/missiles/glatgm/9m112.mdl")
 	else
 		Entity:SetModel("models/missiles/glatgm/9m117.mdl")
 		Entity:SetModelScale(Caliber * 0.01, 0)
@@ -62,13 +62,13 @@ function MakeACF_GLATGM(Gun, BulletData)
 	Entity.ForcedArmor  = 5 -- All missiles should get 5mm
 	Entity.ForcedMass   = BulletData.CartMass
 	Entity.UseGuidance  = true
-	Entity.ViewCone     = math.cos(math.rad(30)) -- Number inside is on degrees
+	Entity.ViewCone     = math.cos(math.rad(50)) -- Number inside is on degrees
 	Entity.MaxRange     = BulletData.MuzzleVel * 2 * 39.37 / ACF.Scale -- optical fuze distance
 	Entity.KillTime     = ACF.CurTime + 20
-	Entity.GuideDelay   = ACF.CurTime + 2 -- Missile won't be guided for the first two seconds
+	Entity.GuideDelay   = ACF.CurTime + 0.25 -- Missile won't be guided for the first quarter of a second
 	Entity.LastThink    = ACF.CurTime
 	Entity.Filter       = Entity.BulletData.Filter
-	Entity.Agility      = 10 -- Magic multiplier that controls the agility of the missile
+	Entity.Agility      = 50 -- Magic multiplier that controls the agility of the missile
 	Entity.IsSubcaliber = Caliber < 100
 	Entity.Speed        = Entity.IsSubcaliber and 2500 or 5000 -- gmu/s
 	Entity.SpiralRadius = Entity.IsSubcaliber and 3.5 or nil
@@ -117,7 +117,7 @@ function ENT:ACF_Activate(Recalc)
 	self.ACF.Type      = "Prop"
 end
 
-function ENT:ACF_OnDamage(Energy, FrArea, Angle, Inflictor)
+function ENT:ACF_OnDamage(Bullet, Trace)
 	if self.Detonated then
 		return {
 			Damage = 0,
@@ -127,11 +127,12 @@ function ENT:ACF_OnDamage(Energy, FrArea, Angle, Inflictor)
 		}
 	end
 
-	local HitRes = ACF.PropDamage(self, Energy, FrArea, Angle, Inflictor) --Calling the standard damage prop function
+	local HitRes = ACF.PropDamage(Bullet, Trace) --Calling the standard damage prop function
+	local Owner  = Bullet.Owner
 
 	-- If the missile was destroyed, then we detonate it.
 	if HitRes.Kill then
-		DetonateMissile(self, Inflictor)
+		DetonateMissile(self, Owner)
 
 		return HitRes
 	elseif HitRes.Overkill > 0 then
@@ -139,7 +140,7 @@ function ENT:ACF_OnDamage(Energy, FrArea, Angle, Inflictor)
 
 		-- We give it a chance to explode when it gets penetrated aswell.
 		if math.random() > 0.75 * Ratio then
-			DetonateMissile(self, Inflictor)
+			DetonateMissile(self, Owner)
 
 			return HitRes
 		end
@@ -196,12 +197,12 @@ function ENT:Think()
 	local Position  = self.Position
 
 	if not IsDelayed and IsValid(Computer) then
-		local StartPos = Computer:LocalToWorld(Computer.Offset)
+		local StartPos = Computer:LocalToWorld(Computer.Offset or Vector(6, -1, 0))
 		local HitPos   = Computer.HitPos
 		local CanSee   = CheckViewCone(self, HitPos)
 
 		if CanSee and Position:Distance(StartPos) <= self.MaxRange then
-			local Desired = self:WorldToLocalAngles(Computer.TraceDir:Angle()) + AngleRand() * 0.01
+			local Desired = self:WorldToLocalAngles(Computer.TraceDir:Angle()) + AngleRand() * 0.005
 			local Agility = self.Agility
 
 			Direction  = ClampAng(Desired, -Agility, Agility) * DeltaTime
@@ -269,7 +270,8 @@ function ENT:Detonate()
 
 	local Bullet = ACF.CreateBullet(BulletData)
 
-	ACF.DoReplicatedPropHit(self, Bullet)
+	local BulletClass = ACF.Classes.AmmoTypes[BulletData.Type]
+	BulletClass:Detonate(Bullet, self.Position)
 
 	self:Remove()
 end

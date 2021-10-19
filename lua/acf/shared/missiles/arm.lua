@@ -11,7 +11,7 @@ ACF.RegisterMissile("AGM-122 ASM", "ARM", {
 	Name		= "AGM-122 Sidearm",
 	Description	= "A refurbished early-model AIM-9, for attacking ground targets.",
 	Model		= "models/missiles/aim9.mdl",
-	Length		= 205,
+	Length		= 287,
 	Caliber		= 127,
 	Mass		= 89,
 	Diameter	= 3.5 * 25.4, -- in mm
@@ -20,26 +20,32 @@ ACF.RegisterMissile("AGM-122 ASM", "ARM", {
 	ReloadTime	= 10,
 	Racks		= { ["1xRK_small"] = true, ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true },
 	Guidance	= { Dumb = true, ["Anti-radiation"] = true },
+	Navigation  = "Chase",
 	Fuzes		= { Contact = true, Optical = true },
 	SeekCone	= 10,
 	ViewCone	= 20,
-	Agility		= 0.3,
+	Agility		= 0.0018,
 	ArmDelay	= 0.2,
 	Round = {
 		Model			= "models/missiles/aim9.mdl",
-		MaxLength		= 70,
+		MaxLength		= 287,
 		Armor			= 5,
-		PropMass		= 4,
-		Thrust			= 4500, -- in kg*in/s^2
-		BurnRate		= 1400, -- in cm^3/s
-		StarterPercent	= 0.4,
-		MinSpeed		= 5000,
-		DragCoef		= 0.001,
-		DragCoefFlight	= 0.001,
-		FinMul			= 0.03,
+		ProjLength		= 68,
+		PropLength		= 160,
+		Thrust			= 800000,	-- in kg*in/s^2
+		FuelConsumption = 0.02,		-- in g/s/f
+		StarterPercent	= 0.05,
+		MaxAgilitySpeed = 350,      -- in m/s
+		DragCoef		= 0.015,
+		FinMul			= 0.1,
+		GLimit          = 20,
+		TailFinMul		= 0.001,
 		CanDelayLaunch	= true,
-		ActualLength 	= 85,
-		ActualWidth		= 4.2
+		ActualLength 	= 287,
+		ActualWidth		= 12.7
+	},
+	Preview = {
+		FOV = 60,
 	},
 })
 
@@ -47,7 +53,7 @@ ACF.RegisterMissile("AGM-45 ASM", "ARM", {
 	Name		= "AGM-45 Shrike",
 	Description	= "Long range anti-SAM missile, built on the body of an AIM-7 Sparrow.",
 	Model		= "models/missiles/aim120.mdl",
-	Length		= 1000,
+	Length		= 305,
 	Caliber		= 203,
 	Mass		= 177,
 	Diameter	= 6.75 * 25.4, -- in mm
@@ -55,25 +61,32 @@ ACF.RegisterMissile("AGM-45 ASM", "ARM", {
 	ReloadTime	= 25,
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true },
 	Guidance	= { Dumb = true, ["Anti-radiation"] = true },
+	Navigation  = "Chase",
 	Fuzes		= { Contact = true, Timed = true },
 	SeekCone	= 5,
 	ViewCone	= 10,
-	Agility		= 0.08,
+	Agility		= 0.012,
 	ArmDelay	= 0.3,
 	Round = {
 		Model			= "models/missiles/aim120.mdl",
-		MaxLength		= 120,
+		MaxLength		= 305,
 		Armor			= 5,
-		PropMass		= 3,
-		Thrust			= 800, -- in kg*in/s^2
-		BurnRate		= 300, -- in cm^3/s
+		ProjLength		= 70,
+		PropLength		= 200,
+		Thrust			= 1500000, 	-- in kg*in/s^2
+		FuelConsumption = 0.020,		-- in g/s/f
 		StarterPercent	= 0.05,
-		MinSpeed		= 4000,
-		DragCoef		= 0.001,
-		DragCoefFlight	= 0,
+		MaxAgilitySpeed = 350,      -- in m/s
+		DragCoef		= 0.02,
 		FinMul			= 0.2,
+		GLimit          = 20,
+		TailFinMul		= 0.001,
 		CanDelayLaunch	= true,
-		ActualLength 	= 151.5,
-		ActualWidth		= 7.1
+		ActualLength 	= 305,
+		ActualWidth		= 20.3
+	},
+	Preview = {
+		Height = 80,
+		FOV    = 60,
 	},
 })

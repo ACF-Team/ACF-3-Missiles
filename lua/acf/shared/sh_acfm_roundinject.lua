@@ -5,7 +5,15 @@ local Fuzes     = ACF.Classes.Fuzes
 hook.Add("ACF_UpdateRoundData", "ACF Missile Ammo", function(_, ToolData, Data)
 	if ToolData.Destiny ~= "Missiles" then return end
 
-	Data.SlugPenMul = ACF_GetGunValue(ToolData.Weapon, "PenMul")
+	local PenMul   = ACF_GetGunValue(ToolData.Weapon, "PenMul")
+	local Standoff = ACF_GetGunValue(ToolData.Weapon, "Standoff")
+	local FillerMul = ACF_GetGunValue(ToolData.Weapon, "FillerMul")
+	local LinerMassMul = ACF_GetGunValue(ToolData.Weapon, "LinerMassMul")
+
+	Data.PenMul = PenMul
+	Data.MissileStandoff = Standoff
+	Data.FillerMul = FillerMul
+	Data.LinerMassMul = LinerMassMul
 end)
 
 if CLIENT then

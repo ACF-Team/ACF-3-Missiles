@@ -20,7 +20,7 @@ else
 	local Lasers    = ACF.ActiveLasers
 
 	function Guidance.GetDirectionDot(Missile, TargetPos)
-		local Position = Missile:GetPos()
+		local Position = Missile.Position
 		local Forward = Missile:GetForward()
 		local Direction = (TargetPos - Position):GetNormalized()
 
@@ -43,7 +43,7 @@ else
 		if not Computer.IsLaserSource then return end
 		if not Computer.Lasing then return end
 
-		local Position = Missile:GetPos()
+		local Position = Missile.Position
 		local HitPos = Computer.HitPos
 
 		if not self:CheckConeLOS(Missile, Position, HitPos, self.ViewConeCos) then return end
@@ -58,7 +58,7 @@ else
 
 		if HitPos then return { TargetPos = HitPos } end
 
-		local Position = Missile:GetPos()
+		local Position = Missile.Position
 		local HighestDot = 0
 		local CurrentDot
 

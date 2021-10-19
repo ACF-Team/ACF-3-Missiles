@@ -4,27 +4,39 @@ local Guidance = ACF.RegisterGuidance("Infrared", "Anti-radiation")
 if CLIENT then
 	Guidance.Description = "This guidance package will detect a contraption in front of itself and guide the munition towards it."
 else
-	function Guidance:FindNewTarget(Missile)
-		local Position = Missile:GetPos()
-		local Entities = ACF.GetEntitiesInCone(Position, Missile:GetForward(), self.SeekCone)
+	function Guidance:UpdateTarget(Missile)
+		local Position   = Missile.Position
+		local Targets    = ACF.GetEntitiesInCone(Position, Missile:GetForward(), self.SeekCone)
 		local HighestDot = 0
-		local CurrentDot, TargetPos, Distance, Target
+		local Target, TargetPos
 
-		for Entity in pairs(Entities) do
-			TargetPos = Entity:GetPos()
-			Distance = Position:DistToSqr(TargetPos)
+		for Entity in pairs(Targets) do
+			local EntPos   = Entity.Position
+			local Distance = Position:DistToSqr(EntPos)
 
-			if Distance >= self.MinDistance and self:CheckConeLOS(Missile, Position, TargetPos, self.SeekConeCos) then
-				CurrentDot = self.GetDirectionDot(Missile, TargetPos)
+			if Distance < self.MinDistance then continue end
+			if not self:CheckConeLOS(Missile, Position, EntPos, self.SeekConeCos) then continue end
 
-				if CurrentDot > HighestDot then
-					HighestDot = CurrentDot
-					Target = Entity
-				end
+			local CurrentDot = self.GetDirectionDot(Missile, EntPos)
+
+			if CurrentDot > HighestDot then
+				HighestDot = CurrentDot
+				TargetPos  = EntPos
+				Target     = Entity
 			end
 		end
 
-		return Target
+		self.Target = Target
+
+		return TargetPos
+	end
+
+	function Guidance:GetTargetPosition()
+		local Target = self.Target
+
+		if not IsValid(Target) then return end
+
+		return Target.Position
 	end
 
 	function Guidance:GetGuidance(Missile)
@@ -34,18 +46,16 @@ else
 
 		if Override then return Override end
 
-		if IsValid(self.Target) then
-			local TargetPos = self.Target:GetPos()
+		local TargetPos = self:GetTargetPosition()
 
-			if self:CheckConeLOS(Missile, Missile:GetPos(), TargetPos, self.ViewConeCos) then
-				return { TargetPos = TargetPos, ViewCone = self.ViewCone }
-			end
+		if TargetPos and self:CheckConeLOS(Missile, Missile.Position, TargetPos, self.ViewConeCos) then
+			return { TargetPos = TargetPos, ViewCone = self.ViewCone }
 		end
 
-		self.Target = self:FindNewTarget(Missile)
+		local NewTarget = self:UpdateTarget(Missile)
 
-		if not self.Target then return {} end
+		if not NewTarget then return {} end
 
-		return { TargetPos = self.Target:GetPos(), ViewCone = self.ViewCone }
+		return { TargetPos = NewTarget, ViewCone = self.ViewCone }
 	end
 end

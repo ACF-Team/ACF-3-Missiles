@@ -14,14 +14,16 @@ ACF.RegisterMissile("RS82 ASR", "UAR", {
 	Model		= "models/missiles/rs82.mdl",
 	Caliber		= 82,
 	Mass		= 7,
-	Length		= 40,
+	Length		= 60,
 	Diameter	= 2.2 * 25.4, -- in mm
 	ReloadTime	= 5,
 	Offset		= Vector(1, 0, 0),
 	Year		= 1933,
 	Racks		= { ["1xRK_small"] = true, ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true },
 	Guidance	= { Dumb = true },
+	Navigation  = "Chase",
 	Fuzes		= { Contact = true, Timed = true },
+	Agility     = 1,
 	ArmDelay	= 0.3,
 	Bodygroups = {
 		warhead = {
@@ -38,19 +40,24 @@ ACF.RegisterMissile("RS82 ASR", "UAR", {
 	},
 	Round = {
 		Model			= "models/missiles/rs82.mdl",
-		MaxLength		= 25,
+		MaxLength		= 60,
 		Armor			= 5,
-		PropMass		= 0.7,
-		Thrust			= 15000, -- in kg*in/s^2
-		BurnRate		= 800, -- in cm^3/s
+		ProjLength		= 25,
+		PropLength		= 35,
+		Thrust			= 50000,    -- in kg*in/s^2
+		FuelConsumption = 0.033,    -- in g/s/f
 		StarterPercent	= 0.15,
-		MinSpeed		= 6000,
-		DragCoef		= 0.002,
-		DragCoefFlight	= 0.025,
-		FinMul			= 0.008,
-		PenMul			= math.sqrt(6.63),
-		ActualLength 	= 25.2,
-		ActualWidth		= 3
+		MaxAgilitySpeed = 1,        -- in m/s
+		DragCoef		= 0.001,
+		FinMul			= 0.01,
+		GLimit          = 1,
+		TailFinMul		= 0.05,
+		PenMul			= 0.8,
+		ActualLength 	= 60,
+		ActualWidth		= 8.2
+	},
+	Preview = {
+		FOV = 70,
 	},
 })
 
@@ -60,31 +67,38 @@ ACF.RegisterMissile("HVAR ASR", "UAR", {
 	Model		= "models/missiles/hvar.mdl",
 	Caliber		= 127,
 	Mass		= 64,
-	Length		= 44,
+	Length		= 173,
 	Diameter	= 4 * 25.4, -- in mm
 	ReloadTime	= 10,
 	Offset		= Vector(2, 0, 0),
 	Year		= 1933,
 	Racks		= { ["1xRK_small"] = true, ["1xRK"] = true, ["2xRK"] = true, ["3xUARRK"] = true, ["4xRK"] = true },
 	Guidance	= { Dumb = true },
+	Navigation  = "Chase",
 	Fuzes		= { Contact = true, Timed = true },
+	Agility     = 1,
 	ArmDelay	= 0.3,
 	Round = {
 		Model			= "models/missiles/hvar.mdl",
 		RackModel		= "models/missiles/hvar_folded.mdl",
-		MaxLength		= 25,
+		MaxLength		= 173,
 		Armor			= 5,
-		PropMass		= 0.7,
-		Thrust			= 25000, -- in kg*in/s^2
-		BurnRate		= 600, -- in cm^3/s
+		ProjLength		= 78,
+		PropLength		= 95,
+		Thrust			= 800000,   -- in kg*in/s^2
+		FuelConsumption = 0.016,    -- in g/s/f
 		StarterPercent	= 0.15,
-		MinSpeed		= 5000,
-		DragCoef		= 0.002,
-		DragCoefFlight	= 0.02,
+		MaxAgilitySpeed = 1,        -- in m/s
+		DragCoef		= 0.005,
 		FinMul			= 0.01,
-		PenMul			= math.sqrt(6.25),
-		ActualLength 	= 69, -- nice
-		ActualWidth		= 5
+		GLimit          = 1,
+		TailFinMul		= 0.075,
+		PenMul			= 0.65,
+		ActualLength 	= 173,
+		ActualWidth		= 12.7
+	},
+	Preview = {
+		FOV = 60,
 	},
 })
 
@@ -94,29 +108,36 @@ ACF.RegisterMissile("SPG-9 ASR", "UAR", {
 	Model		= "models/munitions/round_100mm_mortar_shot.mdl",
 	Caliber		= 73,
 	Mass		= 5,
-	Length		= 20,
+	Length		= 100,
 	Year		= 1962,
 	ReloadTime	= 10,
 	Racks		= { ["1x SPG9"] = true },
 	Guidance	= { Dumb = true },
+	Navigation  = "Chase",
 	Fuzes		= { Contact = true, Optical = true },
+	Agility     = 1,
 	ArmDelay	= 0.05,
 	Round = {
 		Model			= "models/missiles/glatgm/9m112f.mdl",
 		RackModel		= "models/munitions/round_100mm_mortar_shot.mdl",
-		MaxLength		= 50,
+		MaxLength		= 100,
 		Armor			= 5,
-		PropMass		= 0.5,
-		Thrust			= 120000, -- in kg*in/s^2 very high but only burns a brief moment, most of which is in the tube
-		BurnRate		= 1200, -- in cm^3/s
-		StarterPercent	= 0.72,
-		MinSpeed		= 900,
-		DragCoefFlight	= 0.05,
+		ProjLength		= 45,
+		PropLength		= 55,
+		Thrust			= 200000,   -- in kg*in/s^2
+		FuelConsumption = 0.012,    -- in g/s/f
+		StarterPercent	= 0.6,
+		MaxAgilitySpeed = 1,        -- in m/s
 		DragCoef		= 0.001,
-		FinMul			= 0.02,
-		PenMul			= math.sqrt(4.5),
-		ActualLength 	= 25.4,
-		ActualWidth		= 4.2
+		FinMul			= 0.002,
+		GLimit          = 1,
+		TailFinMul		= 0.02,
+		PenMul			= 1.32,
+		ActualLength 	= 100,
+		ActualWidth		= 7.3
+	},
+	Preview = {
+		FOV = 60,
 	},
 })
 
@@ -126,30 +147,37 @@ ACF.RegisterMissile("S-24 ASR", "UAR", {
 	Model		= "models/missiles/s24.mdl",
 	Caliber		= 240,
 	Mass		= 235,
-	Length		= 25,
+	Length		= 233,
 	Diameter	= 8.3 * 25.4, -- in mm
 	ReloadTime	= 20,
 	Year		= 1960,
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true },
 	Guidance	= { Dumb = true },
+	Navigation  = "Chase",
 	Fuzes		= { Contact = true, Timed = true },
 	SkinIndex	= { HEAT = 0, HE = 1 },
+	Agility     = 1,
 	ArmDelay	= 0.3,
 	Round = {
 		Model			= "models/missiles/s24.mdl",
-		MaxLength		= 40,
+		MaxLength		= 233,
 		Armor			= 5,
-		PropMass		= 15,
-		Thrust			= 9000, -- in kg*in/s^2
-		BurnRate		= 1000, -- in cm^3/s
+		ProjLength		= 103,
+		PropLength		= 130,
+		Thrust			= 2000000,  -- in kg*in/s^2
+		FuelConsumption = 0.02,    -- in g/s/f
 		StarterPercent	= 0.15,
-		MinSpeed		= 10000,
-		DragCoef		= 0.001,
-		DragCoefFlight	= 0.01,
-		FinMul			= 0.02,
-		PenMul			= math.sqrt(5),
-		ActualLength 	= 89.3,
-		ActualWidth		= 9
+		MaxAgilitySpeed = 1,        -- in m/s
+		DragCoef		= 0.01,
+		FinMul			= 0.1,
+		GLimit          = 1,
+		TailFinMul		= 0.3,
+		PenMul			= 1.05,
+		ActualLength 	= 233,
+		ActualWidth		= 24
+	},
+	Preview = {
+		FOV = 70,
 	},
 })
 
@@ -159,30 +187,35 @@ ACF.RegisterMissile("RW61 ASR", "UAR", {
 	Model		= "models/missiles/RW61M.mdl",
 	Caliber		= 380,
 	Mass		= 476,
-	Length		= 38,
+	Length		= 150,
 	Year		= 1960,
 	ReloadTime	= 40,
 	Racks		= { ["380mmRW61"] = true },
 	Guidance	= { Dumb = true },
+	Navigation  = "Chase",
 	Fuzes		= { Contact = true, Optical = true },
-	SeekCone	= 35,
-	ViewCone	= 55,
 	Agility		= 1,
 	ArmDelay	= 0.5,
 	Round = {
 		Model			= "models/missiles/RW61M.mdl",
 		RackModel		= "models/missiles/RW61M.mdl",
-		MaxLength		= 60,
+		MaxLength		= 150,
 		Armor			= 5,
-		PropMass		= 5,
-		Thrust			= 5000, -- in kg*in/s^2
-		BurnRate		= 5000, -- in cm^3/s
-		StarterPercent	= 0.01,
-		MinSpeed		= 1,
-		DragCoef		= 0,
-		FinMul			= 0.001,
-		PenMul			= math.sqrt(2),
-		ActualLength 	= 65,
-		ActualWidth		= 16.4
+		ProjLength		= 60,
+		PropLength		= 90,
+		Thrust			= 700000,   -- in kg*in/s^2
+		FuelConsumption = 0.048,    -- in g/s/f
+		StarterPercent	= 0.2,
+		MaxAgilitySpeed = 1,        -- in m/s
+		DragCoef		= 0.02,
+		FinMul			= 0,
+		GLimit          = 1,
+		TailFinMul		= 10,
+		PenMul			= 1.2,
+		ActualLength 	= 150,
+		ActualWidth		= 38
+	},
+	Preview = {
+		FOV = 75,
 	},
 })
