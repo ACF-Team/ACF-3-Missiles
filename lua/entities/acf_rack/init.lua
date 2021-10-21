@@ -38,7 +38,12 @@ do -- Spawning and Updating --------------------
 	end
 
 	local function CreateInputs(Entity, Data, Rack)
-		local List = { "Fire", "Reload", "Unload", "Missile Index", "Fire Delay" }
+		local List = {
+			"Fire (Fires the currently selected missile, or the next in line)",
+			"Reload (Loads a missile to the rack)",
+			"Unload (Removes a missile from the rack)",
+			"Missile Index (Selects a specific slot on the rack)",
+			"Fire Delay (A delay to force between firing)" }
 
 		if Rack.SetupInputs then
 			Rack.SetupInputs(List, Entity, Data, Rack)
@@ -54,7 +59,13 @@ do -- Spawning and Updating --------------------
 	end
 
 	local function CreateOutputs(Entity, Data, Rack)
-		local List = { "Ready", "Shots Left", "Current Index", "Status [STRING]", "Missile [ENTITY]", "Entity [ENTITY]" }
+		local List = {
+			"Ready (Whether or not the rack can fire a missile)",
+			"Shots Left (How many missiles are currently loaded)",
+			"Current Index (The currently selected slot in the rack)",
+			"Status (The current state of the rack) [STRING]",
+			"Missile (The currently selected missile itself) [ENTITY]",
+			"Entity (The rack itself) [ENTITY]" }
 
 		if Rack.SetupOutputs then
 			Rack.SetupOutputs(List, Entity, Data, Rack)
@@ -163,7 +174,7 @@ do -- Spawning and Updating --------------------
 		if EntClass ~= "acf_rack" then return end
 		if Rack.EntType ~= "Rack" then return end
 
-		List[#List + 1] = "Motor Delay"
+		List[#List + 1] = "Motor Delay (A forced delay before igniting the thruster)"
 	end)
 
 	-------------------------------------------------------------------------------
