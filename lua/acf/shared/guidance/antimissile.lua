@@ -91,15 +91,19 @@ else
 
 		if not IsValid(Target) then return end
 
+		local Position = Target.Position
+
 		if self.OnRadar then
 			if not Radar then return end
 
 			local Data = Radar.Targets[Target]
 
-			return Data and Data.Position
+			if not Data then return end
+
+			Position = Position + Data.Spread
 		end
 
-		return Target.Position
+		return Position
 	end
 
 	function Guidance:GetGuidance(Missile)

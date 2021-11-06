@@ -182,7 +182,8 @@ local function ScanForEntities(Entity)
 				Owner = Owner,
 				Position = EntPos,
 				Velocity = EntVel,
-				Distance = EntDist
+				Distance = EntDist,
+				Spread   = Spread,
 			}
 
 			IDs[Count] = Index
