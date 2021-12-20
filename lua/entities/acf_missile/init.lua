@@ -440,6 +440,7 @@ function ENT:CreateBulletData(Crate)
 
 	Data.Destiny = ACF.FindWeaponrySource(Data.Weapon)
 
+	self.ToolData         = Data
 	self.RoundData        = Ammo
 	self.BulletData       = Ammo:ServerConvert(Data)
 	self.BulletData.Crate = self:EntIndex()

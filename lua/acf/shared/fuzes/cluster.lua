@@ -7,39 +7,44 @@ Fuze.MaxDistance = 5000
 if CLIENT then
 	Fuze.Description = "This fuze fires a beam directly ahead and releases bomblets when the beam hits something close-by. Distance in inches."
 else
-	Fuze.Spread = 15
+	Fuze.Spread = 30
+
+	local AmmoTypes = ACF.Classes.AmmoTypes
+
+	local function PrepareBullet(ToolData)
+		local Caliber = ToolData.Caliber / 6.42 -- Circle packing 30 circles within a circle
+		local Rows    = math.max(1, math.floor(ToolData.Projectile / Caliber))
+
+		ToolData.Weapon     = "C"
+		ToolData.Caliber    = Caliber
+		ToolData.Projectile = ToolData.Projectile / Rows
+		ToolData.Propellant = 0
+		ToolData.Destiny    = "Weapons"
+		ToolData.Bomblets   = Rows * 30
+
+		return AmmoTypes[ToolData.AmmoType]()
+	end
 
 	function Fuze:HandleDetonation(Entity, BulletData)
-		local FillerMass = BulletData.FillerMass
-		local Bomblets   = math.Clamp(math.Round(FillerMass * 0.5), 10, 100)
-		local MuzzleVec  = BulletData.Flight:GetNormalized()
-		local RoundData  = Entity.RoundData
-		local Velocity   = BulletData.Flight
+		local ToolData  = Entity.ToolData
+		local AmmoType  = PrepareBullet(ToolData)
+		local Bomblets  = ToolData.Bomblets
+		local Bullet    = AmmoType:ServerConvert(ToolData)
+		local Velocity  = BulletData.Flight
 
-		BulletData.Caliber    = BulletData.Caliber / Bomblets
-		BulletData.Diameter   = BulletData.Diameter / Bomblets
-		BulletData.ProjArea   = math.pi * (BulletData.Diameter * 0.5) ^ 2
-		BulletData.ProjLength = BulletData.ProjLength / Bomblets
-		BulletData.ProjMass   = BulletData.ProjMass / Bomblets
-		BulletData.DragCoef   = BulletData.ProjArea * 0.0001 / BulletData.ProjMass
-		BulletData.FillerMass = FillerMass / Bomblets
-		BulletData.Tracer     = 0
+		Bullet.Crate  = BulletData.Crate
+		Bullet.Owner  = BulletData.Owner
+		Bullet.Gun    = BulletData.Gun
+		Bullet.Pos    = BulletData.Pos
+		Bullet.Flight = Velocity
+		Bullet.Filter = BulletData.Filter
 
-		if BulletData.Type == "HEAT" then
-			BulletData.SlugMass       = BulletData.SlugMass / Bomblets
-			BulletData.SlugCaliber    = BulletData.SlugCaliber / Bomblets
-			BulletData.SlugDragCoef   = BulletData.SlugDragCoef / Bomblets
-			BulletData.SlugMV         = BulletData.SlugMV / Bomblets
-			BulletData.CasingMass     = BulletData.CasingMass / Bomblets
-			BulletData.BoomFillerMass = BulletData.BoomFillerMass / Bomblets
-		end
-
-		RoundData:Network(Entity, BulletData)
+		AmmoType:Network(Entity, Bullet)
 
 		local Effect = EffectData()
 		Effect:SetOrigin(Entity.Position)
 		Effect:SetNormal(Entity.CurDir)
-		Effect:SetScale(math.max(FillerMass ^ 0.33 * 8 * 39.37, 1))
+		Effect:SetScale(math.max(Bomblets ^ 0.33 * 39.37, 1))
 		Effect:SetRadius(BulletData.Caliber)
 
 		util.Effect("ACF_Explosion", Effect)
@@ -47,11 +52,11 @@ else
 		for _ = 1, Bomblets do
 			local Cone = math.tan(math.rad(self.Spread * ACF.GunInaccuracyScale))
 			local Spread = (Entity:GetUp() * math.Rand(-1, 1) + Entity:GetRight() * math.Rand(-1, 1)):GetNormalized()
-			local ShootDir = (MuzzleVec + Cone * Spread * (math.random() ^ (1 / ACF.GunInaccuracyBias))):GetNormalized()
+			local ShootDir = (Velocity:GetNormalized() + Cone * Spread * (math.random() ^ (1 / ACF.GunInaccuracyBias))):GetNormalized()
 
-			BulletData.Flight = ShootDir * Velocity:Length()
+			Bullet.Flight = ShootDir * Velocity:Length()
 
-			RoundData:Create(Entity, BulletData)
+			AmmoType:Create(Entity, Bullet)
 		end
 	end
 end
