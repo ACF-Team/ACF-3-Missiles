@@ -104,7 +104,7 @@ ACF.RegisterMissile("AGM-114 ASM", "ATGM", {
 	Year		= 1984,
 	ReloadTime	= 30,
 	Racks		= { ["1xRK"] = true, ["2x AGM-114"] = true, ["4x AGM-114"] = true },
-	Guidance	= { Dumb = true, Laser = true, ["Active Radar"] = true },
+	Guidance	= { Dumb = true, Laser = true },
 	Navigation  = "PN",
 	Fuzes		= { Contact = true },
 	ViewCone	= 40,
