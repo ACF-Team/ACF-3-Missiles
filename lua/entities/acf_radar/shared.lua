@@ -4,6 +4,6 @@ ENT.PrintName     = "ACF Radar"
 ENT.Author        = "Bubbus"
 ENT.WireDebugName = "ACF Radar"
 ENT.PluralName    = "ACF Radars"
-ENT.IsRadar       = true
+ENT.IsACFRadar       = true
 
 cleanup.Register("acf_radar")
