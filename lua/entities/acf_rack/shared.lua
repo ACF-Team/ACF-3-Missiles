@@ -4,6 +4,6 @@ ENT.PrintName     = "ACF Rack"
 ENT.Author        = "Bubbus"
 ENT.WireDebugName = "ACF Rack"
 ENT.PluralName    = "ACF Racks"
-ENT.IsRack        = true
+ENT.IsACFRack        = true
 
 cleanup.Register("acf_rack")
