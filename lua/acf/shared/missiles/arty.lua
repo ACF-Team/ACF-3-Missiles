@@ -31,14 +31,14 @@ ACF.RegisterMissile("Type 63 RA", "ARTY", {
 		Armor			= 5,
 		ProjLength		= 35,
 		PropLength		= 45,
-		Thrust			= 240000,	-- in kg*in/s^2
+		Thrust			= 5000,	-- in kg*in/s^2
 		FuelConsumption = 0.06, 	-- in g/s/f
-		StarterPercent	= 0.05,
+		StarterPercent	= 0.9,
 		MaxAgilitySpeed = 100,      -- in m/s
 		DragCoef		= 0.005,
 		FinMul			= 0,
 		GLimit          = 10,
-		TailFinMul		= 2,
+		TailFinMul		= 20,
 		PenMul			= 2,
 		ActualLength 	= 80,
 		ActualWidth		= 10.7
@@ -61,9 +61,9 @@ ACF.RegisterMissile("SAKR-10 RA", "ARTY", {
 	ReloadTime	= 20,
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true, ["6xUARRK"] = true },
 	Guidance	= { Dumb = true, Laser = true, ["GPS Guided"] = true },
-	Navigation  = "PN",
+	Navigation  = "Chase",
 	Fuzes		= { Contact = true, Timed = true, Optical = true, Cluster = true },
-	Agility		= 0.0008,
+	Agility		= 0.001,
 	ViewCone	= 45,
 	ArmDelay	= 0.4,
 	Round = {
@@ -73,13 +73,13 @@ ACF.RegisterMissile("SAKR-10 RA", "ARTY", {
 		ProjLength		= 100,
 		PropLength		= 160,
 		Thrust			= 800000,   -- in kg*in/s^2
-		FuelConsumption = 0.012,    -- in g/s/f
+		FuelConsumption = 0.024,    -- in g/s/f
 		StarterPercent	= 0.05,
-		MaxAgilitySpeed = 100,      -- in m/s
-		DragCoef		= 0.02,
-		FinMul			= 0.1,
-		GLimit          = 5,
-		TailFinMul		= 2,
+		MaxAgilitySpeed = 50,      -- in m/s
+		DragCoef		= 0.3,
+		FinMul			= 0.065,
+		GLimit          = 10,
+		TailFinMul		= 30,
 		PenMul			= 1.2,
 		ActualLength 	= 287,
 		ActualWidth		= 12.2
@@ -116,11 +116,11 @@ ACF.RegisterMissile("SS-40 RA", "ARTY", {
 		Thrust			= 2400000,	-- in kg*in/s^2
 		FuelConsumption = 0.022,	-- in g/s/f
 		StarterPercent	= 0.05,
-		MaxAgilitySpeed = 100,      -- in m/s
-		DragCoef		= 0.02,
-		FinMul			= 0.12,
-		GLimit          = 5,
-		TailFinMul		= 10,
+		MaxAgilitySpeed = 50,      -- in m/s
+		DragCoef		= 0.3,
+		FinMul			= 0.08,
+		GLimit          = 10,
+		TailFinMul		= 50,
 		PenMul			= 1.4,
 		ActualLength 	= 370,
 		ActualWidth		= 18
