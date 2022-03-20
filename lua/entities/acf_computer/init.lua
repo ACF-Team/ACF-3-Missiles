@@ -127,7 +127,7 @@ do -- Spawn and update function
 	end
 
 	local function CreateOutputs(Entity, Data, Class, Computer)
-		local List = { "Entity [ENTITY]" }
+		local List = { "Entity (The computer itself) [ENTITY]" }
 
 		if Class.SetupOutputs then
 			Class.SetupOutputs(List, Entity, Data, Class, Computer)

@@ -307,7 +307,7 @@ do -- Spawn and Update functions
 	end
 
 	local function CreateInputs(Entity, Data, Class, Radar)
-		local List = { "Active" }
+		local List = { "Active (Turns on the radar)" }
 
 		if Class.SetupInputs then
 			Class.SetupInputs(List, Entity, Data, Class, Radar)
@@ -323,7 +323,17 @@ do -- Spawn and Update functions
 	end
 
 	local function CreateOutputs(Entity, Data, Class, Radar)
-		local List = { "Think Delay", "Scanning", "Detected", "ClosestDistance", "IDs [ARRAY]", "Owner [ARRAY]", "Position [ARRAY]", "Velocity [ARRAY]", "Distance [ARRAY]", "Entity [ENTITY]" }
+		local List = {
+			"Think Delay (Time between scans)",
+			"Scanning (Whether or not the radar is scanning currently)",
+			"Detected (How many targets the radar detects)",
+			"ClosestDistance (Distance of the closest target)",
+			"IDs (An array of entity IDs of the targets) [ARRAY]",
+			"Owner (An array of owners of the targets) [ARRAY]",
+			"Position (An array of positions of the targets) [ARRAY]",
+			"Velocity (An array of velocities of the targets) [ARRAY]",
+			"Distance (An array of distances of the targets) [ARRAY]",
+			"Entity (The radar itself) [ENTITY]" }
 
 		if Class.SetupOutputs then
 			Class.SetupOutputs(List, Entity, Data, Class, Radar)

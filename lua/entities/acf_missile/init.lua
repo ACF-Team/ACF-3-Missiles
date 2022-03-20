@@ -387,7 +387,7 @@ function MakeACF_Missile(Player, Pos, Ang, Rack, MountPoint, Crate)
 	Missile.MotorEnabled    = false
 	Missile.Thrust          = 0
 	Missile.ThinkDelay      = 0.1
-	Missile.Inputs          = WireLib.CreateInputs(Missile, { "Detonate" })
+	Missile.Inputs          = WireLib.CreateInputs(Missile, { "Detonate (Force detonates the missile)" })
 
 	Missile:UpdateModel(Missile.RackModel or Missile.RealModel)
 	Missile:CreateBulletData(Crate)

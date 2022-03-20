@@ -70,8 +70,8 @@ do -- Joystick
 		MaxAngle	= 25,
 		Speed		= 50, -- Degrees per second
 		Offset		= Vector(0, -1.5, -0.25),
-		Inputs		= { "Pitch", "Yaw" },
-		Outputs		= { "Current Pitch", "Current Yaw" },
+		Inputs		= { "Pitch (Degrees on the vertical axis)", "Yaw (Degrees in the horizontal axis)" },
+		Outputs		= { "Current Pitch (Current degrees on the vertical axis)", "Current Yaw (Current degrees on the horizontal axis)" },
 		Stick = {
 			Model = "models/props_c17/trappropeller_lever.mdl",
 			Scale = 0.5,
@@ -276,8 +276,13 @@ do -- Optical guidance computer
 		Offset		= Vector(6, -1, 0),
 		Speed		= 10, -- Degrees per second
 		FocusSpeed	= 300, -- Meters per second
-		Inputs		= { "Pitch", "Yaw" },
-		Outputs		= { "Ranging", "Distance", "HitPos [VECTOR]", "Current Pitch", "Current Yaw" },
+		Inputs		= { "Pitch (Degrees on the vertical axis)", "Yaw (Degrees on the horizontal axis)" },
+		Outputs		= {
+			"Ranging (Whether or not the computer is currently adjusting to focus)",
+			"Distance (The currently measured distance from the computer, in meters)",
+			"HitPos (The vector of where the computer is currently focused on) [VECTOR]",
+			"Current Pitch (Current degrees on the vertical axis)",
+			"Current Yaw (Current degrees on the horizontal axis)" },
 		Bounds = {
 			Pitch = 15,
 			Yaw = 20,
@@ -461,8 +466,15 @@ do -- Laser guidance computer
 		Cooldown	= 10,
 		Offset		= Vector(6, -1, 0),
 		Speed		= 45, -- Degrees per second
-		Inputs		= { "Lase", "Pitch", "Yaw" },
-		Outputs		= { "Lasing", "Lase Time", "Cooling Down", "Distance", "HitPos [VECTOR]", "Current Pitch", "Current Yaw" },
+		Inputs		= { "Lase (Turns on the laser)", "Pitch (Degrees on the vertical axis)", "Yaw (Degrees on the horizontal axis)" },
+		Outputs		= {
+			"Lasing (Whether or not the laser is on)",
+			"Lase Time (How long the laser can stay on before requiring a cool down)",
+			"Cooling Down (Whether or not the laser is cooling off)",
+			"Distance (The currently measured distance from the computer, in meters)",
+			"HitPos (The vector of where the computer detects a hit from the laser) [VECTOR]",
+			"Current Pitch (Current degrees on the vertical axis)",
+			"Current Yaw (Current degrees on the horizontal axis)" },
 		Bounds = {
 			Pitch = 10,
 			Yaw = 15,
@@ -700,8 +712,11 @@ do -- GPS transmitter
 		Description	= "A transmitter for GPS-based guided munitions.",
 		Model		= "models/props_lab/reciever01a.mdl",
 		Mass		= 15,
-		Inputs		= { "Coordinates [VECTOR]" },
-		Outputs		= { "Transmitting", "Jammed", "Current Coordinates [VECTOR]" },
+		Inputs		= { "Coordinates (The vector to pass along to the linked rack) [VECTOR]" },
+		Outputs		= {
+			"Transmitting (Whether or not the transmitter is functioning)",
+			"Jammed (Whether or not the transmitter is being countered)",
+			"Current Coordinates (The vector currently being transmitted) [VECTOR]" },
 		Preview = {
 			FOV = 80,
 		},
