@@ -73,10 +73,10 @@ ACF.RegisterMissile("SAKR-10 RA", "ARTY", {
 		ProjLength		= 100,
 		PropLength		= 160,
 		Thrust			= 800000,   -- in kg*in/s^2
-		FuelConsumption = 0.024,    -- in g/s/f
+		FuelConsumption = 0.020,    -- in g/s/f
 		StarterPercent	= 0.05,
 		MaxAgilitySpeed = 50,      -- in m/s
-		DragCoef		= 0.3,
+		DragCoef		= 0.2,
 		FinMul			= 0.065,
 		GLimit          = 10,
 		TailFinMul		= 30,
