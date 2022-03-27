@@ -40,10 +40,10 @@ function MakeACF_GLATGM(Gun, BulletData)
 
 	if Caliber >= 140 then
 		Entity:SetModel("models/missiles/glatgm/mgm51.mdl")
-		Entity:SetModelScale(Caliber/150, 0)
+		Entity:SetModelScale(Caliber / 150, 0)
 	elseif Caliber >= 120 then
 		Entity:SetModel("models/missiles/glatgm/9m112.mdl")
-		Entity:SetModelScale(Caliber/125, 0)
+		Entity:SetModelScale(Caliber / 125, 0)
 	else
 		Entity:SetModel("models/missiles/glatgm/9m117.mdl")
 		Entity:SetModelScale(Caliber * 0.01, 0)
