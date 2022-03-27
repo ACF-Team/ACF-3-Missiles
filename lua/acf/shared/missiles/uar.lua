@@ -83,8 +83,8 @@ ACF.RegisterMissile("HVAR ASR", "UAR", {
 		RackModel		= "models/missiles/hvar_folded.mdl",
 		MaxLength		= 173,
 		Armor			= 5,
-		ProjLength		= 78,
-		PropLength		= 95,
+		ProjLength		= 35.8,
+		PropLength		= 120,
 		Thrust			= 800000,   -- in kg*in/s^2
 		FuelConsumption = 0.016,    -- in g/s/f
 		StarterPercent	= 0.15,
@@ -93,7 +93,10 @@ ACF.RegisterMissile("HVAR ASR", "UAR", {
 		FinMul			= 0.01,
 		GLimit          = 1,
 		TailFinMul		= 0.075,
-		PenMul			= 0.65,
+		PenMul			= 1.148,
+		FillerMul		= 1,
+		LinerMassMul	= 1,
+		Standoff		= 7,
 		ActualLength 	= 173,
 		ActualWidth		= 12.7
 	},
@@ -120,10 +123,10 @@ ACF.RegisterMissile("SPG-9 ASR", "UAR", {
 	Round = {
 		Model			= "models/missiles/glatgm/9m112f.mdl",
 		RackModel		= "models/munitions/round_100mm_mortar_shot.mdl",
-		MaxLength		= 100,
+		MaxLength		= 128.18,
 		Armor			= 5,
-		ProjLength		= 45,
-		PropLength		= 55,
+		ProjLength		= 20.07,
+		PropLength		= 67.8,
 		Thrust			= 200000,   -- in kg*in/s^2
 		FuelConsumption = 0.012,    -- in g/s/f
 		StarterPercent	= 0.6,
@@ -132,8 +135,11 @@ ACF.RegisterMissile("SPG-9 ASR", "UAR", {
 		FinMul			= 0.002,
 		GLimit          = 1,
 		TailFinMul		= 0.02,
-		PenMul			= 1.32,
-		ActualLength 	= 100,
+		PenMul			= 2.273,
+		FillerMul		= 1.06,
+		LinerMassMul	= 1.8,
+		Standoff		= 33.3,
+		ActualLength 	= 128.18,
 		ActualWidth		= 7.3
 	},
 	Preview = {
