@@ -80,7 +80,7 @@ else
 		if Caliber < 12 then
 			Model = "models/missiles/glatgm/9m117.mdl"
 			FOV   = 65
-		elseif Caliber > 12 then
+		elseif Caliber >= 14 then
 			Model  = "models/missiles/glatgm/mgm51.mdl"
 			Height = 100
 			FOV    = 60
@@ -111,7 +111,7 @@ else
 			return BulletData.ConeAng
 		end)
 
-		local StandoffRatio = Base:AddSlider("Extra Standoff Ratio", 0, 0.25, 2)
+		local StandoffRatio = Base:AddSlider("Extra Standoff Ratio", 0, 0.7, 2)
 		StandoffRatio:SetClientData("StandoffRatio", "OnValueChanged")
 		StandoffRatio:DefineSetter(function(_, _, _, Value)
 			ToolData.StandoffRatio = math.Round(Value, 2)
