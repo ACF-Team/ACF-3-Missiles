@@ -222,19 +222,20 @@ local function CalcFlight(Missile)
 	Dir = DirAng:Forward()
 	Missile.RotAxis = Missile.RotAxis * (1 - 0.7 * DeltaTime)
 
+	local FuelMod = math.Clamp(Missile.MotorLength / DeltaTime, 0, 1)
 	if Missile.MotorEnabled then
-		Missile.MotorLength = Missile.MotorLength - DeltaTime
-
-		-- Update the missile's mass and inertia according to the remaining fuel
-		Missile.Mass = Missile.ProjMass + Missile.PropMass * math.max(Missile.MotorLength / Missile.MaxMotorLength, 0)
-		Missile.Inertia	= Missile.AreaOfInertia * Missile.Mass
-
 		if Missile.MotorLength <= 0 then
 			SetMotorState(Missile, false)
+		else
+			Missile.MotorLength = math.max(Missile.MotorLength - DeltaTime, 0)
+
+			-- Update the missile's mass and inertia according to the remaining fuel
+			Missile.Mass = Missile.ProjMass + Missile.PropMass * Missile.MotorLength / Missile.MaxMotorLength
+			Missile.Inertia	= Missile.AreaOfInertia * Missile.Mass
 		end
 	end
 
-	local Thrust    = Dir * Missile.Thrust / Missile.Mass
+	local Thrust    = Dir * FuelMod * Missile.Thrust / Missile.Mass
 	local Up        = Dir:Cross(LastVel):Cross(Dir):GetNormalized()
 	local DotSimple = Up.x * VelNorm.x + Up.y * VelNorm.y + Up.z * VelNorm.z
 	local Lift      = -Up * DotSimple * LiftMultiplier
