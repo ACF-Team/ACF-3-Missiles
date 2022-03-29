@@ -22,8 +22,8 @@ function Ammo:BaseConvert(ToolData)
 
 	Data.ShovePower		= 0.1
 	Data.LimitVel		= 100 -- Most efficient penetration speed in m/s
-	Data.Ricochet		= 60 -- Base ricochet angle
-	Data.DetonatorAngle	= 75
+	Data.Ricochet		= 91 -- Base ricochet angle
+	Data.DetonatorAngle	= 91
 
 	self:UpdateRoundData(ToolData, Data, GUIData)
 
@@ -63,8 +63,32 @@ if SERVER then
 else
 	ACF.RegisterAmmoDecal("GLATGM", "damage/heat_pen", "damage/heat_rico", function(Caliber) return Caliber * 0.1667 end)
 
-	function Ammo:PenetrationEffect()
-		return
+	function Ammo:PenetrationEffect(Effect, Bullet)
+		local Data = EffectData()
+
+		if Bullet.Detonated then
+			Data:SetOrigin(Bullet.SimPos)
+			Data:SetNormal(Bullet.SimFlight:GetNormalized())
+			Data:SetScale(Bullet.SimFlight:Length())
+			Data:SetMagnitude(Bullet.RoundMass)
+			Data:SetRadius(Bullet.Caliber)
+			Data:SetDamageType(DecalIndex(Bullet.AmmoType))
+
+			util.Effect("ACF_Penetration", Data)
+		else
+			local BoomFillerMass = Bullet.FillerMass * ACF.HEATBoomConvert
+
+			Data:SetOrigin(Bullet.SimPos)
+			Data:SetNormal(Bullet.SimFlight:GetNormalized())
+			Data:SetScale(math.max(BoomFillerMass ^ 0.33 * 3 * 39.37, 1))
+			Data:SetRadius(Bullet.Caliber)
+
+			util.Effect("ACF_GLATGMExplosion", Data)
+
+			Bullet.Detonated = true
+
+			Effect:SetModel("models/Gibs/wood_gib01e.mdl")
+		end
 	end
 
 	function Ammo:SetupAmmoMenuSettings(Settings)
