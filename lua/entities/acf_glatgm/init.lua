@@ -32,10 +32,12 @@ function MakeACF_GLATGM(Gun, BulletData)
 	if not IsValid(Entity) then return end
 
 	local Caliber = BulletData.Caliber * 10
+	local Owner   = Gun.Owner
 
 	Entity:SetAngles(Gun:GetAngles())
 	Entity:SetPos(BulletData.Pos)
-	Entity:SetPlayer(Gun.Owner)
+	Entity:CPPISetOwner(Owner)
+	Entity:SetPlayer(Owner)
 	Entity:Spawn()
 
 	if Caliber >= 140 then
