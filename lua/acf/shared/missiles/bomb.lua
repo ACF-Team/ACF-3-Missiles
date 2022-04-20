@@ -22,7 +22,7 @@ ACF.RegisterMissile("50kgBOMB", "BOMB", {
 	Racks		= { ["1xRK_small"] = true, ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true },
 	Guidance	= { Dumb = true },
 	Navigation  = "Chase",
-	Fuzes		= { Contact = true, Optical = true, Cluster = true },
+	Fuzes		= { Contact = true, Optical = true},
 	Agility		= 1,
 	ArmDelay	= 0.5,
 	Round = {
@@ -63,7 +63,7 @@ ACF.RegisterMissile("100kgBOMB", "BOMB", {
 	Racks		= { ["1xRK_small"] = true, ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true },
 	Guidance	= { Dumb = true },
 	Navigation  = "Chase",
-	Fuzes		= { Contact = true, Optical = true, Cluster = true },
+	Fuzes		= { Contact = true, Optical = true},
 	Agility		= 1,
 	ArmDelay	= 1,
 	Round = {
@@ -104,7 +104,7 @@ ACF.RegisterMissile("250kgBOMB", "BOMB", {
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true },
 	Guidance	= { Dumb = true },
 	Navigation  = "Chase",
-	Fuzes		= { Contact = true, Optical = true, Cluster = true },
+	Fuzes		= { Contact = true, Optical = true},
 	Agility		= 1,
 	ArmDelay	= 1,
 	Round = {
@@ -145,7 +145,7 @@ ACF.RegisterMissile("500kgBOMB", "BOMB", {
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true },
 	Guidance	= { Dumb = true },
 	Navigation  = "Chase",
-	Fuzes		= { Contact = true, Optical = true, Cluster = true },
+	Fuzes		= { Contact = true, Optical = true},
 	Agility		= 1,
 	ArmDelay	= 2,
 	Round = {
@@ -186,7 +186,7 @@ ACF.RegisterMissile("1000kgBOMB", "BOMB", {
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true },
 	Guidance	= { Dumb = true },
 	Navigation  = "Chase",
-	Fuzes		= { Contact = true, Optical = true, Cluster = true },
+	Fuzes		= { Contact = true, Optical = true},
 	Agility		= 1,
 	ArmDelay	= 3,
 	Round = {

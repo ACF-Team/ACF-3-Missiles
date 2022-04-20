@@ -20,7 +20,7 @@ ACF.RegisterMissile("100kgGBOMB", "GBOMB", {
 	Racks		= { ["1xRK_small"] = true, ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true },
 	Guidance	= { Dumb = true },
 	Navigation  = "Chase",
-	Fuzes		= { Contact = true, Optical = true, Cluster = true },
+	Fuzes		= { Contact = true, Optical = true},
 	ArmDelay	= 1,
 	Round = {
 		Model			= "models/missiles/micro.mdl",
@@ -59,7 +59,7 @@ ACF.RegisterMissile("250kgGBOMB", "GBOMB", {
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true },
 	Guidance	= { Dumb = true },
 	Navigation  = "Chase",
-	Fuzes		= { Contact = true, Optical = true, Cluster = true },
+	Fuzes		= { Contact = true, Optical = true},
 	ArmDelay	= 1,
 	Round = {
 		Model			= "models/missiles/fab250.mdl",
