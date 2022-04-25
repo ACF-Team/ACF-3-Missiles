@@ -463,7 +463,7 @@ function ENT:UpdateModel(Model)
 
 	self:PhysicsInit(SOLID_VPHYSICS)
 	self:SetMoveType(MOVETYPE_VPHYSICS)
-	self:SetCollisionGroup(COLLISION_GROUP_NONE)
+	self:SetCollisionGroup(COLLISION_GROUP_WORLD)
 end
 
 function ENT:Launch(Delay, IsMisfire)
