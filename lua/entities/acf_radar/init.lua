@@ -349,6 +349,9 @@ do -- Spawn and Update functions
 	end
 
 	local function UpdateRadar(Entity, Data, Class, Radar)
+		local Tick  = engine.TickInterval()
+		local Delay = Radar.ThinkDelay
+
 		Entity.ACF = Entity.ACF or {}
 		Entity.ACF.Model = Radar.Model -- Must be set before changing model
 
@@ -375,7 +378,7 @@ do -- Spawn and Update functions
 		Entity.ConeDegs     = Radar.ViewCone
 		Entity.Range        = Radar.Range
 		Entity.SwitchDelay  = Radar.SwitchDelay
-		Entity.ThinkDelay   = Radar.ThinkDelay
+		Entity.ThinkDelay   = math.Round(Delay / Tick) * Tick -- Uses a timer, so has to be tied to CurTime/tickrate
 		Entity.GetDetected  = Radar.Detect or Class.Detect
 		Entity.Origin       = AttachData and Entity:WorldToLocal(AttachData.Pos) or Vector()
 
