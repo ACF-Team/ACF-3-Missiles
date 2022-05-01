@@ -210,7 +210,7 @@ function ENT:Think()
 
 			local AgilityVector = Vector(self.Speed,Agility,Agility) * DeltaTime
 			local ComputerCorrection = Computer:WorldToLocal(Position)
-			ComputerCorrection = Computer:LocalToWorld(Vector(ComputerCorrection.X+self.Speed/10,0,0))
+			ComputerCorrection = Computer:LocalToWorld(Vector(ComputerCorrection.X + self.Speed / 10,0,0))
 			Correction = ClampVec(self:WorldToLocal(ComputerCorrection),-AgilityVector,AgilityVector)
 
 			local Desired = AngleRand() * 0.005
