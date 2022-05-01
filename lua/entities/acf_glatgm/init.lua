@@ -206,13 +206,22 @@ function ENT:Think()
 		local CanSee   = CheckViewCone(self, HitPos)
 
 		if CanSee and Position:Distance(StartPos) <= self.MaxRange then
-			local Desired = self:WorldToLocalAngles(Computer.TraceDir:Angle()) + AngleRand() * 0.005
 			local Agility = self.Agility
 
-			Direction  = ClampAng(Desired, -Agility, Agility) * DeltaTime
-			Correction = self:WorldToLocal(StartPos) * DeltaTime
-			IsGuided   = true
+			local AgilityVector = Vector(self.Speed,Agility,Agility) * DeltaTime
+			local ComputerCorrection = Computer:WorldToLocal(Position)
+			ComputerCorrection = Computer:LocalToWorld(Vector(ComputerCorrection.X+self.Speed/10,0,0))
+			Correction = ClampVec(self:WorldToLocal(ComputerCorrection),-AgilityVector,AgilityVector)
 
+			local Desired = AngleRand() * 0.005
+			if math.abs(Correction.y) + math.abs(Correction.z) >= 0.7 then
+				Desired = self:WorldToLocalAngles((ComputerCorrection - Position):Angle()) + Desired
+			else
+				Desired = self:WorldToLocalAngles(Computer.TraceDir:Angle()) + Desired
+			end
+			Direction  = ClampAng(Desired, -Agility, Agility) * DeltaTime
+
+			IsGuided   = true
 			self.Innacuracy = 0
 		end
 	end
