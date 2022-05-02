@@ -185,6 +185,15 @@ local function ClampAng(Ang, Min, Max)
 	)
 end
 
+local function ClampVec(Vec, VMin, VMax)
+
+	return Vector(
+		math.Clamp(Vec[1], VMin[1], VMax[1]),
+		math.Clamp(Vec[2], VMin[2], VMax[2]),
+		math.Clamp(Vec[3], VMin[3], VMax[3])
+	)
+end
+
 function ENT:Think()
 	if self.Detonated then return end
 
