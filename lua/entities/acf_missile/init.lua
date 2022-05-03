@@ -691,7 +691,6 @@ function ENT:ACF_OnDamage(Bullet, Trace)
 
 			self:SetNW2String("AmmoType", "HE")
 			end
-		
 			DetonateMissile(self, Owner)
 
 			return HitRes
