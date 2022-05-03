@@ -185,6 +185,15 @@ local function ClampAng(Ang, Min, Max)
 	)
 end
 
+local function ClampVec(Vec, VMin, VMax)
+
+	return Vector(
+		math.Clamp(Vec[1], VMin[1], VMax[1]),
+		math.Clamp(Vec[2], VMin[2], VMax[2]),
+		math.Clamp(Vec[3], VMin[3], VMax[3])
+	)
+end
+
 function ENT:Think()
 	if self.Detonated then return end
 
@@ -206,13 +215,22 @@ function ENT:Think()
 		local CanSee   = CheckViewCone(self, HitPos)
 
 		if CanSee and Position:Distance(StartPos) <= self.MaxRange then
-			local Desired = self:WorldToLocalAngles(Computer.TraceDir:Angle()) + AngleRand() * 0.005
 			local Agility = self.Agility
 
-			Direction  = ClampAng(Desired, -Agility, Agility) * DeltaTime
-			Correction = self:WorldToLocal(StartPos) * DeltaTime
-			IsGuided   = true
+			local AgilityVector = Vector(self.Speed,Agility,Agility) * DeltaTime
+			local ComputerCorrection = Computer:WorldToLocal(Position)
+			ComputerCorrection = Computer:LocalToWorld(Vector(ComputerCorrection.X + self.Speed / 10,0,0))
+			Correction = ClampVec(self:WorldToLocal(ComputerCorrection),-AgilityVector,AgilityVector)
 
+			local Desired = AngleRand() * 0.005
+			if math.abs(Correction.y) + math.abs(Correction.z) >= 0.7 then
+				Desired = self:WorldToLocalAngles((ComputerCorrection - Position):Angle()) + Desired
+			else
+				Desired = self:WorldToLocalAngles(Computer.TraceDir:Angle()) + Desired
+			end
+			Direction  = ClampAng(Desired, -Agility, Agility) * DeltaTime
+
+			IsGuided   = true
 			self.Innacuracy = 0
 		end
 	end
