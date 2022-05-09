@@ -686,6 +686,11 @@ function ENT:ACF_OnDamage(Bullet, Trace)
 
 		-- We give it a chance to explode when it gets penetrated aswell.
 		if math.random() > 0.75 * Ratio then
+			if BulletData.Type == "HEAT" then
+			BulletData.Type = "HE"
+
+			self:SetNW2String("AmmoType", "HE")
+			end
 			DetonateMissile(self, Owner)
 
 			return HitRes
@@ -703,8 +708,9 @@ function ENT:ACF_OnDamage(Bullet, Trace)
 			self.UseGuidance = nil
 		end
 
-		-- Damaged the liner.
-		if BulletData.Type == "HEAT" and math.random() > 0.9 * Ratio then
+		-- Any Damage to the liner.
+		-- For sake of consistency and reducing of RNG on damage
+		if BulletData.Type == "HEAT" and 0.95 > Ratio then
 			BulletData.Type = "HE"
 
 			self:SetNW2String("AmmoType", "HE")
