@@ -167,7 +167,6 @@ else
 			local LaunchVel = math.Round(MV / 5, 2)
 			local Accel = math.Round(math.Clamp(BulletData.ProjMass / BulletData.PropMass + BulletData.Caliber / 7, 0.2, 10), 2)
 			local ProjMass	= ACF.GetProperMass(BulletData.ProjMass)
-			print(BulletData.ProjMass)
 			local PropMass	= ACF.GetProperMass(BulletData.PropMass)
 			local Filler	= ACF.GetProperMass(BulletData.FillerMass)
 
