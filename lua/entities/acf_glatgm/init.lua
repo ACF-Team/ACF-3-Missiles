@@ -67,14 +67,18 @@ function MakeACF_GLATGM(Gun, BulletData)
 	Entity.ForcedMass   = BulletData.CartMass
 	Entity.UseGuidance  = true
 	Entity.ViewCone     = math.cos(math.rad(50)) -- Number inside is on degrees
-	Entity.MaxRange     = BulletData.MuzzleVel * 2 * 39.37 / ACF.Scale -- optical fuze distance
 	Entity.KillTime     = ACF.CurTime + 20
 	Entity.GuideDelay   = ACF.CurTime + 0.25 -- Missile won't be guided for the first quarter of a second
 	Entity.LastThink    = ACF.CurTime
 	Entity.Filter       = Entity.BulletData.Filter
 	Entity.Agility      = 50 -- Magic multiplier that controls the agility of the missile
 	Entity.IsSubcaliber = Caliber < 100
-	Entity.Speed        = Entity.IsSubcaliber and 2500 or 5000 -- gmu/s
+	local MV = math.Clamp(BulletData.MuzzleVel / ACF.Scale, 200, 1600)
+	Entity.LaunchVel = math.Round(MV / 5, 2) * 39.37
+	Entity.DiffVel = math.Round(MV / 2, 2) * 39.37 - Entity.LaunchVel
+	Entity.AccelLength  = math.Round(math.Clamp(BulletData.ProjMass / BulletData.PropMass + BulletData.Caliber / 7, 0.2, 10), 2)
+	Entity.AccelTime = Entity.LastThink + Entity.AccelLength
+	Entity.Speed        = Entity.LaunchVel
 	Entity.SpiralRadius = Entity.IsSubcaliber and 3.5 or nil
 	Entity.SpiralSpeed  = Entity.IsSubcaliber and 15 or nil
 	Entity.SpiralAngle  = Entity.IsSubcaliber and 0 or nil
@@ -208,13 +212,15 @@ function ENT:Think()
 	local IsDelayed = self.GuideDelay > Time
 	local Computer  = self:GetComputer()
 	local Position  = self.Position
+	
+	self.Speed = self.LaunchVel + self.DiffVel * math.Clamp(1 - (self.AccelTime - Time) / self.AccelLength, 0, 1)
 
 	if not IsDelayed and IsValid(Computer) then
 		local StartPos = Computer:LocalToWorld(Computer.Offset or Vector(6, -1, 0))
 		local HitPos   = Computer.HitPos
 		local CanSee   = CheckViewCone(self, HitPos)
 
-		if CanSee and Position:Distance(StartPos) <= self.MaxRange then
+		if CanSee and Position:Distance(StartPos) then
 			local Agility = self.Agility
 
 			local AgilityVector = Vector(self.Speed,Agility,Agility) * DeltaTime
