@@ -46,10 +46,15 @@ if SERVER then
 	end
 
 	function Ammo:GetCrateText(BulletData)
-		local Text = "Command Link: %s m\nMax Penetration: %s mm\nBlast Radius: %s m\nBlast Energy: %s KJ"
+		local Text = "Peak Velocity: %s m/s\nLaunch Velocity: %s m/s\nAcceleration: %s s\nMax Penetration: %s mm\nBlast Radius: %s m\nBlast Energy: %s KJ"
 		local Data = self:GetDisplayData(BulletData)
-
-		return Text:format(math.Round(BulletData.MuzzleVel * 2 / ACF.Scale, 2), math.floor(Data.MaxPen), math.Round(Data.BlastRadius, 2), math.floor(BulletData.BoomFillerMass * ACF.HEPower))
+		
+		local MV = math.Clamp(BulletData.MuzzleVel / ACF.Scale, 200, 1600) -- Minimum initial launch velocity of 40m/s and lowest peak at 100m/s while top speed is 800m/s
+		local PeakVel = math.Round(MV / 2, 2)
+		local LaunchVel = math.Round(MV / 5, 2)
+		local Accel = math.Round(math.Clamp(BulletData.ProjMass / BulletData.PropMass + BulletData.Caliber / 7, 0.2, 10), 2)
+		
+		return Text:format(PeakVel, LaunchVel, Accel,  math.floor(Data.MaxPen), math.Round(Data.BlastRadius, 2), math.floor(BulletData.BoomFillerMass * ACF.HEPower))
 	end
 
 	function Ammo:HEATExplosionEffect(Bullet, Pos)
@@ -135,7 +140,7 @@ else
 			return BulletData.ConeAng
 		end)
 
-		local StandoffRatio = Base:AddSlider("Extra Standoff Ratio", 0, 0.7, 2)
+		local StandoffRatio = Base:AddSlider("Extra Standoff Ratio", 0, 0.4, 2)
 		StandoffRatio:SetClientData("StandoffRatio", "OnValueChanged")
 		StandoffRatio:DefineSetter(function(_, _, _, Value)
 			ToolData.StandoffRatio = math.Round(Value, 2)
@@ -155,13 +160,18 @@ else
 		RoundStats:DefineSetter(function()
 			self:UpdateRoundData(ToolData, BulletData)
 
-			local Text		= "Command Distance : %s m\nProjectile Mass : %s\nPropellant Mass : %s\nExplosive Mass : %s"
-			local MuzzleVel	= math.Round(BulletData.MuzzleVel * 2 / ACF.Scale, 2)
+			local Text		= "Peak Velocity: %s m/s\nLaunch Velocity: %s m/s\nAcceleration: %s s\nProjectile Mass : %s\nPropellant Mass : %s\nExplosive Mass : %s"
+			
+			local MV = math.Clamp(BulletData.MuzzleVel / ACF.Scale, 200, 1600) -- Minimum initial launch velocity of 40m/s and lowest peak at 100m/s while top speed is 800m/s
+			local PeakVel	= math.Round(MV / 2, 2)
+			local LaunchVel = math.Round(MV / 5, 2)
+			local Accel = math.Round(math.Clamp(BulletData.ProjMass / BulletData.PropMass + BulletData.Caliber / 7, 0.2, 10), 2)
 			local ProjMass	= ACF.GetProperMass(BulletData.ProjMass)
+			print(BulletData.ProjMass)
 			local PropMass	= ACF.GetProperMass(BulletData.PropMass)
 			local Filler	= ACF.GetProperMass(BulletData.FillerMass)
 
-			return Text:format(MuzzleVel, ProjMass, PropMass, Filler)
+			return Text:format(PeakVel, LaunchVel, Accel, ProjMass, PropMass, Filler)
 		end)
 
 		local FillerStats = Base:AddLabel()
