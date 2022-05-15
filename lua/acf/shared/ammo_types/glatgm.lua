@@ -48,12 +48,12 @@ if SERVER then
 	function Ammo:GetCrateText(BulletData)
 		local Text = "Peak Velocity: %s m/s\nLaunch Velocity: %s m/s\nAcceleration: %s s\nMax Penetration: %s mm\nBlast Radius: %s m\nBlast Energy: %s KJ"
 		local Data = self:GetDisplayData(BulletData)
-		
+
 		local MV = math.Clamp(BulletData.MuzzleVel / ACF.Scale, 200, 1600) -- Minimum initial launch velocity of 40m/s and lowest peak at 100m/s while top speed is 800m/s
 		local PeakVel = math.Round(MV / 2, 2)
 		local LaunchVel = math.Round(MV / 5, 2)
 		local Accel = math.Round(math.Clamp(BulletData.ProjMass / BulletData.PropMass + BulletData.Caliber / 7, 0.2, 10), 2)
-		
+
 		return Text:format(PeakVel, LaunchVel, Accel,  math.floor(Data.MaxPen), math.Round(Data.BlastRadius, 2), math.floor(BulletData.BoomFillerMass * ACF.HEPower))
 	end
 
@@ -161,7 +161,7 @@ else
 			self:UpdateRoundData(ToolData, BulletData)
 
 			local Text		= "Peak Velocity: %s m/s\nLaunch Velocity: %s m/s\nAcceleration: %s s\nProjectile Mass : %s\nPropellant Mass : %s\nExplosive Mass : %s"
-			
+
 			local MV = math.Clamp(BulletData.MuzzleVel / ACF.Scale, 200, 1600) -- Minimum initial launch velocity of 40m/s and lowest peak at 100m/s while top speed is 800m/s
 			local PeakVel	= math.Round(MV / 2, 2)
 			local LaunchVel = math.Round(MV / 5, 2)
