@@ -212,7 +212,7 @@ function ENT:Think()
 	local IsDelayed = self.GuideDelay > Time
 	local Computer  = self:GetComputer()
 	local Position  = self.Position
-	
+
 	self.Speed = self.LaunchVel + self.DiffVel * math.Clamp(1 - (self.AccelTime - Time) / self.AccelLength, 0, 1)
 
 	if not IsDelayed and IsValid(Computer) then
