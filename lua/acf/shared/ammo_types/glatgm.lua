@@ -31,6 +31,8 @@ function Ammo:BaseConvert(ToolData)
 end
 
 if SERVER then
+	local CrateText = "Peak Velocity: %s m/s\nLaunch Velocity: %s m/s\nAcceleration: %s s\nMax Penetration: %s mm\nBlast Radius: %s m\nBlast Energy: %s KJ"
+
 	function Ammo:Create(Gun, BulletData)
 		if Gun:GetClass() == "acf_ammo" then
 			ACF.CreateBullet(BulletData)
@@ -46,15 +48,13 @@ if SERVER then
 	end
 
 	function Ammo:GetCrateText(BulletData)
-		local Text = "Peak Velocity: %s m/s\nLaunch Velocity: %s m/s\nAcceleration: %s s\nMax Penetration: %s mm\nBlast Radius: %s m\nBlast Energy: %s KJ"
-		local Data = self:GetDisplayData(BulletData)
+		local Data      = self:GetDisplayData(BulletData)
+		local Velocity  = math.Clamp(BulletData.MuzzleVel / ACF.Scale, 200, 1600) -- Minimum initial launch velocity of 40m/s and lowest peak at 100m/s while top speed is 800m/s
+		local PeakVel   = math.Round(Velocity * 0.5, 2)
+		local LaunchVel = math.Round(Velocity * 0.2, 2)
+		local Accel     = math.Round(math.Clamp(BulletData.ProjMass / BulletData.PropMass + BulletData.Caliber / 7, 0.2, 10), 2)
 
-		local MV = math.Clamp(BulletData.MuzzleVel / ACF.Scale, 200, 1600) -- Minimum initial launch velocity of 40m/s and lowest peak at 100m/s while top speed is 800m/s
-		local PeakVel = math.Round(MV / 2, 2)
-		local LaunchVel = math.Round(MV / 5, 2)
-		local Accel = math.Round(math.Clamp(BulletData.ProjMass / BulletData.PropMass + BulletData.Caliber / 7, 0.2, 10), 2)
-
-		return Text:format(PeakVel, LaunchVel, Accel,  math.floor(Data.MaxPen), math.Round(Data.BlastRadius, 2), math.floor(BulletData.BoomFillerMass * ACF.HEPower))
+		return CrateText:format(PeakVel, LaunchVel, Accel,  math.floor(Data.MaxPen), math.Round(Data.BlastRadius, 2), math.floor(BulletData.BoomFillerMass * ACF.HEPower))
 	end
 
 	function Ammo:HEATExplosionEffect(Bullet, Pos)
@@ -161,11 +161,10 @@ else
 			self:UpdateRoundData(ToolData, BulletData)
 
 			local Text		= "Peak Velocity: %s m/s\nLaunch Velocity: %s m/s\nAcceleration: %s s\nProjectile Mass : %s\nPropellant Mass : %s\nExplosive Mass : %s"
-
-			local MV = math.Clamp(BulletData.MuzzleVel / ACF.Scale, 200, 1600) -- Minimum initial launch velocity of 40m/s and lowest peak at 100m/s while top speed is 800m/s
-			local PeakVel	= math.Round(MV / 2, 2)
-			local LaunchVel = math.Round(MV / 5, 2)
-			local Accel = math.Round(math.Clamp(BulletData.ProjMass / BulletData.PropMass + BulletData.Caliber / 7, 0.2, 10), 2)
+			local Velocity  = math.Clamp(BulletData.MuzzleVel / ACF.Scale, 200, 1600) -- Minimum initial launch velocity of 40m/s and lowest peak at 100m/s while top speed is 800m/s
+			local PeakVel	= math.Round(Velocity * 0.5, 2)
+			local LaunchVel = math.Round(Velocity * 0.2, 2)
+			local Accel     = math.Round(math.Clamp(BulletData.ProjMass / BulletData.PropMass + BulletData.Caliber / 7, 0.2, 10), 2)
 			local ProjMass	= ACF.GetProperMass(BulletData.ProjMass)
 			local PropMass	= ACF.GetProperMass(BulletData.PropMass)
 			local Filler	= ACF.GetProperMass(BulletData.FillerMass)
