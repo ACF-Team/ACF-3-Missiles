@@ -31,8 +31,9 @@ function MakeACF_GLATGM(Gun, BulletData)
 
 	if not IsValid(Entity) then return end
 
-	local Caliber = BulletData.Caliber * 10
-	local Owner   = Gun.Owner
+	local Velocity = math.Clamp(BulletData.MuzzleVel / ACF.Scale, 200, 1600)
+	local Caliber  = BulletData.Caliber * 10
+	local Owner    = Gun.Owner
 
 	Entity:SetAngles(Gun:GetAngles())
 	Entity:SetPos(BulletData.Pos)
@@ -67,14 +68,17 @@ function MakeACF_GLATGM(Gun, BulletData)
 	Entity.ForcedMass   = BulletData.CartMass
 	Entity.UseGuidance  = true
 	Entity.ViewCone     = math.cos(math.rad(50)) -- Number inside is on degrees
-	Entity.MaxRange     = BulletData.MuzzleVel * 2 * 39.37 / ACF.Scale -- optical fuze distance
 	Entity.KillTime     = ACF.CurTime + 20
 	Entity.GuideDelay   = ACF.CurTime + 0.25 -- Missile won't be guided for the first quarter of a second
 	Entity.LastThink    = ACF.CurTime
 	Entity.Filter       = Entity.BulletData.Filter
 	Entity.Agility      = 50 -- Magic multiplier that controls the agility of the missile
 	Entity.IsSubcaliber = Caliber < 100
-	Entity.Speed        = Entity.IsSubcaliber and 2500 or 5000 -- gmu/s
+	Entity.LaunchVel    = math.Round(Velocity * 0.2, 2) * 39.37
+	Entity.DiffVel      = math.Round(Velocity * 0.5, 2) * 39.37 - Entity.LaunchVel
+	Entity.AccelLength  = math.Round(math.Clamp(BulletData.ProjMass / BulletData.PropMass + BulletData.Caliber / 7, 0.2, 10), 2)
+	Entity.AccelTime    = Entity.LastThink + Entity.AccelLength
+	Entity.Speed        = Entity.LaunchVel
 	Entity.SpiralRadius = Entity.IsSubcaliber and 3.5 or nil
 	Entity.SpiralSpeed  = Entity.IsSubcaliber and 15 or nil
 	Entity.SpiralAngle  = Entity.IsSubcaliber and 0 or nil
@@ -207,32 +211,30 @@ function ENT:Think()
 	local DeltaTime = ACF.CurTime - self.LastThink
 	local IsDelayed = self.GuideDelay > Time
 	local Computer  = self:GetComputer()
+	local CanSee    = IsValid(Computer) and CheckViewCone(self, Computer.HitPos)
 	local Position  = self.Position
 
-	if not IsDelayed and IsValid(Computer) then
-		local StartPos = Computer:LocalToWorld(Computer.Offset or Vector(6, -1, 0))
-		local HitPos   = Computer.HitPos
-		local CanSee   = CheckViewCone(self, HitPos)
+	self.Speed = self.LaunchVel + self.DiffVel * math.Clamp(1 - (self.AccelTime - Time) / self.AccelLength, 0, 1)
 
-		if CanSee and Position:Distance(StartPos) <= self.MaxRange then
-			local Agility = self.Agility
+	if not IsDelayed and CanSee then
+		local Agility            = self.Agility
+		local AgilityVector      = Vector(self.Speed, Agility, Agility) * DeltaTime
+		local ComputerCorrection = Computer:WorldToLocal(Position)
+		local Desired            = AngleRand() * 0.005
 
-			local AgilityVector = Vector(self.Speed,Agility,Agility) * DeltaTime
-			local ComputerCorrection = Computer:WorldToLocal(Position)
-			ComputerCorrection = Computer:LocalToWorld(Vector(ComputerCorrection.X + self.Speed / 10,0,0))
-			Correction = ClampVec(self:WorldToLocal(ComputerCorrection),-AgilityVector,AgilityVector)
+		ComputerCorrection = Computer:LocalToWorld(Vector(ComputerCorrection.X + self.Speed * 0.1))
+		Correction         = ClampVec(self:WorldToLocal(ComputerCorrection), -AgilityVector, AgilityVector)
 
-			local Desired = AngleRand() * 0.005
-			if math.abs(Correction.y) + math.abs(Correction.z) >= 0.7 then
-				Desired = self:WorldToLocalAngles((ComputerCorrection - Position):Angle()) + Desired
-			else
-				Desired = self:WorldToLocalAngles(Computer.TraceDir:Angle()) + Desired
-			end
-			Direction  = ClampAng(Desired, -Agility, Agility) * DeltaTime
-
-			IsGuided   = true
-			self.Innacuracy = 0
+		if math.abs(Correction.y) + math.abs(Correction.z) >= 0.7 then
+			Desired = self:WorldToLocalAngles((ComputerCorrection - Position):Angle()) + Desired
+		else
+			Desired = self:WorldToLocalAngles(Computer.TraceDir:Angle()) + Desired
 		end
+
+		Direction = ClampAng(Desired, -Agility, Agility) * DeltaTime
+		IsGuided  = true
+
+		self.Innacuracy = 0
 	end
 
 	if not IsGuided then
