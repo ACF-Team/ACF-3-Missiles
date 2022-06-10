@@ -317,6 +317,11 @@ ACF.AddInputAction("acf_missile", "Detonate", function(Entity, Value)
 	if not Entity.Launched then return end
 
 	if Value ~= 0 then
+		local BulletData = Entity.BulletData
+		if BulletData.Type == "HEAT" then
+			BulletData.Type = "HE"
+			Entity:SetNW2String("AmmoType", "HE")
+		end
 		Entity:Detonate(true)
 	end
 end)
