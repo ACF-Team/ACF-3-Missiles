@@ -109,6 +109,7 @@ do -- Spawning and Updating --------------------
 		Entity.MissileModel   = Rack.RackModel
 		Entity.ReloadTime     = 1
 		Entity.CurrentShot    = 0
+		Entity.Spread         = Rack.Spread or 1
 
 		Entity:SetNWString("WireName", "ACF " .. Entity.Name)
 
