@@ -10,7 +10,8 @@ local GravityCvar    = GetConVar("sv_gravity")
 local GravityVector  = Vector(0, 0, -GravityCvar:GetFloat())
 local GhostPeriod    = GetConVar("ACFM_GhostPeriod")
 local ActiveMissiles = ACF.ActiveMissiles
-local Missiles       = ACF.Classes.Missiles
+local Classes        = ACF.Classes
+local Missiles       = Classes.Missiles
 local Inputs         = ACF.GetInputActions("acf_missile")
 local HookRun        = hook.Run
 
@@ -335,7 +336,7 @@ function MakeACF_Missile(Player, Pos, Ang, Rack, MountPoint, Crate)
 	if not IsValid(Missile) then return end
 
 	local BulletData = Crate.BulletData
-	local Class = ACF.GetClassGroup(Missiles, BulletData.Id)
+	local Class = Classes.GetGroup(Missiles, BulletData.Id)
 	local Data = Class.Lookup[BulletData.Id]
 	local Round = Data.Round
 	local Length = Data.Length

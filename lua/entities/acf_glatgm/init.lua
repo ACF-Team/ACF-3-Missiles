@@ -3,10 +3,11 @@ AddCSLuaFile("shared.lua")
 
 include("shared.lua")
 
-local ACF = ACF
-local Missiles = ACF.ActiveMissiles
+local ACF       = ACF
+local Missiles  = ACF.ActiveMissiles
+local AmmoTypes = ACF.Classes.AmmoTypes
 local TraceData = { start = true, endpos = true, filter = true }
-local ZERO = Vector()
+local ZERO      = Vector()
 
 local function CheckViewCone(Missile, HitPos)
 	local Position = Missile.Position
@@ -293,9 +294,9 @@ function ENT:Detonate()
 	BulletData.Pos    = self.Position
 
 	local Bullet = ACF.CreateBullet(BulletData)
+	local Ammo   = AmmoTypes.Get(BulletData.Type)
 
-	local BulletClass = ACF.Classes.AmmoTypes[BulletData.Type]
-	BulletClass:Detonate(Bullet, self.Position)
+	Ammo:Detonate(Bullet, self.Position)
 
 	self:Remove()
 end

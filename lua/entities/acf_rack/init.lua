@@ -8,12 +8,14 @@ include("shared.lua")
 local EMPTY   = { Type = "Empty", PropMass = 0, ProjMass = 0, Tracer = 0 }
 local HookRun = hook.Run
 local ACF     = ACF
+local Classes = ACF.Classes
 
 do -- Spawning and Updating --------------------
 	local UnlinkSound = "physics/metal/metal_box_impact_bullet%s.wav"
 	local MaxDistance = ACF.LinkDistance * ACF.LinkDistance
 	local CheckLegal  = ACF_CheckLegal
-	local Racks       = ACF.Classes.Racks
+	local Entities    = Classes.Entities
+	local Racks       = Classes.Racks
 
 	local function VerifyData(Data)
 		if not Data.Rack then
@@ -241,7 +243,8 @@ do -- Spawning and Updating --------------------
 		return Rack
 	end
 
-	ACF.RegisterEntityClass("acf_rack", MakeACF_Rack, "Rack")
+	Entities.Register("acf_rack", MakeACF_Rack, "Rack")
+
 	ACF.RegisterLinkSource("acf_rack", "Crates")
 	ACF.RegisterLinkSource("acf_rack", "Computer", true)
 	ACF.RegisterLinkSource("acf_rack", "Radar", true)
@@ -547,11 +550,11 @@ do -- Firing -----------------------------------
 end ---------------------------------------------
 
 do -- Loading ----------------------------------
-	local Missiles = ACF.Classes.Missiles
+	local Missiles  = Classes.Missiles
 	local NO_OFFSET = Vector()
 
 	local function GetMissileAngPos(BulletData, Point)
-		local Class    = ACF.GetClassGroup(Missiles, BulletData.Id)
+		local Class    = Classes.GetGroup(Missiles, BulletData.Id)
 		local Data     = Class and Class.Lookup[BulletData.Id]
 		local Offset   = Data and Data.Offset or NO_OFFSET
 		local Position = Point.Position

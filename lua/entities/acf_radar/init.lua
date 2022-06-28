@@ -39,7 +39,6 @@ end)
 
 local Radars	  = ACF.ActiveRadars
 local CheckLegal  = ACF_CheckLegal
-local Sensors	  = ACF.Classes.Sensors
 local UnlinkSound = "physics/metal/metal_box_impact_bullet%s.wav"
 local MaxDistance = ACF.LinkDistance * ACF.LinkDistance
 local TraceData	  = { start = true, endpos = true, mask = MASK_SOLID_BRUSHONLY }
@@ -284,17 +283,21 @@ end)
 --===============================================================================================--
 
 do -- Spawn and Update functions
+	local Classes  = ACF.Classes
+	local Entities = Classes.Entities
+	local Sensors  = Classes.Sensors
+
 	local function VerifyData(Data)
 		if not Data.Radar then
 			Data.Radar = Data.Sensor or Data.Id
 		end
 
-		local Class = ACF.GetClassGroup(Sensors, Data.Radar)
+		local Class = Classes.GetGroup(Sensors, Data.Radar)
 
 		if not Class or Class.Entity ~= "acf_radar" then
 			Data.Radar = "SmallDIR-TGT"
 
-			Class = ACF.GetClassGroup(Sensors, "SmallDIR-TGT")
+			Class = Classes.GetGroup(Sensors, "SmallDIR-TGT")
 		end
 
 		do -- External verifications
@@ -373,7 +376,7 @@ do -- Spawn and Update functions
 		Entity.EntType      = Class.Name
 		Entity.ClassType    = Class.ID
 		Entity.ClassData    = Class
-		Entity.SoundPath    = Class.Sound or ACFM.DefaultRadarSound
+		Entity.SoundPath    = Class.Sound or ACF.DefaultRadarSound
 		Entity.DefaultSound = Entity.SoundPath
 		Entity.ConeDegs     = Radar.ViewCone
 		Entity.Range        = Radar.Range
@@ -401,7 +404,7 @@ do -- Spawn and Update functions
 	function MakeACF_Radar(Player, Pos, Angle, Data)
 		VerifyData(Data)
 
-		local Class = ACF.GetClassGroup(Sensors, Data.Radar)
+		local Class = Classes.GetGroup(Sensors, Data.Radar)
 		local RadarData = Class.Lookup[Data.Radar]
 		local Limit = Class.LimitConVar.Name
 
@@ -466,8 +469,9 @@ do -- Spawn and Update functions
 		return Radar
 	end
 
-	ACF.RegisterEntityClass("acf_missileradar", MakeACF_Radar, "Radar") -- Backwards compatibility
-	ACF.RegisterEntityClass("acf_radar", MakeACF_Radar, "Radar")
+	Entities.Register("acf_missileradar", MakeACF_Radar, "Radar") -- Backwards compatibility
+	Entities.Register("acf_radar", MakeACF_Radar, "Radar")
+
 	ACF.RegisterLinkSource("acf_radar", "Weapons")
 
 	------------------- Updating ---------------------
@@ -477,7 +481,7 @@ do -- Spawn and Update functions
 
 		VerifyData(Data)
 
-		local Class    = ACF.GetClassGroup(Sensors, Data.Radar)
+		local Class    = Classes.GetGroup(Sensors, Data.Radar)
 		local Radar    = Class.Lookup[Data.Radar]
 		local OldClass = self.ClassData
 
