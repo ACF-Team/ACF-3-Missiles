@@ -247,7 +247,7 @@ do -- Spawn and update function
 
 		Entity.Owner     = Player -- MUST be stored on ent for PP
 		Entity.Weapons   = {}
-		Entity.DataStore = ACF.GetEntityArguments("acf_computer")
+		Entity.DataStore = Entities.GetArguments("acf_computer")
 
 		UpdateComputer(Entity, Data, Class, Computer)
 

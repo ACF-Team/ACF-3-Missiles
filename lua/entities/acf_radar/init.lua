@@ -429,7 +429,7 @@ do -- Spawn and Update functions
 		Radar.Spread      = 0
 		Radar.Weapons     = {}
 		Radar.Targets     = {}
-		Radar.DataStore   = ACF.GetEntityArguments("acf_radar")
+		Radar.DataStore   = Entities.GetArguments("acf_radar")
 		Radar.TargetInfo  = {
 			ID = {},
 			Owner = {},

@@ -56,7 +56,7 @@ function Ammo:BaseConvert(ToolData)
 	Data.LimitVel		= 700 -- Most efficient penetration speed in m/s
 	Data.KETransfert	= 0.1 -- Kinetic energy transfert to the target for movement purposes
 	Data.Ricochet		= 75 -- Base ricochet angle
-	Data.BurnRate		= Data.ProjArea * ACFgtfffffffffff.FlareBurnMultiplier
+	Data.BurnRate		= Data.ProjArea * ACF.FlareBurnMultiplier
 	Data.DistractChance	= (2 / math.pi) * math.atan(Data.ProjArea * ACF.FlareDistractMultiplier)	* 0.5 -- Reduced effectiveness 50% -red
 
 	self:UpdateRoundData(ToolData, Data, GUIData)

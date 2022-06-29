@@ -23,12 +23,12 @@ do -- Spawning and Updating --------------------
 			Data.Rack = Data.Id or "1xRK"
 		end
 
-		local Rack = Racks[Data.Rack]
+		local Rack = Racks.Get(Data.Rack)
 
 		if not Rack then
 			Data.Rack = "1xRK"
 
-			Rack = Racks["1xRK"]
+			Rack = Racks.Get("1xRK")
 		end
 
 		do -- External verifications
@@ -185,7 +185,7 @@ do -- Spawning and Updating --------------------
 	function MakeACF_Rack(Player, Pos, Ang, Data)
 		VerifyData(Data)
 
-		local RackData = Racks[Data.Rack]
+		local RackData = Racks.Get(Data.Rack)
 		local Limit = RackData.LimitConVar.Name
 
 		if not Player:CheckLimit(Limit) then return end
@@ -211,7 +211,7 @@ do -- Spawning and Updating --------------------
 		Rack.MountPoints = {}
 		Rack.Missiles    = {}
 		Rack.Crates      = {}
-		Rack.DataStore   = ACF.GetEntityArguments("acf_rack")
+		Rack.DataStore   = Entities.GetArguments("acf_rack")
 
 		UpdateRack(Rack, Data, RackData)
 
