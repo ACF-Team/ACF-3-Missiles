@@ -1,4 +1,5 @@
 local ACF       = ACF
+local Clock     = ACF.Utilities.Clock
 local Guidances = ACF.Classes.Guidances
 local Guidance  = Guidances.Register("GPS Guided", "Radio (MCLOS)")
 
@@ -21,8 +22,8 @@ else
 		if Computer.InputCoords == ZERO then return end
 		if Computer.IsJammed then return end
 
-		if ACF.CurTime >= self.NextUpdate then
-			self.NextUpdate = ACF.CurTime + 5
+		if Clock.CurTime >= self.NextUpdate then
+			self.NextUpdate = Clock.CurTime + 5
 			self.LastPos = Computer.Coordinates
 		end
 	end

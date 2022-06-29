@@ -4,7 +4,8 @@ AddCSLuaFile("cl_init.lua")
 
 include("shared.lua")
 
-local ACF = ACF
+local ACF   = ACF
+local Clock = ACF.Utilities.Clock
 
 ACF.RegisterClassLink("acf_computer", "acf_rack", function(Computer, Target)
 	if Computer.Weapons[Target] then return false, "This rack is already linked to this computer!" end
@@ -358,7 +359,7 @@ function ENT:Think()
 		self:OnThink()
 	end
 
-	self:NextThink(ACF.CurTime)
+	self:NextThink(Clock.CurTime)
 
 	return true
 end

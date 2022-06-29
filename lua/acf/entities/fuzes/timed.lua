@@ -1,6 +1,7 @@
 
 local ACF     = ACF
 local Classes = ACF.Classes
+local Clock   = ACF.Utilities.Clock
 local Fuzes   = Classes.Fuzes
 local Fuze    = Fuzes.Register("Timed", "Contact")
 
@@ -56,7 +57,7 @@ else
 	end
 
 	function Fuze:IsOnTime()
-		return ACF.CurTime - self.TimeStarted >= self.Timer
+		return Clock.CurTime - self.TimeStarted >= self.Timer
 	end
 
 	function Fuze:GetDetonate()

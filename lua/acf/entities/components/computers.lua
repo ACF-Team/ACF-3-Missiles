@@ -459,6 +459,7 @@ end
 do -- Laser guidance computer
 	local MenuText  = "Pitch bounds : +-%s degrees\nYaw bounds : +-%s degrees\nAim speed : %s degrees/s\nMass : %s kg"
 	local LaserText = "Lasing time : %s seconds\nCooldown : %s seconds"
+	local Clock     = ACF.Utilities.Clock
 
 	Components.Register("CPR-LSR", "GD-CPR", {
 		Name        = "Laser Guidance Computer",
@@ -644,15 +645,15 @@ do -- Laser guidance computer
 
 				Entity.Direction = Direction
 
-				if Entity.NextSpread <= ACF.CurTime then
+				if Entity.NextSpread <= Clock.CurTime then
 					Entity:SetNW2Vector("Direction", Direction)
 
-					Entity.NextSpread = ACF.CurTime + 0.1
+					Entity.NextSpread = Clock.CurTime + 0.1
 				end
 			end
 
 			if Entity.Lasing or Entity.LaseTime > 0 then
-				local Delta = math.min(ACF.CurTime - Entity.LastLase, Tick) * (Entity.Lasing and 1 or -1)
+				local Delta = math.min(Clock.CurTime - Entity.LastLase, Tick) * (Entity.Lasing and 1 or -1)
 
 				Entity.LaseTime = math.Clamp(Entity.LaseTime + Delta, 0, Entity.MaxTime)
 
@@ -699,7 +700,7 @@ do -- Laser guidance computer
 
 				WireLib.TriggerOutput(Entity, "Lase Time", Entity.MaxTime - Entity.LaseTime)
 
-				Entity.LastLase = ACF.CurTime
+				Entity.LastLase = Clock.CurTime
 
 				Entity:UpdateOverlay()
 			end

@@ -1,5 +1,6 @@
 local ACF     = ACF
 local Classes = ACF.Classes
+local Clock   = ACF.Utilities.Clock
 local Fuzes   = Classes.Fuzes
 local Fuze    = Fuzes.Register("Contact")
 
@@ -15,7 +16,7 @@ function Fuze:OnFirst(_, Data)
 end
 
 function Fuze:Configure()
-	self.TimeStarted = ACF.CurTime
+	self.TimeStarted = Clock.CurTime
 end
 
 function Fuze:GetDisplayConfig()
@@ -57,7 +58,7 @@ else
 	end
 
 	function Fuze:IsArmed()
-		return ACF.CurTime - self.TimeStarted >= self.Primer
+		return Clock.CurTime - self.TimeStarted >= self.Primer
 	end
 
 	-- Do nothing, projectiles auto-detonate on contact anyway.

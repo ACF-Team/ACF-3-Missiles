@@ -9,6 +9,7 @@ local EMPTY   = { Type = "Empty", PropMass = 0, ProjMass = 0, Tracer = 0 }
 local HookRun = hook.Run
 local ACF     = ACF
 local Classes = ACF.Classes
+local Clock   = ACF.Utilities.Clock
 
 do -- Spawning and Updating --------------------
 	local UnlinkSound = "physics/metal/metal_box_impact_bullet%s.wav"
@@ -613,7 +614,7 @@ do -- Loading ----------------------------------
 			local Percent = math.max(0.5, (Bullet.ProjLength + Bullet.PropLength) / Missile.MaxLength)
 			local Time    = Missile.ReloadTime * Percent
 
-			Point.NextFire = ACF.CurTime + Time
+			Point.NextFire = Clock.CurTime + Time
 			Point.State    = "Loading"
 
 			self:UpdateLoad(Point, Missile)
@@ -830,7 +831,7 @@ do -- Misc -------------------------------------
 	end
 
 	function ENT:Think()
-		local Time     = ACF.CurTime
+		local Time     = Clock.CurTime
 		local Previous = self.Position
 		local Current  = GetPosition(self)
 

@@ -1,5 +1,5 @@
 local ACF        = ACF
-local LastThink  = 0
+local Clock      = ACF.Utilities.Clock
 local NextUpdate = 0
 local Entities   = {}
 local Ancestors  = {}
@@ -69,11 +69,7 @@ hook.Add("OnEntityCreated", "ACF Entity Tracking", function(Entity)
 	end
 end)
 
-hook.Add("Think", "ACF Entity Tracking", function()
-	if not ACF.CurTime then return end -- ACF.CurTime undefined, aborting.
-
-	local DeltaTime = ACF.CurTime - LastThink
-
+hook.Add("ACF_OnClock", "ACF Entity Tracking", function(_, DeltaTime)
 	for K in pairs(Ancestors) do
 		local Previous = K.Position
 		local Current  = GetPosition(K)
@@ -81,12 +77,10 @@ hook.Add("Think", "ACF Entity Tracking", function()
 		K.Position = Current
 		K.Velocity = (Current - Previous) / DeltaTime
 	end
-
-	LastThink = ACF.CurTime
 end)
 
 local function GetAncestorEntities()
-	if ACF.CurTime < NextUpdate then return Ancestors end
+	if Clock.CurTime < NextUpdate then return Ancestors end
 
 	local Previous = {}
 	local Checked  = {}
@@ -122,7 +116,7 @@ local function GetAncestorEntities()
 		K:RemoveCallOnRemove("ACF Ancestor Tracking")
 	end
 
-	NextUpdate = ACF.CurTime + math.Rand(3, 5)
+	NextUpdate = Clock.CurTime + math.Rand(3, 5)
 
 	return Ancestors
 end

@@ -12,6 +12,7 @@ local GhostPeriod    = GetConVar("ACFM_GhostPeriod")
 local ActiveMissiles = ACF.ActiveMissiles
 local Ballistics     = ACF.Ballistics
 local Classes        = ACF.Classes
+local Clock          = ACF.Utilities.Clock
 local Missiles       = Classes.Missiles
 local Inputs         = ACF.GetInputActions("acf_missile")
 local HookRun        = hook.Run
@@ -161,7 +162,7 @@ local function CalcFlight(Missile)
 	if not Missile.Launched then return end
 	if Missile.Detonated then return end
 
-	local Time = ACF.CurTime
+	local Time = Clock.CurTime
 	local DeltaTime = Time - Missile.LastThink
 	Missile.LastThink = Time
 
@@ -492,9 +493,9 @@ function ENT:Launch(Delay, IsMisfire)
 
 	self.Launched    = true
 	self.ThinkDelay  = DeltaTime
-	self.GhostPeriod = ACF.CurTime + GhostPeriod:GetFloat()
+	self.GhostPeriod = Clock.CurTime + GhostPeriod:GetFloat()
 	self.NoDamage    = nil
-	self.LastThink   = ACF.CurTime - DeltaTime
+	self.LastThink   = Clock.CurTime - DeltaTime
 	self.Position    = BulletData.Pos
 	self.LastPos     = self.Position
 	self.Velocity    = Velocity
@@ -621,7 +622,7 @@ function ENT:Detonate(Destroyed)
 end
 
 function ENT:Think()
-	self:NextThink(ACF.CurTime + self.ThinkDelay)
+	self:NextThink(Clock.CurTime + self.ThinkDelay)
 
 	CalcFlight(self)
 
