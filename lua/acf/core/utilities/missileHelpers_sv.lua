@@ -1,6 +1,7 @@
-local ACF       = ACF
-local Classes   = ACF.Classes
-local AmmoTypes = Classes.AmmoTypes
+local ACF        = ACF
+local Classes    = ACF.Classes
+local AmmoTypes  = Classes.AmmoTypes
+local Ballistics = ACF.Ballistics
 
 local function ResetDefault(BulletData)
 	if not BulletData.MuzzleVel then return end
@@ -42,19 +43,19 @@ function ACF.DoReplicatedPropHit(Entity, Bullet)
 	local Retry = Ammo:PropImpact(Bullet, FlightRes)
 
 	if Retry == "Penetrated" then
-		if Bullet.OnPenetrated then Bullet.OnPenetrated(Bullet, FlightRes) end
+		if Bullet.OnPenetrated then Bullet:OnPenetrated(FlightRes) end
 
-		ACF.BulletClient(Bullet, "Update", 2, FlightRes.HitPos)
-		ACF.CalcBulletFlight(Bullet)
+		Ballistics.BulletClient(Bullet, "Update", 2, FlightRes.HitPos)
+		Ballistics.CalcBulletFlight(Bullet)
 	elseif Retry == "Ricochet" then
-		if Bullet.OnRicocheted then Bullet.OnRicocheted(Bullet, FlightRes) end
+		if Bullet.OnRicocheted then Bullet:OnRicocheted(FlightRes) end
 
-		ACF.BulletClient(Bullet, "Update", 3, FlightRes.HitPos)
-		ACF.CalcBulletFlight(Bullet)
+		Ballistics.BulletClient(Bullet, "Update", 3, FlightRes.HitPos)
+		Ballistics.CalcBulletFlight(Bullet)
 	else
-		if Bullet.OnEndFlight then Bullet.OnEndFlight(Bullet, FlightRes) end
+		if Bullet.OnEndFlight then Bullet:OnEndFlight(FlightRes) end
 
-		ACF.BulletClient(Bullet, "Update", 1, FlightRes.HitPos)
+		Ballistics.BulletClient(Bullet, "Update", 1, FlightRes.HitPos)
 
 		Ammo:OnFlightEnd(Bullet, FlightRes)
 	end

@@ -10,6 +10,7 @@ local GravityCvar    = GetConVar("sv_gravity")
 local GravityVector  = Vector(0, 0, -GravityCvar:GetFloat())
 local GhostPeriod    = GetConVar("ACFM_GhostPeriod")
 local ActiveMissiles = ACF.ActiveMissiles
+local Ballistics     = ACF.Ballistics
 local Classes        = ACF.Classes
 local Missiles       = Classes.Missiles
 local Inputs         = ACF.GetInputActions("acf_missile")
@@ -611,7 +612,9 @@ function ENT:Detonate(Destroyed)
 	debugoverlay.Line(BulletData.Pos, BulletData.Pos + BulletData.Flight, 10, Color(255, 128, 0))
 
 	BulletData.DetonatorAngle = 91
-	local Bullet = ACF.CreateBullet(BulletData)
+
+	local Bullet = Ballistics.CreateBullet(BulletData)
+
 	if BulletData.Type ~= "HEAT" then
 		ACF.DoReplicatedPropHit(self, Bullet)
 	end

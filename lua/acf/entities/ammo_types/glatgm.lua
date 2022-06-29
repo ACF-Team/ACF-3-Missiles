@@ -33,11 +33,12 @@ function Ammo:BaseConvert(ToolData)
 end
 
 if SERVER then
-	local CrateText = "Peak Velocity: %s m/s\nLaunch Velocity: %s m/s\nAcceleration: %s s\nMax Penetration: %s mm\nBlast Radius: %s m\nBlast Energy: %s KJ"
+	local CrateText  = "Peak Velocity: %s m/s\nLaunch Velocity: %s m/s\nAcceleration: %s s\nMax Penetration: %s mm\nBlast Radius: %s m\nBlast Energy: %s KJ"
+	local Ballistics = ACF.Ballistics
 
 	function Ammo:Create(Gun, BulletData)
 		if Gun:GetClass() == "acf_ammo" then
-			ACF.CreateBullet(BulletData)
+			Ballistics.CreateBullet(BulletData)
 		else
 			MakeACF_GLATGM(Gun, BulletData)
 		end
