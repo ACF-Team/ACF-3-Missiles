@@ -198,7 +198,7 @@ Missiles.Register("Ataka ASM", "ATGM", {
 	},
 })
 
-Missiles.Register("9M113 ASM", "ATGM", {
+Missiles.Register("9M133 ASM", "ATGM", {
 	Name		= "9M133 Kornet",
 	Description	= "The 9M133 Kornet (AT-14 Spriggan) is an extremely powerful antitank missile.",
 	Model		= "models/kali/weapons/kornet/parts/9m133 kornet missile.mdl",
@@ -252,6 +252,8 @@ Missiles.Register("9M113 ASM", "ATGM", {
 		FOV    = 60,
 	},
 })
+
+Missiles.AddItemAlias("ATGM", "9M133 ASM", "9M113 ASM")
 
 Missiles.Register("AT-2 ASM", "ATGM", {
 	Name		= "9M17 Fleyta",
