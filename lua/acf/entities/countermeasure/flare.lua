@@ -1,5 +1,6 @@
 local ACF             = ACF
 local Bullets         = ACF.Bullets
+local Clock           = ACF.Utilities.Clock
 local Countermeasures = ACF.Classes.Countermeasures
 local Countermeasure  = Countermeasures.Register("Flare")
 
@@ -26,7 +27,7 @@ end
 function Countermeasure:UpdateActive()
 	local Flare = self.Flare
 
-	self.Active = Flare and (Flare.CreateTime + Flare.BurnTime) > CurTime() or false
+	self.Active = Flare and (Flare.CreateTime + Flare.BurnTime) > Clock.CurTime or false
 end
 
 function Countermeasure:GetGuidanceOverride()

@@ -1,4 +1,5 @@
 local ACF     = ACF
+local Clock   = ACF.Utilities.Clock
 local Lights  = GetConVar("ACFM_MissileLights")
 local Default = Color(255, 128, 48)
 
@@ -26,7 +27,7 @@ function ACF.RenderLight(Index, Size, LightColor, Position)
 		Light.Brightness = 2 + math.random() * 1
 		Light.Decay = Size * 15
 		Light.Size = Size * 0.66 + math.random() * (Size * 0.33)
-		Light.DieTime = CurTime() + 1
+		Light.DieTime = Clock.CurTime + 1
 	end
 end
 

@@ -1,4 +1,5 @@
-local ACF = ACF
+local ACF   = ACF
+local Clock = ACF.Utilities.Clock
 
 local Overrides =
 {
@@ -20,7 +21,7 @@ local Overrides =
 			Bullet.Tracer:Finish()
 		end
 
-		local Time = CurTime()
+		local Time = Clock.CurTime
 		local CutoutTime = Time - 1
 
 		if not Effect.FlareCutout then
