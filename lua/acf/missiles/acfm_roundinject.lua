@@ -7,10 +7,10 @@ local Fuzes     = Classes.Fuzes
 hook.Add("ACF_UpdateRoundData", "ACF Missile Ammo", function(_, ToolData, Data)
 	if ToolData.Destiny ~= "Missiles" then return end
 
-	local PenMul   = ACF_GetGunValue(ToolData.Weapon, "PenMul")
-	local Standoff = ACF_GetGunValue(ToolData.Weapon, "Standoff")
-	local FillerMul = ACF_GetGunValue(ToolData.Weapon, "FillerMul")
-	local LinerMassMul = ACF_GetGunValue(ToolData.Weapon, "LinerMassMul")
+	local PenMul   = ACF.GetGunValue(ToolData.Weapon, "PenMul")
+	local Standoff = ACF.GetGunValue(ToolData.Weapon, "Standoff")
+	local FillerMul = ACF.GetGunValue(ToolData.Weapon, "FillerMul")
+	local LinerMassMul = ACF.GetGunValue(ToolData.Weapon, "LinerMassMul")
 
 	Data.PenMul = PenMul
 	Data.MissileStandoff = Standoff
@@ -184,7 +184,7 @@ else
 				Data.Guidance = DecodeData(Data.RoundData7, Guidances) or "Dumb"
 			end
 
-			local Allowed  = ACF_GetGunValue(Data.Weapon, "Guidance")
+			local Allowed  = ACF.GetGunValue(Data.Weapon, "Guidance")
 			local Guidance = Guidances.Get(Data.Guidance)
 
 			if not (Guidance and Allowed[Data.Guidance]) then
@@ -206,7 +206,7 @@ else
 				Data.FuzeArgs = Arguments
 			end
 
-			local Allowed = ACF_GetGunValue(Data.Weapon, "Fuzes")
+			local Allowed = ACF.GetGunValue(Data.Weapon, "Fuzes")
 			local Fuze    = Fuzes.Get(Data.Fuze)
 
 			if not (Fuze and Allowed[Data.Fuze]) then

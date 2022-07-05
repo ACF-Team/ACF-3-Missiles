@@ -14,7 +14,7 @@ local function ResetHEAT(BulletData)
 	if not BulletData.Detonated then return ResetDefault(BulletData) end
 	if not BulletData.MuzzleVel then return end
 
-	local PenMul = BulletData.PenMul or ACF_GetGunValue(BulletData, "PenMul") or 1
+	local PenMul = BulletData.PenMul or ACF.GetGunValue(BulletData, "PenMul") or 1
 
 	if not BulletData.SlugMV then -- heat needs to calculate slug mv on the fly
 		local Ammo = AmmoTypes.Get("HEAT")

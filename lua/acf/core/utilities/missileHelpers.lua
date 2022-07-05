@@ -2,7 +2,7 @@ local ACF      = ACF
 local Classes  = ACF.Classes
 local Missiles = Classes.Missiles
 
-function ACF_GetGunValue(BulletData, Value)
+function ACF.GetGunValue(BulletData, Value)
 	BulletData = istable(BulletData) and BulletData.Id or BulletData
 
 	local Class = Classes.GetGroup(Missiles, BulletData)

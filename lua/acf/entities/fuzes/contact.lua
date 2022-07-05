@@ -27,7 +27,7 @@ if CLIENT then
 	Fuze.Description = "This fuze triggers upon direct contact against solid surfaces."
 
 	function Fuze:AddMenuControls(Base, ToolData)
-		local Min = ACF_GetGunValue(ToolData.Weapon, "ArmDelay") or self.MinDelay
+		local Min = ACF.GetGunValue(ToolData.Weapon, "ArmDelay") or self.MinDelay
 
 		local Delay = Base:AddSlider("Arming Delay", Min, self.MaxDelay, 2)
 		Delay:SetClientData("ArmingDelay", "OnValueChanged")
@@ -52,7 +52,7 @@ else
 			Args.AD = nil
 		end
 
-		local Min = ACF_GetGunValue(Data.Weapon, "ArmDelay") or self.MinDelay
+		local Min = ACF.GetGunValue(Data.Weapon, "ArmDelay") or self.MinDelay
 
 		Data.ArmingDelay = math.Clamp(Delay or 0, Min, self.MaxDelay)
 	end
