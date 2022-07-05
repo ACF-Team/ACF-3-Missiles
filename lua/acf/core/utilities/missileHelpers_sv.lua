@@ -60,5 +60,3 @@ function ACF.DoReplicatedPropHit(Entity, Bullet)
 		Ammo:OnFlightEnd(Bullet, FlightRes)
 	end
 end
-
-ACFM_ResetVelocity = ACF.ResetBulletVelocity

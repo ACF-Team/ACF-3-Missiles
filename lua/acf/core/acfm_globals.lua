@@ -18,16 +18,6 @@ if SERVER then
 	resource.AddWorkshop("403587498")
 end
 
-do -- Discontinued registration functions
-	function ACF_DefineRadarClass(ID)
-		print("Attempted to register radar class " .. ID .. " with a discontinued function. Use ACF.RegisterSensorClass instead.")
-	end
-
-	function ACF_DefineRadar(ID)
-		print("Attempted to register radar " .. ID .. " with a discontinued function. Use ACF.RegisterSensor instead.")
-	end
-end
-
 do -- Update checker
 	hook.Add("ACF_OnAddonLoaded", "ACF Missiles Checker", function()
 		ACF.AddRepository("TwistedTail", "ACF-3-Missiles", "lua/acf/core/acfm_globals.lua")

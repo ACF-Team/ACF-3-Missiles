@@ -30,5 +30,3 @@ function ACF.RenderLight(Index, Size, LightColor, Position)
 		Light.DieTime = Clock.CurTime + 1
 	end
 end
-
-ACFM_RenderLight = ACF.RenderLight
