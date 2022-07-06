@@ -3,10 +3,13 @@ AddCSLuaFile("shared.lua")
 
 include("shared.lua")
 
-local ACF = ACF
-local Missiles = ACF.ActiveMissiles
-local TraceData = { start = true, endpos = true, filter = true }
-local ZERO = Vector()
+local ACF        = ACF
+local Missiles   = ACF.ActiveMissiles
+local Ballistics = ACF.Ballistics
+local AmmoTypes  = ACF.Classes.AmmoTypes
+local Clock      = ACF.Utilities.Clock
+local TraceData  = { start = true, endpos = true, filter = true }
+local ZERO       = Vector()
 
 local function CheckViewCone(Missile, HitPos)
 	local Position = Missile.Position
@@ -68,9 +71,9 @@ function MakeACF_GLATGM(Gun, BulletData)
 	Entity.ForcedMass   = BulletData.CartMass
 	Entity.UseGuidance  = true
 	Entity.ViewCone     = math.cos(math.rad(50)) -- Number inside is on degrees
-	Entity.KillTime     = ACF.CurTime + 20
-	Entity.GuideDelay   = ACF.CurTime + 0.25 -- Missile won't be guided for the first quarter of a second
-	Entity.LastThink    = ACF.CurTime
+	Entity.KillTime     = Clock.CurTime + 20
+	Entity.GuideDelay   = Clock.CurTime + 0.25 -- Missile won't be guided for the first quarter of a second
+	Entity.LastThink    = Clock.CurTime
 	Entity.Filter       = Entity.BulletData.Filter
 	Entity.Agility      = 50 -- Magic multiplier that controls the agility of the missile
 	Entity.IsSubcaliber = Caliber < 100
@@ -201,14 +204,14 @@ end
 function ENT:Think()
 	if self.Detonated then return end
 
-	local Time = ACF.CurTime
+	local Time = Clock.CurTime
 
 	if Time >= self.KillTime then
 		return self:Detonate()
 	end
 
 	local IsGuided, Direction, Correction
-	local DeltaTime = ACF.CurTime - self.LastThink
+	local DeltaTime = Clock.CurTime - self.LastThink
 	local IsDelayed = self.GuideDelay > Time
 	local Computer  = self:GetComputer()
 	local CanSee    = IsValid(Computer) and CheckViewCone(self, Computer.HitPos)
@@ -292,10 +295,10 @@ function ENT:Detonate()
 	BulletData.Flight = self:GetForward() * self.Speed
 	BulletData.Pos    = self.Position
 
-	local Bullet = ACF.CreateBullet(BulletData)
+	local Bullet = Ballistics.CreateBullet(BulletData)
+	local Ammo   = AmmoTypes.Get(BulletData.Type)
 
-	local BulletClass = ACF.Classes.AmmoTypes[BulletData.Type]
-	BulletClass:Detonate(Bullet, self.Position)
+	Ammo:Detonate(Bullet, self.Position)
 
 	self:Remove()
 end

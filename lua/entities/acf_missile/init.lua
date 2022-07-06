@@ -10,7 +10,10 @@ local GravityCvar    = GetConVar("sv_gravity")
 local GravityVector  = Vector(0, 0, -GravityCvar:GetFloat())
 local GhostPeriod    = GetConVar("ACFM_GhostPeriod")
 local ActiveMissiles = ACF.ActiveMissiles
-local Missiles       = ACF.Classes.Missiles
+local Ballistics     = ACF.Ballistics
+local Classes        = ACF.Classes
+local Clock          = ACF.Utilities.Clock
+local Missiles       = Classes.Missiles
 local Inputs         = ACF.GetInputActions("acf_missile")
 local HookRun        = hook.Run
 
@@ -159,7 +162,7 @@ local function CalcFlight(Missile)
 	if not Missile.Launched then return end
 	if Missile.Detonated then return end
 
-	local Time = ACF.CurTime
+	local Time = Clock.CurTime
 	local DeltaTime = Time - Missile.LastThink
 	Missile.LastThink = Time
 
@@ -335,7 +338,7 @@ function MakeACF_Missile(Player, Pos, Ang, Rack, MountPoint, Crate)
 	if not IsValid(Missile) then return end
 
 	local BulletData = Crate.BulletData
-	local Class = ACF.GetClassGroup(Missiles, BulletData.Id)
+	local Class = Classes.GetGroup(Missiles, BulletData.Id)
 	local Data = Class.Lookup[BulletData.Id]
 	local Round = Data.Round
 	local Length = Data.Length
@@ -490,9 +493,9 @@ function ENT:Launch(Delay, IsMisfire)
 
 	self.Launched    = true
 	self.ThinkDelay  = DeltaTime
-	self.GhostPeriod = ACF.CurTime + GhostPeriod:GetFloat()
+	self.GhostPeriod = Clock.CurTime + GhostPeriod:GetFloat()
 	self.NoDamage    = nil
-	self.LastThink   = ACF.CurTime - DeltaTime
+	self.LastThink   = Clock.CurTime - DeltaTime
 	self.Position    = BulletData.Pos
 	self.LastPos     = self.Position
 	self.Velocity    = Velocity
@@ -610,14 +613,16 @@ function ENT:Detonate(Destroyed)
 	debugoverlay.Line(BulletData.Pos, BulletData.Pos + BulletData.Flight, 10, Color(255, 128, 0))
 
 	BulletData.DetonatorAngle = 91
-	local Bullet = ACF.CreateBullet(BulletData)
+
+	local Bullet = Ballistics.CreateBullet(BulletData)
+
 	if BulletData.Type ~= "HEAT" then
 		ACF.DoReplicatedPropHit(self, Bullet)
 	end
 end
 
 function ENT:Think()
-	self:NextThink(ACF.CurTime + self.ThinkDelay)
+	self:NextThink(Clock.CurTime + self.ThinkDelay)
 
 	CalcFlight(self)
 
