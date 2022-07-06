@@ -35,6 +35,7 @@ ACF.RegisterRack("57mm16xPOD", {
 	Year		= 1956,
 	MagSize		= 16,
 	Armor		= 5,
+	Spread		= 1.37,
 	Preview = {
 		FOV = 60,
 	},
@@ -71,6 +72,7 @@ ACF.RegisterRack("57mm32xPOD", {
 	Year		= 1956,
 	MagSize		= 32,
 	Armor		= 5,
+	Spread		= 1.37,
 	Preview = {
 		FOV = 85,
 	},
@@ -123,6 +125,7 @@ ACF.RegisterRack("70mm7xPOD", {
 	Year		= 1940,
 	MagSize		= 7,
 	Armor		= 5,
+	Spread		= 0.6,
 	Preview = {
 		FOV = 77,
 	},
@@ -150,6 +153,7 @@ ACF.RegisterRack("70mm19xPOD", {
 	Year		= 1960,
 	MagSize		= 19,
 	Armor		= 5,
+	Spread		= 0.6,
 	Preview = {
 		FOV = 105,
 	},
@@ -189,6 +193,7 @@ ACF.RegisterRack("80mm20xPOD", {
 	Year		= 1970,
 	MagSize		= 20,
 	Armor		= 5,
+	Spread		= 1.3,
 	Preview = {
 		FOV = 105,
 	},
@@ -301,6 +306,7 @@ ACF.RegisterRack("380mmRW61", {
 	Year		= 1945,
 	MagSize		= 1,
 	Armor		= 25,
+	Spread		= 0.01,
 
 	ProtectMissile = true,
 
@@ -318,6 +324,7 @@ ACF.RegisterRack("3xUARRK", {
 	Year		= 1941,
 	Armor		= 5,
 	MagSize		= 3,
+	Spread		= 0.04,
 	Preview = {
 		Height = 115,
 		FOV    = 60,
@@ -342,6 +349,7 @@ ACF.RegisterRack("6xUARRK", {
 	Year		= 1980,
 	Armor		= 5,
 	MagSize		= 6,
+	Spread		= 0.04,
 	Preview = {
 		FOV = 60,
 	},
@@ -528,6 +536,7 @@ ACF.RegisterRack("1x SPG9", {
 	Year		= 1968,
 	MagSize		= 1,
 	Armor		= 5,
+	Spread		= 0.03,
 	Preview = {
 		Height = 80,
 		FOV    = 60,
@@ -573,6 +582,7 @@ ACF.RegisterRack("127mm4xPOD", {
 	Year		= 1957,
 	MagSize		= 4,
 	Armor		= 5,
+	Spread		= 0.02,
 	Preview = {
 		Height = 100,
 		FOV    = 60,
