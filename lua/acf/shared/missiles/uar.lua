@@ -113,31 +113,31 @@ ACF.RegisterMissile("SPG-9 ASR", "UAR", {
 	Mass		= 5,
 	Length		= 100,
 	Year		= 1962,
-	ReloadTime	= 10,
+	ReloadTime	= 6,
 	Racks		= { ["1x SPG9"] = true },
 	Guidance	= { Dumb = true },
 	Navigation  = "Chase",
-	Fuzes		= { Contact = true, Optical = true },
+	Fuzes		= { Contact = true },
 	Agility     = 1,
-	ArmDelay	= 0.05,
+	ArmDelay	= 0.1,
 	Round = {
-		Model			= "models/missiles/glatgm/9m112f.mdl",
-		RackModel		= "models/munitions/round_100mm_mortar_shot.mdl",
+		Model			= "models/missiles/rs82.mdl",
+		RackModel		= "models/missiles/rs82.mdl",
 		MaxLength		= 128.18,
 		Armor			= 5,
 		ProjLength		= 20.07,
 		PropLength		= 67.8,
-		Thrust			= 200000,   -- in kg*in/s^2
-		FuelConsumption = 0.012,    -- in g/s/f
-		StarterPercent	= 0.6,
+		Thrust			= 180000,   -- in kg*in/s^2
+		FuelConsumption = 0.03,    -- in g/s/f
+		StarterPercent	= 0.1,
 		MaxAgilitySpeed = 1,        -- in m/s
-		DragCoef		= 0.001,
-		FinMul			= 0.002,
+		DragCoef		= 0.002,
+		FinMul			= 0.01,
 		GLimit          = 1,
-		TailFinMul		= 0.02,
+		TailFinMul		= 0.023,
 		PenMul			= 2.273,
 		FillerMul		= 1.06,
-		LinerMassMul	= 1.8,
+		LinerMassMul	= 2.8,
 		Standoff		= 33.3,
 		ActualLength 	= 128.18,
 		ActualWidth		= 7.3
