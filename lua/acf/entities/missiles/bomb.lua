@@ -1,6 +1,6 @@
 local Missiles = ACF.Classes.Missiles
 
-Missiles.RegisterGroup("BOMB", {
+Missiles.Register("BOMB", {
 	Name		= "Free Falling Bombs",
 	Description	= "Despite their lack of guidance and sophistication, they are exceptionally destructive on impact relative to their weight.",
 	Sound		= "acf_missiles/fx/clunk.mp3",
@@ -9,7 +9,7 @@ Missiles.RegisterGroup("BOMB", {
 	Blacklist	= { "AP", "APHE", "HP", "FL" }
 })
 
-Missiles.Register("50kgBOMB", "BOMB", {
+Missiles.RegisterItem("50kgBOMB", "BOMB", {
 	Name		= "50kg Free Falling Bomb",
 	Description	= "Old WW2 100lb bomb, most effective vs exposed infantry and light trucks.",
 	Model		= "models/bombs/fab50.mdl",
@@ -50,7 +50,7 @@ Missiles.Register("50kgBOMB", "BOMB", {
 	},
 })
 
-Missiles.Register("100kgBOMB", "BOMB", {
+Missiles.RegisterItem("100kgBOMB", "BOMB", {
 	Name		= "100kg Free Falling Bomb",
 	Description	= "An old 250lb WW2 bomb, as used by Soviet bombers to destroy enemies of the Motherland.",
 	Model		= "models/bombs/fab100.mdl",
@@ -91,7 +91,7 @@ Missiles.Register("100kgBOMB", "BOMB", {
 	},
 })
 
-Missiles.Register("250kgBOMB", "BOMB", {
+Missiles.RegisterItem("250kgBOMB", "BOMB", {
 	Name		= "250kg Free Falling Bomb",
 	Description	= "A heavy 500lb bomb, widely used as a tank buster on various WW2 aircraft.",
 	Model		= "models/bombs/fab250.mdl",
@@ -132,7 +132,7 @@ Missiles.Register("250kgBOMB", "BOMB", {
 	},
 })
 
-Missiles.Register("500kgBOMB", "BOMB", {
+Missiles.RegisterItem("500kgBOMB", "BOMB", {
 	Name		= "500kg Free Falling Bomb",
 	Description	= "A 1000lb bomb, as found in the heavy bombers of late WW2. Best used against fortifications or immobile targets.",
 	Model		= "models/bombs/fab500.mdl",
@@ -173,7 +173,7 @@ Missiles.Register("500kgBOMB", "BOMB", {
 	},
 })
 
-Missiles.Register("1000kgBOMB", "BOMB", {
+Missiles.RegisterItem("1000kgBOMB", "BOMB", {
 	Name		= "1000kg Free Falling Bomb",
 	Description	= "A 2000lb bomb. As close to a nuke as you can get in ACF, this munition will turn everything it touches to ashes. Handle with care.",
 	Model		= "models/bombs/an_m66.mdl",

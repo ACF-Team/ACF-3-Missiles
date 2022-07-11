@@ -3,7 +3,7 @@ local Missiles = Classes.Missiles
 local Entries  = {}
 
 
-function Missiles.RegisterGroup(ID, Data)
+function Missiles.Register(ID, Data)
 	local Group = Classes.AddGroup(ID, Entries, Data)
 
 	if not Group.Entity then
@@ -13,7 +13,7 @@ function Missiles.RegisterGroup(ID, Data)
 	return Group
 end
 
-function Missiles.Register(ID, ClassID, Data)
+function Missiles.RegisterItem(ID, ClassID, Data)
 	local Class = Classes.AddGroupItem(ID, ClassID, Entries, Data)
 
 	Class.Destiny = "Missiles"

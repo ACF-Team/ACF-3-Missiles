@@ -1,6 +1,6 @@
 local Missiles = ACF.Classes.Missiles
 
-Missiles.RegisterGroup("GBU", {
+Missiles.Register("GBU", {
 	Name		= "Guided Bomb Units",
 	Description	= "Similar to a regular bomb, but able to be guided in flight to a vector coordinate. Most useful versus hard, unmoving targets.",
 	Sound		= "acf_missiles/fx/clunk.mp3",
@@ -9,7 +9,7 @@ Missiles.RegisterGroup("GBU", {
 	Blacklist	= {"AP", "APHE", "HP", "FL"}
 })
 
-Missiles.Register("WalleyeGBU", "GBU", {
+Missiles.RegisterItem("WalleyeGBU", "GBU", {
 	Name		= "AGM-62 Walleye",
 	Description	= "An early TV guided bomb, used over Vietnam by American strike aircraft.",
 	Model		= "models/bombs/gbu/agm62.mdl",
@@ -51,7 +51,7 @@ Missiles.Register("WalleyeGBU", "GBU", {
 	},
 })
 
-Missiles.Register("227kgGBU", "GBU", {
+Missiles.RegisterItem("227kgGBU", "GBU", {
 	Name		= "227kg GBU-12 Paveway II",
 	Description	= "Based on the Mk 82 500-pound general-purpose bomb, but with the addition of a nose-mounted laser seeker and fins for guidance.",
 	Model		= "models/bombs/gbu/gbu12.mdl",
@@ -111,7 +111,7 @@ Missiles.Register("227kgGBU", "GBU", {
 	},
 })
 
-Missiles.Register("454kgGBU", "GBU", {
+Missiles.RegisterItem("454kgGBU", "GBU", {
 	Name		= "454kg GBU-16 Paveway II",
 	Description	= "Based on the Mk 83 general-purpose bomb, but with laser seeker and wings for guidance.",
 	Model		= "models/bombs/gbu/gbu16.mdl",
@@ -169,7 +169,7 @@ Missiles.Register("454kgGBU", "GBU", {
 	},
 })
 
-Missiles.Register("909kgGBU", "GBU", {
+Missiles.RegisterItem("909kgGBU", "GBU", {
 	Name		= "909kg GBU-10 Paveway II",
 	Description	= "Based on the Mk 84 general-purpose bomb, but with laser seeker and wings for guidance.",
 	Model		= "models/bombs/gbu/gbu10.mdl",

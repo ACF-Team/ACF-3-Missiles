@@ -1,6 +1,6 @@
 local Missiles = ACF.Classes.Missiles
 
-Missiles.RegisterGroup("GBOMB", {
+Missiles.Register("GBOMB", {
 	Name		= "Gliding Bombs",
 	Description	= "Similar to regular free falling bombs, gliding bombs are capable of travelling longer distances.",
 	Sound		= "acf_missiles/fx/clunk.mp3",
@@ -9,7 +9,7 @@ Missiles.RegisterGroup("GBOMB", {
 	Blacklist	= { "AP", "APHE", "HP", "FL" }
 })
 
-Missiles.Register("100kgGBOMB", "GBOMB", {
+Missiles.RegisterItem("100kgGBOMB", "GBOMB", {
 	Name		= "100kg Glide Bomb",
 	Description	= "A 200-pound bomb, fitted with fins for a longer reach. Well suited to dive bombing, but bulkier and heavier from its fins.",
 	Model		= "models/missiles/micro.mdl",
@@ -48,7 +48,7 @@ Missiles.Register("100kgGBOMB", "GBOMB", {
 	},
 })
 
-Missiles.Register("250kgGBOMB", "GBOMB", {
+Missiles.RegisterItem("250kgGBOMB", "GBOMB", {
 	Name		= "250kg Glide Bomb",
 	Description	= "A heavy 500lb bomb, fitted with fins for a gliding trajectory better suited to striking point targets.",
 	Model		= "models/missiles/fab250.mdl",

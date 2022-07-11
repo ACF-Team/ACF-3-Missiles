@@ -1,6 +1,6 @@
 local Missiles = ACF.Classes.Missiles
 
-Missiles.RegisterGroup("UAR", {
+Missiles.Register("UAR", {
 	Name		= "Unguided Aerial Rockets",
 	Description	= "Rockets which fit in racks, useful for rocket artillery.",
 	Sound		= "acf_missiles/missiles/missile_rocket.mp3",
@@ -9,7 +9,7 @@ Missiles.RegisterGroup("UAR", {
 	Blacklist	= { "AP", "APHE", "HP", "FL", "SM" }
 })
 
-Missiles.Register("RS82 ASR", "UAR", {
+Missiles.RegisterItem("RS82 ASR", "UAR", {
 	Name		= "RS-82 Rocket",
 	Description	= "A small, unguided rocket, often used in multiple-launch artillery as well as for attacking pinpoint ground targets.",
 	Model		= "models/missiles/rs82.mdl",
@@ -62,7 +62,7 @@ Missiles.Register("RS82 ASR", "UAR", {
 	},
 })
 
-Missiles.Register("HVAR ASR", "UAR", {
+Missiles.RegisterItem("HVAR ASR", "UAR", {
 	Name		= "HVAR Rocket",
 	Description	= "A medium, unguided rocket. More bang than the RS82, at the cost of size and weight.",
 	Model		= "models/missiles/hvar.mdl",
@@ -106,7 +106,7 @@ Missiles.Register("HVAR ASR", "UAR", {
 	},
 })
 
-Missiles.Register("SPG-9 ASR", "UAR", {
+Missiles.RegisterItem("SPG-9 ASR", "UAR", {
 	Name		= "SPG-9 Rocket",
 	Description	= "A recoilless rocket launcher similar to an RPG or Grom.",
 	Model		= "models/munitions/round_100mm_mortar_shot.mdl",
@@ -148,7 +148,7 @@ Missiles.Register("SPG-9 ASR", "UAR", {
 	},
 })
 
-Missiles.Register("S-24 ASR", "UAR", {
+Missiles.RegisterItem("S-24 ASR", "UAR", {
 	Name		= "S-24 Rocket",
 	Description	= "A big, unguided rocket. Mostly used by late cold war era attack planes and helicopters.",
 	Model		= "models/missiles/s24.mdl",
@@ -188,7 +188,7 @@ Missiles.Register("S-24 ASR", "UAR", {
 	},
 })
 
-Missiles.Register("RW61 ASR", "UAR", {
+Missiles.RegisterItem("RW61 ASR", "UAR", {
 	Name		= "Raketenwerfer 61",
 	Description	= "A heavy, demolition-oriented rocket-assisted mortar, devastating against field works but takes a very long time to load.",
 	Model		= "models/missiles/RW61M.mdl",

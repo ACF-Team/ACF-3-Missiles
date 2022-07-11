@@ -1,6 +1,6 @@
 local Missiles = ACF.Classes.Missiles
 
-Missiles.RegisterGroup("ARTY", {
+Missiles.Register("ARTY", {
 	Name		= "Artillery Rockets",
 	Description	= "Artillery rockets provide massive HE delivery over a broad area, with arcing ballistic trajectories and limited guidance.",
 	Sound		= "acf_missiles/missiles/missile_rocket.mp3",
@@ -9,7 +9,7 @@ Missiles.RegisterGroup("ARTY", {
 	Blacklist	= { "AP", "APHE", "HP", "FL", "SM" }
 })
 
-Missiles.Register("Type 63 RA", "ARTY", {
+Missiles.RegisterItem("Type 63 RA", "ARTY", {
 	Name		= "Type 63 Rocket",
 	Description	= "A common artillery rocket in the third world, able to be launched from a variety of platforms with a painful whallop and a very arced trajectory.",
 	Model		= "models/missiles/glatgm/mgm51.mdl",
@@ -50,7 +50,7 @@ Missiles.Register("Type 63 RA", "ARTY", {
 	},
 })
 
-Missiles.Register("SAKR-10 RA", "ARTY", {
+Missiles.RegisterItem("SAKR-10 RA", "ARTY", {
 	Name		= "SAKR-10 Rocket",
 	Description	= "A short-range but formidable artillery rocket, based upon the Grad. Well suited to the backs of trucks.",
 	Model		= "models/missiles/9m31.mdl",
@@ -91,7 +91,7 @@ Missiles.Register("SAKR-10 RA", "ARTY", {
 	},
 })
 
-Missiles.Register("SS-40 RA", "ARTY", {
+Missiles.RegisterItem("SS-40 RA", "ARTY", {
 	Name		= "SS-40 Rocket",
 	Description	= "A large, heavy, guided artillery rocket for taking out stationary or dug-in targets. Slow to load, slow to fire, slow to guide, and slow to arrive.",
 	Model		= "models/missiles/aim120.mdl",

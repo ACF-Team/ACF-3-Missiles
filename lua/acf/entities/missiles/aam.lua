@@ -1,6 +1,6 @@
 local Missiles = ACF.Classes.Missiles
 
-Missiles.RegisterGroup("AAM", {
+Missiles.Register("AAM", {
 	Name		= "Air-To-Air Missiles",
 	Description	= "Missiles specialized for air-to-air flight. They have varying range, but are agile, can be radar-guided, and withstand difficult launch angles well.",
 	Sound		= "acf_missiles/missiles/missile_rocket.mp3",
@@ -9,7 +9,7 @@ Missiles.RegisterGroup("AAM", {
 	Blacklist	= { "AP", "APHE", "HEAT", "HP", "FL", "SM" }
 })
 
-Missiles.Register("AIM-9 AAM", "AAM", {
+Missiles.RegisterItem("AIM-9 AAM", "AAM", {
 	Name		= "AIM-9 Sidewinder",
 	Description	= "Agile and reliable with a rather underwhelming effective range, this homing missile is the weapon of choice for dogfights.",
 	Model		= "models/missiles/aim9m.mdl",
@@ -51,7 +51,7 @@ Missiles.Register("AIM-9 AAM", "AAM", {
 	},
 })
 
-Missiles.Register("AIM-120 AAM", "AAM", {
+Missiles.RegisterItem("AIM-120 AAM", "AAM", {
 	Name		= "AIM-120 AMRAAM",
 	Description	= "Burns hot and fast, with a good reach, but harder to lock with. This long-range missile is sure to deliver one heck of a blast upon impact.",
 	Model		= "models/missiles/aim120c.mdl",
@@ -93,7 +93,7 @@ Missiles.Register("AIM-120 AAM", "AAM", {
 	},
 })
 
-Missiles.Register("AIM-54 AAM", "AAM", {
+Missiles.RegisterItem("AIM-54 AAM", "AAM", {
 	Name		= "AIM-54 Phoenix",
 	Description	= "A BEEFY god-tier anti-bomber weapon, made with Jimmy Carter's repressed rage. Getting hit with one of these is a significant emotional event that is hard to avoid if you're flying high.",
 	Model		= "models/missiles/aim54.mdl",

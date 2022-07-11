@@ -1,7 +1,7 @@
 local ACF     = ACF
 local Sensors = ACF.Classes.Sensors
 
-Sensors.RegisterGroup("TGT-Radar", {
+Sensors.Register("TGT-Radar", {
 	Name		= "Targeting Radar",
 	Entity		= "acf_radar",
 	CreateMenu	= ACF.CreateRadarMenu,
@@ -17,7 +17,7 @@ do -- Directional radars
 		return ACF.GetEntitiesInCone(Radar:LocalToWorld(Radar.Origin), Radar:GetForward(), Radar.ConeDegs)
 	end
 
-	Sensors.Register("SmallDIR-TGT", "TGT-Radar", {
+	Sensors.RegisterItem("SmallDIR-TGT", "TGT-Radar", {
 		Name		= "Small Directional Radar",
 		Description	= "A lightweight directional radar with a smaller view cone.",
 		Model		= "models/radar/radar_sml.mdl",
@@ -32,7 +32,7 @@ do -- Directional radars
 		},
 	})
 
-	Sensors.Register("MediumDIR-TGT", "TGT-Radar", {
+	Sensors.RegisterItem("MediumDIR-TGT", "TGT-Radar", {
 		Name		= "Medium Directional Radar",
 		Description	= "A directional radar with a regular view cone.",
 		Model		= "models/radar/radar_mid.mdl",
@@ -47,7 +47,7 @@ do -- Directional radars
 		},
 	})
 
-	Sensors.Register("LargeDIR-TGT", "TGT-Radar", {
+	Sensors.RegisterItem("LargeDIR-TGT", "TGT-Radar", {
 		Name		= "Large Directional Radar",
 		Description	= "A heavy directional radar with a large view cone.",
 		Model		= "models/radar/radar_big.mdl",
@@ -68,7 +68,7 @@ do -- Spherical radars
 		return ACF.GetEntitiesInSphere(Radar:LocalToWorld(Radar.Origin), Radar.Range)
 	end
 
-	Sensors.Register("SmallOMNI-TGT", "TGT-Radar", {
+	Sensors.RegisterItem("SmallOMNI-TGT", "TGT-Radar", {
 		Name		= "Small Spherical Radar",
 		Description	= "A lightweight omni-directional radar with a smaller range.",
 		Model		= "models/radar/radar_sp_sml.mdl",
@@ -83,7 +83,7 @@ do -- Spherical radars
 		},
 	})
 
-	Sensors.Register("MediumOMNI-TGT", "TGT-Radar", {
+	Sensors.RegisterItem("MediumOMNI-TGT", "TGT-Radar", {
 		Name		= "Medium Spherical Radar",
 		Description	= "A omni-directional radar with a regular range.",
 		Model		= "models/radar/radar_sp_mid.mdl",
@@ -98,7 +98,7 @@ do -- Spherical radars
 		},
 	})
 
-	Sensors.Register("LargeOMNI-TGT", "TGT-Radar", {
+	Sensors.RegisterItem("LargeOMNI-TGT", "TGT-Radar", {
 		Name		= "Large Spherical Radar",
 		Description	= "A heavy omni-directional radar with a large range.",
 		Model		= "models/radar/radar_sp_big.mdl",

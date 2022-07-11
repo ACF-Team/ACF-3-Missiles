@@ -1,7 +1,7 @@
 local ACF     = ACF
 local Sensors = ACF.Classes.Sensors
 
-Sensors.RegisterGroup("AM-Radar", {
+Sensors.Register("AM-Radar", {
 	Name		= "Missile Radar",
 	Entity		= "acf_radar",
 	CreateMenu	= ACF.CreateRadarMenu,
@@ -17,7 +17,7 @@ do -- Directional radars
 		return ACFM_GetMissilesInCone(Radar:LocalToWorld(Radar.Origin), Radar:GetForward(), Radar.ConeDegs)
 	end
 
-	Sensors.Register("SmallDIR-AM", "AM-Radar", {
+	Sensors.RegisterItem("SmallDIR-AM", "AM-Radar", {
 		Name		= "Small Directional Missile Radar",
 		Description	= "A lightweight directional radar with a smaller view cone.",
 		Model		= "models/radar/radar_sml.mdl",
@@ -32,7 +32,7 @@ do -- Directional radars
 		},
 	})
 
-	Sensors.Register("MediumDIR-AM", "AM-Radar", {
+	Sensors.RegisterItem("MediumDIR-AM", "AM-Radar", {
 		Name		= "Medium Directional Missile Radar",
 		Description	= "A directional radar with a regular view cone.",
 		Model		= "models/radar/radar_mid.mdl",
@@ -47,7 +47,7 @@ do -- Directional radars
 		},
 	})
 
-	Sensors.Register("LargeDIR-AM", "AM-Radar", {
+	Sensors.RegisterItem("LargeDIR-AM", "AM-Radar", {
 		Name		= "Large Directional Missile Radar",
 		Description	= "A heavy directional radar with a large view cone.",
 		Model		= "models/radar/radar_big.mdl",
@@ -68,7 +68,7 @@ do -- Spherical radars
 		return ACFM_GetMissilesInSphere(Radar:LocalToWorld(Radar.Origin), Radar.Range)
 	end
 
-	Sensors.Register("SmallOMNI-AM", "AM-Radar", {
+	Sensors.RegisterItem("SmallOMNI-AM", "AM-Radar", {
 		Name		= "Small Spherical Missile Radar",
 		Description	= "A lightweight omni-directional radar with a smaller range.",
 		Model		= "models/radar/radar_sp_sml.mdl",
@@ -83,7 +83,7 @@ do -- Spherical radars
 		},
 	})
 
-	Sensors.Register("MediumOMNI-AM", "AM-Radar", {
+	Sensors.RegisterItem("MediumOMNI-AM", "AM-Radar", {
 		Name		= "Medium Spherical Missile Radar",
 		Description	= "A omni-directional radar with a regular range.",
 		Model		= "models/radar/radar_sp_mid.mdl",
@@ -98,7 +98,7 @@ do -- Spherical radars
 		},
 	})
 
-	Sensors.Register("LargeOMNI-AM", "AM-Radar", {
+	Sensors.RegisterItem("LargeOMNI-AM", "AM-Radar", {
 		Name		= "Large Spherical Missile Radar",
 		Description	= "A heavy omni-directional radar with a large range.",
 		Model		= "models/radar/radar_sp_big.mdl",

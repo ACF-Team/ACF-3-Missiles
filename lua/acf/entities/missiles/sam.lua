@@ -1,6 +1,6 @@
 local Missiles = ACF.Classes.Missiles
 
-Missiles.RegisterGroup("SAM", {
+Missiles.Register("SAM", {
 	Name		= "Surface-To-Air Missiles",
 	Description	= "Missiles specialized for surface-to-air operation, and well suited to lower altitude operation against ground attack aircraft.",
 	Sound		= "acf_missiles/missiles/missile_rocket.mp3",
@@ -9,7 +9,7 @@ Missiles.RegisterGroup("SAM", {
 	Blacklist	= { "AP", "APHE", "HEAT", "HP", "FL", "SM" }
 })
 
-Missiles.Register("FIM-92 SAM", "SAM", {
+Missiles.RegisterItem("FIM-92 SAM", "SAM", {
 	Name		= "FIM-92 Stinger",
 	Description	= "The FIM-92 Stinger is a lightweight and versatile close-range air defense missile.",
 	Model		= "models/missiles/fim_92.mdl",
@@ -50,7 +50,7 @@ Missiles.Register("FIM-92 SAM", "SAM", {
 	},
 })
 
-Missiles.Register("Strela-1 SAM", "SAM", {
+Missiles.RegisterItem("Strela-1 SAM", "SAM", {
 	Name		= "9M31 Strela-1",
 	Description	= "The 9M31 Strela-1 (SA-9 Gaskin) is a medium-range homing SAM, best suited to ground vehicles or stationary units.",
 	Model		= "models/missiles/9m31.mdl",

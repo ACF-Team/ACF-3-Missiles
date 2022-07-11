@@ -1,7 +1,7 @@
 local ACF        = ACF
 local Components = ACF.Classes.Components
 
-Components.RegisterGroup("GD-CPR", {
+Components.Register("GD-CPR", {
 	Name   = "Guidance Computer",
 	Entity = "acf_computer",
 	LimitConVar = {
@@ -65,7 +65,7 @@ end
 do -- Joystick
 	local MenuText = "Joystick bounds : +-%s degrees\nJoystick speed : %s degrees/s\nMass : %s kg"
 
-	Components.Register("CPR-Joystick", "GD-CPR", {
+	Components.RegisterItem("CPR-Joystick", "GD-CPR", {
 		Name        = "Joystick",
 		Description = "A small joystick, used to manually guide anti-tank missiles and munitions.",
 		Model       = "models/weapons/w_slam.mdl",
@@ -271,7 +271,7 @@ do -- Optical guidance computer
 		end
 	end)
 
-	Components.Register("CPR-OPT", "GD-CPR", {
+	Components.RegisterItem("CPR-OPT", "GD-CPR", {
 		Name        = "Optical Guidance Computer",
 		Description = "Fully analog guidance computer. Unlike the laser guidance computer, it takes a few seconds for it to aim and focus properly.",
 		Model       = "models/props_lab/monitor01b.mdl",
@@ -461,7 +461,7 @@ do -- Laser guidance computer
 	local LaserText = "Lasing time : %s seconds\nCooldown : %s seconds"
 	local Clock     = ACF.Utilities.Clock
 
-	Components.Register("CPR-LSR", "GD-CPR", {
+	Components.RegisterItem("CPR-LSR", "GD-CPR", {
 		Name        = "Laser Guidance Computer",
 		Description = "Modern equivalent to the analog guidance computer, provides faster and more accurate measurements. Can be also used as a laser target designator.",
 		Model       = "models/props_lab/monitor01b.mdl",
@@ -711,7 +711,7 @@ end
 do -- GPS transmitter
 	local ZERO = Vector()
 
-	Components.Register("CPR-GPS", "GD-CPR", {
+	Components.RegisterItem("CPR-GPS", "GD-CPR", {
 		Name        = "GPS Transmitter",
 		Description = "A transmitter for GPS-based guided munitions.",
 		Model       = "models/props_lab/reciever01a.mdl",

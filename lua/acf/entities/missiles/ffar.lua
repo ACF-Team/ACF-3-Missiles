@@ -1,6 +1,6 @@
 local Missiles = ACF.Classes.Missiles
 
-Missiles.RegisterGroup("FFAR", {
+Missiles.Register("FFAR", {
 	Name		= "Folding-Fin Aerial Rockets",
 	Description	= "Small rockets which fit in tubes or pods. Rapid-firing and versatile.",
 	Sound		= "acf_missiles/missiles/missile_rocket.mp3",
@@ -9,7 +9,7 @@ Missiles.RegisterGroup("FFAR", {
 	Blacklist	= { "AP", "APHE", "HP", "FL" }
 })
 
-Missiles.Register("40mmFFAR", "FFAR", {
+Missiles.RegisterItem("40mmFFAR", "FFAR", {
 	Name		= "40mm Pod Rocket",
 	Description	= "A tiny, unguided rocket. Useful for anti-infantry, smoke and suppression. Folding fins allow the rocket to be stored in pods, which defend them from damage.",
 	Model		= "models/missiles/ffar_40mm.mdl",
@@ -49,7 +49,7 @@ Missiles.Register("40mmFFAR", "FFAR", {
 	},
 })
 
-Missiles.Register("57mmFFAR", "FFAR", {
+Missiles.RegisterItem("57mmFFAR", "FFAR", {
 	Name		= "57mm Pod Rocket",
 	Description	= "A small, spammy rocket with light anti-armor capabilities. Works well on technicals.",
 	Model		= "models/missiles/ffar_40mm.mdl",
@@ -89,7 +89,7 @@ Missiles.Register("57mmFFAR", "FFAR", {
 	},
 })
 
-Missiles.Register("70mmFFAR", "FFAR", {
+Missiles.RegisterItem("70mmFFAR", "FFAR", {
 	Name		= "70mm Pod Rocket",
 	Description	= "A small, unguided rocket. Useful against light vehicles and infantry. Folding fins allow the rocket to be stored in pods, which defend them from damage.",
 	Model		= "models/missiles/ffar_70mm.mdl",
@@ -129,7 +129,7 @@ Missiles.Register("70mmFFAR", "FFAR", {
 	},
 })
 
-Missiles.Register("80mmFFAR", "FFAR", {
+Missiles.RegisterItem("80mmFFAR", "FFAR", {
 	Name		= "80mm Rocket Pod",
 	Description	= "A large aerial rocket designed for use against ground targets. Good HEAT performance.",
 	Model		= "models/missiles/ffar_70mm.mdl",
@@ -169,7 +169,7 @@ Missiles.Register("80mmFFAR", "FFAR", {
 	},
 })
 
-Missiles.Register("Zuni ASR", "FFAR", {
+Missiles.RegisterItem("Zuni ASR", "FFAR", {
 	Name		= "127mm Pod Rocket",
 	Description	= "A heavy 5in air to surface unguided rocket, able to provide heavy suppressive fire in a single pass.",
 	Model		= "models/ghosteh/zuni.mdl",

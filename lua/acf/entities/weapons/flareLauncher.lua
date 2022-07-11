@@ -1,7 +1,7 @@
 local ACF     = ACF
 local Weapons = ACF.Classes.Weapons
 
-Weapons.RegisterGroup("FGL", {
+Weapons.Register("FGL", {
 	Name        = "Flare Launcher",
 	Description = "Flare Launchers can fire flares much more rapidly than other launchers, but can't load any other ammo types.",
 	MuzzleFlash = "gl_muzzleflash_noscale",
@@ -18,7 +18,7 @@ Weapons.RegisterGroup("FGL", {
 	},
 })
 
-Weapons.Register("40mmFGL", "FGL", {
+Weapons.RegisterItem("40mmFGL", "FGL", {
 	Name		= "40mm Flare Launcher",
 	Description	= "Put on an all-American fireworks show with this flare launcher: high fire rate, low distraction rate. Fill the air with flare. Careful of your reload time.",
 	Model		= "models/missiles/blackjellypod.mdl",
@@ -39,7 +39,7 @@ Weapons.Register("40mmFGL", "FGL", {
 
 ACF.SetCustomAttachment("models/missiles/blackjellypod.mdl", "muzzle", Vector(6, 0, 3.2))
 
-cleanup.Register("acf_flarelauncher")
+cleanup.RegisterItem("acf_flarelauncher")
 
 if SERVER then return end
 

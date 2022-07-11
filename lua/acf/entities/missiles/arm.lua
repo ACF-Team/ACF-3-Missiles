@@ -1,6 +1,6 @@
 local Missiles = ACF.Classes.Missiles
 
-Missiles.RegisterGroup("ARM", {
+Missiles.Register("ARM", {
 	Name		= "Anti-Radiation Missiles",
 	Description	= "Missiles specialized for Suppression of Enemy Air Defenses.",
 	Sound		= "acf_missiles/missiles/missile_rocket.mp3",
@@ -9,7 +9,7 @@ Missiles.RegisterGroup("ARM", {
 	Blacklist	= { "AP", "APHE", "HEAT", "HP", "FL", "SM" }
 })
 
-Missiles.Register("AGM-122 ASM", "ARM", {
+Missiles.RegisterItem("AGM-122 ASM", "ARM", {
 	Name		= "AGM-122 Sidearm",
 	Description	= "A refurbished early-model AIM-9, for attacking ground targets.",
 	Model		= "models/missiles/aim9.mdl",
@@ -51,7 +51,7 @@ Missiles.Register("AGM-122 ASM", "ARM", {
 	},
 })
 
-Missiles.Register("AGM-45 ASM", "ARM", {
+Missiles.RegisterItem("AGM-45 ASM", "ARM", {
 	Name		= "AGM-45 Shrike",
 	Description	= "Long range anti-SAM missile, built on the body of an AIM-7 Sparrow.",
 	Model		= "models/missiles/aim120.mdl",
