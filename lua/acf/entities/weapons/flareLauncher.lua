@@ -39,7 +39,7 @@ Weapons.RegisterItem("40mmFGL", "FGL", {
 
 ACF.SetCustomAttachment("models/missiles/blackjellypod.mdl", "muzzle", Vector(6, 0, 3.2))
 
-cleanup.RegisterItem("acf_flarelauncher")
+cleanup.Register("acf_flarelauncher")
 
 if SERVER then return end
 
