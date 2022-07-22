@@ -8,24 +8,27 @@ include("shared.lua")
 local EMPTY   = { Type = "Empty", PropMass = 0, ProjMass = 0, Tracer = 0 }
 local HookRun = hook.Run
 local ACF     = ACF
+local Classes = ACF.Classes
+local Clock   = ACF.Utilities.Clock
 
 do -- Spawning and Updating --------------------
 	local UnlinkSound = "physics/metal/metal_box_impact_bullet%s.wav"
 	local MaxDistance = ACF.LinkDistance * ACF.LinkDistance
 	local CheckLegal  = ACF_CheckLegal
-	local Racks       = ACF.Classes.Racks
+	local Entities    = Classes.Entities
+	local Racks       = Classes.Racks
 
 	local function VerifyData(Data)
 		if not Data.Rack then
 			Data.Rack = Data.Id or "1xRK"
 		end
 
-		local Rack = Racks[Data.Rack]
+		local Rack = Racks.Get(Data.Rack)
 
 		if not Rack then
 			Data.Rack = "1xRK"
 
-			Rack = Racks["1xRK"]
+			Rack = Racks.Get("1xRK")
 		end
 
 		do -- External verifications
@@ -109,6 +112,7 @@ do -- Spawning and Updating --------------------
 		Entity.MissileModel   = Rack.RackModel
 		Entity.ReloadTime     = 1
 		Entity.CurrentShot    = 0
+		Entity.Spread         = Rack.Spread or 1
 
 		Entity:SetNWString("WireName", "ACF " .. Entity.Name)
 
@@ -182,7 +186,7 @@ do -- Spawning and Updating --------------------
 	function MakeACF_Rack(Player, Pos, Ang, Data)
 		VerifyData(Data)
 
-		local RackData = Racks[Data.Rack]
+		local RackData = Racks.Get(Data.Rack)
 		local Limit = RackData.LimitConVar.Name
 
 		if not Player:CheckLimit(Limit) then return end
@@ -208,7 +212,7 @@ do -- Spawning and Updating --------------------
 		Rack.MountPoints = {}
 		Rack.Missiles    = {}
 		Rack.Crates      = {}
-		Rack.DataStore   = ACF.GetEntityArguments("acf_rack")
+		Rack.DataStore   = Entities.GetArguments("acf_rack")
 
 		UpdateRack(Rack, Data, RackData)
 
@@ -241,7 +245,8 @@ do -- Spawning and Updating --------------------
 		return Rack
 	end
 
-	ACF.RegisterEntityClass("acf_rack", MakeACF_Rack, "Rack")
+	Entities.Register("acf_rack", MakeACF_Rack, "Rack")
+
 	ACF.RegisterLinkSource("acf_rack", "Crates")
 	ACF.RegisterLinkSource("acf_rack", "Computer", true)
 	ACF.RegisterLinkSource("acf_rack", "Radar", true)
@@ -547,11 +552,11 @@ do -- Firing -----------------------------------
 end ---------------------------------------------
 
 do -- Loading ----------------------------------
-	local Missiles = ACF.Classes.Missiles
+	local Missiles  = Classes.Missiles
 	local NO_OFFSET = Vector()
 
 	local function GetMissileAngPos(BulletData, Point)
-		local Class    = ACF.GetClassGroup(Missiles, BulletData.Id)
+		local Class    = Classes.GetGroup(Missiles, BulletData.Id)
 		local Data     = Class and Class.Lookup[BulletData.Id]
 		local Offset   = Data and Data.Offset or NO_OFFSET
 		local Position = Point.Position
@@ -610,7 +615,7 @@ do -- Loading ----------------------------------
 			local Percent = math.max(0.5, (Bullet.ProjLength + Bullet.PropLength) / Missile.MaxLength)
 			local Time    = Missile.ReloadTime * Percent
 
-			Point.NextFire = ACF.CurTime + Time
+			Point.NextFire = Clock.CurTime + Time
 			Point.State    = "Loading"
 
 			self:UpdateLoad(Point, Missile)
@@ -827,7 +832,7 @@ do -- Misc -------------------------------------
 	end
 
 	function ENT:Think()
-		local Time     = ACF.CurTime
+		local Time     = Clock.CurTime
 		local Previous = self.Position
 		local Current  = GetPosition(self)
 

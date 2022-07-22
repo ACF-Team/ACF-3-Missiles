@@ -1,5 +1,6 @@
 include("shared.lua")
 
+local ACF        = ACF
 local LightColor = Color(255, 128, 48)
 
 local function RenderMotorLight(Entity)
@@ -10,7 +11,7 @@ local function RenderMotorLight(Entity)
 	local Index = Entity:EntIndex()
 	local Pos = Entity:GetPos() - Entity:GetForward() * 64
 
-	ACFM_RenderLight(Index, Size * 175, LightColor, Pos)
+	ACF.RenderLight(Index, Size * 175, LightColor, Pos)
 end
 
 function ENT:Draw()

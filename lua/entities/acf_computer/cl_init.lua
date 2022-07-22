@@ -6,7 +6,10 @@ language.Add("Cleanup_acf_computer", "ACF Computers")
 language.Add("Cleaned_acf_computer", "Cleaned up all ACF Computers")
 language.Add("SBoxLimit__acf_computer", "You've reached the ACF Computer limit!")
 
-local Components = ACF.Classes.Components
+local ACF        = ACF
+local Classes    = ACF.Classes
+local Clock      = ACF.Utilities.Clock
+local Components = Classes.Components
 
 function ENT:Initialize(...)
 	BaseClass.Initialize(self, ...)
@@ -16,7 +19,7 @@ end
 
 function ENT:Update()
 	local Id = self:GetNW2String("ID")
-	local Class = ACF.GetClassGroup(Components, Id)
+	local Class = Classes.GetGroup(Components, Id)
 	local Data = Class.Lookup[Id]
 
 	if self.OnLast then
@@ -42,7 +45,7 @@ function ENT:Draw(...)
 end
 
 function ENT:Think(...)
-	self:NextThink(ACF.CurTime)
+	self:NextThink(Clock.CurTime)
 
 	if self.OnThink then
 		self:OnThink()

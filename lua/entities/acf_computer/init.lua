@@ -4,7 +4,8 @@ AddCSLuaFile("cl_init.lua")
 
 include("shared.lua")
 
-local ACF = ACF
+local ACF   = ACF
+local Clock = ACF.Utilities.Clock
 
 ACF.RegisterClassLink("acf_computer", "acf_rack", function(Computer, Target)
 	if Computer.Weapons[Target] then return false, "This rack is already linked to this computer!" end
@@ -65,7 +66,6 @@ end)
 --===============================================================================================--
 
 local CheckLegal  = ACF_CheckLegal
-local Components  = ACF.Classes.Components
 local UnlinkSound = "physics/metal/metal_box_impact_bullet%s.wav"
 local MaxDistance = ACF.LinkDistance * ACF.LinkDistance
 local HookRun     = hook.Run
@@ -88,17 +88,21 @@ end
 --===============================================================================================--
 
 do -- Spawn and update function
+	local Classes    = ACF.Classes
+	local Components = Classes.Components
+	local Entities   = Classes.Entities
+
 	local function VerifyData(Data)
 		if not Data.Computer then
 			Data.Computer = Data.Component or Data.Id
 		end
 
-		local Class = ACF.GetClassGroup(Components, Data.Computer)
+		local Class = Classes.GetGroup(Components, Data.Computer)
 
 		if not Class or Class.Entity ~= "acf_computer" then
 			Data.Computer = "CPR-LSR"
 
-			Class = ACF.GetClassGroup(Components, "CPR-LSR")
+			Class = Classes.GetGroup(Components, "CPR-LSR")
 		end
 
 		do -- External verifications
@@ -223,7 +227,7 @@ do -- Spawn and update function
 	function MakeACF_Computer(Player, Pos, Angle, Data)
 		VerifyData(Data)
 
-		local Class = ACF.GetClassGroup(Components, Data.Computer)
+		local Class = Classes.GetGroup(Components, Data.Computer)
 		local Computer = Class.Lookup[Data.Computer]
 		local Limit = Class.LimitConVar.Name
 
@@ -243,7 +247,7 @@ do -- Spawn and update function
 
 		Entity.Owner     = Player -- MUST be stored on ent for PP
 		Entity.Weapons   = {}
-		Entity.DataStore = ACF.GetEntityArguments("acf_computer")
+		Entity.DataStore = Entities.GetArguments("acf_computer")
 
 		UpdateComputer(Entity, Data, Class, Computer)
 
@@ -276,8 +280,9 @@ do -- Spawn and update function
 		return Entity
 	end
 
-	ACF.RegisterEntityClass("acf_opticalcomputer", MakeACF_Computer, "Computer") -- Backwards compatibility
-	ACF.RegisterEntityClass("acf_computer", MakeACF_Computer, "Computer")
+	Entities.Register("acf_opticalcomputer", MakeACF_Computer, "Computer") -- Backwards compatibility
+	Entities.Register("acf_computer", MakeACF_Computer, "Computer")
+
 	ACF.RegisterLinkSource("acf_computer", "Weapons")
 
 	------------------- Updating ---------------------
@@ -285,7 +290,7 @@ do -- Spawn and update function
 	function ENT:Update(Data)
 		VerifyData(Data)
 
-		local Class    = ACF.GetClassGroup(Components, Data.Computer)
+		local Class    = Classes.GetGroup(Components, Data.Computer)
 		local Computer = Class.Lookup[Data.Computer]
 		local OldClass = self.ClassData
 
@@ -354,7 +359,7 @@ function ENT:Think()
 		self:OnThink()
 	end
 
-	self:NextThink(ACF.CurTime)
+	self:NextThink(Clock.CurTime)
 
 	return true
 end
