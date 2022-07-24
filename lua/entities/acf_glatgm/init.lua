@@ -220,21 +220,21 @@ function ENT:Think()
 	self.Speed = self.LaunchVel + self.DiffVel * math.Clamp(1 - (self.AccelTime - Time) / self.AccelLength, 0, 1)
 
 	if not IsDelayed and CanSee then
-		local Agility            = self.Agility
-		local AgilityVector      = Vector(self.Speed, Agility, Agility) * DeltaTime
+		local Agility            = self.Agility * DeltaTime
+		local AgilityVector      = Vector(self.Speed, Agility, Agility)
 		local ComputerCorrection = Computer:WorldToLocal(Position)
 		local Desired            = AngleRand() * 0.005
 
-		ComputerCorrection = Computer:LocalToWorld(Vector(ComputerCorrection.X + self.Speed * 0.1))
+		ComputerCorrection = Computer:LocalToWorld(Vector(ComputerCorrection.X + self.Speed * 0.27))
 		Correction         = ClampVec(self:WorldToLocal(ComputerCorrection), -AgilityVector, AgilityVector)
 
-		if math.abs(Correction.y) + math.abs(Correction.z) >= 0.7 then
+		if math.abs(Correction.y) + math.abs(Correction.z) >= 0.2 then
 			Desired = self:WorldToLocalAngles((ComputerCorrection - Position):Angle()) + Desired
 		else
 			Desired = self:WorldToLocalAngles(Computer.TraceDir:Angle()) + Desired
 		end
 
-		Direction = ClampAng(Desired, -Agility, Agility) * DeltaTime
+		Direction = ClampAng(Desired, -Agility, Agility)
 		IsGuided  = true
 
 		self.Innacuracy = 0
