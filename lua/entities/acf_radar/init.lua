@@ -284,8 +284,23 @@ end)
 
 do -- Spawn and Update functions
 	local Classes  = ACF.Classes
+	local WireIO   = ACF.Utilities.WireIO
 	local Entities = Classes.Entities
 	local Sensors  = Classes.Sensors
+	local Inputs   = { "Active (If set to a non-zero value, attempts to start the radar activation.)" }
+
+	local Outputs = {
+		"Scanning (Returns 1 if the radar is currently scanning.)",
+		"Detected (Returns the amount of targets detected by the radar.)",
+		"ClosestDistance (Returns the distance in inches of the closest target detected by the radar.)",
+		"IDs (Returns a list of IDs from all the detected targets.) [ARRAY]",
+		"Owner (Returns a list of owner names from all the detected targets.) [ARRAY]",
+		"Position (Returns a list of position vectors from all the detected targets.) [ARRAY]",
+		"Velocity (Returns a list of velocity vectors from all the detected targets.) [ARRAY]",
+		"Distance (Returns a list of distances from all the detected targets.) [ARRAY]",
+		"Think Delay (Returns the amount of time in seconds between each scan.)",
+		"Entity (The radar itself.) [ENTITY]"
+	}
 
 	local function VerifyData(Data)
 		if not Data.Radar then
@@ -306,48 +321,6 @@ do -- Spawn and Update functions
 			end
 
 			HookRun("ACF_VerifyData", "acf_radar", Data, Class)
-		end
-	end
-
-	local function CreateInputs(Entity, Data, Class, Radar)
-		local List = { "Active (Turns on the radar)" }
-
-		if Class.SetupInputs then
-			Class.SetupInputs(List, Entity, Data, Class, Radar)
-		end
-
-		HookRun("ACF_OnSetupInputs", "acf_radar", List, Entity, Data, Class, Radar)
-
-		if Entity.Inputs then
-			Entity.Inputs = WireLib.AdjustInputs(Entity, List)
-		else
-			Entity.Inputs = WireLib.CreateInputs(Entity, List)
-		end
-	end
-
-	local function CreateOutputs(Entity, Data, Class, Radar)
-		local List = {
-			"Think Delay (Time between scans)",
-			"Scanning (Whether or not the radar is scanning currently)",
-			"Detected (How many targets the radar detects)",
-			"ClosestDistance (Distance of the closest target)",
-			"IDs (An array of entity IDs of the targets) [ARRAY]",
-			"Owner (An array of owners of the targets) [ARRAY]",
-			"Position (An array of positions of the targets) [ARRAY]",
-			"Velocity (An array of velocities of the targets) [ARRAY]",
-			"Distance (An array of distances of the targets) [ARRAY]",
-			"Entity (The radar itself) [ENTITY]" }
-
-		if Class.SetupOutputs then
-			Class.SetupOutputs(List, Entity, Data, Class, Radar)
-		end
-
-		HookRun("ACF_OnSetupOutputs", "acf_radar", List, Entity, Data, Class, Radar)
-
-		if Entity.Outputs then
-			Entity.Outputs = WireLib.AdjustOutputs(Entity, List)
-		else
-			Entity.Outputs = WireLib.CreateOutputs(Entity, List)
 		end
 	end
 
@@ -385,10 +358,10 @@ do -- Spawn and Update functions
 		Entity.GetDetected  = Radar.Detect or Class.Detect
 		Entity.Origin       = AttachData and Entity:WorldToLocal(AttachData.Pos) or Vector()
 
-		Entity:SetNWString("WireName", "ACF " .. Entity.Name)
+		WireIO.SetupInputs(Entity, Inputs, Data, Class, Radar)
+		WireIO.SetupOutputs(Entity, Outputs, Data, Class, Radar)
 
-		CreateInputs(Entity, Data, Class, Radar)
-		CreateOutputs(Entity, Data, Class, Radar)
+		Entity:SetNWString("WireName", "ACF " .. Entity.Name)
 
 		WireLib.TriggerOutput(Entity, "Think Delay", Entity.ThinkDelay)
 

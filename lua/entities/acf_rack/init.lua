@@ -5,18 +5,36 @@ include("shared.lua")
 
 -- Local Vars -----------------------------------
 
-local EMPTY   = { Type = "Empty", PropMass = 0, ProjMass = 0, Tracer = 0 }
-local HookRun = hook.Run
-local ACF     = ACF
-local Classes = ACF.Classes
-local Clock   = ACF.Utilities.Clock
+local EMPTY     = { Type = "Empty", PropMass = 0, ProjMass = 0, Tracer = 0 }
+local HookRun   = hook.Run
+local ACF       = ACF
+local Classes   = ACF.Classes
+local Utilities = ACF.Utilities
+local Clock     = Utilities.Clock
 
 do -- Spawning and Updating --------------------
 	local UnlinkSound = "physics/metal/metal_box_impact_bullet%s.wav"
 	local MaxDistance = ACF.LinkDistance * ACF.LinkDistance
 	local CheckLegal  = ACF_CheckLegal
+	local WireIO      = Utilities.WireIO
 	local Entities    = Classes.Entities
 	local Racks       = Classes.Racks
+
+	local Inputs = {
+		"Fire (Attempts to fire the next missile in line, or the selected one.)",
+		"Reload (Attempts to load another missile into the rack.)",
+		"Unload (Does nothing.)",
+		"Missile Index (Selects a specific slot on the rack to be fired next.)",
+		"Fire Delay (Sets the delay at which missiles will be fired.)"
+	}
+	local Outputs = {
+		"Ready (Returns 1 if the rack can fire a missile.)",
+		"Status (Returns the current state of the rack.) [STRING]",
+		"Shots Left (Returns the amount of missiles left in the rack.)",
+		"Current Index (Returns the currently selected missile index.)",
+		"Missile (Returns the next missile to be fired.) [ENTITY]",
+		"Entity (The rack itself.) [ENTITY]"
+	}
 
 	local function VerifyData(Data)
 		if not Data.Rack then
@@ -37,49 +55,6 @@ do -- Spawning and Updating --------------------
 			end
 
 			HookRun("ACF_VerifyData", "acf_rack", Data, Rack)
-		end
-	end
-
-	local function CreateInputs(Entity, Data, Rack)
-		local List = {
-			"Fire (Fires the currently selected missile, or the next in line)",
-			"Reload (Loads a missile to the rack)",
-			"Unload (Removes a missile from the rack)",
-			"Missile Index (Selects a specific slot on the rack)",
-			"Fire Delay (A delay to force between firing)" }
-
-		if Rack.SetupInputs then
-			Rack.SetupInputs(List, Entity, Data, Rack)
-		end
-
-		HookRun("ACF_OnSetupInputs", "acf_rack", List, Entity, Data, Rack)
-
-		if Entity.Inputs then
-			Entity.Inputs = WireLib.AdjustInputs(Entity, List)
-		else
-			Entity.Inputs = WireLib.CreateInputs(Entity, List)
-		end
-	end
-
-	local function CreateOutputs(Entity, Data, Rack)
-		local List = {
-			"Ready (Whether or not the rack can fire a missile)",
-			"Shots Left (How many missiles are currently loaded)",
-			"Current Index (The currently selected slot in the rack)",
-			"Status (The current state of the rack) [STRING]",
-			"Missile (The currently selected missile itself) [ENTITY]",
-			"Entity (The rack itself) [ENTITY]" }
-
-		if Rack.SetupOutputs then
-			Rack.SetupOutputs(List, Entity, Data, Rack)
-		end
-
-		HookRun("ACF_OnSetupOutputs", "acf_rack", List, Entity, Data, Rack)
-
-		if Entity.Outputs then
-			Entity.Outputs = WireLib.AdjustOutputs(Entity, List)
-		else
-			Entity.Outputs = WireLib.CreateOutputs(Entity, List)
 		end
 	end
 
@@ -114,10 +89,10 @@ do -- Spawning and Updating --------------------
 		Entity.CurrentShot    = 0
 		Entity.Spread         = Rack.Spread or 1
 
-		Entity:SetNWString("WireName", "ACF " .. Entity.Name)
+		WireIO.SetupInputs(Entity, Inputs, Data, Rack)
+		WireIO.SetupOutputs(Entity, Outputs, Data, Rack)
 
-		CreateInputs(Entity, Data, Rack)
-		CreateOutputs(Entity, Data, Rack)
+		Entity:SetNWString("WireName", "ACF " .. Entity.Name)
 
 		ACF.Activate(Entity, true)
 
@@ -174,8 +149,8 @@ do -- Spawning and Updating --------------------
 		end
 	end
 
-	hook.Add("ACF_OnSetupInputs", "ACF Rack Motor Delay", function(EntClass, List, _, _, Rack)
-		if EntClass ~= "acf_rack" then return end
+	hook.Add("ACF_OnSetupInputs", "ACF Rack Motor Delay", function(Entity, List, _, Rack)
+		if Entity:GetClass() ~= "acf_rack" then return end
 		if Rack.EntType ~= "Rack" then return end
 
 		List[#List + 1] = "Motor Delay (A forced delay before igniting the thruster)"

@@ -4,8 +4,9 @@ AddCSLuaFile("cl_init.lua")
 
 include("shared.lua")
 
-local ACF   = ACF
-local Clock = ACF.Utilities.Clock
+local ACF       = ACF
+local Utilities = ACF.Utilities
+local Clock     = Utilities.Clock
 
 ACF.RegisterClassLink("acf_computer", "acf_rack", function(Computer, Target)
 	if Computer.Weapons[Target] then return false, "This rack is already linked to this computer!" end
@@ -89,8 +90,11 @@ end
 
 do -- Spawn and update function
 	local Classes    = ACF.Classes
+	local WireIO     = Utilities.WireIO
 	local Components = Classes.Components
 	local Entities   = Classes.Entities
+	local Inputs     = {}
+	local Outputs    = { "Entity (The computer itself.) [ENTITY]" }
 
 	local function VerifyData(Data)
 		if not Data.Computer then
@@ -111,38 +115,6 @@ do -- Spawn and update function
 			end
 
 			HookRun("ACF_VerifyData", "acf_computer", Data, Class)
-		end
-	end
-
-	local function CreateInputs(Entity, Data, Class, Computer)
-		local List = {}
-
-		if Class.SetupInputs then
-			Class.SetupInputs(List, Entity, Data, Class, Computer)
-		end
-
-		HookRun("ACF_OnSetupInputs", "acf_computer", List, Entity, Data, Class, Computer)
-
-		if Entity.Inputs then
-			Entity.Inputs = WireLib.AdjustInputs(Entity, List)
-		else
-			Entity.Inputs = WireLib.CreateInputs(Entity, List)
-		end
-	end
-
-	local function CreateOutputs(Entity, Data, Class, Computer)
-		local List = { "Entity (The computer itself) [ENTITY]" }
-
-		if Class.SetupOutputs then
-			Class.SetupOutputs(List, Entity, Data, Class, Computer)
-		end
-
-		HookRun("ACF_OnSetupOutputs", "acf_computer", List, Entity, Data, Class, Computer)
-
-		if Entity.Outputs then
-			Entity.Outputs = WireLib.AdjustOutputs(Entity, List)
-		else
-			Entity.Outputs = WireLib.CreateOutputs(Entity, List)
 		end
 	end
 
@@ -177,11 +149,11 @@ do -- Spawn and update function
 		Entity.OnDisabled   = Computer.OnDisabled or Class.OnDisabled
 		Entity.OnThink      = Computer.OnThink or Class.OnThink
 
+		WireIO.SetupInputs(Entity, Inputs, Data, Class, Computer)
+		WireIO.SetupOutputs(Entity, Outputs, Data, Class, Computer)
+
 		Entity:SetNWString("WireName", "ACF " .. Computer.Name)
 		Entity:SetNW2String("ID", Entity.Computer)
-
-		CreateInputs(Entity, Data, Class, Computer)
-		CreateOutputs(Entity, Data, Class, Computer)
 
 		ACF.Activate(Entity, true)
 
@@ -200,8 +172,8 @@ do -- Spawn and update function
 		end
 	end
 
-	hook.Add("ACF_OnSetupInputs", "ACF Computer Inputs", function(Class, List, _, _, _, Computer)
-		if Class ~= "acf_computer" then return end
+	hook.Add("ACF_OnSetupInputs", "ACF Computer Inputs", function(Entity, List, _, _, Computer)
+		if Entity:GetClass() ~= "acf_computer" then return end
 		if not Computer.Inputs then return end
 
 		local Count = #List
@@ -211,8 +183,8 @@ do -- Spawn and update function
 		end
 	end)
 
-	hook.Add("ACF_OnSetupOutputs", "ACF Computer Outputs", function(Class, List, _, _, _, Computer)
-		if Class ~= "acf_computer" then return end
+	hook.Add("ACF_OnSetupOutputs", "ACF Computer Outputs", function(Entity, List, _, _, Computer)
+		if Entity:GetClass() ~= "acf_computer" then return end
 		if not Computer.Outputs then return end
 
 		local Count = #List

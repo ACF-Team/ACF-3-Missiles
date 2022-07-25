@@ -14,8 +14,10 @@ local Ballistics     = ACF.Ballistics
 local Classes        = ACF.Classes
 local Clock          = ACF.Utilities.Clock
 local Missiles       = Classes.Missiles
-local Inputs         = ACF.GetInputActions("acf_missile")
+local InputActions   = ACF.GetInputActions("acf_missile")
 local HookRun        = hook.Run
+local Inputs         = { "Detonate (Force the missile to explode.)" }
+local Outputs        = { "Entity (The missile itself.) [ENTITY]" }
 
 local function ApplyBodySubgroup(Missile, Group, Source, Phase)
 	local Target = Source.DataSource(Missile)
@@ -397,7 +399,10 @@ function MakeACF_Missile(Player, Pos, Ang, Rack, MountPoint, Crate)
 	Missile.MotorEnabled    = false
 	Missile.Thrust          = 0
 	Missile.ThinkDelay      = 0.1
-	Missile.Inputs          = WireLib.CreateInputs(Missile, { "Detonate (Force detonates the missile)" })
+	Missile.Inputs          = WireLib.CreateInputs(Missile, Inputs)
+	Missile.Outputs         = WireLib.CreateOutputs(Missile, Outputs)
+
+	WireLib.TriggerOutput(Missile, "Entity", Missile)
 
 	Missile:UpdateModel(Missile.RackModel or Missile.RealModel)
 	Missile:CreateBulletData(Crate)
@@ -557,7 +562,7 @@ function ENT:DoFlight(ToPos, ToDir)
 end
 
 function ENT:TriggerInput(Name, Value)
-	local Action = Inputs[Name]
+	local Action = InputActions[Name]
 
 	if Action then
 		Action(self, Value)
