@@ -137,7 +137,9 @@ end
 function ACFM_ApplyCountermeasures(Missile, Guidance)
 	if Guidance.Override then return end
 
-	for _, CounterMeasure in pairs(Countermeasures) do
+	local List = Countermeasures.GetList()
+
+	for _, CounterMeasure in ipairs(List) do
 		if not CounterMeasure.ApplyContinuous then
 			continue
 		end
@@ -151,7 +153,9 @@ end
 function ACFM_ApplySpawnCountermeasures(Missile, Guidance)
 	if Guidance.Override then return end
 
-	for _, CounterMeasure in pairs(Countermeasures) do
+	local List = Countermeasures.GetList()
+
+	for _, CounterMeasure in ipairs(List) do
 		if CounterMeasure.ApplyContinuous then
 			continue
 		end
