@@ -20,6 +20,7 @@ Missiles.RegisterItem("AGM-122 ASM", "ARM", {
 	Offset		= Vector(-6, 0, 0),
 	Year		= 1986,
 	ReloadTime	= 10,
+	ExhaustPos  = Vector(-30),
 	Racks		= { ["1xRK_small"] = true, ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true },
 	Guidance	= { Dumb = true, ["Anti-radiation"] = true },
 	Navigation  = "Chase",
@@ -61,6 +62,7 @@ Missiles.RegisterItem("AGM-45 ASM", "ARM", {
 	Diameter	= 6.75 * 25.4, -- in mm
 	Year		= 1969,
 	ReloadTime	= 25,
+	ExhaustPos  = Vector(-70),
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true },
 	Guidance	= { Dumb = true, ["Anti-radiation"] = true },
 	Navigation  = "Chase",

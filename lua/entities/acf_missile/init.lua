@@ -372,7 +372,7 @@ function MakeACF_Missile(Player, Pos, Ang, Rack, MountPoint, Crate)
 	Missile.ForcedArmor     = Round.Armor
 	Missile.Effect          = Data.Effect or Class.Effect
 	Missile.NoDamage        = Rack.ProtectMissile or Data.NoDamage
-	Missile.ExhaustOffset   = Data.ExhaustOffset
+	Missile.ExhaustPos      = Data.ExhaustPos or Vector()
 	Missile.Bodygroups      = Data.Bodygroups
 	Missile.RackModel       = Rack.MissileModel or Round.RackModel
 	Missile.RealModel       = Round.Model
@@ -421,13 +421,6 @@ function MakeACF_Missile(Player, Pos, Ang, Rack, MountPoint, Crate)
 		Missile.MaxMotorLength = TotalLength
 		Missile.MotorLength = (1 - Missile.StarterPercent) * TotalLength
 		Missile.SpeedBoost = Missile.StarterPercent * TotalLength * Missile.MaxThrust / (Missile.ProjMass + Missile.PropMass * 0.5)
-	end
-
-	do -- Exhaust pos
-		local Attachment = Missile:GetAttachment(Missile:LookupAttachment("exhaust"))
-		local Offset = Missile.ExhaustOffset or (Attachment and Attachment.Pos) or Vector()
-
-		Missile.ExhaustPos = Missile:WorldToLocal(Offset)
 	end
 
 	local PhysObj = Missile:GetPhysicsObject()

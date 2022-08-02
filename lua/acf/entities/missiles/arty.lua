@@ -19,6 +19,7 @@ Missiles.RegisterItem("Type 63 RA", "ARTY", {
 	Diameter	= 6.5 * 25.4, -- in mm
 	Year		= 1960,
 	ReloadTime	= 10,
+	ExhaustPos  = Vector(-24),
 	Racks		= { ["1xRK_small"] = true, ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true, ["6xUARRK"] = true },
 	Guidance	= { Dumb = true },
 	Navigation  = "Chase",
@@ -60,6 +61,7 @@ Missiles.RegisterItem("SAKR-10 RA", "ARTY", {
 	Diameter	= 4.6 * 25.4, -- in mm
 	Year		= 1980,
 	ReloadTime	= 20,
+	ExhaustPos  = Vector(-44),
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true, ["6xUARRK"] = true },
 	Guidance	= { Dumb = true, Laser = true, ["GPS Guided"] = true },
 	Navigation  = "Chase",
@@ -101,6 +103,7 @@ Missiles.RegisterItem("SS-40 RA", "ARTY", {
 	Diameter	= 6.75 * 25.4, -- in mm
 	Year		= 1983,
 	ReloadTime	= 30,
+	ExhaustPos  = Vector(-70),
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true, ["6xUARRK"] = true },
 	Guidance	= { Dumb = true, Laser = true, ["GPS Guided"] = true },
 	Navigation  = "PN",

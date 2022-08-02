@@ -19,6 +19,7 @@ Missiles.RegisterItem("AIM-9 AAM", "AAM", {
 	Year		= 1953,
 	Diameter	= 101.6, -- in mm
 	ReloadTime	= 10,
+	ExhaustPos  = Vector(-42),
 	Racks		= { ["1xRK_small"] = true, ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true },
 	Guidance	= { Dumb = true, Infrared = true, ["Semi-Active Radar"] = true },
 	Navigation  = "APN",
@@ -61,6 +62,7 @@ Missiles.RegisterItem("AIM-120 AAM", "AAM", {
 	Year		= 1991,
 	Diameter	= 154.5, -- in mm
 	ReloadTime	= 25,
+	ExhaustPos  = Vector(-66),
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true },
 	Guidance	= { Dumb = true, ["Semi-Active Radar"] = true, ["Active Radar"] = true },
 	Navigation  = "APN",
@@ -103,6 +105,7 @@ Missiles.RegisterItem("AIM-54 AAM", "AAM", {
 	Year		= 1974,
 	Diameter	= 327.5, -- in mm
 	ReloadTime	= 40,
+	ExhaustPos  = Vector(-60),
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true },
 	Guidance	= { Dumb = true, ["Semi-Active Radar"] = true, ["Active Radar"] = true },
 	Navigation  = "APN",

@@ -45,7 +45,9 @@ else
 		TraceData.start = self.Source:LocalToWorld(self.InPos)
 		TraceData.endpos = Missile:LocalToWorld(self.OutPos)
 
-		return not TraceLine(TraceData).Hit
+		local Trace = TraceLine(TraceData)
+
+		return not Trace.Hit
 	end
 
 	function Guidance:GetGuidance(Missile)
