@@ -1,5 +1,5 @@
 local ACF             = ACF
-local Bullets         = ACF.Bullets
+local Bullets         = ACF.Ballistics.Bullets
 local Clock           = ACF.Utilities.Clock
 local Countermeasures = ACF.Classes.Countermeasures
 local Countermeasure  = Countermeasures.Register("Flare")
