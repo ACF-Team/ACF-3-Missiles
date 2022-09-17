@@ -847,7 +847,7 @@ do -- Misc -------------------------------------
 		for _, Point in pairs(self.MountPoints) do
 			local Missile = Point.Missile
 
-			if IsValid( Missile ) then
+			if IsValid(Missile) then
 				Missile:Remove()
 			end
 
