@@ -42,6 +42,7 @@ else
 	end
 
 	function Guidance:CheckLOS(Missile)
+		if not IsValid(self.Source) then return end
 		TraceData.start = self.Source:LocalToWorld(self.InPos)
 		TraceData.endpos = Missile:LocalToWorld(self.OutPos)
 
