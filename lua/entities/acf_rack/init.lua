@@ -234,6 +234,8 @@ do -- Spawning and Updating --------------------
 		VerifyData(Data)
 
 		local Rack    = Racks[Data.Rack]
+		if not Rack then return false, "Invalid rack type!" end
+
 		local OldData = self.RackData
 
 		if OldData.OnLast then
