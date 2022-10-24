@@ -42,6 +42,7 @@ Missiles.RegisterItem("Type 63 RA", "ARTY", {
 		GLimit          = 10,
 		TailFinMul		= 20,
 		PenMul			= 2,
+		CanDelayLaunch	= true,
 		ActualLength 	= 80,
 		ActualWidth		= 10.7
 	},
@@ -84,6 +85,7 @@ Missiles.RegisterItem("SAKR-10 RA", "ARTY", {
 		GLimit          = 10,
 		TailFinMul		= 30,
 		PenMul			= 1.2,
+		CanDelayLaunch	= true,
 		ActualLength 	= 287,
 		ActualWidth		= 12.2
 	},
@@ -126,6 +128,7 @@ Missiles.RegisterItem("SS-40 RA", "ARTY", {
 		GLimit          = 10,
 		TailFinMul		= 50,
 		PenMul			= 1.4,
+		CanDelayLaunch	= true,
 		ActualLength 	= 370,
 		ActualWidth		= 18
 	},

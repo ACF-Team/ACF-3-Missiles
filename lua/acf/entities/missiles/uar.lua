@@ -55,6 +55,7 @@ Missiles.RegisterItem("RS82 ASR", "UAR", {
 		GLimit          = 1,
 		TailFinMul		= 0.05,
 		PenMul			= 0.8,
+		CanDelayLaunch	= true,
 		ActualLength 	= 60,
 		ActualWidth		= 8.2
 	},
@@ -100,6 +101,7 @@ Missiles.RegisterItem("HVAR ASR", "UAR", {
 		FillerMul		= 1,
 		LinerMassMul	= 1,
 		Standoff		= 7,
+		CanDelayLaunch	= true,
 		ActualLength 	= 173,
 		ActualWidth		= 12.7
 	},
@@ -184,6 +186,7 @@ Missiles.RegisterItem("S-24 ASR", "UAR", {
 		GLimit          = 1,
 		TailFinMul		= 0.3,
 		PenMul			= 1.05,
+		CanDelayLaunch	= true,
 		ActualLength 	= 233,
 		ActualWidth		= 24
 	},

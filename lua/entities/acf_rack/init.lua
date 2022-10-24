@@ -82,6 +82,7 @@ do -- Spawning and Updating --------------------
 		Entity.PointIndex     = 1
 		Entity.SoundPath      = Rack.Sound
 		Entity.DefaultSound   = Rack.Sound
+		Entity.CanDropMissile = Rack.CanDropMissile
 		Entity.HideMissile    = Rack.HideMissile
 		Entity.ProtectMissile = Rack.ProtectMissile
 		Entity.MissileModel   = Rack.RackModel
@@ -151,9 +152,9 @@ do -- Spawning and Updating --------------------
 
 	hook.Add("ACF_OnSetupInputs", "ACF Rack Motor Delay", function(Entity, List, _, Rack)
 		if Entity:GetClass() ~= "acf_rack" then return end
-		if Rack.EntType ~= "Rack" then return end
+		if not Rack.CanDropMissile then return end
 
-		List[#List + 1] = "Motor Delay (A forced delay before igniting the thruster)"
+		List[#List + 1] = "Motor Delay (A forced delay before igniting the missile's thruster)"
 	end)
 
 	-------------------------------------------------------------------------------

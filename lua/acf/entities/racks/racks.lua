@@ -13,6 +13,8 @@ Racks.Register("1xRK", {
 		FOV    = 60,
 	},
 
+	CanDropMissile = true,
+
 	MountPoints = {
 		{ Name = "missile1", Position = Vector(0, 0, 2.5), Direction = Vector(0, 0, -1) }
 	}
@@ -31,6 +33,8 @@ Racks.Register("1xRK_small", {
 		FOV    = 60,
 	},
 
+	CanDropMissile = true,
+
 	MountPoints = {
 		{ Name = "missile1", Position = Vector(0, 0, 2.5), Direction = Vector(0, 0, -1) }
 	}
@@ -47,6 +51,8 @@ Racks.Register("2xRK", {
 	Preview = {
 		FOV = 85,
 	},
+
+	CanDropMissile = true,
 
 	MountPoints = {
 		{ Name = "missile1", Position = Vector(4, -14, -1.7), Direction = Vector(0, -1, 0), Angle = Angle(0, 0, -90) },
@@ -66,6 +72,8 @@ Racks.Register("3xRK", {
 		FOV = 75,
 	},
 
+	CanDropMissile = true,
+
 	MountPoints = {
 		{ Name = "missile1", Position = Vector(-4, 0, -8.8), Direction = Vector(0, 0, -1) },
 		{ Name = "missile2", Position = Vector(-4, 3.7, -0.2), Direction = Vector(0, 0.75, -0.75), Angle = Angle(0, 0, 45) },
@@ -84,6 +92,8 @@ Racks.Register("4xRK", {
 	Preview = {
 		FOV = 115,
 	},
+
+	CanDropMissile = true,
 
 	MountPoints = {
 		{ Name = "missile1", Position = Vector(0, -12.5, -4.5), Direction = Vector(0, 0, -1) },
@@ -106,6 +116,8 @@ Racks.Register("2x AGM-114", {
 		FOV    = 60,
 	},
 
+	CanDropMissile = true,
+
 	MountPoints = {
 		{ Name = "missile1", Position = Vector(0, -7.85, 4.9), Direction = Vector(0, 0, -1) },
 		{ Name = "missile2", Position = Vector(0, 8.05, 4.9), Direction = Vector(0, 0, -1) },
@@ -123,6 +135,8 @@ Racks.Register("4x AGM-114", {
 	Preview = {
 		FOV = 100,
 	},
+
+	CanDropMissile = true,
 
 	MountPoints = {
 		{ Name = "missile1", Position = Vector(0, -7.85, 4.9), Direction = Vector(0, 0, -1) },

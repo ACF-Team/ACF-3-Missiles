@@ -523,7 +523,7 @@ function ENT:Launch(Delay, IsMisfire)
 
 	ActiveMissiles[self] = true
 
-	if Delay and self.CanDelay then
+	if Delay and self.CanDelay and Rack.CanDropMissile then
 		timer.Simple(Delay, function()
 			if not IsValid(self) then return end
 

@@ -45,6 +45,7 @@ Missiles.RegisterItem("AT-3 ASM", "ATGM", {
 		FillerMul		= 12,
 		LinerMassMul	= 1.2,
 		Standoff		= 22,
+		CanDelayLaunch	= true,
 		ActualLength 	= 86,
 		ActualWidth		= 12.5
 	},
@@ -145,6 +146,7 @@ Missiles.RegisterItem("AGM-114 ASM", "ATGM", {
 		FillerMul		= 12,
 		LinerMassMul	= 1,
 		Standoff		= 51,
+		CanDelayLaunch	= true,
 		ActualLength 	= 160,
 		ActualWidth		= 18
 	},
@@ -294,6 +296,7 @@ Missiles.RegisterItem("AT-2 ASM", "ATGM", {
 		FillerMul		= 4,
 		LinerMassMul	= 2,
 		Standoff		= 5.7,
+		CanDelayLaunch	= true,
 		ActualLength 	= 116,
 		ActualWidth		= 14.8
 	},
