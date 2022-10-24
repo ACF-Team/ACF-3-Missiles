@@ -233,7 +233,7 @@ do -- Spawning and Updating --------------------
 
 		VerifyData(Data)
 
-		local Rack    = Racks[Data.Rack]
+		local Rack    = Racks.Get(Data.Rack)
 		local OldData = self.RackData
 
 		if OldData.OnLast then
