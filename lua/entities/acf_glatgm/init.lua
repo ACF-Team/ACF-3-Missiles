@@ -268,7 +268,7 @@ function ENT:Think()
 	TraceData.endpos = self.Position
 	TraceData.filter = self.Filter
 
-	local Result = ACF.trace(TraceData)
+	local Result = ACF.Trace(TraceData)
 
 	if Result.Hit then
 		self.Position = Result.HitPos

@@ -252,6 +252,7 @@ do -- Optical guidance computer
 	local MenuText  = "Pitch bounds : +-%s degrees\nYaw bounds : +-%s degrees\nAim speed : %s degrees/s\nFocus speed : %s m/s\nMass : %s kg"
 	local TraceData = { start = true, endpos = true, filter = true }
 	local Computers = {}
+	local Trace     = ACF.TraceF
 
 	local function GetTraceEndPos(Entity, Distance)
 		return Entity:LocalToWorld(Entity.Offset + Entity.Direction * Distance)
@@ -431,7 +432,7 @@ do -- Optical guidance computer
 			TraceData.endpos = GetTraceEndPos(Entity, 50000)
 			TraceData.filter = Entity.Filter
 
-			local Result = ACF.trace(TraceData)
+			local Result = Trace(TraceData)
 
 			Entity.TraceDir  = Result.Normal
 			Entity.TracePos  = Result.HitPos
