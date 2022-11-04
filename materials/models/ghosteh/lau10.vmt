@@ -2,7 +2,6 @@
 {
 	"$baseTexture" "models\ghosteh/lau10"
 	"$bumpmap" "models\ghosteh/lau10_norm"
-	"$normalmapalphaenvmapmask" "1"	
 	"$surfaceprop" "metal"
 	"$envmap" "env_cubemap"
 	"$normalmapalphaenvmapmask" "1"
