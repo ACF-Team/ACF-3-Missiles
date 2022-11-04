@@ -6,7 +6,6 @@
 
 	"$surfaceprop" "metal"
 	"$envmap" "env_cubemap"
-	"$normalmapalphaenvmapmask" "1"
 	"$envmaptint" "[ 0.1 0.1 0.1 ]"
 	"$envmapcontrast" 0.1
 	"$envmapsaturation" 0.1

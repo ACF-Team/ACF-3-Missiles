@@ -1,9 +1,8 @@
 "VertexLitGeneric"
 {
 	"$baseTexture" "models\missiles/9m120_rack"
-	$halflambert 			1
-	$blendtintbybasealpha		1
-	$surfaceprop	metal
+	"$blendtintbybasealpha" "1"
+	"$surfaceprop" "metal"
 	"$phong" "1"
 	"$phongexponent" "40"
 	"$phongboost" "2"
