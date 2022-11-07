@@ -266,6 +266,7 @@ do -- Spawning and Updating --------------------
 end ---------------------------------------------
 
 do -- Custom ACF damage ------------------------
+	local Damage     = ACF.TempDamage
 	local SparkSound = "ambient/energy/spark%s.wav"
 
 	local function ShowDamage(Rack, Point)
@@ -292,8 +293,8 @@ do -- Custom ACF damage ------------------------
 		end)
 	end
 
-	function ENT:ACF_OnDamage(Bullet, Trace)
-		local HitRes = ACF.PropDamage(Bullet, Trace) --Calling the standard damage prop function
+	function ENT:ACF_OnDamage(DmgResult, DmgInfo)
+		local HitRes = Damage.doPropDamage(self, DmgResult, DmgInfo) -- Calling the standard prop damage function
 
 		if not HitRes.Kill then
 			local Ratio = self.ACF.Health / self.ACF.MaxHealth

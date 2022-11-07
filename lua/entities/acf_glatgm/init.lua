@@ -7,6 +7,7 @@ local ACF        = ACF
 local Missiles   = ACF.ActiveMissiles
 local Ballistics = ACF.Ballistics
 local AmmoTypes  = ACF.Classes.AmmoTypes
+local Damage     = ACF.TempDamage
 local Clock      = ACF.Utilities.Clock
 local TraceData  = { start = true, endpos = true, filter = true }
 local ZERO       = Vector()
@@ -128,7 +129,7 @@ function ENT:ACF_Activate(Recalc)
 	self.ACF.Type      = "Prop"
 end
 
-function ENT:ACF_OnDamage(Bullet, Trace)
+function ENT:ACF_OnDamage(DmgResult, DmgInfo)
 	if self.Detonated then
 		return {
 			Damage = 0,
@@ -138,8 +139,8 @@ function ENT:ACF_OnDamage(Bullet, Trace)
 		}
 	end
 
-	local HitRes = ACF.PropDamage(Bullet, Trace) --Calling the standard damage prop function
-	local Owner  = Bullet.Owner
+	local HitRes = Damage.doPropDamage(self, DmgResult, DmgInfo) -- Calling the standard prop damage function
+	local Owner  = DmgInfo:GetAttacker()
 
 	-- If the missile was destroyed, then we detonate it.
 	if HitRes.Kill then
