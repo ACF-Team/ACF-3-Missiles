@@ -7,7 +7,7 @@ local ACF        = ACF
 local Missiles   = ACF.ActiveMissiles
 local Ballistics = ACF.Ballistics
 local AmmoTypes  = ACF.Classes.AmmoTypes
-local Damage     = ACF.TempDamage
+local Damage     = ACF.Damage
 local Clock      = ACF.Utilities.Clock
 local TraceData  = { start = true, endpos = true, filter = true }
 local ZERO       = Vector()

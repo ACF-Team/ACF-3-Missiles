@@ -38,7 +38,7 @@ end)
 --===============================================================================================--
 
 local Radars	  = ACF.ActiveRadars
-local Damage      = ACF.TempDamage
+local Damage      = ACF.Damage
 local CheckLegal  = ACF_CheckLegal
 local UnlinkSound = "physics/metal/metal_box_impact_bullet%s.wav"
 local MaxDistance = ACF.LinkDistance * ACF.LinkDistance

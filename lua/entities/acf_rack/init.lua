@@ -266,7 +266,7 @@ do -- Spawning and Updating --------------------
 end ---------------------------------------------
 
 do -- Custom ACF damage ------------------------
-	local Damage     = ACF.TempDamage
+	local Damage     = ACF.Damage
 	local SparkSound = "ambient/energy/spark%s.wav"
 
 	local function ShowDamage(Rack, Point)
