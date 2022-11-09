@@ -501,9 +501,6 @@ end
 function ENT:Enable()
 	if not CheckLegal(self) then return end
 
-	self.Disabled		= nil
-	self.DisableReason	= nil
-
 	if self.Inputs.Active.Path then
 		self:TriggerInput("Active", self.Inputs.Active.Value)
 	end
@@ -513,8 +510,6 @@ end
 
 function ENT:Disable()
 	self:TriggerInput("Active", 0)
-
-	self.Disabled = true
 end
 
 local Text = "%s\n\n%s\nDetection range: %s\nScanning angle: %s degrees"
