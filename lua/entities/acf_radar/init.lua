@@ -38,6 +38,7 @@ end)
 --===============================================================================================--
 
 local Radars	  = ACF.ActiveRadars
+local Damage      = ACF.Damage
 local CheckLegal  = ACF_CheckLegal
 local UnlinkSound = "physics/metal/metal_box_impact_bullet%s.wav"
 local MaxDistance = ACF.LinkDistance * ACF.LinkDistance
@@ -490,8 +491,8 @@ end
 -- Meta Funcs
 --===============================================================================================--
 
-function ENT:ACF_OnDamage(Bullet, Trace)
-	local HitRes = ACF.PropDamage(Bullet, Trace)
+function ENT:ACF_OnDamage(DmgResult, DmgInfo)
+	local HitRes = Damage.doPropDamage(self, DmgResult, DmgInfo)
 
 	self.Spread = ACF.MaxDamageInaccuracy * (1 - math.Round(self.ACF.Health / self.ACF.MaxHealth, 2))
 

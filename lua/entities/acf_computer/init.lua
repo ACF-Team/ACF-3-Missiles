@@ -5,6 +5,7 @@ AddCSLuaFile("cl_init.lua")
 include("shared.lua")
 
 local ACF       = ACF
+local Damage    = ACF.Damage
 local Utilities = ACF.Utilities
 local Clock     = Utilities.Clock
 
@@ -294,8 +295,8 @@ do -- Spawn and update function
 	end
 end
 
-function ENT:ACF_OnDamage(Bullet, Trace)
-	local HitRes = ACF.PropDamage(Bullet, Trace)
+function ENT:ACF_OnDamage(DmgResult, DmgInfo)
+	local HitRes = Damage.doPropDamage(self, DmgResult, DmgInfo)
 
 	--self.Spread = ACF.MaxDamageInaccuracy * (1 - math.Round(self.ACF.Health / self.ACF.MaxHealth, 2))
 	if self.OnDamaged then
