@@ -76,7 +76,7 @@ Missiles.RegisterItem("AIM-120 AAM", "AAM", {
 		MaxLength		= 370,
 		Armor			= 5,
 		ProjLength		= 70,
-		PropLength		= 140,
+		PropLength		= 200,
 		Thrust			= 1500000, 	-- in kg*in/s^2
 		FuelConsumption = 0.02,		-- in g/s/f
 		StarterPercent	= 0.05,
@@ -91,6 +91,49 @@ Missiles.RegisterItem("AIM-120 AAM", "AAM", {
 	},
 	Preview = {
 		Height = 60,
+		FOV    = 60,
+	},
+})
+
+Missiles.RegisterItem("AIM-7 AAM", "AAM", {
+	Name        = "AIM-7 Sparrow",
+	Description = "This well-aged early BVR missile has been worn on the hip of every raging fighter since '53. But don't be mislead, this ain't your granddaddy's Sparrow",
+	Model       = "models/missiles/aim7f.mdl",
+	Length      = 370,
+	Caliber     = 200,
+	Mass        = 231,
+	Year        = 1953,
+	Diameter    = 203.2, -- in mm
+	ReloadTime  = 28,
+	ExhaustPos  = Vector(-70),
+	Racks       = { ["1xRK"] = true, ["2xRK"] = true },
+	Guidance    = { Dumb = true, ["Semi-Active Radar"] = true, ["Radio (MCLOS)"] = true },
+	Navigation  = "APN",
+	Fuzes       = { Contact = true, Radio = true },
+	SeekCone    = 10,
+	ViewCone    = 20,
+	Agility     = 0.02,
+	ArmDelay    = 0.3,
+	Round = {
+		Model           = "models/missiles/aim7f.mdl",
+		MaxLength       = 370,
+		Armor           = 5,
+		ProjLength      = 70,
+		PropLength      = 200,
+		Thrust          = 3000000, -- in kg*in/s^2
+		FuelConsumption = 0.03, -- in g/s/f
+		StarterPercent  = 0.05,
+		MaxAgilitySpeed = 300, -- in m/s
+		DragCoef        = 0.02,
+		FinMul          = 0.25,
+		GLimit          = 12,
+		TailFinMul      = 0.001,
+		CanDelayLaunch  = true,
+		ActualLength    = 370,
+		ActualWidth     = 20
+	},
+	Preview = {
+		Height = 100,
 		FOV    = 60,
 	},
 })
