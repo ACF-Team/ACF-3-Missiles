@@ -26,6 +26,7 @@ else
 
 		for Entity in pairs(Targets) do
 			if Missile == Entity then continue end
+			if Entity.IsAntiMissile then continue end
 
 			local EntPos   = Entity.Position
 			local Distance = Position:DistToSqr(EntPos)
@@ -60,6 +61,7 @@ else
 
 		for Entity, Data in pairs(Targets) do
 			if Missile == Entity then continue end
+			if Entity.IsAntiMissile then continue end
 
 			local EntPos   = Data.Position
 			local Distance = Position:DistToSqr(EntPos)
@@ -83,6 +85,8 @@ else
 	end
 
 	function Guidance:OnLaunched(Missile)
+		Missile.IsAntiMissile = true
+
 		self:UpdateTarget(Missile, self:GetRadar())
 	end
 
@@ -119,5 +123,11 @@ else
 		if not NewTarget then return {} end
 
 		return { TargetPos = NewTarget, ViewCone = self.ViewCone }
+	end
+
+	function Guidance:OnRemoved(Missile)
+		Guidance.BaseClass.OnRemoved(self, Missile)
+
+		Missile.IsAntiMissile = nil
 	end
 end
