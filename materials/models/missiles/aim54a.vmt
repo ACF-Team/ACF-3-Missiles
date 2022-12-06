@@ -1,6 +1,6 @@
 "VertexLitGeneric"
 {
-	"$basetexture" "models/missiles/AIM54"
+	"$basetexture" "models/missiles/AIM54A"
 	"$surfaceprop" "metal"
 	"$envmap" "env_cubemap"
 	"$envmaptint" "[ .25 .25 .30 ]"
