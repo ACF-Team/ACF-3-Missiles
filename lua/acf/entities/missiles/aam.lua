@@ -141,12 +141,12 @@ Missiles.RegisterItem("AIM-7 AAM", "AAM", {
 Missiles.RegisterItem("AIM-54 AAM", "AAM", {
 	Name		= "AIM-54 Phoenix",
 	Description	= "A BEEFY god-tier anti-bomber weapon, made with Jimmy Carter's repressed rage. Getting hit with one of these is a significant emotional event that is hard to avoid if you're flying high.",
-	Model		= "models/missiles/aim54.mdl",
+	Model		= "models/missiles/aim54a.mdl",
 	Length		= 400,
 	Caliber		= 380,
 	Mass		= 453,
 	Year		= 1974,
-	Diameter	= 327.5, -- in mm
+	Diameter	= 330, -- in mm
 	ReloadTime	= 40,
 	ExhaustPos  = Vector(-60),
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true },
@@ -158,7 +158,7 @@ Missiles.RegisterItem("AIM-54 AAM", "AAM", {
 	Agility		= 0.02,
 	ArmDelay	= 0.4,
 	Round = {
-		Model           = "models/missiles/aim54.mdl",
+		Model           = "models/missiles/aim54a.mdl",
 		MaxLength       = 400,
 		Armor           = 2,
 		ProjLength      = 60,
