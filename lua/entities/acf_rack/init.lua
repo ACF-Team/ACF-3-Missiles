@@ -106,8 +106,8 @@ do -- Spawning and Updating --------------------
 		do -- Removing old missiles
 			local Missiles = Entity.Missiles
 
-			for _, V in pairs(Missiles) do
-				V:Remove()
+			for _, v in pairs(Missiles) do
+				SafeRemoveEntity(v)
 			end
 		end
 
