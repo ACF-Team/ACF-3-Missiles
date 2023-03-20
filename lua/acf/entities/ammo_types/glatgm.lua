@@ -11,7 +11,6 @@ function Ammo:OnLoaded()
 		C = true,
 		AL = true,
 		HW = true,
-		SB = true,
 		SC = true,
 	})
 end
