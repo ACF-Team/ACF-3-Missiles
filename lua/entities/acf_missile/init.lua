@@ -341,11 +341,12 @@ function MakeACF_Missile(Player, Pos, Ang, Rack, MountPoint, Crate)
 	if not IsValid(Missile) then return end
 
 	local BulletData = Crate.BulletData
-	local Class = Classes.GetGroup(Missiles, BulletData.Id)
-	local Data = Class.Lookup[BulletData.Id]
-	local Round = Data.Round
-	local Length = Data.Length
-	local Caliber = Data.Caliber
+	local Class      = Classes.GetGroup(Missiles, BulletData.Id)
+	local Data       = Class.Lookup[BulletData.Id]
+	local Round      = Data.Round
+	local Length     = Data.Length
+	local Caliber    = Data.Caliber
+	local Percent    = math.max(0.5, (BulletData.ProjLength + BulletData.PropLength) / Round.MaxLength)
 
 	Missile:SetAngles(Rack:LocalToWorldAngles(Ang))
 	Missile:SetPos(Rack:LocalToWorld(Pos))
@@ -368,7 +369,7 @@ function MakeACF_Missile(Player, Pos, Ang, Rack, MountPoint, Crate)
 	Missile.SkinIndex       = Data.SkinIndex
 	Missile.NoThrust        = Data.NoThrust or Class.NoThrust
 	Missile.Sound           = Data.Sound or Class.Sound or "acf_missiles/missiles/missile_rocket.mp3"
-	Missile.ReloadTime      = Data.ReloadTime or 10
+	Missile.ReloadTime      = (Data.ReloadTime or 10) * Percent
 	Missile.ForcedMass      = Data.Mass or 10
 	Missile.ForcedArmor     = Round.Armor
 	Missile.Effect          = Data.Effect or Class.Effect

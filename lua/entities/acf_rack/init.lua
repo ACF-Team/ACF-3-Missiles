@@ -12,6 +12,20 @@ local Classes   = ACF.Classes
 local Utilities = ACF.Utilities
 local Clock     = Utilities.Clock
 
+local function UpdateTotalAmmo(Entity)
+	local Total = 0
+
+	for Crate in pairs(Entity.Crates) do
+		if Crate:CanConsume() then
+			Total = Total + Crate.Ammo
+		end
+	end
+
+	Entity.TotalAmmo = Total
+
+	WireLib.TriggerOutput(Entity, "Total Ammo", Total)
+end
+
 do -- Spawning and Updating --------------------
 	local UnlinkSound = "physics/metal/metal_box_impact_bullet%s.wav"
 	local MaxDistance = ACF.LinkDistance * ACF.LinkDistance
@@ -23,15 +37,19 @@ do -- Spawning and Updating --------------------
 	local Inputs = {
 		"Fire (Attempts to fire the next missile in line, or the selected one.)",
 		"Reload (Attempts to load another missile into the rack.)",
-		"Unload (Does nothing.)",
+		--"Unload (Does nothing.)",
 		"Missile Index (Selects a specific slot on the rack to be fired next.)",
 		"Fire Delay (Sets the delay at which missiles will be fired.)"
 	}
 	local Outputs = {
 		"Ready (Returns 1 if the rack can fire a missile.)",
 		"Status (Returns the current state of the rack.) [STRING]",
+		"Ammo Type (Returns the name of the currently loaded ammo type.) [STRING]",
 		"Shots Left (Returns the amount of missiles left in the rack.)",
-		"Current Index (Returns the currently selected missile index.)",
+		"Total Ammo (Returns the amount of missiles available for this rack.)",
+		"Current Index (Returns the index of the currently selected hardpoint.)",
+		"Rate of Fire (Returns the amount of missiles per minute the rack can fire.)",
+		"Reload Time (Returns the amount of time in seconds it'll take to reload the currently selected hardpoint.)",
 		"Missile (Returns the next missile to be fired.) [ENTITY]",
 		"Entity (The rack itself.) [ENTITY]"
 	}
@@ -106,8 +124,10 @@ do -- Spawning and Updating --------------------
 		do -- Removing old missiles
 			local Missiles = Entity.Missiles
 
-			for _, v in pairs(Missiles) do
-				SafeRemoveEntity(v)
+			for _, V in pairs(Missiles) do
+				if IsValid(V) then
+					V:Remove()
+				end
 			end
 		end
 
@@ -133,6 +153,8 @@ do -- Spawning and Updating --------------------
 
 			Entity:UpdatePoint()
 		end
+
+		UpdateTotalAmmo(Entity)
 	end
 
 	local function CheckDistantLinks(Entity, Source)
@@ -198,6 +220,8 @@ do -- Spawning and Updating --------------------
 
 		HookRun("ACF_OnEntitySpawn", "acf_rack", Rack, Data, RackData)
 
+		WireLib.TriggerOutput(Rack, "Rate of Fire", 60)
+		WireLib.TriggerOutput(Rack, "Reload Time", 1)
 		WireLib.TriggerOutput(Rack, "Entity", Rack)
 
 		Rack:UpdateOverlay(true)
@@ -216,6 +240,12 @@ do -- Spawning and Updating --------------------
 			if not IsValid(Rack) then return end
 
 			CheckDistantLinks(Rack, "Crates")
+		end)
+
+		timer.Create("ACF Rack Ammo " .. Rack:EntIndex(), 1, 0, function()
+			if not IsValid(Rack) then return end
+
+			UpdateTotalAmmo(Rack)
 		end)
 
 		return Rack
@@ -373,6 +403,8 @@ do -- Entity Link/Unlink -----------------------
 		Weapon:UpdateOverlay()
 		Target:UpdateOverlay()
 
+		UpdateTotalAmmo(Weapon)
+
 		return true, "Rack linked successfully."
 	end)
 
@@ -387,6 +419,8 @@ do -- Entity Link/Unlink -----------------------
 
 			Weapon:UpdateOverlay()
 			Target:UpdateOverlay()
+
+			UpdateTotalAmmo(Weapon)
 
 			return true, "Weapon unlinked successfully."
 		end
@@ -435,7 +469,11 @@ do -- Entity Inputs ----------------------------
 	end)
 
 	ACF.AddInputAction("acf_rack", "Fire Delay", function(Entity, Value)
-		Entity.FireDelay = math.Clamp(Value, 0.1, 1)
+		local New = math.Clamp(Value, 0.1, 1)
+
+		Entity.FireDelay = New
+
+		WireLib.TriggerOutput(Entity, "Rate of Fire", 60 / New)
 	end)
 
 	ACF.AddInputAction("acf_rack", "Motor Delay", function(Entity, Value)
@@ -587,22 +625,22 @@ do -- Loading ----------------------------------
 		local Crate = GetNextCrate(self)
 
 		if not self.Firing and Index and Crate then
-			local Missile = AddMissile(self, Point, Crate)
-			local Bullet  = Missile.BulletData
-			local Percent = math.max(0.5, (Bullet.ProjLength + Bullet.PropLength) / Missile.MaxLength)
-			local Time    = Missile.ReloadTime * Percent
+			local Missile    = AddMissile(self, Point, Crate)
+			local ReloadTime = Missile.ReloadTime
 
-			Point.NextFire = Clock.CurTime + Time
+			Point.NextFire = Clock.CurTime + ReloadTime
 			Point.State    = "Loading"
 
 			self:UpdateLoad(Point, Missile)
 
 			self.CurrentCrate = Crate
-			self.ReloadTime   = Time
+			self.ReloadTime   = ReloadTime
+
+			WireLib.TriggerOutput(self, "Reload Time", ReloadTime)
 
 			Crate:Consume()
 
-			timer.Simple(Time, function()
+			timer.Simple(ReloadTime, function()
 				if not IsValid(self) or Point.Removed then
 					if IsValid(Crate) then Crate:Consume(-1) end
 
@@ -775,17 +813,22 @@ do -- Misc -------------------------------------
 	end
 
 	function ENT:UpdatePoint()
-		local Index = self.ForcedIndex or self.PointIndex
-		local Point = self.MountPoints[Index]
+		local Index      = self.ForcedIndex or self.PointIndex
+		local Point      = self.MountPoints[Index]
+		local BulletData = Point.BulletData
+		local Missile    = Point.Missile
+		local Reload     = IsValid(Missile) and Missile.ReloadTime or 1
 
-		self.BulletData = Point.BulletData
-		self.NextFire = Point.NextFire
-		self.Jammed = Point.Disabled
+		self.BulletData = BulletData
+		self.NextFire   = Point.NextFire
+		self.Jammed     = Point.Disabled
 
 		self:SetState(self.Jammed and "Jammed" or Point.State)
 
+		WireLib.TriggerOutput(self, "Ammo Type", BulletData.Type)
 		WireLib.TriggerOutput(self, "Current Index", Index)
-		WireLib.TriggerOutput(self, "Missile", Point.Missile)
+		WireLib.TriggerOutput(self, "Reload Time", Reload)
+		WireLib.TriggerOutput(self, "Missile", Missile)
 	end
 
 	function ENT:UpdateLoad(Point, Missile)
@@ -857,6 +900,7 @@ do -- Misc -------------------------------------
 		end
 
 		timer.Remove("ACF Rack Clock " .. self:EntIndex())
+		timer.Remove("ACF Rack Ammo " .. self:EntIndex())
 
 		WireLib.Remove(self)
 	end
