@@ -8,4 +8,4 @@ jobs:
   Lint:
     uses: FPtje/GLuaFixer/.github/workflows/glualint.yml@master
     with:
-      config: ".glualint.json"
+      config: "./.glualint.json"
