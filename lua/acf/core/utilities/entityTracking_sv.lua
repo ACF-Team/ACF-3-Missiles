@@ -13,10 +13,6 @@ local Whitelist = {
 	gmod_emitter               = true,
 	gmod_button                = true,
 	phys_magnet                = true,
-	-- Vehicle entities
-	prop_vehicle_jeep          = true,
-	prop_vehicle_airboat       = true,
-	prop_vehicle_prisoner_pod  = true,
 	-- Wiremod entities
 	gmod_wire_cameracontroller = true,
 	gmod_wire_expression2      = true,
@@ -39,6 +35,8 @@ local Whitelist = {
 	acf_gun                    = true,
 	acf_rack                   = true,
 	acf_radar                  = true,
+	-- I shouldn't have to explain this
+	player                     = true,
 }
 
 local function GetAncestor(Entity)
@@ -51,31 +49,52 @@ local function GetAncestor(Entity)
 	return Ancestor
 end
 
-local function GetPosition(Entity)
-	local PhysObj = Entity:GetPhysicsObject()
+local function UpdateValues(Entity)
+	local PhysObj  = Entity:GetPhysicsObject()
+	local Velocity = Entity:GetVelocity()
+	local PrevPos  = Entity.Position
+	local Position
 
-	if not IsValid(PhysObj) then return Entity:GetPos() end
+	if IsValid(PhysObj) then
+		Position = Entity:LocalToWorld(PhysObj:GetMassCenter())
+	else
+		Position = Entity:GetPos()
+	end
 
-	return Entity:LocalToWorld(PhysObj:GetMassCenter())
+	-- Entities being moved around by SetPos will have a velocity of 0
+	-- By using the difference between positions we can get a proper value
+	if Velocity:LengthSqr() == 0 and PrevPos then
+		Velocity = (Position - PrevPos) / Clock.DeltaTime
+	end
+
+	Entity.Position = Position
+	Entity.Velocity = Velocity
 end
 
 hook.Add("OnEntityCreated", "ACF Entity Tracking", function(Entity)
-	if IsValid(Entity) and Whitelist[Entity:GetClass()] then
-		Entities[Entity] = true
+	if not IsValid(Entity) then return end
+	if not Whitelist[Entity:GetClass()] then return end
 
-		Entity:CallOnRemove("ACF Entity Tracking", function()
-			Entities[Entity] = nil
-		end)
-	end
+	Entities[Entity] = true
+
+	Entity:CallOnRemove("ACF Entity Tracking", function()
+		Entities[Entity] = nil
+	end)
 end)
 
-hook.Add("ACF_OnClock", "ACF Entity Tracking", function(_, DeltaTime)
-	for K in pairs(Ancestors) do
-		local Previous = K.Position
-		local Current  = GetPosition(K)
+hook.Add("PlayerSpawnedVehicle", "ACF Entity Tracking", function(_, Entity)
+	if not IsValid(Entity) then return end
 
-		K.Position = Current
-		K.Velocity = (Current - Previous) / DeltaTime
+	Entities[Entity] = true
+
+	Entity:CallOnRemove("ACF Entity Tracking", function()
+		Entities[Entity] = nil
+	end)
+end)
+
+hook.Add("ACF_OnClock", "ACF Entity Tracking", function()
+	for Ancestor in pairs(Ancestors) do
+		UpdateValues(Ancestor)
 	end
 end)
 
@@ -92,8 +111,7 @@ local function GetAncestorEntities()
 
 		if Ancestor and not Checked[Ancestor] then
 			if not Ancestors[Ancestor] then
-				Ancestor.Position = GetPosition(Ancestor)
-				Ancestor.Velocity = Vector()
+				UpdateValues(Ancestor)
 
 				Ancestors[Ancestor] = true
 
