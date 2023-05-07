@@ -1,6 +1,6 @@
 # Armored Combat Framework 3: Missiles
 
-[![Linter Status](https://img.shields.io/github/workflow/status/TwistedTail/ACF-3-Missiles/GLuaFixer?label=Linter%20Status&style=flat-square)](https://github.com/TwistedTail/ACF-3-Missiles/actions?query=workflow%3AGLuaFixer)
+[![Linter Status](https://img.shields.io/github/actions/workflow/status/TwistedTail/ACF-3-Missiles/GLuaFixer.yml?label=Linter%20Status&style=flat-square)](https://github.com/TwistedTail/ACF-3-Missiles/actions?query=workflow%3AGLuaFixer)
 [![Repository Size](https://img.shields.io/github/repo-size/TwistedTail/ACF-3-Missiles?label=Repository%20Size&style=flat-square)](https://github.com/TwistedTail/ACF-3-Missiles)
 [![Commit Activity](https://img.shields.io/github/commit-activity/m/TwistedTail/ACF-3-Missiles?label=Commit%20Activity&style=flat-square)](https://github.com/TwistedTail/ACF-3-Missiles/commits/master)
 
