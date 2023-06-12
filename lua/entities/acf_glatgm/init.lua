@@ -3,6 +3,7 @@ AddCSLuaFile("shared.lua")
 
 include("shared.lua")
 
+local hook       = hook
 local ACF        = ACF
 local Missiles   = ACF.ActiveMissiles
 local Ballistics = ACF.Ballistics
@@ -21,7 +22,7 @@ local function CheckViewCone(Missile, HitPos)
 end
 
 local function DetonateMissile(Missile, Inflictor)
-	if HookRun("ACF_AmmoExplode", Missile, Missile.BulletData) == false then return end
+	if hook.Run("ACF_AmmoExplode", Missile, Missile.BulletData) == false then return end
 
 	if IsValid(Inflictor) and Inflictor:IsPlayer() then
 		Missile.Inflictor = Inflictor
