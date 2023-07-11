@@ -19,7 +19,9 @@ if SERVER then
 end
 
 do -- Update checker
-	hook.Add("ACF_OnAddonLoaded", "ACF Missiles Checker", function()
+	hook.Add("ACF_OnLoadAddon", "ACF Missiles Checker", function()
 		ACF.AddRepository("TwistedTail", "ACF-3-Missiles", "lua/acf/core/acfm_globals.lua")
+
+		hook.Remove("ACF_OnLoadAddon", "ACF Missiles Checker")
 	end)
 end
