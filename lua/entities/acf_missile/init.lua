@@ -404,6 +404,8 @@ function MakeACF_Missile(Player, Pos, Ang, Rack, MountPoint, Crate)
 	Missile.Inputs          = WireLib.CreateInputs(Missile, Inputs)
 	Missile.Outputs         = WireLib.CreateOutputs(Missile, Outputs)
 
+	HookRun("ACF_OnEntitySpawn", "acf_missile", Missile, Data, Class, Crate)
+
 	WireLib.TriggerOutput(Missile, "Entity", Missile)
 
 	Missile:UpdateModel(Missile.RackModel or Missile.RealModel)
