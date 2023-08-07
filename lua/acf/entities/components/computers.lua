@@ -510,6 +510,7 @@ do -- Laser guidance computer
 		OnUpdate = function(Entity, _, _, Computer)
 			Entity.IsComputer = true
 			Entity.Lasing     = false
+			Entity.Offset     = Computer.Offset
 			Entity.OnCooldown = false
 			Entity.HitPos     = Vector()
 			Entity.Distance   = 0
