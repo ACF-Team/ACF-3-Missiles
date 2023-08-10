@@ -12,9 +12,6 @@ local ACF = ACF
 
 local Damage      = ACF.Damage
 local CheckLegal  = ACF_CheckLegal
-local Indexes	  = {}
-local Unused	  = {}
-local IndexCount  = 0
 local TimerExists = timer.Exists
 local TimerCreate = timer.Create
 local TimerRemove = timer.Remove
@@ -44,10 +41,10 @@ local function CheckReceive(Entity)
 
 	for Ent in pairs(Sources) do
 		local EntPos = Ent.Position or Ent:GetPos()
-		local Damage = Entity.Damage
-		local Spread = math.max(Entity.Divisor,15) * 2 * Damage
+		local EntDamage = Entity.Damage
+		local Spread = math.max(Entity.Divisor,15) * 2 * EntDamage
 
-		if Entity.CheckLOS(Entity, Ent, Origin, EntPos) and (math.Rand(0,1) >= (Damage / 5)) then
+		if Entity.CheckLOS(Entity, Ent, Origin, EntPos) and (math.Rand(0,1) >= (EntDamage / 5)) then
 			IsDetected = true
 
 			local PreAng = (EntPos - Origin):GetNormalized():Angle()
@@ -74,6 +71,8 @@ local function CheckReceive(Entity)
 end
 
 local function SetActive(Entity,Bool)
+	ResetOutputs(Entity)
+
 	if Bool then
 		if not TimerExists(Entity.TimerID) then
 			TimerCreate(Entity.TimerID, Entity.ThinkDelay, 0, function()
@@ -177,7 +176,7 @@ do -- Spawn and Update functions
 		if IsValid(Phys) then Phys:SetMass(Receiver.Mass) end
 	end
 
-	function MakeACF_Receiver(Player, Pos, Angle, Data)
+	function MakeACF_Receiver(Player, Pos, Ang, Data)
 		VerifyData(Data)
 
 		local Class = Classes.GetGroup(Sensors, Data.Receiver)
@@ -191,7 +190,7 @@ do -- Spawn and Update functions
 		if not IsValid(Receiver) then return end
 
 		Receiver:SetPlayer(Player)
-		Receiver:SetAngles(Angle)
+		Receiver:SetAngles(Ang)
 		Receiver:SetPos(Pos)
 		Receiver:Spawn()
 
@@ -301,7 +300,6 @@ function ENT:ACF_Activate(Recalc)
 	self.ACF.MaxHealth = Health
 	self.ACF.Armour    = Armor * (0.5 + Percent * 0.5)
 	self.ACF.MaxArmour = Armor * ACF.ArmorMod
-	self.ACF.Mass      = self.ForcedMass
 	self.ACF.Type      = "Prop"
 end
 
@@ -320,9 +318,7 @@ end
 local Text = "%s\n\n%s"
 
 function ENT:UpdateOverlayText()
-	local Status, Range, Cone
-
-	Status = self.Detected and "Detected" or "Undetected"
+	local Status = self.Detected and "Detected" or "Undetected"
 
 	return Text:format(Status, self.EntType)
 end

@@ -87,7 +87,7 @@ do -- Radar Receiver
 
 		local ReceiverOrigin = Receiver:LocalToWorld(Receiver.Origin)
 
-		for k,v in pairs(ACF.ActiveRadars) do -- Radar entities
+		for k in pairs(ACF.ActiveRadars) do -- Radar entities
 			if k.EntType ~= "Targeting Radar" then continue end
 			local RadarOrigin = k:LocalToWorld(k.Origin)
 
@@ -98,7 +98,7 @@ do -- Radar Receiver
 			end
 		end
 
-		for k,v in pairs(ACF.ActiveMissiles) do -- Missile entities
+		for k in pairs(ACF.ActiveMissiles) do -- Missile entities
 			if not k.UseGuidance then continue end -- Don't waste time on missiles that don't have functional guidance
 			if not ValidMissileRadars[k.Guidance] then continue end -- Further filter for anything without radar on the missile itself
 
