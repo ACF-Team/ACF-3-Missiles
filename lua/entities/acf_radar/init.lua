@@ -162,11 +162,14 @@ local function ScanForEntities(Entity)
 	local Velocity = TargetInfo.Velocity
 	local Distance = TargetInfo.Distance
 
+	local Damage = Entity.Damage
+	local Spread = ACF.MaxDamageInaccuracy * Damage
+
 	for Ent in pairs(Detected) do
 		local EntPos = Ent.Position or Ent:GetPos()
 
-		if CheckLOS(Origin, EntPos) then
-			local Spread = VectorRand(-Entity.Spread, Entity.Spread)
+		if CheckLOS(Origin, EntPos) and (math.Rand(0,1) >= (Damage / 10)) then
+			local Spread = VectorRand(-Spread, Spread)
 			local EntVel = Ent.Velocity or Ent:GetVelocity()
 			local Owner = GetEntityOwner(Entity.Owner, Ent)
 			local Index = GetEntityIndex(Ent)
@@ -400,7 +403,7 @@ do -- Spawn and Update functions
 		Radar.Active      = false
 		Radar.Scanning    = false
 		Radar.TargetCount = 0
-		Radar.Spread      = 0
+		Radar.Damage	  = 0
 		Radar.Weapons     = {}
 		Radar.Targets     = {}
 		Radar.DataStore   = Entities.GetArguments("acf_radar")
@@ -494,9 +497,13 @@ end
 function ENT:ACF_OnDamage(DmgResult, DmgInfo)
 	local HitRes = Damage.doPropDamage(self, DmgResult, DmgInfo)
 
-	self.Spread = ACF.MaxDamageInaccuracy * (1 - math.Round(self.ACF.Health / self.ACF.MaxHealth, 2))
+	self.Damage = (1 - math.Round(self.ACF.Health / self.ACF.MaxHealth, 2))
 
 	return HitRes
+end
+
+function ENT:ACF_OnRepaired() -- OldArmor, OldHealth, Armor, Health
+	self.Damage = (1 - math.Round(self.ACF.Health / self.ACF.MaxHealth, 2))
 end
 
 function ENT:Enable()
