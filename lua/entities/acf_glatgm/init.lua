@@ -94,8 +94,8 @@ function MakeACF_GLATGM(Gun, BulletData)
 	Entity.AccelLength  = math.Round(math.Clamp(BulletData.ProjMass / BulletData.PropMass + BulletData.Caliber / 7, 0.2, 10), 2)
 	Entity.AccelTime    = Entity.LastThink + Entity.AccelLength
 	Entity.Speed        = Entity.LaunchVel
-	Entity.SpiralRadius = Entity.IsSubcaliber and 3.5 or nil
-	Entity.SpiralSpeed  = Entity.IsSubcaliber and 15 or nil
+	Entity.SpiralRadius = Entity.IsSubcaliber and 120 / Caliber or nil
+	Entity.SpiralSpeed  = Entity.IsSubcaliber and 360 / Entity.AccelLength or nil
 	Entity.SpiralAngle  = Entity.IsSubcaliber and 0 or nil
 	Entity.Position     = BulletData.Pos
 	Entity.Velocity     = BulletData.Flight:GetNormalized() * Entity.LaunchVel
@@ -237,27 +237,18 @@ function ENT:Think()
 		self.Innacuracy = self.Innacuracy + DeltaTime * 50
 	end
 
-	--[[
 	if self.IsSubcaliber then
-		local Center  = Position + NextDir * self.Speed * DeltaTime
 		local Current = self.SpiralAngle
-		local Offset  = NextAng:Right():Angle()
+		local SpiralRad = self.SpiralRadius
+		NextAng:RotateAroundAxis(NextAng:Forward(),Current)
 
-		Offset:RotateAroundAxis(NextDir, Current)
+		local Offset = NextDir * self.Speed * DeltaTime + NextAng:Up() * math.sin(Current) * SpiralRad + NextAng:Right() * math.cos(Current) * SpiralRad
 
-		local Target = Center + Offset:Forward() -- * self.SpiralRadius
-
-		print("----------------------")
-		print(Current)
-		print(NextDir)
-		print((Target - Position):GetNormalized())
-		print("----------------------")
-
-		NextDir = (Target - Position):GetNormalized()
+		NextDir = (Offset - NextDir):GetNormalized()
 
 		self.SpiralAngle = (Current + self.SpiralSpeed * DeltaTime) % 360
 	end
-	]]
+
 
 	self.Position = self.Position + NextDir * self.Speed * DeltaTime
 	self.Velocity = (self.Position - Position) / DeltaTime
