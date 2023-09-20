@@ -126,7 +126,7 @@ local function GetEntityIndex(Entity)
 end
 
 local function GetEntityOwner(Owner, Entity)
-	-- If entity info is restricted and the radar owner doesn't has permissions on this entity then return Unknown
+	-- If entity info is restricted and the radar owner doesn't have permissions on this entity then return Unknown
 	if ACF.RestrictInfo and not Entity:CPPICanTool(Owner) then
 		return "Unknown"
 	end
