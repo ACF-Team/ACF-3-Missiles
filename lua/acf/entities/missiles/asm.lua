@@ -276,7 +276,7 @@ Missiles.RegisterItem("AT-2 ASM", "ATGM", {
 	Navigation  = "Chase",
 	Fuzes		= { Contact = true },
 	ViewCone	= 90,
-	Agility		= 0.00008,
+	Agility		= 0.00035,
 	ArmDelay	= 0.1,
 	Round = {
 		Model           = "models/missiles/at2.mdl",
