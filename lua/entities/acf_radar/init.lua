@@ -1,4 +1,3 @@
-
 AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
 
@@ -39,7 +38,7 @@ end)
 
 local Radars	  = ACF.ActiveRadars
 local Damage      = ACF.Damage
-local CheckLegal  = ACF_CheckLegal
+local CheckLegal  = ACF.CheckLegal
 local UnlinkSound = "physics/metal/metal_box_impact_bullet%s.wav"
 local MaxDistance = ACF.LinkDistance * ACF.LinkDistance
 local TraceData	  = { start = true, endpos = true, mask = MASK_SOLID_BRUSHONLY }
@@ -127,8 +126,8 @@ local function GetEntityIndex(Entity)
 end
 
 local function GetEntityOwner(Owner, Entity)
-	-- If the server is competitive and the radar owner doesn't has permissions on this entity then return Unknown
-	if ACF.Gamemode == 3 and not Entity:CPPICanTool(Owner) then
+	-- If entity info is restricted and the radar owner doesn't have permissions on this entity then return Unknown
+	if ACF.RestrictInfo and not Entity:CPPICanTool(Owner) then
 		return "Unknown"
 	end
 
