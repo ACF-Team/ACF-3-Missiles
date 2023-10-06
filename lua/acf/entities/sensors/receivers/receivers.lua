@@ -55,7 +55,7 @@ do -- Laser Receiver
 	Sensors.RegisterItem("LAS-Receiver", "WARN-Receiver", {
 		Name		= "Laser Warning Receiver",
 		Description	= "An optical unit designed to detect laser sources and give a precise direction.",
-		Model		= "models/jaanus/wiretool/wiretool_range.mdl",
+		Model		= "models/bluemetaknight/laser_detector.mdl",
 
 		Mass		= 25,
 		Health		= 10,
