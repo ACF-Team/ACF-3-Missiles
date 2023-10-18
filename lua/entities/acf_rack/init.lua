@@ -29,7 +29,7 @@ end
 do -- Spawning and Updating --------------------
 	local UnlinkSound = "physics/metal/metal_box_impact_bullet%s.wav"
 	local MaxDistance = ACF.LinkDistance * ACF.LinkDistance
-	local CheckLegal  = ACF_CheckLegal
+	local CheckLegal  = ACF.CheckLegal
 	local WireIO      = Utilities.WireIO
 	local Entities    = Classes.Entities
 	local Racks       = Classes.Racks

@@ -11,7 +11,7 @@ local ACF = ACF
 --===============================================================================================--
 
 local Damage      = ACF.Damage
-local CheckLegal  = ACF_CheckLegal
+local CheckLegal  = ACF.CheckLegal
 local TimerExists = timer.Exists
 local TimerCreate = timer.Create
 local TimerRemove = timer.Remove
