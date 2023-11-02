@@ -11,6 +11,7 @@ local ACF       = ACF
 local Classes   = ACF.Classes
 local Utilities = ACF.Utilities
 local Clock     = Utilities.Clock
+local Sounds    = Utilities.Sounds
 
 local function UpdateTotalAmmo(Entity)
 	local Total = 0
@@ -164,8 +165,8 @@ do -- Spawning and Updating --------------------
 			if Position:DistToSqr(Link:GetPos()) > MaxDistance then
 				local Sound = UnlinkSound:format(math.random(1, 3))
 
-				Entity:EmitSound(Sound, 70, math.random(99, 109), ACF.Volume)
-				Link:EmitSound(Sound, 70, math.random(99, 109), ACF.Volume)
+				Sounds.SendSound(Entity, Sound, 70, math.random(99, 109), 1)
+				Sounds.SendSound(Link, Sound, 70, math.random(99, 109), 1)
 
 				Entity:Unlink(Link)
 			end
@@ -312,7 +313,7 @@ do -- Custom ACF damage ------------------------
 
 		util.Effect("Sparks", Effect, true, true)
 
-		Rack:EmitSound(SparkSound:format(math.random(6)), math.random(55, 65), math.random(99, 101), ACF.Volume)
+		Sounds.SendSound(Rack, SparkSound:format(math.random(6)), math.random(55, 65), math.random(99, 101), 1)
 
 		timer.Simple(math.Rand(0.5, 2), function()
 			if not IsValid(Rack) then return end
@@ -464,7 +465,7 @@ do -- Entity Inputs ----------------------------
 		Entity:UpdatePoint()
 
 		if Entity.ForcedIndex then
-			Entity:EmitSound("buttons/blip2.wav", 70, math.random(99, 101), ACF.Volume)
+			Sounds.SendSound(Entity, "buttons/blip2.wav", 70, math.random(99, 101), 1)
 		end
 	end)
 
@@ -545,7 +546,7 @@ do -- Firing -----------------------------------
 
 			self:UpdatePoint()
 		else
-			self:EmitSound("weapons/pistol/pistol_empty.wav", 70, math.random(99, 101), ACF.Volume)
+			Sounds.SendSound(self, "weapons/pistol/pistol_empty.wav", 70, math.random(99, 101), 1)
 
 			Delay = 1
 		end
@@ -604,7 +605,7 @@ do -- Loading ----------------------------------
 		local Pos, Ang = GetMissileAngPos(Crate.BulletData, Point)
 		local Missile = MakeACF_Missile(Rack.Owner, Pos, Ang, Rack, Point, Crate)
 
-		Rack:EmitSound("acf_missiles/fx/bomb_reload.mp3", 70, math.random(99, 101), ACF.Volume)
+		Sounds.SendSound(Rack, "acf_missiles/fx/bomb_reload.mp3", 70, math.random(99, 101), 1)
 
 		return Missile
 	end
@@ -650,7 +651,7 @@ do -- Loading ----------------------------------
 				if not IsValid(Missile) then
 					Missile = nil
 				else
-					self:EmitSound("acf_missiles/fx/weapon_select.mp3", 70, math.random(99, 101), ACF.Volume)
+					Sounds.SendSound(self, "acf_missiles/fx/weapon_select.mp3", 70, math.random(99, 101), 1)
 
 					Point.State = "Loaded"
 					Point.NextFire = nil

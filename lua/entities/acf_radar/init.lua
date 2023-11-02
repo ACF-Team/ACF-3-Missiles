@@ -39,6 +39,7 @@ end)
 local Radars	  = ACF.ActiveRadars
 local Damage      = ACF.Damage
 local CheckLegal  = ACF.CheckLegal
+local Sounds      = ACF.Utilities.Sounds
 local UnlinkSound = "physics/metal/metal_box_impact_bullet%s.wav"
 local MaxDistance = ACF.LinkDistance * ACF.LinkDistance
 local TraceData	  = { start = true, endpos = true, mask = MASK_SOLID_BRUSHONLY }
@@ -212,7 +213,7 @@ local function ScanForEntities(Entity)
 
 	if Count ~= Entity.TargetCount then
 		if Count > Entity.TargetCount then
-			Entity:EmitSound(Entity.SoundPath, 70, 100, ACF.Volume)
+			Sounds.SendSound(Entity, Entity.SoundPath, 70, 100, 1)
 		end
 
 		Entity.TargetCount = Count
@@ -271,8 +272,8 @@ local function CheckDistantLinks(Entity, Source)
 		if Position:DistToSqr(Link:GetPos()) > MaxDistance then
 			local Sound = UnlinkSound:format(math.random(1, 3))
 
-			Entity:EmitSound(Sound, 70, 100, ACF.Volume)
-			Link:EmitSound(Sound, 70, 100, ACF.Volume)
+			Sounds.SendSound(Entity, Sound, 70, 100, 1)
+			Sounds.SendSound(Link, Sound, 70, 100, 1)
 
 			Entity:Unlink(Link)
 		end

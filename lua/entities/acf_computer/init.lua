@@ -8,6 +8,7 @@ local ACF       = ACF
 local Damage    = ACF.Damage
 local Utilities = ACF.Utilities
 local Clock     = Utilities.Clock
+local Sounds    = Utilities.Sounds
 
 ACF.RegisterClassLink("acf_computer", "acf_rack", function(Computer, Target)
 	if Computer.Weapons[Target] then return false, "This rack is already linked to this computer!" end
@@ -79,8 +80,8 @@ local function CheckDistantLinks(Entity, Source)
 		if Position:DistToSqr(Link:GetPos()) > MaxDistance then
 			local Sound = UnlinkSound:format(math.random(1, 3))
 
-			Entity:EmitSound(Sound, 70, 100, ACF.Volume)
-			Link:EmitSound(Sound, 70, 100, ACF.Volume)
+			Sounds.SendSound(Entity, Sound, 70, 100, 1)
+			Sounds.SendSound(Link, Sound, 70, 100, 1)
 
 			Entity:Unlink(Link)
 		end
