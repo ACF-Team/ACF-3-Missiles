@@ -135,12 +135,12 @@ Missiles.RegisterItem("SPG-9 ASR", "UAR", {
 		PropLength      = 67.8,
 		Thrust          = 180000, -- in kg*in/s^2
 		FuelConsumption = 0.03, -- in g/s/f
-		StarterPercent  = 0.1,
+		StarterPercent  = 0.6,
 		MaxAgilitySpeed = 1, -- in m/s
-		DragCoef        = 0.012,
+		DragCoef        = 0.002,
 		FinMul          = 0,
 		GLimit          = 1,
-		TailFinMul      = 2.8,
+		TailFinMul      = 0.8,
 		PenMul          = 2.273,
 		FillerMul       = 1.06,
 		LinerMassMul    = 2.8,
