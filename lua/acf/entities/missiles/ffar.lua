@@ -39,7 +39,7 @@ Missiles.RegisterItem("40mmFFAR", "FFAR", {
 		DragCoef        = 0.004,
 		FinMul          = 0,
 		GLimit          = 1,
-		TailFinMul      = 0.5,
+		TailFinMul      = 0.05,
 		PenMul          = 0.91,
 		ActualLength    = 60,
 		ActualWidth     = 4
@@ -75,12 +75,12 @@ Missiles.RegisterItem("57mmFFAR", "FFAR", {
 		PropLength      = 50,
 		Thrust          = 113000, -- in kg*in/s^2
 		FuelConsumption	= 0.0095, -- S5 rocket motors burn for 1.1 seconds not 0.333
-		StarterPercent  = 0.02,
+		StarterPercent  = 0.2,
 		MaxAgilitySpeed	= 1,
 		DragCoef        = 0.007,
 		FinMul          = 0.003,
 		GLimit          = 1,
-		TailFinMul      = 0.2,
+		TailFinMul      = 0.005,
 		PenMul          = 1.3,
 		ActualLength    = 85,
 		ActualWidth     = 5.7,
@@ -162,7 +162,7 @@ Missiles.RegisterItem("80mmFFAR", "FFAR", {
 		DragCoef        = 0.023,
 		FinMul          = 0.003,
 		GLimit          = 1,
-		TailFinMul      = 3.8,
+		TailFinMul      = 0.08,
 		PenMul          = 0.85,
 		ActualLength    = 127,
 		ActualWidth     = 8
