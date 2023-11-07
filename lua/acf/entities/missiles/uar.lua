@@ -125,7 +125,7 @@ Missiles.RegisterItem("SPG-9 ASR", "UAR", {
 	Navigation  = "Chase",
 	Fuzes		= { Contact = true },
 	Agility     = 1,
-	ArmDelay	= 0.1,
+	ArmDelay	= 0, -- :)
 	Round = {
 		Model           = "models/missiles/rs82.mdl",
 		RackModel       = "models/missiles/rs82.mdl",
@@ -135,7 +135,7 @@ Missiles.RegisterItem("SPG-9 ASR", "UAR", {
 		PropLength      = 67.8,
 		Thrust          = 180000, -- in kg*in/s^2
 		FuelConsumption = 0.03, -- in g/s/f
-		StarterPercent  = 0.6,
+		StarterPercent  = 0.4,
 		MaxAgilitySpeed = 1, -- in m/s
 		DragCoef        = 0.002,
 		FinMul          = 0,
