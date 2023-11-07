@@ -140,7 +140,7 @@ Missiles.RegisterItem("SPG-9 ASR", "UAR", {
 		DragCoef        = 0.002,
 		FinMul          = 0,
 		GLimit          = 1,
-		TailFinMul      = 0.8,
+		TailFinMul      = 0.2,
 		PenMul          = 2.273,
 		FillerMul       = 1.06,
 		LinerMassMul    = 2.8,
