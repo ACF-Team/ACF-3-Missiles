@@ -51,9 +51,9 @@ Missiles.RegisterItem("RS82 ASR", "UAR", {
 		StarterPercent  = 0.15,
 		MaxAgilitySpeed = 1, -- in m/s
 		DragCoef        = 0.001,
-		FinMul          = 0.01,
+		FinMul          = 0,
 		GLimit          = 1,
-		TailFinMul      = 0.05,
+		TailFinMul      = 2,
 		PenMul          = 0.8,
 		CanDelayLaunch  = true,
 		ActualLength    = 60,
@@ -93,10 +93,10 @@ Missiles.RegisterItem("HVAR ASR", "UAR", {
 		FuelConsumption = 0.016, -- in g/s/f
 		StarterPercent  = 0.15,
 		MaxAgilitySpeed = 1, -- in m/s
-		DragCoef        = 0.005,
-		FinMul          = 0.01,
+		DragCoef        = 0.019,
+		FinMul          = 0,
 		GLimit          = 1,
-		TailFinMul      = 0.075,
+		TailFinMul      = 2.344,
 		PenMul          = 1.148,
 		FillerMul       = 1,
 		LinerMassMul    = 1,
@@ -137,10 +137,10 @@ Missiles.RegisterItem("SPG-9 ASR", "UAR", {
 		FuelConsumption = 0.03, -- in g/s/f
 		StarterPercent  = 0.1,
 		MaxAgilitySpeed = 1, -- in m/s
-		DragCoef        = 0.002,
-		FinMul          = 0.01,
+		DragCoef        = 0.012,
+		FinMul          = 0,
 		GLimit          = 1,
-		TailFinMul      = 0.023,
+		TailFinMul      = 2.8,
 		PenMul          = 2.273,
 		FillerMul       = 1.06,
 		LinerMassMul    = 2.8,
@@ -182,9 +182,9 @@ Missiles.RegisterItem("S-24 ASR", "UAR", {
 		StarterPercent  = 0.15,
 		MaxAgilitySpeed = 1, -- in m/s
 		DragCoef        = 0.01,
-		FinMul          = 0.1,
+		FinMul          = 0,
 		GLimit          = 1,
-		TailFinMul      = 0.3,
+		TailFinMul      = 4.3,
 		PenMul          = 1.05,
 		CanDelayLaunch  = true,
 		ActualLength    = 233,
@@ -210,7 +210,7 @@ Missiles.RegisterItem("RW61 ASR", "UAR", {
 	Navigation  = "Chase",
 	Fuzes		= { Contact = true, Optical = true },
 	Agility		= 1,
-	ArmDelay	= 0.5,
+	ArmDelay	= 0.2,
 	Round = {
 		Model           = "models/missiles/RW61M.mdl",
 		RackModel       = "models/missiles/RW61M.mdl",
@@ -225,7 +225,7 @@ Missiles.RegisterItem("RW61 ASR", "UAR", {
 		DragCoef        = 0.02,
 		FinMul          = 0,
 		GLimit          = 1,
-		TailFinMul      = 10,
+		TailFinMul      = 38.25,
 		PenMul          = 1.2,
 		ActualLength    = 150,
 		ActualWidth     = 38
