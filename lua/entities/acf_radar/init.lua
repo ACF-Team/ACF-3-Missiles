@@ -161,20 +161,20 @@ local function ScanForEntities(Entity)
 	local Velocity = TargetInfo.Velocity
 	local Distance = TargetInfo.Distance
 
-	local Damage = Entity.Damage
-	local Spread = ACF.MaxDamageInaccuracy * Damage
+	local EntDamage = Entity.Damage
+	local Spread = ACF.MaxDamageInaccuracy * EntDamage
 
 	for Ent in pairs(Detected) do
 		local EntPos = Ent.Position or Ent:GetPos()
 
-		if CheckLOS(Origin, EntPos) and (math.Rand(0,1) >= (Damage / 10)) then
-			local Spread = VectorRand(-Spread, Spread)
+		if CheckLOS(Origin, EntPos) and (math.Rand(0,1) >= (EntDamage / 10)) then
+			local EntSpread = VectorRand(-Spread, Spread)
 			local EntVel = Ent.Velocity or Ent:GetVelocity()
 			local Owner = GetEntityOwner(Entity.Owner, Ent)
 			local Index = GetEntityIndex(Ent)
 
-			EntPos = EntPos + Spread
-			EntVel = EntVel + Spread
+			EntPos = EntPos + EntSpread
+			EntVel = EntVel + EntSpread
 			Count = Count + 1
 
 			local EntDist = Origin:Distance(EntPos)
@@ -185,7 +185,7 @@ local function ScanForEntities(Entity)
 				Position = EntPos,
 				Velocity = EntVel,
 				Distance = EntDist,
-				Spread   = Spread,
+				Spread   = EntSpread,
 			}
 
 			IDs[Count] = Index
