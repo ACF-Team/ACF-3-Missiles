@@ -1,4 +1,3 @@
-
 AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
 
@@ -39,7 +38,7 @@ end)
 
 local Radars	  = ACF.ActiveRadars
 local Damage      = ACF.Damage
-local CheckLegal  = ACF_CheckLegal
+local CheckLegal  = ACF.CheckLegal
 local UnlinkSound = "physics/metal/metal_box_impact_bullet%s.wav"
 local MaxDistance = ACF.LinkDistance * ACF.LinkDistance
 local TraceData	  = { start = true, endpos = true, mask = MASK_SOLID_BRUSHONLY }
@@ -127,8 +126,8 @@ local function GetEntityIndex(Entity)
 end
 
 local function GetEntityOwner(Owner, Entity)
-	-- If the server is competitive and the radar owner doesn't has permissions on this entity then return Unknown
-	if ACF.Gamemode == 3 and not Entity:CPPICanTool(Owner) then
+	-- If entity info is restricted and the radar owner doesn't have permissions on this entity then return Unknown
+	if ACF.RestrictInfo and not Entity:CPPICanTool(Owner) then
 		return "Unknown"
 	end
 
@@ -162,17 +161,20 @@ local function ScanForEntities(Entity)
 	local Velocity = TargetInfo.Velocity
 	local Distance = TargetInfo.Distance
 
+	local EntDamage = Entity.Damage
+	local Spread = ACF.MaxDamageInaccuracy * EntDamage
+
 	for Ent in pairs(Detected) do
 		local EntPos = Ent.Position or Ent:GetPos()
 
-		if CheckLOS(Origin, EntPos) then
-			local Spread = VectorRand(-Entity.Spread, Entity.Spread)
+		if CheckLOS(Origin, EntPos) and (math.Rand(0,1) >= (EntDamage / 10)) then
+			local EntSpread = VectorRand(-Spread, Spread)
 			local EntVel = Ent.Velocity or Ent:GetVelocity()
 			local Owner = GetEntityOwner(Entity.Owner, Ent)
 			local Index = GetEntityIndex(Ent)
 
-			EntPos = EntPos + Spread
-			EntVel = EntVel + Spread
+			EntPos = EntPos + EntSpread
+			EntVel = EntVel + EntSpread
 			Count = Count + 1
 
 			local EntDist = Origin:Distance(EntPos)
@@ -183,7 +185,7 @@ local function ScanForEntities(Entity)
 				Position = EntPos,
 				Velocity = EntVel,
 				Distance = EntDist,
-				Spread   = Spread,
+				Spread   = EntSpread,
 			}
 
 			IDs[Count] = Index
@@ -400,7 +402,7 @@ do -- Spawn and Update functions
 		Radar.Active      = false
 		Radar.Scanning    = false
 		Radar.TargetCount = 0
-		Radar.Spread      = 0
+		Radar.Damage	  = 0
 		Radar.Weapons     = {}
 		Radar.Targets     = {}
 		Radar.DataStore   = Entities.GetArguments("acf_radar")
@@ -494,9 +496,13 @@ end
 function ENT:ACF_OnDamage(DmgResult, DmgInfo)
 	local HitRes = Damage.doPropDamage(self, DmgResult, DmgInfo)
 
-	self.Spread = ACF.MaxDamageInaccuracy * (1 - math.Round(self.ACF.Health / self.ACF.MaxHealth, 2))
+	self.Damage = (1 - math.Round(self.ACF.Health / self.ACF.MaxHealth, 2))
 
 	return HitRes
+end
+
+function ENT:ACF_OnRepaired() -- OldArmor, OldHealth, Armor, Health
+	self.Damage = (1 - math.Round(self.ACF.Health / self.ACF.MaxHealth, 2))
 end
 
 function ENT:Enable()

@@ -141,12 +141,16 @@ do -- Joystick
 			Entity.Spread = 1 - math.Round(Entity.ACF.Health / Entity.ACF.MaxHealth, 2)
 		end,
 		OnEnabled = function(Entity)
-			if Entity.Inputs.InputPitch.Path then
-				Entity:TriggerInput("Pitch", Entity.Inputs.InputPitch.Value)
+			local Inputs = Entity.Inputs
+			local Pitch  = Inputs.InputPitch
+			local Yaw    = Inputs.InputYaw
+
+			if Pitch and Pitch.Path then
+				Entity:TriggerInput("Pitch", Pitch.Value)
 			end
 
-			if Entity.Inputs.InputYaw.Path then
-				Entity:TriggerInput("Yaw", Entity.Inputs.InputYaw.Value)
+			if Yaw and Yaw.Path then
+				Entity:TriggerInput("Yaw", Yaw.Value)
 			end
 		end,
 		OnDisabled = function(Entity)
@@ -381,12 +385,16 @@ do -- Optical guidance computer
 			Entity.Spread = 1 - math.Round(Entity.ACF.Health / Entity.ACF.MaxHealth, 2)
 		end,
 		OnEnabled = function(Entity)
-			if Entity.Inputs.InputPitch.Path then
-				Entity:TriggerInput("Pitch", Entity.Inputs.InputPitch.Value)
+			local Inputs = Entity.Inputs
+			local Pitch  = Inputs.InputPitch
+			local Yaw    = Inputs.InputYaw
+
+			if Pitch and Pitch.Path then
+				Entity:TriggerInput("Pitch", Pitch.Value)
 			end
 
-			if Entity.Inputs.InputYaw.Path then
-				Entity:TriggerInput("Yaw", Entity.Inputs.InputYaw.Value)
+			if Yaw and Yaw.Path then
+				Entity:TriggerInput("Yaw", Yaw.Value)
 			end
 		end,
 		OnDisabled = function(Entity)
@@ -502,6 +510,7 @@ do -- Laser guidance computer
 		OnUpdate = function(Entity, _, _, Computer)
 			Entity.IsComputer = true
 			Entity.Lasing     = false
+			Entity.Offset     = Computer.Offset
 			Entity.OnCooldown = false
 			Entity.HitPos     = Vector()
 			Entity.Distance   = 0
@@ -591,16 +600,21 @@ do -- Laser guidance computer
 			Entity.Spread = 1 - math.Round(Entity.ACF.Health / Entity.ACF.MaxHealth, 2)
 		end,
 		OnEnabled = function(Entity)
-			if Entity.Inputs.Lase.Path then
-				Entity:TriggerInput("Lase", Entity.Inputs.Lase.Value)
+			local Inputs = Entity.Inputs
+			local Lase   = Inputs.Lase
+			local Pitch  = Inputs.InputPitch
+			local Yaw    = Inputs.InputYaw
+
+			if Lase and Lase.Path then
+				Entity:TriggerInput("Lase", Lase.Value)
 			end
 
-			if Entity.Inputs.InputPitch.Path then
-				Entity:TriggerInput("Pitch", Entity.Inputs.InputPitch.Value)
+			if Pitch and Pitch.Path then
+				Entity:TriggerInput("Pitch", Pitch.Value)
 			end
 
-			if Entity.Inputs.InputYaw.Path then
-				Entity:TriggerInput("Yaw", Entity.Inputs.InputYaw.Value)
+			if Yaw and Yaw.Path then
+				Entity:TriggerInput("Yaw", Yaw.Value)
 			end
 		end,
 		OnDisabled = function(Entity)
@@ -771,8 +785,10 @@ do -- GPS transmitter
 			Entity.Spread = ACF.MaxDamageInaccuracy * (1 - math.Round(Entity.ACF.Health / Entity.ACF.MaxHealth, 2))
 		end,
 		OnEnabled = function(Entity)
-			if Entity.Inputs.Coordinates.Path then
-				Entity:TriggerInput("Coordinates", Entity.Inputs.Coordinates.Value)
+			local Coordinates = Entity.Inputs.Coordinates
+
+			if Coordinates and Coordinates.Path then
+				Entity:TriggerInput("Coordinates", Coordinates.Value)
 			end
 		end,
 		OnDisabled = function(Entity)

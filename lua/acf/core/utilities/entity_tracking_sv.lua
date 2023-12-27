@@ -4,7 +4,7 @@ local NextUpdate = 0
 local Entities   = {}
 local Ancestors  = {}
 
-local Whitelist = {
+local Whitelist  = {
 	-- Garry's Mod entities
 	gmod_wheel                 = true,
 	gmod_hoverball             = true,
@@ -50,6 +50,8 @@ local function GetAncestor(Entity)
 end
 
 local function UpdateValues(Entity)
+	if not IsValid(Entity) then return end
+
 	local PhysObj  = Entity:GetPhysicsObject()
 	local Velocity = Entity:GetVelocity()
 	local PrevPos  = Entity.Position

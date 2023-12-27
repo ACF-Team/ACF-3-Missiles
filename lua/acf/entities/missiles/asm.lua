@@ -107,7 +107,7 @@ Missiles.RegisterItem("AGM-114 ASM", "ATGM", {
 	Year		= 1984,
 	ReloadTime	= 30,
 	ExhaustPos  = Vector(-29),
-	Racks		= { ["1xRK"] = true, ["2x AGM-114"] = true, ["4x AGM-114"] = true },
+	Racks		= { ["1xRK"] = true, ["1xRK_small"] = true, ["2x AGM-114"] = true, ["4x AGM-114"] = true },
 	Guidance	= { Dumb = true, Laser = true },
 	Navigation  = "PN",
 	Fuzes		= { Contact = true },
@@ -276,7 +276,7 @@ Missiles.RegisterItem("AT-2 ASM", "ATGM", {
 	Navigation  = "Chase",
 	Fuzes		= { Contact = true },
 	ViewCone	= 90,
-	Agility		= 0.00008,
+	Agility		= 0.00035,
 	ArmDelay	= 0.1,
 	Round = {
 		Model           = "models/missiles/at2.mdl",

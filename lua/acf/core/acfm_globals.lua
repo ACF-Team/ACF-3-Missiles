@@ -14,10 +14,6 @@ game.AddParticles("particles/flares_fx.pcf")
 
 PrecacheParticleSystem("ACFM_Flare")
 
-if SERVER then
-	resource.AddWorkshop("403587498")
-end
-
 do -- Update checker
 	hook.Add("ACF_OnLoadAddon", "ACF Missiles Update Checker", function()
 		ACF.AddRepository("TwistedTail", "ACF-3-Missiles", "lua/acf/core/acfm_globals.lua")

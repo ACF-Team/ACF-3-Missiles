@@ -3,6 +3,7 @@ AddCSLuaFile("shared.lua")
 
 include("shared.lua")
 
+local hook       = hook
 local ACF        = ACF
 local Missiles   = ACF.ActiveMissiles
 local Ballistics = ACF.Ballistics
@@ -14,14 +15,24 @@ local ZERO       = Vector()
 
 local function CheckViewCone(Missile, HitPos)
 	local Position = Missile.Position
-	local Forward = Missile:GetForward()
+	local Forward  = Missile.Velocity:GetNormalized()
 	local Direction = (HitPos - Position):GetNormalized()
 
 	return Direction:Dot(Forward) >= Missile.ViewCone
 end
 
+local function ClampAngle(Object, Limit)
+	local Pitch, Yaw, Roll = Object:Unpack()
+
+	return Angle(
+		math.Clamp(Pitch, -Limit, Limit),
+		math.Clamp(Yaw, -Limit, Limit),
+		math.Clamp(Roll, -Limit, Limit)
+	)
+end
+
 local function DetonateMissile(Missile, Inflictor)
-	if HookRun("ACF_AmmoExplode", Missile, Missile.BulletData) == false then return end
+	if hook.Run("ACF_AmmoExplode", Missile, Missile.BulletData) == false then return end
 
 	if IsValid(Inflictor) and Inflictor:IsPlayer() then
 		Missile.Inflictor = Inflictor
@@ -83,10 +94,11 @@ function MakeACF_GLATGM(Gun, BulletData)
 	Entity.AccelLength  = math.Round(math.Clamp(BulletData.ProjMass / BulletData.PropMass + BulletData.Caliber / 7, 0.2, 10), 2)
 	Entity.AccelTime    = Entity.LastThink + Entity.AccelLength
 	Entity.Speed        = Entity.LaunchVel
-	Entity.SpiralRadius = Entity.IsSubcaliber and 3.5 or nil
-	Entity.SpiralSpeed  = Entity.IsSubcaliber and 15 or nil
+	Entity.SpiralRadius = Entity.IsSubcaliber and 120 / Caliber or nil
+	Entity.SpiralSpeed  = Entity.IsSubcaliber and 360 / Entity.AccelLength or nil
 	Entity.SpiralAngle  = Entity.IsSubcaliber and 0 or nil
 	Entity.Position     = BulletData.Pos
+	Entity.Velocity     = BulletData.Flight:GetNormalized() * Entity.LaunchVel
 	Entity.Innacuracy   = 0
 
 	Entity.Filter[#Entity.Filter + 1] = Entity
@@ -183,25 +195,6 @@ function ENT:GetComputer()
 	return Computer
 end
 
-local function ClampAng(Ang, Min, Max)
-	local Pitch, Yaw, Roll = Ang:Unpack()
-
-	return Angle(
-		math.Clamp(Pitch, Min, Max),
-		math.Clamp(Yaw, Min, Max),
-		math.Clamp(Roll, Min, Max)
-	)
-end
-
-local function ClampVec(Vec, VMin, VMax)
-
-	return Vector(
-		math.Clamp(Vec[1], VMin[1], VMax[1]),
-		math.Clamp(Vec[2], VMin[2], VMax[2]),
-		math.Clamp(Vec[3], VMin[3], VMax[3])
-	)
-end
-
 function ENT:Think()
 	if self.Detonated then return end
 
@@ -211,58 +204,53 @@ function ENT:Think()
 		return self:Detonate()
 	end
 
-	local IsGuided, Direction, Correction
-	local DeltaTime = Clock.CurTime - self.LastThink
-	local IsDelayed = self.GuideDelay > Time
+	local DeltaTime = Time - self.LastThink
+	local CanGuide  = self.GuideDelay <= Time
 	local Computer  = self:GetComputer()
 	local CanSee    = IsValid(Computer) and CheckViewCone(self, Computer.HitPos)
 	local Position  = self.Position
+	local NextDir, NextAng
 
 	self.Speed = self.LaunchVel + self.DiffVel * math.Clamp(1 - (self.AccelTime - Time) / self.AccelLength, 0, 1)
 
-	if not IsDelayed and CanSee then
-		local Agility            = self.Agility * DeltaTime
-		local AgilityVector      = Vector(self.Speed, Agility, Agility)
-		local ComputerCorrection = Computer:WorldToLocal(Position)
-		local Desired            = AngleRand() * 0.005
+	if CanGuide and CanSee then
+		local Origin      = Computer:LocalToWorld(Computer.Offset)
+		local Distance    = Origin:Distance(Position) + self.Speed * 0.15
+		local Target      = Origin + Computer.TraceDir * Distance
+		local Expected    = (Target - Position):GetNormalized():Angle()
+		local Current     = self.Velocity:GetNormalized():Angle()
+		local _, LocalAng = WorldToLocal(Target, Expected, Position, Current)
+		local Clamped     = ClampAngle(LocalAng, self.Agility * DeltaTime)
+		local _, WorldAng = LocalToWorld(Vector(), Clamped, Position, Current)
 
-		ComputerCorrection = Computer:LocalToWorld(Vector(ComputerCorrection.X + self.Speed * 0.27))
-		Correction         = ClampVec(self:WorldToLocal(ComputerCorrection), -AgilityVector, AgilityVector)
-
-		if math.abs(Correction.y) + math.abs(Correction.z) >= 0.2 then
-			Desired = self:WorldToLocalAngles((ComputerCorrection - Position):Angle()) + Desired
-		else
-			Desired = self:WorldToLocalAngles(Computer.TraceDir:Angle()) + Desired
-		end
-
-		Direction = ClampAng(Desired, -Agility, Agility)
-		IsGuided  = true
+		NextAng = WorldAng
+		NextDir = WorldAng:Forward()
 
 		self.Innacuracy = 0
-	end
+	else
+		local Spread = self.Innacuracy * DeltaTime * 0.005
+		local Added  = VectorRand() * Spread
 
-	if not IsGuided then
-		local Innacuracy = self.Innacuracy * DeltaTime
+		NextDir = (self.Velocity:GetNormalized() + Added):GetNormalized()
+		NextAng = NextDir:Angle()
 
-		Direction  = AngleRand() * 0.0002 * Innacuracy
-		Correction = VectorRand() * 0.0007 * Innacuracy
-
-		self.Innacuracy = self.Innacuracy + 100 * DeltaTime
+		self.Innacuracy = self.Innacuracy + DeltaTime * 50
 	end
 
 	if self.IsSubcaliber then
-		local Radius = self.SpiralRadius
-		local CurAng = self.SpiralAngle
+		local Current = self.SpiralAngle
+		local SpiralRad = self.SpiralRadius
+		NextAng:RotateAroundAxis(NextAng:Forward(),Current)
 
-		Correction.y = Correction.y + Radius * math.cos(CurAng)
-		Correction.z = Correction.z + Radius * math.sin(CurAng)
+		local Offset = NextDir * self.Speed * DeltaTime + NextAng:Up() * math.sin(Current) * SpiralRad + NextAng:Right() * math.cos(Current) * SpiralRad
 
-		self.SpiralAngle = (CurAng + self.SpiralSpeed * DeltaTime) % 360
+		NextDir = (Offset - NextDir):GetNormalized()
+
+		self.SpiralAngle = (Current + self.SpiralSpeed * DeltaTime) % 360
 	end
 
-	self:SetAngles(self:LocalToWorldAngles(Direction))
 
-	self.Position = self:LocalToWorld(Vector(self.Speed * DeltaTime, Correction.y, Correction.z))
+	self.Position = self.Position + NextDir * self.Speed * DeltaTime
 	self.Velocity = (self.Position - Position) / DeltaTime
 
 	TraceData.start  = Position
@@ -278,6 +266,7 @@ function ENT:Think()
 	end
 
 	self:SetPos(self.Position)
+	self:SetAngles(NextAng)
 	self:NextThink(Time)
 
 	self.LastThink = Time
@@ -288,18 +277,19 @@ end
 function ENT:Detonate()
 	if self.Detonated then return end
 
-	self.Detonated = true
-
-	local BulletData  = self.BulletData
+	local BulletData = self.BulletData
+	local Position   = self.Position
+	local Ammo       = AmmoTypes.Get(BulletData.Type)
 
 	BulletData.Filter = self.Filter
-	BulletData.Flight = self:GetForward() * self.Speed
-	BulletData.Pos    = self.Position
+	BulletData.Flight = self.Velocity:GetNormalized() * self.Speed
+	BulletData.Pos    = Position
+
+	self.Detonated = true
 
 	local Bullet = Ballistics.CreateBullet(BulletData)
-	local Ammo   = AmmoTypes.Get(BulletData.Type)
 
-	Ammo:Detonate(Bullet, self.Position)
+	Ammo:Detonate(Bullet, Position)
 
 	self:Remove()
 end

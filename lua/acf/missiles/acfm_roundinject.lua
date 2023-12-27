@@ -227,6 +227,7 @@ else
 		Guidance:Configure(Entity)
 		Fuze:Configure(Entity)
 
+		Entity.Guidance		 = Data.Guidance
 		Entity.IsMissileAmmo = true
 		Entity.GuidanceData  = Guidance
 		Entity.FuzeData      = Fuze
