@@ -289,7 +289,7 @@ local function CalcFlight(Missile)
 end
 
 local function DetonateMissile(Missile, Inflictor)
-	local CanExplode = hook.Run("ACF_AmmoCanExplode", Missile, Missile.BulletData)
+	local CanExplode = hook.Run("ACF_MissileCanExplode", Missile, Missile.BulletData)
 
 	if not CanExplode then return end
 
