@@ -49,7 +49,7 @@ local TraceLine	  = util.TraceLine
 local TimerExists = timer.Exists
 local TimerCreate = timer.Create
 local TimerRemove = timer.Remove
-local HookRun     = hook.Run
+local hook        = hook
 
 -- TODO: Optimize this so the entries are only cleared when the target is no longer detected by the radar
 local function ClearTargets(Entity)
@@ -323,7 +323,7 @@ do -- Spawn and Update functions
 				Class.VerifyData(Data, Class)
 			end
 
-			HookRun("ACF_VerifyData", "acf_radar", Data, Class)
+			hook.Run("ACF_VerifyData", "acf_radar", Data, Class)
 		end
 	end
 
@@ -420,7 +420,7 @@ do -- Spawn and Update functions
 			Class.OnSpawn(Radar, Data, Class, RadarData)
 		end
 
-		HookRun("ACF_OnEntitySpawn", "acf_radar", Radar, Data, Class, RadarData)
+		hook.Run("ACF_OnEntitySpawn", "acf_radar", Radar, Data, Class, RadarData)
 
 		WireLib.TriggerOutput(Radar, "Entity", Radar)
 
@@ -465,7 +465,7 @@ do -- Spawn and Update functions
 			OldClass.OnLast(self, OldClass)
 		end
 
-		HookRun("ACF_OnEntityLast", "acf_radar", self, OldClass)
+		hook.Run("ACF_OnEntityLast", "acf_radar", self, OldClass)
 
 		ACF.SaveEntity(self)
 
@@ -477,7 +477,7 @@ do -- Spawn and Update functions
 			Class.OnUpdate(self, Data, Class, Radar)
 		end
 
-		HookRun("ACF_OnEntityUpdate", "acf_radar", self, Data, Class, Radar)
+		hook.Run("ACF_OnEntityUpdate", "acf_radar", self, Data, Class, Radar)
 
 		self:UpdateOverlay(true)
 
@@ -545,7 +545,7 @@ function ENT:OnRemove()
 		OldClass.OnLast(self, OldClass)
 	end
 
-	HookRun("ACF_OnEntityLast", "acf_radar", self, OldClass)
+	hook.Run("ACF_OnEntityLast", "acf_radar", self, OldClass)
 
 	for Weapon in pairs(self.Weapons) do
 		self:Unlink(Weapon)
