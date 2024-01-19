@@ -16,7 +16,7 @@ PrecacheParticleSystem("ACFM_Flare")
 
 do -- Update checker
 	hook.Add("ACF_OnLoadAddon", "ACF Missiles Checker", function()
-		ACF.AddRepository("TwistedTail", "ACF-3-Missiles", "lua/acf/core/acfm_globals.lua")
+		ACF.AddRepository("ACF-Team", "ACF-3-Missiles", "lua/acf/core/acfm_globals.lua")
 
 		hook.Remove("ACF_OnLoadAddon", "ACF Missiles Checker")
 	end)
