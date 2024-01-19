@@ -1,5 +1,6 @@
 local ACF       = ACF
 local Guidances = ACF.Classes.Guidances
+local Sounds    = ACF.Utilities.Sounds
 local Guidance  = Guidances.Register("Wire (MCLOS)", "Radio (MCLOS)")
 
 function Guidance:Configure(Missile)
@@ -54,7 +55,7 @@ else
 			self.Rope = nil
 
 			if IsValid(self.Source) then
-				self.Source:EmitSound(SnapSound:format(math.random(3)), nil, nil, ACF.Volume)
+				Sounds.SendSound(self.Source, SnapSound:format(math.random(3)), nil, nil, 1)
 			end
 		end
 	end

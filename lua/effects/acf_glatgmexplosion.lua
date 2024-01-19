@@ -1,6 +1,6 @@
 local TraceData = { start = true, endpos = true, mask = true }
 local TraceLine = util.TraceLine
-
+local Sounds    = ACF.Utilities.Sounds
 
 function EFFECT:Init(Data)
 	self.DirVec = Data:GetNormal()
@@ -31,8 +31,8 @@ function EFFECT:Airburst()
 	local Mult = self.ParticleMul
 	local sndrad = math.Clamp(Radius * 20, 75, 165)
 	local sndradp = 300 - Radius
-	sound.Play("ambient/explosions/explode_4.wav", self.Origin, sndrad, math.Clamp(sndradp * 25, 15, 170), ACF.Volume)
-	sound.Play("ambient/explosions/explode_9.wav", self.Origin, sndrad, math.Clamp(sndradp * 22, 15, 120), ACF.Volume)
+	Sounds.PlaySound(self.Origin, "ambient/explosions/explode_4.wav", sndrad, math.Clamp(sndradp * 25, 15, 170), 1)
+	Sounds.PlaySound(self.Origin, "ambient/explosions/explode_9.wav", sndrad, math.Clamp(sndradp * 22, 15, 120), 1)
 	local EF = self.Emitter:Add("effects/muzzleflash" .. math.random(1, 4), Origin )
 	if EF then
 		EF:SetVelocity(self.DirVec * 100)
