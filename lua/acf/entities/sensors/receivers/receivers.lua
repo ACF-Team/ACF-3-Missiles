@@ -30,6 +30,7 @@ do -- Laser Receiver
 		for _,ply in pairs(player.GetAll()) do
 			local Wep = ply:GetWeapon("laserpointer")
 			if not IsValid(Wep) then continue end
+			if Wep ~= ply:GetActiveWeapon() then continue end
 
 			if Wep.Pointing then
 				local Las = {Dir = ply:EyeAngles():Forward(),Position = ply:EyePos(),Player = ply}
