@@ -1,8 +1,9 @@
-local ACF        = ACF
-local Clock      = ACF.Utilities.Clock
-local NextUpdate = 0
-local Entities   = {}
-local Ancestors  = {}
+local ACF         = ACF
+local Clock       = ACF.Utilities.Clock
+local Contraption = ACF.Contraption
+local NextUpdate  = 0
+local Entities    = {}
+local Ancestors   = {}
 
 local Whitelist  = {
 	-- Garry's Mod entities
@@ -40,7 +41,7 @@ local Whitelist  = {
 }
 
 local function GetAncestor(Entity)
-	local Ancestor = ACF_GetAncestor(Entity)
+	local Ancestor = Contraption.GetAncestor(Entity)
 
 	if not IsValid(Ancestor) then return end
 	if Ancestor == Entity then return end
