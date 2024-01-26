@@ -12,6 +12,7 @@ local ACF = ACF
 
 local Damage      = ACF.Damage
 local CheckLegal  = ACF.CheckLegal
+local Sounds      = ACF.Utilities.Sounds
 local TimerExists = timer.Exists
 local TimerCreate = timer.Create
 local TimerRemove = timer.Remove
@@ -60,7 +61,7 @@ local function CheckReceive(Entity)
 		WireLib.TriggerOutput(Entity, "Detected", IsDetected and 1 or 0)
 
 		if IsDetected then
-			Entity:EmitSound(Entity.SoundPath, 70, 100, ACF.Volume)
+			Sounds.SendSound(Entity, Entity.SoundPath, 70, 100, 1)
 		end
 
 		Entity:UpdateOverlay()
