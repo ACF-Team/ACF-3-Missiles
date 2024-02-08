@@ -5,6 +5,7 @@ AddCSLuaFile("shared.lua")
 include("shared.lua")
 
 local ACF = ACF
+local Contraption	= ACF.Contraption
 
 --===============================================================================================--
 -- Local Funcs and Vars
@@ -132,9 +133,8 @@ do -- Spawn and Update functions
 		local Delay = Receiver.ThinkDelay
 
 		Entity.ACF = Entity.ACF or {}
-		Entity.ACF.Model = Receiver.Model -- Must be set before changing model
 
-		Entity:SetModel(Receiver.Model)
+		Contraption.SetModel(Entity, Receiver.Model)
 
 		Entity:PhysicsInit(SOLID_VPHYSICS)
 		Entity:SetMoveType(MOVETYPE_VPHYSICS)
@@ -170,11 +170,7 @@ do -- Spawn and Update functions
 
 		ACF.Activate(Entity, true)
 
-		Entity.ACF.Model		= Receiver.Model
-		Entity.ACF.LegalMass	= Receiver.Mass
-
-		local Phys = Entity:GetPhysicsObject()
-		if IsValid(Phys) then Phys:SetMass(Receiver.Mass) end
+		Contraption.SetMass(Entity, Receiver.Mass)
 	end
 
 	function MakeACF_Receiver(Player, Pos, Ang, Data)

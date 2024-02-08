@@ -5,6 +5,7 @@ AddCSLuaFile("cl_init.lua")
 include("shared.lua")
 
 local ACF       = ACF
+local Contraption	= ACF.Contraption
 local Damage    = ACF.Damage
 local Utilities = ACF.Utilities
 local Clock     = Utilities.Clock
@@ -122,9 +123,8 @@ do -- Spawn and update function
 
 	local function UpdateComputer(Entity, Data, Class, Computer)
 		Entity.ACF = Entity.ACF or {}
-		Entity.ACF.Model = Computer.Model -- Must be set before changing model
 
-		Entity:SetModel(Computer.Model)
+		Contraption.SetModel(Entity, Computer.Model)
 
 		Entity:PhysicsInit(SOLID_VPHYSICS)
 		Entity:SetMoveType(MOVETYPE_VPHYSICS)
@@ -159,11 +159,7 @@ do -- Spawn and update function
 
 		ACF.Activate(Entity, true)
 
-		Entity.ACF.LegalMass	= Computer.Mass
-		Entity.ACF.Model		= Computer.Model
-
-		local Phys = Entity:GetPhysicsObject()
-		if IsValid(Phys) then Phys:SetMass(Computer.Mass) end
+		Contraption.SetMass(Entity, Computer.Mass)
 
 		if Entity.OnUpdate then
 			Entity:OnUpdate(Data, Class, Computer)

@@ -4,6 +4,7 @@ AddCSLuaFile("shared.lua")
 include("shared.lua")
 
 local ACF = ACF
+local Contraption	= ACF.Contraption
 
 ACF.RegisterClassLink("acf_radar", "acf_rack", function(Radar, Target)
 	if Radar.Weapons[Target] then return false, "This rack is already linked to this radar!" end
@@ -333,9 +334,8 @@ do -- Spawn and Update functions
 		local Delay = Radar.ThinkDelay
 
 		Entity.ACF = Entity.ACF or {}
-		Entity.ACF.Model = Radar.Model -- Must be set before changing model
 
-		Entity:SetModel(Radar.Model)
+		Contraption.SetModel(Entity, Radar.Model)
 
 		Entity:PhysicsInit(SOLID_VPHYSICS)
 		Entity:SetMoveType(MOVETYPE_VPHYSICS)
@@ -371,11 +371,7 @@ do -- Spawn and Update functions
 
 		ACF.Activate(Entity, true)
 
-		Entity.ACF.Model		= Radar.Model
-		Entity.ACF.LegalMass	= Radar.Mass
-
-		local Phys = Entity:GetPhysicsObject()
-		if IsValid(Phys) then Phys:SetMass(Radar.Mass) end
+		Contraption.SetMass(Entity, Radar.Mass)
 	end
 
 	function MakeACF_Radar(Player, Pos, Angle, Data)

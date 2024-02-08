@@ -8,6 +8,7 @@ include("shared.lua")
 local EMPTY     = { Type = "Empty", PropMass = 0, ProjMass = 0, Tracer = 0 }
 local HookRun   = hook.Run
 local ACF       = ACF
+local Contraption	= ACF.Contraption
 local Classes   = ACF.Classes
 local Utilities = ACF.Utilities
 local Clock     = Utilities.Clock
@@ -79,9 +80,8 @@ do -- Spawning and Updating --------------------
 
 	local function UpdateRack(Entity, Data, Rack)
 		Entity.ACF = Entity.ACF or {}
-		Entity.ACF.Model = Rack.Model -- Must be set before changing model
 
-		Entity:SetModel(Rack.Model)
+		Contraption.SetModel(Entity, Rack.Model)
 
 		Entity:PhysicsInit(SOLID_VPHYSICS)
 		Entity:SetMoveType(MOVETYPE_VPHYSICS)
@@ -116,11 +116,7 @@ do -- Spawning and Updating --------------------
 
 		ACF.Activate(Entity, true)
 
-		Entity.ACF.Model		= Rack.Model
-		Entity.ACF.LegalMass	= Rack.Mass
-
-		local Phys = Entity:GetPhysicsObject()
-		if IsValid(Phys) then Phys:SetMass(Rack.Mass) end
+		Contraption.SetMass(Entity, Rack.Mass)
 
 		do -- Removing old missiles
 			local Missiles = Entity.Missiles
