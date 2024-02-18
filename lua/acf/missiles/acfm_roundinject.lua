@@ -4,7 +4,7 @@ local Entities  = Classes.Entities
 local Guidances = Classes.Guidances
 local Fuzes     = Classes.Fuzes
 
-hook.Add("ACF_UpdateRoundData", "ACF Missile Ammo", function(_, ToolData, Data)
+hook.Add("ACF_OnUpdateRound", "ACF Missile Ammo", function(_, ToolData, Data)
 	if ToolData.Destiny ~= "Missiles" then return end
 
 	local PenMul   = ACF.GetGunValue(ToolData.Weapon, "PenMul")
