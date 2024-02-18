@@ -53,7 +53,7 @@ function ACF.FilterLaserEntity(Entity)
 	net.Broadcast()
 end
 
-hook.Add("ACF_OnPlayerLoaded", "ACF Laser Setup", function(Player)
+hook.Add("ACF_OnLoadPlayer", "ACF Laser Setup", function(Player)
 	net.Start("ACF_SyncLaserSources")
 		net.WriteTable(Sources)
 	net.Send(Player)
