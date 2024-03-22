@@ -13,6 +13,8 @@ local Classes   = ACF.Classes
 local Utilities = ACF.Utilities
 local Clock     = Utilities.Clock
 local Sounds    = Utilities.Sounds
+local MaxDistance = ACF.LinkDistance * ACF.LinkDistance
+local UnlinkSound = "physics/metal/metal_box_impact_bullet%s.wav"
 
 local function UpdateTotalAmmo(Entity)
 	local Total = 0
@@ -28,9 +30,22 @@ local function UpdateTotalAmmo(Entity)
 	WireLib.TriggerOutput(Entity, "Total Ammo", Total)
 end
 
+local function CheckDistantLink(Entity, Crate, EntPos)
+	local CrateUnlinked = false
+
+	if EntPos:DistToSqr(Crate:GetPos()) > MaxDistance then
+		local Sound = UnlinkSound:format(math.random(1, 3))
+
+		Sounds.SendSound(Entity, Sound, 70, math.random(99, 109), 1)
+		Sounds.SendSound(Crate, Sound, 70, math.random(99, 109), 1)
+
+		CrateUnlinked = Entity:Unlink(Crate)
+	end
+
+	return CrateUnlinked
+end
+
 do -- Spawning and Updating --------------------
-	local UnlinkSound = "physics/metal/metal_box_impact_bullet%s.wav"
-	local MaxDistance = ACF.LinkDistance * ACF.LinkDistance
 	local CheckLegal  = ACF.CheckLegal
 	local WireIO      = Utilities.WireIO
 	local Entities    = Classes.Entities
@@ -154,21 +169,6 @@ do -- Spawning and Updating --------------------
 		UpdateTotalAmmo(Entity)
 	end
 
-	local function CheckDistantLinks(Entity, Source)
-		local Position = Entity:GetPos()
-
-		for Link in pairs(Entity[Source]) do
-			if Position:DistToSqr(Link:GetPos()) > MaxDistance then
-				local Sound = UnlinkSound:format(math.random(1, 3))
-
-				Sounds.SendSound(Entity, Sound, 70, math.random(99, 109), 1)
-				Sounds.SendSound(Link, Sound, 70, math.random(99, 109), 1)
-
-				Entity:Unlink(Link)
-			end
-		end
-	end
-
 	hook.Add("ACF_OnSetupInputs", "ACF Rack Motor Delay", function(Entity, List, _, Rack)
 		if Entity:GetClass() ~= "acf_rack" then return end
 		if not Rack.CanDropMissile then return end
@@ -236,7 +236,11 @@ do -- Spawning and Updating --------------------
 		timer.Create("ACF Rack Clock " .. Rack:EntIndex(), 3, 0, function()
 			if not IsValid(Rack) then return end
 
-			CheckDistantLinks(Rack, "Crates")
+			local Position = Rack:GetPos()
+
+			for Link in pairs(Rack.Crates) do
+				CheckDistantLink(Rack, Link, Position)
+			end
 		end)
 
 		timer.Create("ACF Rack Ammo " .. Rack:EntIndex(), 1, 0, function()
@@ -281,6 +285,14 @@ do -- Spawning and Updating --------------------
 		end
 
 		HookRun("ACF_OnEntityUpdate", "acf_rack", self, Data, Rack)
+
+		local Crates = self.Crates
+
+		if next(Crates) then
+			for Crate in pairs(Crates) do
+				self:Unlink(Crate)
+			end
+		end
 
 		self:UpdateOverlay(true)
 
@@ -383,6 +395,7 @@ do -- Entity Link/Unlink -----------------------
 		if Weapon.Crates[Target] then return false, "This rack is already linked to this crate." end
 		if Target.Weapons[Weapon] then return false, "This rack is already linked to this crate." end
 		if Target.IsRefill then return false, "Refill crates cannot be linked!" end
+		if Target:GetPos():DistToSqr(Weapon:GetPos()) > MaxDistance then return false, "This crate is too far away from this rack." end
 
 		local Blacklist = Target.RoundData.Blacklist
 
@@ -621,7 +634,7 @@ do -- Loading ----------------------------------
 		local Index, Point = self:GetNextMountPoint("Empty")
 		local Crate = GetNextCrate(self)
 
-		if not self.Firing and Index and Crate then
+		if not self.Firing and Index and Crate and not CheckDistantLink(self, Crate, self:GetPos()) then
 			local Missile    = AddMissile(self, Point, Crate)
 			local ReloadTime = Missile.ReloadTime
 
