@@ -109,7 +109,7 @@ do -- Spawning and Updating --------------------
 		Entity.ShortName      = Rack.ID
 		Entity.EntType        = Rack.EntType
 		Entity.RackData       = Rack
-		Entity.Caliber        = Rack.Caliber
+		Entity.Caliber        = Rack.Caliber or 0
 		Entity.MagSize        = Rack.MagSize or 1
 		Entity.ForcedIndex    = Entity.ForcedIndex and math.max(Entity.ForcedIndex, Entity.MagSize)
 		Entity.PointIndex     = 1
@@ -833,6 +833,7 @@ do -- Misc -------------------------------------
 		local Reload     = IsValid(Missile) and Missile.ReloadTime or 1
 
 		self.BulletData = BulletData
+		self.Caliber    = BulletData.Caliber
 		self.NextFire   = Point.NextFire
 		self.Jammed     = Point.Disabled
 
