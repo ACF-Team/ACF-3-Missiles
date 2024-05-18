@@ -5,6 +5,7 @@ AddCSLuaFile("shared.lua")
 include("shared.lua")
 
 local ACF = ACF
+local Contraption	= ACF.Contraption
 
 --===============================================================================================--
 -- Local Funcs and Vars
@@ -12,6 +13,7 @@ local ACF = ACF
 
 local Damage      = ACF.Damage
 local CheckLegal  = ACF.CheckLegal
+local Sounds      = ACF.Utilities.Sounds
 local TimerExists = timer.Exists
 local TimerCreate = timer.Create
 local TimerRemove = timer.Remove
@@ -60,7 +62,7 @@ local function CheckReceive(Entity)
 		WireLib.TriggerOutput(Entity, "Detected", IsDetected and 1 or 0)
 
 		if IsDetected then
-			Entity:EmitSound(Entity.SoundPath, 70, 100, ACF.Volume)
+			Sounds.SendSound(Entity, Entity.SoundPath, 70, 100, 1)
 		end
 
 		Entity:UpdateOverlay()
@@ -131,9 +133,8 @@ do -- Spawn and Update functions
 		local Delay = Receiver.ThinkDelay
 
 		Entity.ACF = Entity.ACF or {}
-		Entity.ACF.Model = Receiver.Model -- Must be set before changing model
 
-		Entity:SetModel(Receiver.Model)
+		Contraption.SetModel(Entity, Receiver.Model)
 
 		Entity:PhysicsInit(SOLID_VPHYSICS)
 		Entity:SetMoveType(MOVETYPE_VPHYSICS)
@@ -169,11 +170,7 @@ do -- Spawn and Update functions
 
 		ACF.Activate(Entity, true)
 
-		Entity.ACF.Model		= Receiver.Model
-		Entity.ACF.LegalMass	= Receiver.Mass
-
-		local Phys = Entity:GetPhysicsObject()
-		if IsValid(Phys) then Phys:SetMass(Receiver.Mass) end
+		Contraption.SetMass(Entity, Receiver.Mass)
 	end
 
 	function MakeACF_Receiver(Player, Pos, Ang, Data)

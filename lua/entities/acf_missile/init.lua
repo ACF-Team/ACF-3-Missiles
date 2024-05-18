@@ -13,6 +13,7 @@ local ActiveMissiles = ACF.ActiveMissiles
 local Ballistics     = ACF.Ballistics
 local Classes        = ACF.Classes
 local Clock          = ACF.Utilities.Clock
+local Sounds         = ACF.Utilities.Sounds
 local Damage         = ACF.Damage
 local Missiles       = Classes.Missiles
 local InputActions   = ACF.GetInputActions("acf_missile")
@@ -69,7 +70,7 @@ local function LaunchEffect(Missile)
 	if ACF_SOUND_EXT then
 		hook.Run("ACF_SOUND_MISSILE", Missile, Sound)
 	else
-		Missile:EmitSound(Sound, 180, math.random(99, 101), ACF.Volume)
+		Sounds.SendSound(Missile, Sound, 180, math.random(99, 101), 1)
 	end
 end
 
@@ -512,7 +513,7 @@ function ENT:Launch(Delay, IsMisfire)
 		self.Filter[#self.Filter + 1] = Missile
 	end
 
-	self:EmitSound("phx/epicmetal_hard.wav", 70, math.random(99, 101), ACF.Volume)
+	Sounds.SendSound(self, "phx/epicmetal_hard.wav", 70, math.random(99, 101), 1)
 	self:SetNotSolid(false)
 	self:SetNoDraw(false)
 	self:SetParent()

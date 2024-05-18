@@ -4,6 +4,7 @@ AddCSLuaFile("shared.lua")
 include("shared.lua")
 
 local ACF = ACF
+local Contraption	= ACF.Contraption
 
 ACF.RegisterClassLink("acf_radar", "acf_rack", function(Radar, Target)
 	if Radar.Weapons[Target] then return false, "This rack is already linked to this radar!" end
@@ -39,6 +40,7 @@ end)
 local Radars	  = ACF.ActiveRadars
 local Damage      = ACF.Damage
 local CheckLegal  = ACF.CheckLegal
+local Sounds      = ACF.Utilities.Sounds
 local UnlinkSound = "physics/metal/metal_box_impact_bullet%s.wav"
 local MaxDistance = ACF.LinkDistance * ACF.LinkDistance
 local TraceData	  = { start = true, endpos = true, mask = MASK_SOLID_BRUSHONLY }
@@ -212,7 +214,7 @@ local function ScanForEntities(Entity)
 
 	if Count ~= Entity.TargetCount then
 		if Count > Entity.TargetCount then
-			Entity:EmitSound(Entity.SoundPath, 70, 100, ACF.Volume)
+			Sounds.SendSound(Entity, Entity.SoundPath, 70, 100, 1)
 		end
 
 		Entity.TargetCount = Count
@@ -271,8 +273,8 @@ local function CheckDistantLinks(Entity, Source)
 		if Position:DistToSqr(Link:GetPos()) > MaxDistance then
 			local Sound = UnlinkSound:format(math.random(1, 3))
 
-			Entity:EmitSound(Sound, 70, 100, ACF.Volume)
-			Link:EmitSound(Sound, 70, 100, ACF.Volume)
+			Sounds.SendSound(Entity, Sound, 70, 100, 1)
+			Sounds.SendSound(Link, Sound, 70, 100, 1)
 
 			Entity:Unlink(Link)
 		end
@@ -332,9 +334,8 @@ do -- Spawn and Update functions
 		local Delay = Radar.ThinkDelay
 
 		Entity.ACF = Entity.ACF or {}
-		Entity.ACF.Model = Radar.Model -- Must be set before changing model
 
-		Entity:SetModel(Radar.Model)
+		Contraption.SetModel(Entity, Radar.Model)
 
 		Entity:PhysicsInit(SOLID_VPHYSICS)
 		Entity:SetMoveType(MOVETYPE_VPHYSICS)
@@ -370,11 +371,7 @@ do -- Spawn and Update functions
 
 		ACF.Activate(Entity, true)
 
-		Entity.ACF.Model		= Radar.Model
-		Entity.ACF.LegalMass	= Radar.Mass
-
-		local Phys = Entity:GetPhysicsObject()
-		if IsValid(Phys) then Phys:SetMass(Radar.Mass) end
+		Contraption.SetMass(Entity, Radar.Mass)
 	end
 
 	function MakeACF_Radar(Player, Pos, Angle, Data)

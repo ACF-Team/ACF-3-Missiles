@@ -8,9 +8,11 @@ include("shared.lua")
 local EMPTY     = { Type = "Empty", PropMass = 0, ProjMass = 0, Tracer = 0 }
 local HookRun   = hook.Run
 local ACF       = ACF
+local Contraption	= ACF.Contraption
 local Classes   = ACF.Classes
 local Utilities = ACF.Utilities
 local Clock     = Utilities.Clock
+local Sounds    = Utilities.Sounds
 local MaxDistance = ACF.LinkDistance * ACF.LinkDistance
 local UnlinkSound = "physics/metal/metal_box_impact_bullet%s.wav"
 
@@ -34,8 +36,8 @@ local function CheckDistantLink(Entity, Crate, EntPos)
 	if EntPos:DistToSqr(Crate:GetPos()) > MaxDistance then
 		local Sound = UnlinkSound:format(math.random(1, 3))
 
-		Entity:EmitSound(Sound, 70, math.random(99, 109), ACF.Volume)
-		Crate:EmitSound(Sound, 70, math.random(99, 109), ACF.Volume)
+		Sounds.SendSound(Entity, Sound, 70, math.random(99, 109), 1)
+		Sounds.SendSound(Crate, Sound, 70, math.random(99, 109), 1)
 
 		CrateUnlinked = Entity:Unlink(Crate)
 	end
@@ -93,9 +95,8 @@ do -- Spawning and Updating --------------------
 
 	local function UpdateRack(Entity, Data, Rack)
 		Entity.ACF = Entity.ACF or {}
-		Entity.ACF.Model = Rack.Model -- Must be set before changing model
 
-		Entity:SetModel(Rack.Model)
+		Contraption.SetModel(Entity, Rack.Model)
 
 		Entity:PhysicsInit(SOLID_VPHYSICS)
 		Entity:SetMoveType(MOVETYPE_VPHYSICS)
@@ -130,11 +131,7 @@ do -- Spawning and Updating --------------------
 
 		ACF.Activate(Entity, true)
 
-		Entity.ACF.Model		= Rack.Model
-		Entity.ACF.LegalMass	= Rack.Mass
-
-		local Phys = Entity:GetPhysicsObject()
-		if IsValid(Phys) then Phys:SetMass(Rack.Mass) end
+		Contraption.SetMass(Entity, Rack.Mass)
 
 		do -- Removing old missiles
 			local Missiles = Entity.Missiles
@@ -324,7 +321,7 @@ do -- Custom ACF damage ------------------------
 
 		util.Effect("Sparks", Effect, true, true)
 
-		Rack:EmitSound(SparkSound:format(math.random(6)), math.random(55, 65), math.random(99, 101), ACF.Volume)
+		Sounds.SendSound(Rack, SparkSound:format(math.random(6)), math.random(55, 65), math.random(99, 101), 1)
 
 		timer.Simple(math.Rand(0.5, 2), function()
 			if not IsValid(Rack) then return end
@@ -477,7 +474,7 @@ do -- Entity Inputs ----------------------------
 		Entity:UpdatePoint()
 
 		if Entity.ForcedIndex then
-			Entity:EmitSound("buttons/blip2.wav", 70, math.random(99, 101), ACF.Volume)
+			Sounds.SendSound(Entity, "buttons/blip2.wav", 70, math.random(99, 101), 1)
 		end
 	end)
 
@@ -558,7 +555,7 @@ do -- Firing -----------------------------------
 
 			self:UpdatePoint()
 		else
-			self:EmitSound("weapons/pistol/pistol_empty.wav", 70, math.random(99, 101), ACF.Volume)
+			Sounds.SendSound(self, "weapons/pistol/pistol_empty.wav", 70, math.random(99, 101), 1)
 
 			Delay = 1
 		end
@@ -617,7 +614,7 @@ do -- Loading ----------------------------------
 		local Pos, Ang = GetMissileAngPos(Crate.BulletData, Point)
 		local Missile = MakeACF_Missile(Rack.Owner, Pos, Ang, Rack, Point, Crate)
 
-		Rack:EmitSound("acf_missiles/fx/bomb_reload.mp3", 70, math.random(99, 101), ACF.Volume)
+		Sounds.SendSound(Rack, "acf_missiles/fx/bomb_reload.mp3", 70, math.random(99, 101), 1)
 
 		return Missile
 	end
@@ -663,7 +660,7 @@ do -- Loading ----------------------------------
 				if not IsValid(Missile) then
 					Missile = nil
 				else
-					self:EmitSound("acf_missiles/fx/weapon_select.mp3", 70, math.random(99, 101), ACF.Volume)
+					Sounds.SendSound(self, "acf_missiles/fx/weapon_select.mp3", 70, math.random(99, 101), 1)
 
 					Point.State = "Loaded"
 					Point.NextFire = nil

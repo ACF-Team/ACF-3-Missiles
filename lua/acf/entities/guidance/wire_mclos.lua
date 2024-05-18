@@ -1,5 +1,6 @@
 local ACF       = ACF
 local Guidances = ACF.Classes.Guidances
+local Sounds    = ACF.Utilities.Sounds
 local Guidance  = Guidances.Register("Wire (MCLOS)", "Radio (MCLOS)")
 
 function Guidance:Configure(Missile)
@@ -30,7 +31,7 @@ else
 			LastFired.GuidanceData:SnapRope(LastFired)
 		end
 
-		self.Rope = constraint.CreateKeyframeRope(Vector(), 0.1, "cable/cable2", nil, self.Source, self.InPos, 0, Missile, self.OutPos, 0)
+		self.Rope = constraint.CreateKeyframeRope(Vector(), 0.1, "acf/core/wire", nil, self.Source, self.InPos, 0, Missile, self.OutPos, 0)
 		self.Rope:SetKeyValue("Width", 0.1)
 	end
 
@@ -54,7 +55,7 @@ else
 			self.Rope = nil
 
 			if IsValid(self.Source) then
-				self.Source:EmitSound(SnapSound:format(math.random(3)), nil, nil, ACF.Volume)
+				Sounds.SendSound(self.Source, SnapSound:format(math.random(3)), nil, nil, 1)
 			end
 		end
 	end
