@@ -760,6 +760,45 @@ do -- Duplicator Support -----------------------
 	end
 end ---------------------------------------------
 
+do	-- Overlay/networking
+	util.AddNetworkString("ACF.RequestRackInfo")
+	net.Receive("ACF.RequestRackInfo",function(_,Ply)
+		local Rack = net.ReadEntity()
+		if not IsValid(Rack) then return end
+
+		local RackInfo	= {}
+		local Crates	= {}
+
+		if IsValid(Rack.Computer) then
+			RackInfo.HasComputer	= true
+			RackInfo.Computer	= Rack.Computer:EntIndex()
+		end
+
+		if IsValid(Rack.Radar) then
+			RackInfo.HasRadar	= true
+			RackInfo.Radar	= Rack.Radar:EntIndex()
+		end
+
+		RackInfo.MountPoints	= {}
+
+		for _,Point in pairs(Rack.MountPoints) do
+			RackInfo.MountPoints[#RackInfo.MountPoints + 1] = {Pos = Point.Position, Ang = Point.Angle, Index = Point.Index}
+		end
+
+		if next(Rack.Crates) then
+			for Crate in pairs(Rack.Crates) do
+				Crates[#Crates + 1] = Crate:EntIndex()
+			end
+		end
+
+		net.Start("ACF.RequestRackInfo")
+			net.WriteEntity(Rack)
+			net.WriteString(util.TableToJSON(RackInfo))
+			net.WriteString(util.TableToJSON(Crates))
+		net.Send(Ply)
+	end)
+end
+
 do -- Misc -------------------------------------
 	local function GetPosition(Entity)
 		local PhysObj = Entity:GetPhysicsObject()
