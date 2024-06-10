@@ -556,3 +556,22 @@ function ENT:OnRemove()
 
 	WireLib.Remove(self)
 end
+
+do	-- Overlay/networking
+	util.AddNetworkString("ACF.RequestRadarInfo")
+	net.Receive("ACF.RequestRadarInfo",function(_,Ply)
+		local Radar = net.ReadEntity()
+		if not IsValid(Radar) then return end
+
+		local RadarInfo	= {}
+		RadarInfo.Spherical = (Radar.ConeDegs == nil) and true or false
+		RadarInfo.Cone	= Radar.ConeDegs and math.Round(Radar.ConeDegs, 2) or 0
+		RadarInfo.Range	= Radar.Range and math.Round(Radar.Range,2) or 0
+		RadarInfo.Origin	= Radar.Origin
+
+		net.Start("ACF.RequestRadarInfo")
+			net.WriteEntity(Radar)
+			net.WriteString(util.TableToJSON(RadarInfo))
+		net.Send(Ply)
+	end)
+end
