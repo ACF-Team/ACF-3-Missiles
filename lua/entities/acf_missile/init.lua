@@ -15,6 +15,7 @@ local Classes        = ACF.Classes
 local Clock          = ACF.Utilities.Clock
 local Sounds         = ACF.Utilities.Sounds
 local Damage         = ACF.Damage
+local Debug			 = ACF.Debug
 local Missiles       = Classes.Missiles
 local InputActions   = ACF.GetInputActions("acf_missile")
 local HookRun        = hook.Run
@@ -284,7 +285,7 @@ local function CalcFlight(Missile)
 	Missile.CurDir = Dir
 
 	--Missile trajectory debugging
-	debugoverlay.Line(Pos, EndPos, 10, Color(0, 255, 0))
+	Debug.Line(Pos, EndPos, 10, Color(0, 255, 0))
 
 	Missile:DoFlight()
 end
@@ -613,7 +614,7 @@ function ENT:Detonate(Destroyed)
 		return Fuze:HandleDetonation(self, BulletData)
 	end
 
-	debugoverlay.Line(BulletData.Pos, BulletData.Pos + BulletData.Flight, 10, Color(255, 128, 0))
+	Debug.Line(BulletData.Pos, BulletData.Pos + BulletData.Flight, 10, Color(255, 128, 0))
 
 	BulletData.DetonatorAngle = 91
 
