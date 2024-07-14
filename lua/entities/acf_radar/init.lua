@@ -349,7 +349,7 @@ do -- Spawn and Update functions
 		end
 
 		Entity.Name         = Radar.Name
-		Entity.ShortName    = Radar.Name
+		Entity.ShortName    = Radar.ID
 		Entity.EntType      = Class.Name
 		Entity.ClassType    = Class.ID
 		Entity.ClassData    = Class
