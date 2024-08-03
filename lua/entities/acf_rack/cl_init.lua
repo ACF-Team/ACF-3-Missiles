@@ -73,6 +73,7 @@ do	-- Overlay/networking
 	local JoystickMat = Material("icon16/joystick.png")
 	local RadarColor = Color(255,255,0,25)
 	local ControllerColor = Color(0,255,0,25)
+	local ForwardColor = Color(255,0,0)
 
 	function ENT:DrawOverlay()
 		local SelfTbl = self:GetTable()
@@ -132,5 +133,15 @@ do	-- Overlay/networking
 			render.SetMaterial(JoystickMat)
 			render.DrawSprite(Computer:LocalToWorld(Computer:OBBCenter()), 12, 12, color_white)
 		end
+
+		local p1 = self:GetPos() + self:GetForward() * 24
+		local p2 = self:GetPos()
+		local dir = (p1 - p2):GetNormalized()
+		local dir2 = EyeVector()
+		local right = (dir:Cross(dir2)):GetNormalized()
+
+		render.DrawLine(p1, p2, ForwardColor)
+		render.DrawLine(p1, p1 + (-dir - right) * 5, ForwardColor)
+		render.DrawLine(p1, p1 + (-dir + right) * 5, ForwardColor)
 	end
 end
