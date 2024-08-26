@@ -5,14 +5,14 @@ include("shared.lua")
 
 -- Local Vars -----------------------------------
 
-local EMPTY     = { Type = "Empty", PropMass = 0, ProjMass = 0, Tracer = 0 }
-local HookRun   = hook.Run
-local ACF       = ACF
-local Contraption	= ACF.Contraption
-local Classes   = ACF.Classes
-local Utilities = ACF.Utilities
-local Clock     = Utilities.Clock
-local Sounds    = Utilities.Sounds
+local EMPTY       = { Type = "Empty", PropMass = 0, ProjMass = 0, Tracer = 0 }
+local HookRun     = hook.Run
+local ACF         = ACF
+local Contraption = ACF.Contraption
+local Classes     = ACF.Classes
+local Utilities   = ACF.Utilities
+local Clock       = Utilities.Clock
+local Sounds      = Utilities.Sounds
 local MaxDistance = ACF.LinkDistance * ACF.LinkDistance
 local UnlinkSound = "physics/metal/metal_box_impact_bullet%s.wav"
 
@@ -110,6 +110,7 @@ do -- Spawning and Updating --------------------
 		Entity.ShortName      = Rack.ID
 		Entity.EntType        = Rack.EntType
 		Entity.RackData       = Rack
+		Entity.Class          = Rack.ID
 		Entity.Caliber        = Rack.Caliber or 0
 		Entity.MagSize        = Rack.MagSize or 1
 		Entity.ForcedIndex    = Entity.ForcedIndex and math.max(Entity.ForcedIndex, Entity.MagSize)
@@ -413,7 +414,13 @@ do -- Entity Link/Unlink -----------------------
 		Weapon:UpdateOverlay()
 		Target:UpdateOverlay()
 
-		UpdateTotalAmmo(Weapon)
+		if Weapon.State == "Empty" then -- When linked to an empty weapon, attempt to load it
+			timer.Simple(0.5, function() -- Delay by 500ms just in case the wiring isn't applied at the same time or whatever weird dupe shit happens
+				if IsValid(Weapon) and IsValid(Target) and Weapon.State == "Empty" and Target:CanConsume() then
+					Weapon:Reload()
+				end
+			end)
+		end
 
 		return true, "Rack linked successfully."
 	end)
@@ -429,8 +436,6 @@ do -- Entity Link/Unlink -----------------------
 
 			Weapon:UpdateOverlay()
 			Target:UpdateOverlay()
-
-			UpdateTotalAmmo(Weapon)
 
 			return true, "Weapon unlinked successfully."
 		end
@@ -457,9 +462,7 @@ do -- Entity Inputs ----------------------------
 
 		Entity.Reloading = tobool(Value)
 
-		if Entity:CanReload() then
-			Entity:Reload()
-		end
+		Entity:Reload()
 	end)
 
 	ACF.AddInputAction("acf_rack", "Unload", function(Entity, Value)
@@ -573,6 +576,12 @@ do -- Firing -----------------------------------
 				end
 			end)
 		end
+
+		timer.Simple(1, function()
+			if not IsValid(self) then return end
+
+			self:Reload()
+		end)
 	end
 end ---------------------------------------------
 
@@ -623,14 +632,17 @@ do -- Loading ----------------------------------
 
 	function ENT:CanReload()
 		if self.RetryReload then return false end
-		if not self.Reloading then return false end
 		if not ACF.RacksCanFire then return false end
+		if self.Disabled then return false end
+		if self.MagSize == self.CurrentShot then return false end
 
 		return true
 	end
 
 	-- TODO: Once Unloading gets implemented, racks have to unload missiles if no empty mountpoint is found.
 	function ENT:Reload()
+		if not self:CanReload() then return end
+
 		local Index, Point = self:GetNextMountPoint("Empty")
 		local Crate = GetNextCrate(self)
 
@@ -677,9 +689,7 @@ do -- Loading ----------------------------------
 
 			self.RetryReload = nil
 
-			if self:CanReload() then
-				self:Reload()
-			end
+			self:Reload()
 		end)
 	end
 end ---------------------------------------------
@@ -762,7 +772,8 @@ end ---------------------------------------------
 
 do	-- Overlay/networking
 	util.AddNetworkString("ACF.RequestRackInfo")
-	net.Receive("ACF.RequestRackInfo",function(_,Ply)
+
+	net.Receive("ACF.RequestRackInfo", function(_, Ply)
 		local Rack = net.ReadEntity()
 		if not IsValid(Rack) then return end
 
@@ -816,9 +827,7 @@ do -- Misc -------------------------------------
 			self:Shoot()
 		end
 
-		if self:CanReload() then
-			self:Reload()
-		end
+		self:Reload()
 	end
 
 	function ENT:Disable()
@@ -833,6 +842,8 @@ do -- Misc -------------------------------------
 
 		WireLib.TriggerOutput(self, "Status", State)
 		WireLib.TriggerOutput(self, "Ready", State == "Loaded" and 1 or 0)
+
+		UpdateTotalAmmo(self)
 	end
 
 	function ENT:GetNextMountPoint(State, CustomStart)
