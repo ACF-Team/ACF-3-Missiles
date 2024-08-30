@@ -6,9 +6,11 @@ include("shared.lua")
 
 local hook      = hook
 local ACF       = ACF
+local Contraption	= ACF.Contraption
 local Damage    = ACF.Damage
 local Utilities = ACF.Utilities
 local Clock     = Utilities.Clock
+local Sounds    = Utilities.Sounds
 
 ACF.RegisterClassLink("acf_computer", "acf_rack", function(Computer, Target)
 	if Computer.Weapons[Target] then return false, "This rack is already linked to this computer!" end
@@ -79,8 +81,8 @@ local function CheckDistantLinks(Entity, Source)
 		if Position:DistToSqr(Link:GetPos()) > MaxDistance then
 			local Sound = UnlinkSound:format(math.random(1, 3))
 
-			Entity:EmitSound(Sound, 70, 100, ACF.Volume)
-			Link:EmitSound(Sound, 70, 100, ACF.Volume)
+			Sounds.SendSound(Entity, Sound, 70, 100, 1)
+			Sounds.SendSound(Link, Sound, 70, 100, 1)
 
 			Entity:Unlink(Link)
 		end
@@ -121,9 +123,8 @@ do -- Spawn and update function
 
 	local function UpdateComputer(Entity, Data, Class, Computer)
 		Entity.ACF = Entity.ACF or {}
-		Entity.ACF.Model = Computer.Model -- Must be set before changing model
 
-		Entity:SetModel(Computer.Model)
+		Contraption.SetModel(Entity, Computer.Model)
 
 		Entity:PhysicsInit(SOLID_VPHYSICS)
 		Entity:SetMoveType(MOVETYPE_VPHYSICS)
@@ -158,11 +159,7 @@ do -- Spawn and update function
 
 		ACF.Activate(Entity, true)
 
-		Entity.ACF.LegalMass	= Computer.Mass
-		Entity.ACF.Model		= Computer.Model
-
-		local Phys = Entity:GetPhysicsObject()
-		if IsValid(Phys) then Phys:SetMass(Computer.Mass) end
+		Contraption.SetMass(Entity, Computer.Mass)
 
 		if Entity.OnUpdate then
 			Entity:OnUpdate(Data, Class, Computer)

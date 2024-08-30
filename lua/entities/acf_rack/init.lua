@@ -8,9 +8,13 @@ include("shared.lua")
 local EMPTY     = { Type = "Empty", PropMass = 0, ProjMass = 0, Tracer = 0 }
 local hook      = hook
 local ACF       = ACF
+local Contraption	= ACF.Contraption
 local Classes   = ACF.Classes
 local Utilities = ACF.Utilities
 local Clock     = Utilities.Clock
+local Sounds    = Utilities.Sounds
+local MaxDistance = ACF.LinkDistance * ACF.LinkDistance
+local UnlinkSound = "physics/metal/metal_box_impact_bullet%s.wav"
 
 local function UpdateTotalAmmo(Entity)
 	local Total = 0
@@ -26,9 +30,22 @@ local function UpdateTotalAmmo(Entity)
 	WireLib.TriggerOutput(Entity, "Total Ammo", Total)
 end
 
+local function CheckDistantLink(Entity, Crate, EntPos)
+	local CrateUnlinked = false
+
+	if EntPos:DistToSqr(Crate:GetPos()) > MaxDistance then
+		local Sound = UnlinkSound:format(math.random(1, 3))
+
+		Sounds.SendSound(Entity, Sound, 70, math.random(99, 109), 1)
+		Sounds.SendSound(Crate, Sound, 70, math.random(99, 109), 1)
+
+		CrateUnlinked = Entity:Unlink(Crate)
+	end
+
+	return CrateUnlinked
+end
+
 do -- Spawning and Updating --------------------
-	local UnlinkSound = "physics/metal/metal_box_impact_bullet%s.wav"
-	local MaxDistance = ACF.LinkDistance * ACF.LinkDistance
 	local CheckLegal  = ACF.CheckLegal
 	local WireIO      = Utilities.WireIO
 	local Entities    = Classes.Entities
@@ -78,9 +95,8 @@ do -- Spawning and Updating --------------------
 
 	local function UpdateRack(Entity, Data, Rack)
 		Entity.ACF = Entity.ACF or {}
-		Entity.ACF.Model = Rack.Model -- Must be set before changing model
 
-		Entity:SetModel(Rack.Model)
+		Contraption.SetModel(Entity, Rack.Model)
 
 		Entity:PhysicsInit(SOLID_VPHYSICS)
 		Entity:SetMoveType(MOVETYPE_VPHYSICS)
@@ -94,7 +110,7 @@ do -- Spawning and Updating --------------------
 		Entity.ShortName      = Rack.ID
 		Entity.EntType        = Rack.EntType
 		Entity.RackData       = Rack
-		Entity.Caliber        = Rack.Caliber
+		Entity.Caliber        = Rack.Caliber or 0
 		Entity.MagSize        = Rack.MagSize or 1
 		Entity.ForcedIndex    = Entity.ForcedIndex and math.max(Entity.ForcedIndex, Entity.MagSize)
 		Entity.PointIndex     = 1
@@ -115,11 +131,7 @@ do -- Spawning and Updating --------------------
 
 		ACF.Activate(Entity, true)
 
-		Entity.ACF.Model		= Rack.Model
-		Entity.ACF.LegalMass	= Rack.Mass
-
-		local Phys = Entity:GetPhysicsObject()
-		if IsValid(Phys) then Phys:SetMass(Rack.Mass) end
+		Contraption.SetMass(Entity, Rack.Mass)
 
 		do -- Removing old missiles
 			local Missiles = Entity.Missiles
@@ -155,21 +167,6 @@ do -- Spawning and Updating --------------------
 		end
 
 		UpdateTotalAmmo(Entity)
-	end
-
-	local function CheckDistantLinks(Entity, Source)
-		local Position = Entity:GetPos()
-
-		for Link in pairs(Entity[Source]) do
-			if Position:DistToSqr(Link:GetPos()) > MaxDistance then
-				local Sound = UnlinkSound:format(math.random(1, 3))
-
-				Entity:EmitSound(Sound, 70, math.random(99, 109), ACF.Volume)
-				Link:EmitSound(Sound, 70, math.random(99, 109), ACF.Volume)
-
-				Entity:Unlink(Link)
-			end
-		end
 	end
 
 	hook.Add("ACF_OnSetupInputs", "ACF Rack Motor Delay", function(Entity, List, _, Rack)
@@ -239,7 +236,11 @@ do -- Spawning and Updating --------------------
 		timer.Create("ACF Rack Clock " .. Rack:EntIndex(), 3, 0, function()
 			if not IsValid(Rack) then return end
 
-			CheckDistantLinks(Rack, "Crates")
+			local Position = Rack:GetPos()
+
+			for Link in pairs(Rack.Crates) do
+				CheckDistantLink(Rack, Link, Position)
+			end
 		end)
 
 		timer.Create("ACF Rack Ammo " .. Rack:EntIndex(), 1, 0, function()
@@ -285,6 +286,14 @@ do -- Spawning and Updating --------------------
 
 		hook.Run("ACF_OnEntityUpdate", "acf_rack", self, Data, Rack)
 
+		local Crates = self.Crates
+
+		if next(Crates) then
+			for Crate in pairs(Crates) do
+				self:Unlink(Crate)
+			end
+		end
+
 		self:UpdateOverlay(true)
 
 		net.Start("ACF_UpdateEntity")
@@ -312,7 +321,7 @@ do -- Custom ACF damage ------------------------
 
 		util.Effect("Sparks", Effect, true, true)
 
-		Rack:EmitSound(SparkSound:format(math.random(6)), math.random(55, 65), math.random(99, 101), ACF.Volume)
+		Sounds.SendSound(Rack, SparkSound:format(math.random(6)), math.random(55, 65), math.random(99, 101), 1)
 
 		timer.Simple(math.Rand(0.5, 2), function()
 			if not IsValid(Rack) then return end
@@ -386,6 +395,7 @@ do -- Entity Link/Unlink -----------------------
 		if Weapon.Crates[Target] then return false, "This rack is already linked to this crate." end
 		if Target.Weapons[Weapon] then return false, "This rack is already linked to this crate." end
 		if Target.IsRefill then return false, "Refill crates cannot be linked!" end
+		if Target:GetPos():DistToSqr(Weapon:GetPos()) > MaxDistance then return false, "This crate is too far away from this rack." end
 
 		local Blacklist = Target.RoundData.Blacklist
 
@@ -464,7 +474,7 @@ do -- Entity Inputs ----------------------------
 		Entity:UpdatePoint()
 
 		if Entity.ForcedIndex then
-			Entity:EmitSound("buttons/blip2.wav", 70, math.random(99, 101), ACF.Volume)
+			Sounds.SendSound(Entity, "buttons/blip2.wav", 70, math.random(99, 101), 1)
 		end
 	end)
 
@@ -546,7 +556,7 @@ do -- Firing -----------------------------------
 
 			self:UpdatePoint()
 		else
-			self:EmitSound("weapons/pistol/pistol_empty.wav", 70, math.random(99, 101), ACF.Volume)
+			Sounds.SendSound(self, "weapons/pistol/pistol_empty.wav", 70, math.random(99, 101), 1)
 
 			Delay = 1
 		end
@@ -605,7 +615,7 @@ do -- Loading ----------------------------------
 		local Pos, Ang = GetMissileAngPos(Crate.BulletData, Point)
 		local Missile = MakeACF_Missile(Rack.Owner, Pos, Ang, Rack, Point, Crate)
 
-		Rack:EmitSound("acf_missiles/fx/bomb_reload.mp3", 70, math.random(99, 101), ACF.Volume)
+		Sounds.SendSound(Rack, "acf_missiles/fx/bomb_reload.mp3", 70, math.random(99, 101), 1)
 
 		return Missile
 	end
@@ -625,7 +635,7 @@ do -- Loading ----------------------------------
 		local Index, Point = self:GetNextMountPoint("Empty")
 		local Crate = GetNextCrate(self)
 
-		if not self.Firing and Index and Crate then
+		if not self.Firing and Index and Crate and not CheckDistantLink(self, Crate, self:GetPos()) then
 			local Missile    = AddMissile(self, Point, Crate)
 			local ReloadTime = Missile.ReloadTime
 
@@ -651,7 +661,7 @@ do -- Loading ----------------------------------
 				if not IsValid(Missile) then
 					Missile = nil
 				else
-					self:EmitSound("acf_missiles/fx/weapon_select.mp3", 70, math.random(99, 101), ACF.Volume)
+					Sounds.SendSound(self, "acf_missiles/fx/weapon_select.mp3", 70, math.random(99, 101), 1)
 
 					Point.State = "Loaded"
 					Point.NextFire = nil
@@ -751,6 +761,45 @@ do -- Duplicator Support -----------------------
 	end
 end ---------------------------------------------
 
+do	-- Overlay/networking
+	util.AddNetworkString("ACF.RequestRackInfo")
+	net.Receive("ACF.RequestRackInfo",function(_,Ply)
+		local Rack = net.ReadEntity()
+		if not IsValid(Rack) then return end
+
+		local RackInfo	= {}
+		local Crates	= {}
+
+		if IsValid(Rack.Computer) then
+			RackInfo.HasComputer	= true
+			RackInfo.Computer	= Rack.Computer:EntIndex()
+		end
+
+		if IsValid(Rack.Radar) then
+			RackInfo.HasRadar	= true
+			RackInfo.Radar	= Rack.Radar:EntIndex()
+		end
+
+		RackInfo.MountPoints	= {}
+
+		for _,Point in pairs(Rack.MountPoints) do
+			RackInfo.MountPoints[#RackInfo.MountPoints + 1] = {Pos = Point.Position, Ang = Point.Angle, Index = Point.Index}
+		end
+
+		if next(Rack.Crates) then
+			for Crate in pairs(Rack.Crates) do
+				Crates[#Crates + 1] = Crate:EntIndex()
+			end
+		end
+
+		net.Start("ACF.RequestRackInfo")
+			net.WriteEntity(Rack)
+			net.WriteString(util.TableToJSON(RackInfo))
+			net.WriteString(util.TableToJSON(Crates))
+		net.Send(Ply)
+	end)
+end
+
 do -- Misc -------------------------------------
 	local function GetPosition(Entity)
 		local PhysObj = Entity:GetPhysicsObject()
@@ -821,6 +870,7 @@ do -- Misc -------------------------------------
 		local Reload     = IsValid(Missile) and Missile.ReloadTime or 1
 
 		self.BulletData = BulletData
+		self.Caliber    = BulletData.Caliber
 		self.NextFire   = Point.NextFire
 		self.Jammed     = Point.Disabled
 
