@@ -307,20 +307,22 @@ end ---------------------------------------------
 
 do -- Custom ACF damage ------------------------
 	local Damage     = ACF.Damage
+	local Effects    = ACF.Utilities.Effects
 	local SparkSound = "ambient/energy/spark%s.wav"
 
 	local function ShowDamage(Rack, Point)
 		local Position = Rack:LocalToWorld(Point.Position)
 
-		local Effect = EffectData()
-			Effect:SetMagnitude(math.Rand(0.5, 1))
-			Effect:SetRadius(1)
-			Effect:SetScale(1)
-			Effect:SetStart(Position)
-			Effect:SetOrigin(Position)
-			Effect:SetNormal(VectorRand())
+		local EffectTable = {
+			Magnitude = math.Rand(0.5, 1),
+			Radius = 1,
+			Scale = 1,
+			Start = Position,
+			Origin = Position,
+			Normal = VectorRand(),
+		}
 
-		util.Effect("Sparks", Effect, true, true)
+		Effects.CreateEffect("Sparks", EffectTable, true, true)
 
 		Sounds.SendSound(Rack, SparkSound:format(math.random(6)), math.random(55, 65), math.random(99, 101), 1)
 

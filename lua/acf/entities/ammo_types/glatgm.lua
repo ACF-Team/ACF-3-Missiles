@@ -1,5 +1,6 @@
 local ACF       = ACF
 local AmmoTypes = ACF.Classes.AmmoTypes
+local Effects   = ACF.Utilities.Effects
 local Ammo      = AmmoTypes.Register("GLATGM", "HEATFS")
 
 function Ammo:OnLoaded()
@@ -60,38 +61,35 @@ if SERVER then
 	end
 
 	function Ammo:HEATExplosionEffect(Bullet, Pos)
-		local Data = EffectData()
-		Data:SetOrigin(Pos)
-		Data:SetNormal(Bullet.Flight:GetNormalized())
-		Data:SetRadius(math.max(Bullet.FillerMass ^ 0.33 * 8 * 39.37, 1))
+		local EffectTable = {
+			Origin = Pos,
+			Normal = Bullet.Flight:GetNormalized(),
+			Radius = math.max(Bullet.FillerMass ^ 0.33 * 8 * 39.37, 1),
+		}
 
-		util.Effect("ACF_GLATGMExplosion", Data)
+		Effects.CreateEffect("ACF_GLATGMExplosion", EffectTable)
 	end
 else
 	ACF.RegisterAmmoDecal("GLATGM", "damage/heat_pen", "damage/heat_rico", function(Caliber) return Caliber * 0.1667 end)
 
 	function Ammo:PenetrationEffect(Effect, Bullet)
-		local Data = EffectData()
+		local Detonated = Bullet.Detonated
+		local EffectName = Detonated and "ACF_Penetration" or "ACF_GLATGMExplosion"
+		local BoomFillerMass = Bullet.FillerMass * ACF.HEATBoomConvert
+		local Scale = Detonated and Bullet.SimFlight:Length() or math.max(BoomFillerMass ^ 0.33 * 3 * 39.37, 1)
 
-		if Bullet.Detonated then
-			Data:SetOrigin(Bullet.SimPos)
-			Data:SetNormal(Bullet.SimFlight:GetNormalized())
-			Data:SetScale(Bullet.SimFlight:Length())
-			Data:SetMagnitude(Bullet.RoundMass)
-			Data:SetRadius(Bullet.Caliber)
-			Data:SetDamageType(DecalIndex(Bullet.AmmoType))
+		local EffectTable = {
+			Origin = Bullet.SimPos,
+			Normal = Bullet.SimFlight:GetNormalized(),
+			Radius = Bullet.Caliber,
+			Scale = Scale,
+			Magnitude = Detonated and Bullet.RoundMass or nil,
+			DamageType = Detonated and DecalIndex(Bullet.AmmoType) or nil,
+		}
 
-			util.Effect("ACF_Penetration", Data)
-		else
-			local BoomFillerMass = Bullet.FillerMass * ACF.HEATBoomConvert
+		Effects.CreateEffect(EffectName, EffectTable)
 
-			Data:SetOrigin(Bullet.SimPos)
-			Data:SetNormal(Bullet.SimFlight:GetNormalized())
-			Data:SetScale(math.max(BoomFillerMass ^ 0.33 * 3 * 39.37, 1))
-			Data:SetRadius(Bullet.Caliber)
-
-			util.Effect("ACF_GLATGMExplosion", Data)
-
+		if not Detonated then
 			Bullet.Detonated = true
 
 			Effect:SetModel("models/Gibs/wood_gib01e.mdl")
