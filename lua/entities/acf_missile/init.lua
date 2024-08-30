@@ -657,9 +657,9 @@ end
 
 function ENT:ACF_Activate(Recalc)
 	local PhysObj = self.ACF.PhysObj
-	local Area    = PhysObj:GetSurfaceArea()
+	local Area    = PhysObj:GetSurfaceArea() * ACF.InchToCmSq
 	local Armor   = self.ForcedArmor
-	local Health  = self.Caliber
+	local Health  = Area / ACF.Threshold
 	local Percent = 1
 
 	if Recalc and self.ACF.Health and self.ACF.MaxHealth then
