@@ -99,7 +99,7 @@ function MakeACF_GLATGM(Gun, BulletData)
 	Entity.SpiralAngle  = Entity.IsSubcaliber and 0 or nil
 	Entity.Position     = BulletData.Pos
 	Entity.Velocity     = BulletData.Flight:GetNormalized() * Entity.LaunchVel
-	Entity.Innacuracy   = 0
+	Entity.Inaccuracy   = 0
 
 	Entity.Filter[#Entity.Filter + 1] = Entity
 
@@ -122,9 +122,9 @@ end
 
 function ENT:ACF_Activate(Recalc)
 	local PhysObj = self.ACF.PhysObj
-	local Area    = PhysObj:GetSurfaceArea()
+	local Area    = PhysObj:GetSurfaceArea() * ACF.InchToCmSq
 	local Armor   = self.ForcedArmor
-	local Health  = self.Caliber * 2
+	local Health  = Area / ACF.Threshold
 	local Percent = 1
 
 	if Recalc and self.ACF.Health and self.ACF.MaxHealth then
@@ -226,21 +226,21 @@ function ENT:Think()
 		NextAng = WorldAng
 		NextDir = WorldAng:Forward()
 
-		self.Innacuracy = 0
+		self.Inaccuracy = 0
 	else
-		local Spread = self.Innacuracy * DeltaTime * 0.005
+		local Spread = self.Inaccuracy * DeltaTime * 0.005
 		local Added  = VectorRand() * Spread
 
 		NextDir = (self.Velocity:GetNormalized() + Added):GetNormalized()
 		NextAng = NextDir:Angle()
 
-		self.Innacuracy = self.Innacuracy + DeltaTime * 50
+		self.Inaccuracy = self.Inaccuracy + DeltaTime * 50
 	end
 
 	if self.IsSubcaliber then
 		local Current = self.SpiralAngle
 		local SpiralRad = self.SpiralRadius
-		NextAng:RotateAroundAxis(NextAng:Forward(),Current)
+		NextAng:RotateAroundAxis(NextAng:Forward(), Current)
 
 		local Offset = NextDir * self.Speed * DeltaTime + NextAng:Up() * math.sin(Current) * SpiralRad + NextAng:Right() * math.cos(Current) * SpiralRad
 
