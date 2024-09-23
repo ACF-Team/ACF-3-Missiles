@@ -18,7 +18,7 @@ local function AddToBlacklist(Weapon, Ammo)
 	end
 end
 
-hook.Add("ACF_OnNewClassGroup", "ACF External Ammo Blacklist", function(ID, Group)
+hook.Add("ACF_OnCreateGroup", "ACF External Ammo Blacklist", function(ID, Group)
 	if not Group.Blacklist then return end
 
 	for _, Ammo in ipairs(Group.Blacklist) do
@@ -26,7 +26,7 @@ hook.Add("ACF_OnNewClassGroup", "ACF External Ammo Blacklist", function(ID, Grou
 	end
 end)
 
-hook.Add("ACF_OnClassLoaded", "ACF External Ammo Blacklist", function(ID, Class)
+hook.Add("ACF_OnLoadClass", "ACF External Ammo Blacklist", function(ID, Class)
 	if not AmmoTypes.Get(ID) then return end
 	if not Blacklisted[ID] then return end
 

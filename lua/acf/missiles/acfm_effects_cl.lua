@@ -49,10 +49,10 @@ local Overrides =
 	end
 }
 
-hook.Add("ACF_BulletEffect", "ACF Missiles Custom Effects", function(AmmoType)
-	local Custom = Overrides[AmmoType]
+hook.Add("ACF_OnCreateBulletEffect", "ACF Missiles Custom Effects", function(Effect, BulletData)
+	local Custom = Overrides[BulletData.AmmoType]
 
 	if Custom then
-		return Custom
+		Effect.ApplyMovement = Custom
 	end
 end)
