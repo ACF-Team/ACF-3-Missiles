@@ -44,13 +44,13 @@ local function CheckReceive(Entity)
 	for Ent in pairs(Sources) do
 		local EntPos = Ent.Position or Ent:GetPos()
 		local EntDamage = Entity.Damage
-		local Spread = math.max(Entity.Divisor,15) * 2 * EntDamage
+		local Spread = math.max(Entity.Divisor, 15) * 2 * EntDamage
 
-		if Entity.CheckLOS(Entity, Ent, Origin, EntPos) and (math.Rand(0,1) >= (EntDamage / 5)) then
+		if Entity.CheckLOS(Entity, Ent, Origin, EntPos) and (math.Rand(0, 1) >= (EntDamage / 5)) then
 			IsDetected = true
 
 			local PreAng = (EntPos - Origin):GetNormalized():Angle()
-			Ang = Angle(math.Round((PreAng.p + math.random(-Spread,Spread)) / Entity.Divisor),math.Round((PreAng.y + math.random(-Spread,Spread)) / Entity.Divisor),0) * Entity.Divisor
+			Ang = Angle(math.Round((PreAng.p + math.random(-Spread, Spread)) / Entity.Divisor), math.Round((PreAng.y + math.random(-Spread, Spread)) / Entity.Divisor), 0) * Entity.Divisor
 			Dir = Ang:Forward()
 
 			break -- Stop at the first valid source
@@ -72,7 +72,7 @@ local function CheckReceive(Entity)
 	WireLib.TriggerOutput(Entity, "Angle", Ang)
 end
 
-local function SetActive(Entity,Bool)
+local function SetActive(Entity, Bool)
 	ResetOutputs(Entity)
 
 	if Bool then
@@ -220,7 +220,7 @@ do -- Spawn and Update functions
 
 		CheckLegal(Receiver)
 
-		SetActive(Receiver,true)
+		SetActive(Receiver, true)
 
 		return Receiver
 	end
@@ -303,13 +303,13 @@ end
 function ENT:Enable()
 	if not CheckLegal(self) then return end
 
-	SetActive(self,true)
+	SetActive(self, true)
 
 	self:UpdateOverlay()
 end
 
 function ENT:Disable()
-	SetActive(self,false)
+	SetActive(self, false)
 end
 
 local Text = "%s\n\n%s"

@@ -169,7 +169,7 @@ local function ScanForEntities(Entity)
 	for Ent in pairs(Detected) do
 		local EntPos = Ent.Position or Ent:GetPos()
 
-		if CheckLOS(Origin, EntPos) and (math.Rand(0,1) >= (EntDamage / 10)) then
+		if CheckLOS(Origin, EntPos) and (math.Rand(0, 1) >= (EntDamage / 10)) then
 			local EntSpread = VectorRand(-Spread, Spread)
 			local EntVel = Ent.Velocity or Ent:GetVelocity()
 			local Owner = GetEntityOwner(Entity.Owner, Ent)
@@ -559,14 +559,14 @@ end
 
 do	-- Overlay/networking
 	util.AddNetworkString("ACF.RequestRadarInfo")
-	net.Receive("ACF.RequestRadarInfo",function(_,Ply)
+	net.Receive("ACF.RequestRadarInfo", function(_, Ply)
 		local Radar = net.ReadEntity()
 		if not IsValid(Radar) then return end
 
 		local RadarInfo	= {}
 		RadarInfo.Spherical = (Radar.ConeDegs == nil) and true or false
 		RadarInfo.Cone	= Radar.ConeDegs and math.Round(Radar.ConeDegs, 2) or 0
-		RadarInfo.Range	= Radar.Range and math.Round(Radar.Range,2) or 0
+		RadarInfo.Range	= Radar.Range and math.Round(Radar.Range, 2) or 0
 		RadarInfo.Origin	= Radar.Origin
 
 		net.Start("ACF.RequestRadarInfo")
