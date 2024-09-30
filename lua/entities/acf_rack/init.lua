@@ -794,7 +794,7 @@ do	-- Overlay/networking
 
 		RackInfo.MountPoints	= {}
 
-		for _,Point in pairs(Rack.MountPoints) do
+		for _, Point in pairs(Rack.MountPoints) do
 			RackInfo.MountPoints[#RackInfo.MountPoints + 1] = {Pos = Point.Position, Ang = Point.Angle, Index = Point.Index}
 		end
 
