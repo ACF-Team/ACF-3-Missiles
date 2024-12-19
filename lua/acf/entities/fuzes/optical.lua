@@ -31,6 +31,7 @@ if CLIENT then
 else
 	local TraceData = { start = true, endpos = true, filter = true }
 	local Entities  = Classes.Entities
+	local Trace     = ACF.trace
 
 	Entities.AddArguments("acf_ammo", "FuzeDistance") -- Adding extra info to ammo crates
 
@@ -64,7 +65,7 @@ else
 		TraceData.endpos = Position + Missile:GetForward() * self.Distance
 		TraceData.filter = Missile.Filter or { Missile }
 
-		return util.TraceLine(TraceData).Hit
+		return Trace(TraceData).Hit
 	end
 
 	function Fuze:OnLast(Entity)

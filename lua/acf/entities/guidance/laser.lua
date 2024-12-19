@@ -17,7 +17,7 @@ if CLIENT then
 	Guidance.Description = "This guidance package reads a target-position from the launcher and guides the munition towards it."
 else
 	local TraceData = { start = true, endpos = true, mask = MASK_SOLID_BRUSHONLY }
-	local TraceLine = util.TraceLine
+	local Trace     = ACF.trace
 	local Lasers    = ACF.ActiveLasers
 
 	function Guidance.GetDirectionDot(Missile, TargetPos)
@@ -34,7 +34,7 @@ else
 		TraceData.start = Position
 		TraceData.endpos = TargetPos
 
-		return not TraceLine(TraceData).Hit
+		return not Trace(TraceData).Hit
 	end
 
 	function Guidance:CheckComputer(Missile)
