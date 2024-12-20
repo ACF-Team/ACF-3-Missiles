@@ -11,7 +11,7 @@ Hooks.Add("ACF_Missiles_Server", function(Gamemode)
 	--- @param Entity entity The affected missile.
 	--- @param Data table The bullet data of the affected missile.
 	--- @return boolean # True if the missile can explode, false otherwise.
-	function Gamemode:ACF_MissileCanExplode()
+	function Gamemode:ACF_PreExplodeMissile()
 		return true
 	end
 

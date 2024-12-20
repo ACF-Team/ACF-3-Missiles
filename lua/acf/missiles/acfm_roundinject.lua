@@ -163,7 +163,7 @@ else
 		return Result
 	end
 
-	hook.Add("ACF_VerifyData", "ACF Missile Ammo", function(EntClass, Data, ...)
+	hook.Add("ACF_OnVerifyData", "ACF Missile Ammo", function(EntClass, Data, ...)
 		if not AllowedClass[EntClass] then return end
 		if Data.Destiny ~= "Missiles" then return end
 

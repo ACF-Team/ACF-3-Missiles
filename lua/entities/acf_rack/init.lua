@@ -6,7 +6,6 @@ include("shared.lua")
 -- Local Vars -----------------------------------
 
 local EMPTY       = { Type = "Empty", PropMass = 0, ProjMass = 0, Tracer = 0 }
-local HookRun     = hook.Run
 local ACF         = ACF
 local Contraption = ACF.Contraption
 local Classes     = ACF.Classes
@@ -89,7 +88,7 @@ do -- Spawning and Updating --------------------
 				Rack.VerifyData(Data, Rack)
 			end
 
-			hook.Run("ACF_VerifyData", "acf_rack", Data, Rack)
+			hook.Run("ACF_OnVerifyData", "acf_rack", Data, Rack)
 		end
 	end
 

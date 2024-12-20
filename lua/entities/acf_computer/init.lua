@@ -117,7 +117,7 @@ do -- Spawn and update function
 				Class.VerifyData(Data, Class)
 			end
 
-			hook.Run("ACF_VerifyData", "acf_computer", Data, Class)
+			hook.Run("ACF_OnVerifyData", "acf_computer", Data, Class)
 		end
 	end
 
