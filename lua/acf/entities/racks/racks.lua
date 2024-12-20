@@ -140,7 +140,7 @@ Racks.Register("4x AGM-114", {
 
 	MountPoints = {
 		{ Name = "missile1", Position = Vector(0, -7.85, 4.9), Direction = Vector(0, 0, -1) },
-		{ Name = "missile2", Position = Vector(0, 8.05,4.9), Direction = Vector(0, 0, -1) },
+		{ Name = "missile2", Position = Vector(0, 8.05, 4.9), Direction = Vector(0, 0, -1) },
 		{ Name = "missile3", Position = Vector(0, -7.85, -13), Direction = Vector(0, 0, -1) },
 		{ Name = "missile4", Position = Vector(0, 8.05, -13), Direction = Vector(0, 0, -1) }
 	}

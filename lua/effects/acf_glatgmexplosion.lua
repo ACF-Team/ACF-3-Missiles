@@ -5,7 +5,7 @@ local Sounds    = ACF.Utilities.Sounds
 function EFFECT:Init(Data)
 	self.DirVec = Data:GetNormal()
 	self.Origin = Data:GetOrigin() + self.DirVec * -15
-	self.Radius = math.Clamp(Data:GetScale() * 0.042 ,0.1,10)
+	self.Radius = math.Clamp(Data:GetScale() * 0.042, 0.1, 10)
 
 	self.Emitter = ParticleEmitter(self.Origin)
 	self.ParticleMul = LocalPlayer():GetInfoNum("acf_cl_particlemul", 1)
@@ -44,7 +44,7 @@ function EFFECT:Airburst()
 		EF:SetEndSize(30 * Radius)
 		EF:SetRoll(800)
 		EF:SetRollDelta(math.random(-1, 1))
-		EF:SetColor(255,255,255)
+		EF:SetColor(255, 255, 255)
 	end
 	local EI = 20 * Radius * Mult
 	for E = 0, EI do
@@ -59,7 +59,7 @@ function EFFECT:Airburst()
 			EF:SetEndSize(0)
 			EF:SetRoll(800)
 			EF:SetRollDelta(math.random(-1, 1))
-			EF:SetColor(255,255,255)
+			EF:SetColor(255, 255, 255)
 		end
 	end
 	EI = 10 * Radius * Mult
@@ -75,18 +75,18 @@ function EFFECT:Airburst()
 			EF:SetEndSize(0)
 			EF:SetRoll(800)
 			EF:SetRollDelta(math.random(-1, 1))
-			EF:SetColor(255,255,255)
+			EF:SetColor(255, 255, 255)
 		end
 	end
 	local Angle = self.DirVec:Angle()
-	Angle:RotateAroundAxis(Angle:Forward(), math.random(1,300))
-	local rv = math.random(20,40) * Mult
+	Angle:RotateAroundAxis(Angle:Forward(), math.random(1, 300))
+	local rv = math.random(20, 40) * Mult
 	for _ = 0, rv do
 		Angle:RotateAroundAxis(Angle:Forward(), 360 / rv)
 		EF = self.Emitter:Add("particle/smokesprites_000" .. math.random(1, 9), Origin)
 		if EF then
-			EF:SetVelocity((Angle:Up() - self.DirVec * math.random(0.05,0.25)) * math.random(200,300) * Radius)
-			EF:SetDieTime(math.random(0.35,0.8))
+			EF:SetVelocity((Angle:Up() - self.DirVec * math.random(0.05, 0.25)) * math.random(200, 300) * Radius)
+			EF:SetDieTime(math.random(0.35, 0.8))
 			EF:SetStartAlpha(100)
 			EF:SetEndAlpha(0)
 			EF:SetStartSize(15 * Radius)
@@ -99,19 +99,19 @@ function EFFECT:Airburst()
 		end
 		local Spark = Emitter:Add("particles/flamelet" .. math.random(1, 5), self.Origin)
 		if Spark then
-			Spark:SetVelocity((Angle:Up() - self.DirVec * math.random(-0.5,1)) * math.random(40,100) * Radius)
+			Spark:SetVelocity((Angle:Up() - self.DirVec * math.random(-0.5, 1)) * math.random(40, 100) * Radius)
 			Spark:SetLifeTime(0)
 			Spark:SetDieTime(math.Rand(2, 8) * self.Radius)
 			Spark:SetStartAlpha(255)
 			Spark:SetEndAlpha(20)
-			Spark:SetStartSize(math.random(2,4) * 0.2 * self.Radius)
+			Spark:SetStartSize(math.random(2, 4) * 0.2 * self.Radius)
 			Spark:SetEndSize(0 * self.Radius)
-			Spark:SetStartLength(math.random(2,7) * 0.5 * self.Radius)
+			Spark:SetStartLength(math.random(2, 7) * 0.5 * self.Radius)
 			Spark:SetEndLength(0)
 			Spark:SetRoll(math.Rand(0, 360))
 			Spark:SetRollDelta(math.Rand(-0.2, 0.2))
 			Spark:SetAirResistance(10)
-			Spark:SetGravity(Vector(0,0,-400))
+			Spark:SetGravity(Vector(0, 0, -400))
 			Spark:SetColor(200, 200, 200)
 			Spark:SetCollide(true)
 			Spark:SetBounce(0.2)
@@ -145,7 +145,7 @@ function EFFECT:Airburst()
 			AirBurst:SetEndSize(100 * Radius)
 			AirBurst:SetRoll(math.Rand(150, 360))
 			AirBurst:SetRollDelta(math.Rand(-0.2, 0.2))
-			AirBurst:SetAirResistance(math.random(70,120))
+			AirBurst:SetAirResistance(math.random(70, 120))
 			AirBurst:SetGravity(Vector(math.random(-10, 10) * Radius, math.random(-10, 10) * Radius, 20))
 			AirBurst:SetColor(200, 200, 200)
 		end

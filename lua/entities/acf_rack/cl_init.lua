@@ -20,7 +20,7 @@ do	-- Overlay/networking
 		net.SendToServer()
 	end
 
-	net.Receive("ACF.RequestRackInfo",function()
+	net.Receive("ACF.RequestRackInfo", function()
 		local Rack = net.ReadEntity()
 		if not IsValid(Rack) then return end
 
@@ -45,19 +45,19 @@ do	-- Overlay/networking
 
 		Rack.MountPoints = {}
 		if next(RackInfo.MountPoints) then
-			for _,T in ipairs(RackInfo.MountPoints) do
-				local Dir = Vector(1,0,0)
+			for _, T in ipairs(RackInfo.MountPoints) do
+				local Dir = Vector(1, 0, 0)
 				Dir:Rotate(T.Ang)
 				Rack.MountPoints[#Rack.MountPoints + 1] = {Index = T.Index, Pos = T.Pos, Dir = Dir}
 			end
 		end
 
 		local CrateEnts = {}
-		for _,E in ipairs(CrateInfo) do
+		for _, E in ipairs(CrateInfo) do
 			local Crate = Entity(E)
 
 			if IsValid(Crate) then
-				local Col = ColorAlpha(Crate:GetColor(),25)
+				local Col = ColorAlpha(Crate:GetColor(), 25)
 				CrateEnts[#CrateEnts + 1] = {Ent = Crate, Col = Col}
 			end
 		end
@@ -71,9 +71,9 @@ do	-- Overlay/networking
 	-- icon16/joystick.png controller sprite
 	local RadarSprite = Material("icon16/transmit.png")
 	local JoystickMat = Material("icon16/joystick.png")
-	local RadarColor = Color(255,255,0,25)
-	local ControllerColor = Color(0,255,0,25)
-	local ForwardColor = Color(255,0,0)
+	local RadarColor = Color(255, 255, 0, 25)
+	local ControllerColor = Color(0, 255, 0, 25)
+	local ForwardColor = Color(255, 0, 0)
 
 	function ENT:DrawOverlay()
 		local SelfTbl = self:GetTable()
@@ -86,18 +86,18 @@ do	-- Overlay/networking
 		end
 
 		if next(SelfTbl.Crates) then
-			for _,T in ipairs(SelfTbl.Crates) do
+			for _, T in ipairs(SelfTbl.Crates) do
 				local E = T.Ent
 
 				if IsValid(E) then
-					render.DrawWireframeBox(E:GetPos(),E:GetAngles(),E:OBBMins(),E:OBBMaxs(),T.Col,true)
-					render.DrawBox(E:GetPos(),E:GetAngles(),E:OBBMins(),E:OBBMaxs(),T.Col)
+					render.DrawWireframeBox(E:GetPos(), E:GetAngles(), E:OBBMins(), E:OBBMaxs(), T.Col, true)
+					render.DrawBox(E:GetPos(), E:GetAngles(), E:OBBMins(), E:OBBMaxs(), T.Col)
 				end
 			end
 		end
 
 		if next(SelfTbl.MountPoints) then
-			for _,T in ipairs(SelfTbl.MountPoints) do
+			for _, T in ipairs(SelfTbl.MountPoints) do
 				local Pos1 = self:LocalToWorld(T.Pos - T.Dir * 6)
 				local Pos2 = self:LocalToWorld(T.Pos + T.Dir * 6)
 				render.DrawBeam(Pos1, Pos2, 2, 0, 0, color_black)
@@ -105,9 +105,9 @@ do	-- Overlay/networking
 			end
 
 			cam.Start2D()
-				for _,T in ipairs(SelfTbl.MountPoints) do
+				for _, T in ipairs(SelfTbl.MountPoints) do
 					local Pos = self:LocalToWorld(T.Pos):ToScreen()
-					draw.SimpleTextOutlined("Mount " .. T.Index,"ACF_Title",Pos.x,Pos.y,color_white,TEXT_ALIGN_CENTER,TEXT_ALIGN_CENTER,1,color_black)
+					draw.SimpleTextOutlined("Mount " .. T.Index, "ACF_Title", Pos.x, Pos.y, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
 				end
 			cam.End2D()
 		end
@@ -115,8 +115,8 @@ do	-- Overlay/networking
 		if IsValid(SelfTbl.Radar) then
 			local Radar = SelfTbl.Radar
 			local RadPos, RadAng, OBBMin, OBBMax = Radar:GetPos(), Radar:GetAngles(), Radar:OBBMins(), Radar:OBBMaxs()
-			render.DrawWireframeBox(RadPos,RadAng,OBBMin,OBBMax,RadarColor,true)
-			render.DrawBox(RadPos,RadAng,OBBMin,OBBMax,RadarColor)
+			render.DrawWireframeBox(RadPos, RadAng, OBBMin, OBBMax, RadarColor, true)
+			render.DrawBox(RadPos, RadAng, OBBMin, OBBMax, RadarColor)
 
 			render.SetMaterial(RadarSprite)
 			render.DrawSprite(Radar:LocalToWorld(Radar:OBBCenter()), 12, 12, color_white)
@@ -127,8 +127,8 @@ do	-- Overlay/networking
 		if IsValid(SelfTbl.Computer) then
 			local Computer = SelfTbl.Computer
 			local ComPos, ComAng, OBBMin, OBBMax = Computer:GetPos(), Computer:GetAngles(), Computer:OBBMins(), Computer:OBBMaxs()
-			render.DrawWireframeBox(ComPos,ComAng,OBBMin,OBBMax,ControllerColor,true)
-			render.DrawBox(ComPos,ComAng,OBBMin,OBBMax,ControllerColor)
+			render.DrawWireframeBox(ComPos, ComAng, OBBMin, OBBMax, ControllerColor, true)
+			render.DrawBox(ComPos, ComAng, OBBMin, OBBMax, ControllerColor)
 
 			render.SetMaterial(JoystickMat)
 			render.DrawSprite(Computer:LocalToWorld(Computer:OBBCenter()), 12, 12, color_white)

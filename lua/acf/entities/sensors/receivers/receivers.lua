@@ -19,7 +19,7 @@ do -- Laser Receiver
 
 		local ReceiverOrigin = Receiver:LocalToWorld(Receiver.Origin)
 
-		for k,v in pairs(ACF.ActiveLasers) do
+		for k, v in pairs(ACF.ActiveLasers) do
 			local Dir = k.Dir or k:GetForward()
 			if v.Distance > 0 then Dir = (v.HitPos - v.Origin):GetNormalized() end
 
@@ -27,13 +27,13 @@ do -- Laser Receiver
 		end
 
 		-- Wiremod laser pointer, because it's, you know, a laser
-		for _,ply in pairs(player.GetAll()) do
+		for _, ply in ipairs(player.GetAll()) do
 			local Wep = ply:GetWeapon("laserpointer")
 			if not IsValid(Wep) then continue end
 			if Wep ~= ply:GetActiveWeapon() then continue end
 
 			if Wep.Pointing then
-				local Las = {Dir = ply:EyeAngles():Forward(),Position = ply:EyePos(),Player = ply}
+				local Las = {Dir = ply:EyeAngles():Forward(), Position = ply:EyePos(), Player = ply}
 
 				if Las.Dir:Dot((ReceiverOrigin - Las.Position):GetNormalized()) >= Receiver.Cone then Lasers[Las] = true end
 			end
@@ -47,8 +47,8 @@ do -- Laser Receiver
 		TraceData.start = Start
 		TraceData.endpos = End
 		if IsValid(Source.Player) then
-			TraceData.filter = {Receiver,Source.Player}
-		else TraceData.filter = {Receiver,Source} end
+			TraceData.filter = {Receiver, Source.Player}
+		else TraceData.filter = {Receiver, Source} end
 
 		return not TraceLine(TraceData).Hit
 	end
@@ -61,7 +61,7 @@ do -- Laser Receiver
 		Mass		= 25,
 		Health		= 10,
 		Armor		= 10,
-		Offset 		= Vector(0,0,3),
+		Offset 		= Vector(0, 0, 3),
 
 		ThinkDelay	= 0.25,
 		Divisor		= 2.5, -- Divisor (pre-floor) and then multiplier to give a choppy angle
@@ -125,7 +125,7 @@ do -- Radar Receiver
 		Mass		= 25,
 		Health		= 10,
 		Armor		= 10,
-		Offset 		= Vector(0,0,6),
+		Offset 		= Vector(0, 0, 6),
 
 		ThinkDelay	= 0.5,
 		Divisor		= 30, -- Divisor (pre-floor) and then multiplier to give a choppy angle

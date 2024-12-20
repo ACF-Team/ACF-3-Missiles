@@ -20,7 +20,7 @@ do	-- Overlay/networking
 		net.SendToServer()
 	end
 
-	net.Receive("ACF.RequestRadarInfo",function()
+	net.Receive("ACF.RequestRadarInfo", function()
 		local Radar = net.ReadEntity()
 		if not IsValid(Radar) then return end
 
@@ -37,8 +37,8 @@ do	-- Overlay/networking
 		Radar.Age		= Clock.CurTime + 5
 	end)
 
-	local Col = Color(255,255,0,25)
-	local Col2 = Color(255,255,0)
+	local Col = Color(255, 255, 0, 25)
+	local Col2 = Color(255, 255, 0)
 	function ENT:DrawOverlay()
 		local SelfTbl = self:GetTable()
 
@@ -51,17 +51,17 @@ do	-- Overlay/networking
 
 		local Origin = self:LocalToWorld(SelfTbl.Origin)
 		if SelfTbl.Spherical then
-			render.DrawWireframeSphere(Origin,SelfTbl.Range,50,50,Col2)
+			render.DrawWireframeSphere(Origin, SelfTbl.Range, 50, 50, Col2)
 		else
 
 			for I = 0, 7 do
-				local Dir = Vector(16384,0,0)
-				Dir:Rotate(Angle(SelfTbl.Cone,0,0))
-				Dir:Rotate(Angle(0,0,45 * I))
+				local Dir = Vector(16384, 0, 0)
+				Dir:Rotate(Angle(SelfTbl.Cone, 0, 0))
+				Dir:Rotate(Angle(0, 0, 45 * I))
 				local Point = self:LocalToWorld(SelfTbl.Origin + Dir)
-				local Dir2 = Vector(16384,0,0)
-				Dir2:Rotate(Angle(SelfTbl.Cone,0,0))
-				Dir2:Rotate(Angle(0,0,45 * (I + 1)))
+				local Dir2 = Vector(16384, 0, 0)
+				Dir2:Rotate(Angle(SelfTbl.Cone, 0, 0))
+				Dir2:Rotate(Angle(0, 0, 45 * (I + 1)))
 				local Point2 = self:LocalToWorld(SelfTbl.Origin + Dir2)
 
 				render.DrawQuad(Origin, Point, Point2, Point, Col)
