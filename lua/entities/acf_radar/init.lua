@@ -47,7 +47,7 @@ local TraceData	  = { start = true, endpos = true, mask = MASK_SOLID_BRUSHONLY }
 local Indexes	  = {}
 local Unused	  = {}
 local IndexCount  = 0
-local TraceLine	  = util.TraceLine
+local Trace       = ACF.trace
 local TimerExists = timer.Exists
 local TimerCreate = timer.Create
 local TimerRemove = timer.Remove
@@ -100,7 +100,7 @@ local function CheckLOS(Start, End)
 	TraceData.start = Start
 	TraceData.endpos = End
 
-	return not TraceLine(TraceData).Hit
+	return not Trace(TraceData).Hit
 end
 
 local function GetEntityIndex(Entity)

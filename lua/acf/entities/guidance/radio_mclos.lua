@@ -9,7 +9,7 @@ if CLIENT then
 	Guidance.Description = "This guidance package allows you to manually control the direction of the missile."
 else
 	local TraceData = { start = true, endpos = true, mask = MASK_SOLID_BRUSHONLY }
-	local TraceLine = util.TraceLine
+	local Trace     = ACF.trace
 
 	function Guidance:OnLaunched(Missile)
 		self.InPos = Missile.MountPoint.Position
@@ -46,9 +46,9 @@ else
 		TraceData.start = self.Source:LocalToWorld(self.InPos)
 		TraceData.endpos = Missile:LocalToWorld(self.OutPos)
 
-		local Trace = TraceLine(TraceData)
+		local Result = Trace(TraceData)
 
-		return not Trace.Hit
+		return not Result.Hit
 	end
 
 	function Guidance:GetGuidance(Missile)

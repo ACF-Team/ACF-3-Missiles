@@ -1,6 +1,6 @@
 local ACF     = ACF
 local Sensors = ACF.Classes.Sensors
-local TraceLine	  = util.TraceLine
+local Trace   = ACF.trace
 
 Sensors.Register("WARN-Receiver", {
 	Name		= "Warning Receiver",
@@ -50,7 +50,7 @@ do -- Laser Receiver
 			TraceData.filter = {Receiver, Source.Player}
 		else TraceData.filter = {Receiver, Source} end
 
-		return not TraceLine(TraceData).Hit
+		return not Trace(TraceData).Hit
 	end
 
 	Sensors.RegisterItem("LAS-Receiver", "WARN-Receiver", {
@@ -114,7 +114,7 @@ do -- Radar Receiver
 		TraceData.start = Start
 		TraceData.endpos = End
 
-		return not TraceLine(TraceData).Hit
+		return not Trace(TraceData).Hit
 	end
 
 	Sensors.RegisterItem("RAD-Receiver", "WARN-Receiver", {
