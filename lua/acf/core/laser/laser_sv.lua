@@ -59,6 +59,6 @@ hook.Add("ACF_OnLoadPlayer", "ACF Laser Setup", function(Player)
 	net.Send(Player)
 end)
 
-hook.Add("ACF_OnMissileLaunched", "ACF Laser Filter Update", function(Missile)
+hook.Add("ACF_OnLaunchMissile", "ACF Laser Filter Update", function(Missile)
 	ACF.FilterLaserEntity(Missile)
 end)

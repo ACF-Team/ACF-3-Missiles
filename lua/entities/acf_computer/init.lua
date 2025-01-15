@@ -225,7 +225,7 @@ do -- Spawn and update function
 			Class.OnSpawn(Entity, Data, Class, Computer)
 		end
 
-		hook.Run("ACF_OnEntitySpawn", "acf_computer", Entity, Data, Class, Computer)
+		hook.Run("ACF_OnSpawnEntity", "acf_computer", Entity, Data, Class, Computer)
 
 		WireLib.TriggerOutput(Entity, "Entity", Entity)
 
@@ -280,7 +280,7 @@ do -- Spawn and update function
 			Class.OnUpdate(self, Data, Class, Computer)
 		end
 
-		hook.Run("ACF_OnEntityUpdate", "acf_computer", self, Data, Class, Computer)
+		hook.Run("ACF_OnUpdateEntity", "acf_computer", self, Data, Class, Computer)
 
 		self:UpdateOverlay(true)
 

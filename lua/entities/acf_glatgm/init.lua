@@ -117,7 +117,7 @@ function MakeACF_GLATGM(Gun, BulletData)
 
 	Missiles[Entity] = true
 
-	hook.Run("ACF_OnMissileLaunched", Entity)
+	hook.Run("ACF_OnLaunchMissile", Entity)
 
 	return Entity
 end

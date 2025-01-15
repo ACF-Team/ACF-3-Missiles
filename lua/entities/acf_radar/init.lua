@@ -417,7 +417,7 @@ do -- Spawn and Update functions
 			Class.OnSpawn(Radar, Data, Class, RadarData)
 		end
 
-		hook.Run("ACF_OnEntitySpawn", "acf_radar", Radar, Data, Class, RadarData)
+		hook.Run("ACF_OnSpawnEntity", "acf_radar", Radar, Data, Class, RadarData)
 
 		WireLib.TriggerOutput(Radar, "Entity", Radar)
 
@@ -474,7 +474,7 @@ do -- Spawn and Update functions
 			Class.OnUpdate(self, Data, Class, Radar)
 		end
 
-		hook.Run("ACF_OnEntityUpdate", "acf_radar", self, Data, Class, Radar)
+		hook.Run("ACF_OnUpdateEntity", "acf_radar", self, Data, Class, Radar)
 
 		self:UpdateOverlay(true)
 

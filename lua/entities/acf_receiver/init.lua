@@ -204,7 +204,7 @@ do -- Spawn and Update functions
 			Class.OnSpawn(Receiver, Data, Class, ReceiverData)
 		end
 
-		hook.Run("ACF_OnEntitySpawn", "acf_receiver", Receiver, Data, Class, ReceiverData)
+		hook.Run("ACF_OnSpawnEntity", "acf_receiver", Receiver, Data, Class, ReceiverData)
 
 		WireLib.TriggerOutput(Receiver, "Entity", Receiver)
 
@@ -252,7 +252,7 @@ do -- Spawn and Update functions
 			Class.OnUpdate(self, Data, Class, Receiver)
 		end
 
-		hook.Run("ACF_OnEntityUpdate", "acf_Receiver", self, Data, Class, Receiver)
+		hook.Run("ACF_OnUpdateEntity", "acf_Receiver", self, Data, Class, Receiver)
 
 		self:UpdateOverlay(true)
 

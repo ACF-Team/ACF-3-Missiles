@@ -142,6 +142,6 @@ end
 
 ACF.AddMenuItem(101, "Entities", "Missiles", "wand", CreateMenu)
 
-hook.Add("ACF_PreCreateTraceControls", "ACF Missiles Remove Tracer Checkbox", function(_, ToolData)
+hook.Add("ACF_PreCreateTracerControls", "ACF Missiles Remove Tracer Checkbox", function(_, ToolData)
 	if ToolData.PrimaryClass == "acf_rack" then return false end
 end)

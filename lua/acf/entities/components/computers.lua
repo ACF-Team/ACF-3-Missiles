@@ -266,7 +266,7 @@ do -- Optical guidance computer
 		return math.floor(Value * 0.00254) * 393.7
 	end
 
-	hook.Add("ACF_OnMissileLaunched", "ACF Optical Computer Filter", function(Missile)
+	hook.Add("ACF_OnLaunchMissile", "ACF Optical Computer Filter", function(Missile)
 		for Computer in pairs(Computers) do
 			local Filter = Computer.Filter
 

@@ -310,7 +310,7 @@ hook.Add("CanDrive", "acf_missile_CanDrive", function(_, Entity)
 	if ActiveMissiles[Entity] then return false end
 end)
 
-hook.Add("ACF_OnMissileLaunched", "ACF Missile Rack Filter", function(Missile)
+hook.Add("ACF_OnLaunchMissile", "ACF Missile Rack Filter", function(Missile)
 	local Count = #Missile.Filter
 
 	for K in pairs(ActiveMissiles) do
@@ -408,7 +408,7 @@ function MakeACF_Missile(Player, Pos, Ang, Rack, MountPoint, Crate)
 	Missile.Inputs          = WireLib.CreateInputs(Missile, Inputs)
 	Missile.Outputs         = WireLib.CreateOutputs(Missile, Outputs)
 
-	hook.Run("ACF_OnEntitySpawn", "acf_missile", Missile, Data, Class, Crate)
+	hook.Run("ACF_OnSpawnEntity", "acf_missile", Missile, Data, Class, Crate)
 
 	WireLib.TriggerOutput(Missile, "Entity", Missile)
 
@@ -549,7 +549,7 @@ function ENT:Launch(Delay, IsMisfire)
 	UpdateBodygroups(self, "OnLaunch")
 	UpdateSkin(self)
 
-	hook.Run("ACF_OnMissileLaunched", self)
+	hook.Run("ACF_OnLaunchMissile", self)
 end
 
 function ENT:DoFlight(ToPos, ToDir)

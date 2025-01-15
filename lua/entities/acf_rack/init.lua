@@ -215,7 +215,7 @@ do -- Spawning and Updating --------------------
 			RackData.OnSpawn(Rack, Data, RackData)
 		end
 
-		hook.Run("ACF_OnEntitySpawn", "acf_rack", Rack, Data, RackData)
+		hook.Run("ACF_OnSpawnEntity", "acf_rack", Rack, Data, RackData)
 
 		WireLib.TriggerOutput(Rack, "Rate of Fire", 60)
 		WireLib.TriggerOutput(Rack, "Reload Time", 1)
@@ -284,7 +284,7 @@ do -- Spawning and Updating --------------------
 			Rack.OnUpdate(self, Data, Rack)
 		end
 
-		hook.Run("ACF_OnEntityUpdate", "acf_rack", self, Data, Rack)
+		hook.Run("ACF_OnUpdateEntity", "acf_rack", self, Data, Rack)
 
 		local Crates = self.Crates
 
@@ -551,7 +551,7 @@ do -- Firing -----------------------------------
 	function ENT:Shoot()
 		local Index, Point = self:GetNextMountPoint("Loaded", self.PointIndex)
 		local Delay = self.FireDelay
-		local CanFire = hook.Run("ACF_WeaponCanFire", self)
+		local CanFire = hook.Run("ACF_PreFireWeapon", self)
 
 		if Index and CanFire then
 			ShootMissile(self, Point)

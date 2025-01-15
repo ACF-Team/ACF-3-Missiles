@@ -21,7 +21,7 @@ function Ammo:GetDisplayData(Data)
 		BurnTime       = Data.BurnTime,
 	}
 
-	hook.Run("ACF_OnGetDisplayData", self, Data, Display)
+	hook.Run("ACF_OnRequestDisplayData", self, Data, Display)
 
 	return Display
 end
