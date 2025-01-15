@@ -15,9 +15,9 @@ game.AddParticles("particles/flares_fx.pcf")
 PrecacheParticleSystem("ACFM_Flare")
 
 do -- Update checker
-	hook.Add("ACF_OnLoadAddon", "ACF Missiles Checker", function()
+	hook.Add("ACF_OnLoadAddon", "ACF Missiles Update Checker", function()
 		ACF.AddRepository("ACF-Team", "ACF-3-Missiles", "lua/acf/core/acfm_globals.lua")
 
-		hook.Remove("ACF_OnLoadAddon", "ACF Missiles Checker")
+		hook.Remove("ACF_OnLoadAddon", "ACF Missiles Update Checker")
 	end)
 end

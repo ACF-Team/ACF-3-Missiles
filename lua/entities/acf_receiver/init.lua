@@ -17,7 +17,7 @@ local Sounds      = ACF.Utilities.Sounds
 local TimerExists = timer.Exists
 local TimerCreate = timer.Create
 local TimerRemove = timer.Remove
-local HookRun     = hook.Run
+local hook        = hook
 
 local function ResetOutputs(Entity)
 	if not Entity.Detected then return end
@@ -124,7 +124,7 @@ do -- Spawn and Update functions
 				Class.VerifyData(Data, Class)
 			end
 
-			HookRun("ACF_VerifyData", "acf_receiver", Data, Class)
+			hook.Run("ACF_OnVerifyData", "acf_receiver", Data, Class)
 		end
 	end
 
@@ -204,7 +204,7 @@ do -- Spawn and Update functions
 			Class.OnSpawn(Receiver, Data, Class, ReceiverData)
 		end
 
-		HookRun("ACF_OnEntitySpawn", "acf_receiver", Receiver, Data, Class, ReceiverData)
+		hook.Run("ACF_OnSpawnEntity", "acf_receiver", Receiver, Data, Class, ReceiverData)
 
 		WireLib.TriggerOutput(Receiver, "Entity", Receiver)
 
@@ -240,7 +240,7 @@ do -- Spawn and Update functions
 			OldClass.OnLast(self, OldClass)
 		end
 
-		HookRun("ACF_OnEntityLast", "acf_Receiver", self, OldClass)
+		hook.Run("ACF_OnEntityLast", "acf_Receiver", self, OldClass)
 
 		ACF.SaveEntity(self)
 
@@ -252,7 +252,7 @@ do -- Spawn and Update functions
 			Class.OnUpdate(self, Data, Class, Receiver)
 		end
 
-		HookRun("ACF_OnEntityUpdate", "acf_Receiver", self, Data, Class, Receiver)
+		hook.Run("ACF_OnUpdateEntity", "acf_Receiver", self, Data, Class, Receiver)
 
 		self:UpdateOverlay(true)
 
@@ -327,7 +327,7 @@ function ENT:OnRemove()
 		OldClass.OnLast(self, OldClass)
 	end
 
-	HookRun("ACF_OnEntityLast", "acf_Receiver", self, OldClass)
+	hook.Run("ACF_OnEntityLast", "acf_Receiver", self, OldClass)
 
 	TimerRemove(self.TimerID)
 

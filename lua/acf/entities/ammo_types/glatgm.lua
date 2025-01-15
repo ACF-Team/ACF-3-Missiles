@@ -96,12 +96,12 @@ else
 		end
 	end
 
-	function Ammo:SetupAmmoMenuSettings(Settings)
-		Settings.SuppressTracer = true
+	function Ammo:PreCreateTracerControls()
+		return false
 	end
 
-	function Ammo:AddAmmoPreview(Preview, Setup, ToolData, BulletData)
-		Ammo.BaseClass.AddAmmoPreview(self, Preview, Setup, ToolData, BulletData)
+	function Ammo:OnCreateAmmoPreview(Preview, Setup, ToolData, BulletData)
+		Ammo.BaseClass.OnCreateAmmoPreview(self, Preview, Setup, ToolData, BulletData)
 
 		local Caliber = BulletData.Caliber
 		local Model, FOV, Height
@@ -123,7 +123,7 @@ else
 		Setup.Height = Height or Setup.Height
 	end
 
-	function Ammo:AddAmmoControls(Base, ToolData, BulletData)
+	function Ammo:OnCreateAmmoControls(Base, ToolData, BulletData)
 		local LinerAngle = Base:AddSlider("Liner Angle", BulletData.MinConeAng, 90, 1)
 		LinerAngle:SetClientData("LinerAngle", "OnValueChanged")
 		LinerAngle:TrackClientData("Projectile")
@@ -151,7 +151,7 @@ else
 		end)
 	end
 
-	function Ammo:AddAmmoInformation(Base, ToolData, BulletData)
+	function Ammo:OnCreateAmmoInformation(Base, ToolData, BulletData)
 		local RoundStats = Base:AddLabel()
 		RoundStats:TrackClientData("Projectile", "SetText")
 		RoundStats:TrackClientData("Propellant")

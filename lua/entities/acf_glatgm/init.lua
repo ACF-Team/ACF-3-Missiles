@@ -32,7 +32,9 @@ local function ClampAngle(Object, Limit)
 end
 
 local function DetonateMissile(Missile, Inflictor)
-	if hook.Run("ACF_AmmoExplode", Missile, Missile.BulletData) == false then return end
+	local CanExplode = hook.Run("ACF_PreExplodeMissile", Missile, Missile.BulletData)
+
+	if not CanExplode then return end
 
 	if IsValid(Inflictor) and Inflictor:IsPlayer() then
 		Missile.Inflictor = Inflictor
@@ -115,7 +117,7 @@ function MakeACF_GLATGM(Gun, BulletData)
 
 	Missiles[Entity] = true
 
-	hook.Run("OnMissileLaunched", Entity)
+	hook.Run("ACF_OnLaunchMissile", Entity)
 
 	return Entity
 end

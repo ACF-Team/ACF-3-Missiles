@@ -95,7 +95,7 @@ hook.Add("PlayerSpawnedVehicle", "ACF Entity Tracking", function(_, Entity)
 	end)
 end)
 
-hook.Add("ACF_OnClock", "ACF Entity Tracking", function()
+hook.Add("ACF_OnTick", "ACF Entity Tracking", function()
 	for Ancestor in pairs(Ancestors) do
 		UpdateValues(Ancestor)
 	end

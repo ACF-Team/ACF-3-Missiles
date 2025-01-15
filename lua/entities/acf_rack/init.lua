@@ -6,7 +6,6 @@ include("shared.lua")
 -- Local Vars -----------------------------------
 
 local EMPTY       = { Type = "Empty", PropMass = 0, ProjMass = 0, Tracer = 0 }
-local HookRun     = hook.Run
 local ACF         = ACF
 local Contraption = ACF.Contraption
 local Classes     = ACF.Classes
@@ -89,7 +88,7 @@ do -- Spawning and Updating --------------------
 				Rack.VerifyData(Data, Rack)
 			end
 
-			HookRun("ACF_VerifyData", "acf_rack", Data, Rack)
+			hook.Run("ACF_OnVerifyData", "acf_rack", Data, Rack)
 		end
 	end
 
@@ -216,7 +215,7 @@ do -- Spawning and Updating --------------------
 			RackData.OnSpawn(Rack, Data, RackData)
 		end
 
-		HookRun("ACF_OnEntitySpawn", "acf_rack", Rack, Data, RackData)
+		hook.Run("ACF_OnSpawnEntity", "acf_rack", Rack, Data, RackData)
 
 		WireLib.TriggerOutput(Rack, "Rate of Fire", 60)
 		WireLib.TriggerOutput(Rack, "Reload Time", 1)
@@ -273,7 +272,7 @@ do -- Spawning and Updating --------------------
 			OldData.OnLast(self, OldData)
 		end
 
-		HookRun("ACF_OnEntityLast", "acf_rack", self, OldData)
+		hook.Run("ACF_OnEntityLast", "acf_rack", self, OldData)
 
 		ACF.SaveEntity(self)
 
@@ -285,7 +284,7 @@ do -- Spawning and Updating --------------------
 			Rack.OnUpdate(self, Data, Rack)
 		end
 
-		HookRun("ACF_OnEntityUpdate", "acf_rack", self, Data, Rack)
+		hook.Run("ACF_OnUpdateEntity", "acf_rack", self, Data, Rack)
 
 		local Crates = self.Crates
 
@@ -552,8 +551,9 @@ do -- Firing -----------------------------------
 	function ENT:Shoot()
 		local Index, Point = self:GetNextMountPoint("Loaded", self.PointIndex)
 		local Delay = self.FireDelay
+		local CanFire = hook.Run("ACF_PreFireWeapon", self)
 
-		if Index and HookRun("ACF_FireShell", self) ~= false then
+		if Index and CanFire then
 			ShootMissile(self, Point)
 
 			self.PointIndex = self:GetNextMountPoint("Loaded", Index) or 1
@@ -943,7 +943,7 @@ do -- Misc -------------------------------------
 			OldData.OnLast(self, OldData)
 		end
 
-		HookRun("ACF_OnEntityLast", "acf_rack", self, OldData)
+		hook.Run("ACF_OnEntityLast", "acf_rack", self, OldData)
 
 		for Crate in pairs(self.Crates) do
 			self:Unlink(Crate)

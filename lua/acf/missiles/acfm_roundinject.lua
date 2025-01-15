@@ -4,7 +4,7 @@ local Entities  = Classes.Entities
 local Guidances = Classes.Guidances
 local Fuzes     = Classes.Fuzes
 
-hook.Add("ACF_UpdateRoundData", "ACF Missile Ammo", function(_, ToolData, Data)
+hook.Add("ACF_OnUpdateRound", "ACF Missile Ammo", function(_, ToolData, Data)
 	if ToolData.Destiny ~= "Missiles" then return end
 
 	local PenMul   = ACF.GetGunValue(ToolData.Weapon, "PenMul")
@@ -51,7 +51,7 @@ if CLIENT then
 		return Result
 	end
 
-	hook.Add("ACF_AddAmmoControls", "ACF Add Missiles Menu", function(Base, ToolData, Ammo, BulletData)
+	hook.Add("ACF_OnCreateAmmoControls", "ACF Add Missiles Menu", function(Base, ToolData, Ammo, BulletData)
 		if ToolData.Destiny ~= "Missiles" then return end
 
 		local Missile      = Base.MissileData
@@ -123,18 +123,6 @@ if CLIENT then
 		ACF.LoadSortedList(GuidanceList, GetGuidanceList(Missile), "Name")
 		ACF.LoadSortedList(FuzeList, GetFuzeList(Missile), "Name")
 	end)
-
-	--[[
-	-- Unused, uncomment if needed
-	hook.Add("ACF_AddAmmoInformation", "ACF Add Missiles Menu", function(Base, ToolData, Ammo, BulletData)
-		if ToolData.Destiny ~= "Missiles" then return end
-
-		local Guidance     = BulletData.Guidance
-		local Fuze         = BulletData.Fuze
-		local GuidanceBase = Base:AddPanel("ACF_Panel")
-		local FuzeBase     = Base:AddPanel("ACF_Panel")
-	end)
-	]]
 else
 	local Display      = "%s: %s%s\n\n%s: %s%s"
 	local AllowedClass = {
@@ -175,7 +163,7 @@ else
 		return Result
 	end
 
-	hook.Add("ACF_VerifyData", "ACF Missile Ammo", function(EntClass, Data, ...)
+	hook.Add("ACF_OnVerifyData", "ACF Missile Ammo", function(EntClass, Data, ...)
 		if not AllowedClass[EntClass] then return end
 		if Data.Destiny ~= "Missiles" then return end
 

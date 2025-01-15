@@ -18,7 +18,7 @@ local Damage         = ACF.Damage
 local Debug			 = ACF.Debug
 local Missiles       = Classes.Missiles
 local InputActions   = ACF.GetInputActions("acf_missile")
-local HookRun        = hook.Run
+local hook           = hook
 local Inputs         = { "Detonate (Force the missile to explode.)" }
 local Outputs        = { "Entity (The missile itself.) [ENTITY]" }
 
@@ -291,7 +291,9 @@ local function CalcFlight(Missile)
 end
 
 local function DetonateMissile(Missile, Inflictor)
-	if HookRun("ACF_AmmoExplode", Missile, Missile.BulletData) == false then return end
+	local CanExplode = hook.Run("ACF_PreExplodeMissile", Missile, Missile.BulletData)
+
+	if not CanExplode then return end
 
 	if IsValid(Inflictor) and Inflictor:IsPlayer() then
 		Missile.Inflictor = Inflictor
@@ -308,7 +310,7 @@ hook.Add("CanDrive", "acf_missile_CanDrive", function(_, Entity)
 	if ActiveMissiles[Entity] then return false end
 end)
 
-hook.Add("OnMissileLaunched", "ACF Missile Rack Filter", function(Missile)
+hook.Add("ACF_OnLaunchMissile", "ACF Missile Rack Filter", function(Missile)
 	local Count = #Missile.Filter
 
 	for K in pairs(ActiveMissiles) do
@@ -406,7 +408,7 @@ function MakeACF_Missile(Player, Pos, Ang, Rack, MountPoint, Crate)
 	Missile.Inputs          = WireLib.CreateInputs(Missile, Inputs)
 	Missile.Outputs         = WireLib.CreateOutputs(Missile, Outputs)
 
-	HookRun("ACF_OnEntitySpawn", "acf_missile", Missile, Data, Class, Crate)
+	hook.Run("ACF_OnSpawnEntity", "acf_missile", Missile, Data, Class, Crate)
 
 	WireLib.TriggerOutput(Missile, "Entity", Missile)
 
@@ -465,7 +467,7 @@ function ENT:CreateBulletData(Crate)
 		Ammo:OnFirst(self)
 	end
 
-	HookRun("ACF_OnAmmoFirst", Ammo, self, Data)
+	hook.Run("ACF_OnAmmoFirst", Ammo, self, Data)
 
 	Ammo:Network(self, self.BulletData)
 end
@@ -547,7 +549,7 @@ function ENT:Launch(Delay, IsMisfire)
 	UpdateBodygroups(self, "OnLaunch")
 	UpdateSkin(self)
 
-	HookRun("OnMissileLaunched", self)
+	hook.Run("ACF_OnLaunchMissile", self)
 end
 
 function ENT:DoFlight(ToPos, ToDir)

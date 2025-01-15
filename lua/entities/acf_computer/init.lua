@@ -4,6 +4,7 @@ AddCSLuaFile("cl_init.lua")
 
 include("shared.lua")
 
+local hook      = hook
 local ACF       = ACF
 local Contraption	= ACF.Contraption
 local Damage    = ACF.Damage
@@ -72,7 +73,6 @@ end)
 local CheckLegal  = ACF.CheckLegal
 local UnlinkSound = "physics/metal/metal_box_impact_bullet%s.wav"
 local MaxDistance = ACF.LinkDistance * ACF.LinkDistance
-local HookRun     = hook.Run
 
 local function CheckDistantLinks(Entity, Source)
 	local Position = Entity:GetPos()
@@ -117,7 +117,7 @@ do -- Spawn and update function
 				Class.VerifyData(Data, Class)
 			end
 
-			HookRun("ACF_VerifyData", "acf_computer", Data, Class)
+			hook.Run("ACF_OnVerifyData", "acf_computer", Data, Class)
 		end
 	end
 
@@ -225,7 +225,7 @@ do -- Spawn and update function
 			Class.OnSpawn(Entity, Data, Class, Computer)
 		end
 
-		HookRun("ACF_OnEntitySpawn", "acf_computer", Entity, Data, Class, Computer)
+		hook.Run("ACF_OnSpawnEntity", "acf_computer", Entity, Data, Class, Computer)
 
 		WireLib.TriggerOutput(Entity, "Entity", Entity)
 
@@ -268,7 +268,7 @@ do -- Spawn and update function
 			OldClass.OnLast(self, OldClass)
 		end
 
-		HookRun("ACF_OnEntityLast", "acf_computer", self, OldClass)
+		hook.Run("ACF_OnEntityLast", "acf_computer", self, OldClass)
 
 		ACF.SaveEntity(self)
 
@@ -280,7 +280,7 @@ do -- Spawn and update function
 			Class.OnUpdate(self, Data, Class, Computer)
 		end
 
-		HookRun("ACF_OnEntityUpdate", "acf_computer", self, Data, Class, Computer)
+		hook.Run("ACF_OnUpdateEntity", "acf_computer", self, Data, Class, Computer)
 
 		self:UpdateOverlay(true)
 
@@ -371,7 +371,7 @@ function ENT:OnRemove()
 		OldClass.OnLast(self, OldClass)
 	end
 
-	HookRun("ACF_OnEntityLast", "acf_computer", self, OldClass)
+	hook.Run("ACF_OnEntityLast", "acf_computer", self, OldClass)
 
 	for Weapon in pairs(self.Weapons) do
 		self:Unlink(Weapon)

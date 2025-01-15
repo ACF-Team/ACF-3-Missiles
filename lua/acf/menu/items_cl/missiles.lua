@@ -2,7 +2,6 @@ local ACF      = ACF
 local Classes  = ACF.Classes
 local Missiles = Classes.Missiles
 local Racks    = Classes.Racks
-local Settings = { SuppressTracer = true }
 
 local function GetRackList(Data)
 	local Result = {}
@@ -78,7 +77,7 @@ local function CreateMenu(Menu)
 	local RackPreview = RackBase:AddModelPreview(nil, true)
 	local RackInfo = RackBase:AddLabel()
 
-	local AmmoList = ACF.CreateAmmoMenu(Menu, Settings)
+	local AmmoList = ACF.CreateAmmoMenu(Menu)
 
 	ACF.SetClientData("PrimaryClass", "acf_rack")
 	ACF.SetClientData("SecondaryClass", "acf_ammo")
@@ -120,7 +119,7 @@ local function CreateMenu(Menu)
 
 		Menu.AmmoBase.MissileData = Data
 
-		ACF.UpdateAmmoMenu(Menu, Settings)
+		ACF.UpdateAmmoMenu(Menu)
 	end
 
 	function RackList:OnSelect(Index, _, Data)
@@ -142,3 +141,7 @@ local function CreateMenu(Menu)
 end
 
 ACF.AddMenuItem(101, "Entities", "Missiles", "wand", CreateMenu)
+
+hook.Add("ACF_PreCreateTracerControls", "ACF Missiles Remove Tracer Checkbox", function(_, ToolData)
+	if ToolData.PrimaryClass == "acf_rack" then return false end
+end)
