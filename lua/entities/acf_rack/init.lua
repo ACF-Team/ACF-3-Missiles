@@ -223,13 +223,7 @@ do -- Spawning and Updating --------------------
 
 		Rack:UpdateOverlay(true)
 
-		do -- Mass entity mod removal
-			local EntMods = Data and Data.EntityMods
-
-			if EntMods and EntMods.mass then
-				EntMods.mass = nil
-			end
-		end
+		duplicator.ClearEntityModifier(Rack, "mass")
 
 		CheckLegal(Rack)
 
@@ -293,12 +287,6 @@ do -- Spawning and Updating --------------------
 				self:Unlink(Crate)
 			end
 		end
-
-		self:UpdateOverlay(true)
-
-		net.Start("ACF_UpdateEntity")
-			net.WriteEntity(self)
-		net.Broadcast()
 
 		return true, "Rack updated successfully!"
 	end

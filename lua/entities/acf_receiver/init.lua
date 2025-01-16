@@ -210,13 +210,7 @@ do -- Spawn and Update functions
 
 		Receiver:UpdateOverlay(true)
 
-		do -- Mass entity mod removal
-			local EntMods = Data and Data.EntityMods
-
-			if EntMods and EntMods.mass then
-				EntMods.mass = nil
-			end
-		end
+		duplicator.ClearEntityModifier(Receiver, "mass")
 
 		CheckLegal(Receiver)
 
@@ -240,7 +234,7 @@ do -- Spawn and Update functions
 			OldClass.OnLast(self, OldClass)
 		end
 
-		hook.Run("ACF_OnEntityLast", "acf_Receiver", self, OldClass)
+		hook.Run("ACF_OnEntityLast", "acf_receiver", self, OldClass)
 
 		ACF.SaveEntity(self)
 
@@ -252,13 +246,7 @@ do -- Spawn and Update functions
 			Class.OnUpdate(self, Data, Class, Receiver)
 		end
 
-		hook.Run("ACF_OnUpdateEntity", "acf_Receiver", self, Data, Class, Receiver)
-
-		self:UpdateOverlay(true)
-
-		net.Start("ACF_UpdateEntity")
-			net.WriteEntity(self)
-		net.Broadcast()
+		hook.Run("ACF_OnUpdateEntity", "acf_receiver", self, Data, Class, Receiver)
 
 		return true, "Receiver updated successfully!"
 	end

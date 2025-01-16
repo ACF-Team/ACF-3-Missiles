@@ -231,13 +231,7 @@ do -- Spawn and update function
 
 		Entity:UpdateOverlay(true)
 
-		do -- Mass entity mod removal
-			local EntMods = Data and Data.EntityMods
-
-			if EntMods and EntMods.mass then
-				EntMods.mass = nil
-			end
-		end
+		duplicator.ClearEntityModifier(Entity, "mass")
 
 		CheckLegal(Entity)
 
@@ -281,12 +275,6 @@ do -- Spawn and update function
 		end
 
 		hook.Run("ACF_OnUpdateEntity", "acf_computer", self, Data, Class, Computer)
-
-		self:UpdateOverlay(true)
-
-		net.Start("ACF_UpdateEntity")
-			net.WriteEntity(self)
-		net.Broadcast()
 
 		return true, "Computer updated successfully!"
 	end

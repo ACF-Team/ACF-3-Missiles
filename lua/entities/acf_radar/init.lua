@@ -423,13 +423,7 @@ do -- Spawn and Update functions
 
 		Radar:UpdateOverlay(true)
 
-		do -- Mass entity mod removal
-			local EntMods = Data and Data.EntityMods
-
-			if EntMods and EntMods.mass then
-				EntMods.mass = nil
-			end
-		end
+		duplicator.ClearEntityModifier(Radar, "mass")
 
 		CheckLegal(Radar)
 
@@ -475,12 +469,6 @@ do -- Spawn and Update functions
 		end
 
 		hook.Run("ACF_OnUpdateEntity", "acf_radar", self, Data, Class, Radar)
-
-		self:UpdateOverlay(true)
-
-		net.Start("ACF_UpdateEntity")
-			net.WriteEntity(self)
-		net.Broadcast()
 
 		return true, "Radar updated successfully!"
 	end
