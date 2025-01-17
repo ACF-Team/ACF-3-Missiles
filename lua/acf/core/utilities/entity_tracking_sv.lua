@@ -1,9 +1,10 @@
-local ACF         = ACF
-local Clock       = ACF.Utilities.Clock
-local Contraption = ACF.Contraption
-local NextUpdate  = 0
-local Entities    = {}
-local Ancestors   = {}
+local ACF             = ACF
+local Clock           = ACF.Utilities.Clock
+local Contraption     = ACF.Contraption
+local Countermeasures = ACF.Classes.Countermeasures
+local NextUpdate      = 0
+local Entities        = {}
+local Ancestors       = {}
 
 local Whitelist  = {
 	-- Garry's Mod entities
@@ -148,7 +149,7 @@ function ACF.GetEntitiesInCone(Position, Direction, Degrees)
 	for Entity in pairs(GetAncestorEntities()) do
 		if not IsValid(Entity) then continue end
 
-		if ACFM_ConeContainsPos(Position, Direction, Degrees, Entity:GetPos()) then
+		if Countermeasures.ConeContainsPos(Position, Direction, Degrees, Entity:GetPos()) then
 			Result[Entity] = true
 		end
 	end

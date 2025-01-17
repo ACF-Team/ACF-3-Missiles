@@ -100,9 +100,9 @@ do -- Spawn and Update functions
 	local Sensors  = Classes.Sensors
 
 	local Outputs = {
-		"Detected (Returns 1 if it)",
-		"Direction (The direction to a source) [VECTOR]",
-		"Angle (The direction to a source) [ANGLE]",
+		"Detected (Returns 1 if something is detected.)",
+		"Direction (The direction to a source.) [VECTOR]",
+		"Angle (The direction to a source.) [ANGLE]",
 		"Entity (The receiver itself.) [ENTITY]"
 	}
 
@@ -315,7 +315,7 @@ function ENT:OnRemove()
 		OldClass.OnLast(self, OldClass)
 	end
 
-	hook.Run("ACF_OnEntityLast", "acf_Receiver", self, OldClass)
+	hook.Run("ACF_OnEntityLast", "acf_receiver", self, OldClass)
 
 	TimerRemove(self.TimerID)
 

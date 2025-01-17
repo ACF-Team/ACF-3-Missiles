@@ -2,7 +2,6 @@ local Classes = ACF.Classes
 local Racks   = Classes.Racks
 local Entries = {}
 
-
 function Racks.Register(ID, Data)
 	local Class = Classes.AddSimple(ID, Entries, Data)
 
@@ -24,13 +23,3 @@ function Racks.Register(ID, Data)
 end
 
 Classes.AddSimpleFunctions(Racks, Entries)
-
-do -- Discontinued functions
-	function ACF_DefineRackClass(ID)
-		print("Attempted to register rack class " .. ID .. " with a discontinued function. Racks are no longer separated in classes.")
-	end
-
-	function ACF_DefineRack(ID)
-		print("Attempted to register rack " .. ID .. " with a discontinued function. Use ACF.RegisterRack instead.")
-	end
-end

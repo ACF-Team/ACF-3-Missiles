@@ -1,5 +1,6 @@
-local ACF     = ACF
-local Sensors = ACF.Classes.Sensors
+local ACF             = ACF
+local Sensors         = ACF.Classes.Sensors
+local Countermeasures = ACF.Classes.Countermeasures
 
 Sensors.Register("AM-Radar", {
 	Name		= "Missile Radar",
@@ -14,7 +15,7 @@ Sensors.Register("AM-Radar", {
 
 do -- Directional radars
 	local function DetectEntities(Radar)
-		return ACFM_GetMissilesInCone(Radar:LocalToWorld(Radar.Origin), Radar:GetForward(), Radar.ConeDegs)
+		return Countermeasures.GetMissilesInCone(Radar:LocalToWorld(Radar.Origin), Radar:GetForward(), Radar.ConeDegs)
 	end
 
 	Sensors.RegisterItem("SmallDIR-AM", "AM-Radar", {
@@ -65,7 +66,7 @@ end
 
 do -- Spherical radars
 	local function DetectEntities(Radar)
-		return ACFM_GetMissilesInSphere(Radar:LocalToWorld(Radar.Origin), Radar.Range)
+		return Countermeasures.GetMissilesInSphere(Radar:LocalToWorld(Radar.Origin), Radar.Range)
 	end
 
 	Sensors.RegisterItem("SmallOMNI-AM", "AM-Radar", {

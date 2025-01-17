@@ -77,6 +77,7 @@ do -- Laser Receiver
 end
 
 do -- Radar Receiver
+	local Countermeasures = ACF.Classes.Countermeasures
 
 	-- ACF.ActiveRadars for radars, need to check for direction and range for these
 	local ValidMissileRadars = {
@@ -95,7 +96,7 @@ do -- Radar Receiver
 			if k.Range then -- Spherical
 				if RadarOrigin:DistToSqr(ReceiverOrigin) <= (k.Range ^ 2) then RadarSource[k] = true end
 			else -- Directional
-				if ACFM_ConeContainsPos(RadarOrigin, k:GetForward(), k.ConeDegs, ReceiverOrigin) then RadarSource[k] = true end
+				if Countermeasures.ConeContainsPos(RadarOrigin, k:GetForward(), k.ConeDegs, ReceiverOrigin) then RadarSource[k] = true end
 			end
 		end
 
@@ -103,7 +104,7 @@ do -- Radar Receiver
 			if not k.UseGuidance then continue end -- Don't waste time on missiles that don't have functional guidance
 			if not ValidMissileRadars[k.Guidance] then continue end -- Further filter for anything without radar on the missile itself
 
-			if ACFM_ConeContainsPos(k.Position, k:GetForward(), k.ViewCone, ReceiverOrigin) then RadarSource[k] = true end
+			if Countermeasures.ConeContainsPos(k.Position, k:GetForward(), k.ViewCone, ReceiverOrigin) then RadarSource[k] = true end
 		end
 
 		return RadarSource

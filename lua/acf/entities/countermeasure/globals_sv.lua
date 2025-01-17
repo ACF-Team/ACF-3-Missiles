@@ -3,36 +3,10 @@ local Countermeasures = ACF.Classes.Countermeasures
 local Bullets         = ACF.Ballistics.Bullets
 local Missiles        = ACF.ActiveMissiles
 
-ACFM_Flares = {}
-ACFM_FlareUID = 0
+local Flares = {}
+local FlareUID = 0
 
-function ACFM_RegisterFlare(BulletData)
-	local Flare    = Countermeasures.Get("Flare")
-	local FlareObj = Flare()
-
-	BulletData.FlareUID = ACFM_FlareUID
-
-	ACFM_Flares[BulletData.Index] = ACFM_FlareUID
-	ACFM_FlareUID = ACFM_FlareUID + 1
-
-	FlareObj:Configure(BulletData)
-
-	BulletData.FlareObj = FlareObj
-
-	ACFM_OnFlareSpawn(BulletData)
-end
-
-function ACFM_UnregisterFlare(BulletData)
-	local FlareObj = BulletData.FlareObj
-
-	if FlareObj then
-		FlareObj.Flare = nil
-	end
-
-	ACFM_Flares[BulletData.Index] = nil
-end
-
-function ACFM_OnFlareSpawn(BulletData)
+local function OnFlareSpawn(BulletData)
 	local FlareObj = BulletData.FlareObj
 	local Affected = FlareObj:ApplyToAll()
 
@@ -41,17 +15,43 @@ function ACFM_OnFlareSpawn(BulletData)
 	end
 end
 
-function ACFM_GetFlaresInCone(Position, Direction, Degrees)
+function Countermeasures.RegisterFlare(BulletData)
+	local Flare    = Countermeasures.Get("Flare")
+	local FlareObj = Flare()
+
+	BulletData.FlareUID = FlareUID
+
+	Flares[BulletData.Index] = FlareUID
+	FlareUID = FlareUID + 1
+
+	FlareObj:Configure(BulletData)
+
+	BulletData.FlareObj = FlareObj
+
+	OnFlareSpawn(BulletData)
+end
+
+function Countermeasures.UnregisterFlare(BulletData)
+	local FlareObj = BulletData.FlareObj
+
+	if FlareObj then
+		FlareObj.Flare = nil
+	end
+
+	Flares[BulletData.Index] = nil
+end
+
+function Countermeasures.GetFlaresInCone(Position, Direction, Degrees)
 	local Result = {}
 
-	for Index, UID in pairs(ACFM_Flares) do
+	for Index, UID in pairs(Flares) do
 		local Flare = Bullets[Index]
 
 		if not (Flare and Flare.FlareUID and Flare.FlareUID == UID) then
 			continue
 		end
 
-		if ACFM_ConeContainsPos(Position, Direction, Degrees, Flare.Pos) then
+		if Countermeasures.ConeContainsPos(Position, Direction, Degrees, Flare.Pos) then
 			Result[Flare] = true
 		end
 	end
@@ -59,21 +59,21 @@ function ACFM_GetFlaresInCone(Position, Direction, Degrees)
 	return Result
 end
 
-function ACFM_GetAnyFlareInCone(Position, Direction, Degrees)
-	for Index, UID in pairs(ACFM_Flares) do
+function Countermeasures.GetAnyFlareInCone(Position, Direction, Degrees)
+	for Index, UID in pairs(Flares) do
 		local Flare = Bullets[Index]
 
 		if not (Flare and Flare.FlareUID and Flare.FlareUID == UID) then
 			continue
 		end
 
-		if ACFM_ConeContainsPos(Position, Direction, Degrees, Flare.Pos) then
+		if Countermeasures.ConeContainsPos(Position, Direction, Degrees, Flare.Pos) then
 			return Flare
 		end
 	end
 end
 
-function ACFM_GetMissilesInCone(Position, Direction, Degrees)
+function Countermeasures.GetMissilesInCone(Position, Direction, Degrees)
 	local Result = {}
 
 	for Missile in pairs(Missiles) do
@@ -81,7 +81,7 @@ function ACFM_GetMissilesInCone(Position, Direction, Degrees)
 			continue
 		end
 
-		if ACFM_ConeContainsPos(Position, Direction, Degrees, Missile:GetPos()) then
+		if Countermeasures.ConeContainsPos(Position, Direction, Degrees, Missile:GetPos()) then
 			Result[Missile] = true
 		end
 
@@ -90,7 +90,7 @@ function ACFM_GetMissilesInCone(Position, Direction, Degrees)
 	return Result
 end
 
-function ACFM_GetMissilesInSphere(Position, Radius)
+function Countermeasures.GetMissilesInSphere(Position, Radius)
 	local Result = {}
 	local RadiusSqr = Radius * Radius
 
@@ -109,7 +109,7 @@ end
 
 -- Tests flare distraction effect upon all undistracted missiles, but does not perform the effect itself.  Returns a list of potentially affected missiles.
 -- argument is the bullet in the acf bullet table which represents the flare - not the cm_flare object!
-function ACFM_GetAllMissilesWhichCanSee(Position)
+function Countermeasures.GetAllMissilesWhichCanSee(Position)
 	local Result = {}
 
 	for Missile in pairs(Missiles) do
@@ -119,7 +119,7 @@ function ACFM_GetAllMissilesWhichCanSee(Position)
 			continue
 		end
 
-		if ACFM_ConeContainsPos(Missile:GetPos(), Missile:GetForward(), Guidance.ViewCone, Position) then
+		if Countermeasures.ConeContainsPos(Missile:GetPos(), Missile:GetForward(), Guidance.ViewCone, Position) then
 			Result[Missile] = true
 		end
 	end
@@ -127,14 +127,25 @@ function ACFM_GetAllMissilesWhichCanSee(Position)
 	return Result
 end
 
-function ACFM_ConeContainsPos(ConePos, ConeDir, Degrees, Position)
+function Countermeasures.ConeContainsPos(ConePos, ConeDir, Degrees, Position)
 	local MinimumDot = math.cos(math.rad(Degrees))
 	local Direction = (Position - ConePos):GetNormalized()
 
 	return ConeDir:Dot(Direction) >= MinimumDot
 end
 
-function ACFM_ApplyCountermeasures(Missile, Guidance)
+local function ApplyCountermeasure(Missile, Guidance, CounterMeasure)
+	if not CounterMeasure.AppliesTo[Guidance.Name] then return end
+
+	local Override = CounterMeasure.ApplyAll(Missile, Guidance)
+
+	if Override then
+		Guidance.Override = Override
+		return true
+	end
+end
+
+function Countermeasures.ApplyCountermeasures(Missile, Guidance)
 	if Guidance.Override then return end
 
 	local List = Countermeasures.GetList()
@@ -144,13 +155,13 @@ function ACFM_ApplyCountermeasures(Missile, Guidance)
 			continue
 		end
 
-		if ACFM_ApplyCountermeasure(Missile, Guidance, CounterMeasure) then
+		if ApplyCountermeasure(Missile, Guidance, CounterMeasure) then
 			break
 		end
 	end
 end
 
-function ACFM_ApplySpawnCountermeasures(Missile, Guidance)
+function Countermeasures.ApplySpawnCountermeasures(Missile, Guidance)
 	if Guidance.Override then return end
 
 	local List = Countermeasures.GetList()
@@ -160,19 +171,8 @@ function ACFM_ApplySpawnCountermeasures(Missile, Guidance)
 			continue
 		end
 
-		if ACFM_ApplyCountermeasure(Missile, Guidance, CounterMeasure) then
+		if ApplyCountermeasure(Missile, Guidance, CounterMeasure) then
 			break
 		end
-	end
-end
-
-function ACFM_ApplyCountermeasure(Missile, Guidance, CounterMeasure)
-	if not CounterMeasure.AppliesTo[Guidance.Name] then return end
-
-	local Override = CounterMeasure.ApplyAll(Missile, Guidance)
-
-	if Override then
-		Guidance.Override = Override
-		return true
 	end
 end

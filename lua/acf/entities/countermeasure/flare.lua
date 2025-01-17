@@ -70,7 +70,7 @@ if SERVER then
 		local Position = Missile:GetPos()
 		local Forward = Missile:GetForward()
 
-		return ACFM_ConeContainsPos(Position, Forward, SeekCone, self.Flare.Pos) and self:ApplyChance(Missile, Guidance, self.Flare)
+		return Countermeasures.ConeContainsPos(Position, Forward, SeekCone, self.Flare.Pos) and self:ApplyChance(Missile, Guidance, self.Flare)
 	end
 
 	-- counterpart to ApplyAll.  this takes one Flare and applies it to all missiles.
@@ -83,7 +83,7 @@ if SERVER then
 		if not self.Active then return {} end
 
 		local Result = {}
-		local Targets = ACFM_GetAllMissilesWhichCanSee(self.Flare.Pos)
+		local Targets = Countermeasures.GetAllMissilesWhichCanSee(self.Flare.Pos)
 
 		for Missile in pairs(Targets) do
 			local Guidance = Missile.GuidanceData
@@ -97,7 +97,7 @@ if SERVER then
 	end
 
 	-- 'static' function to iterate over all flares in flight and return one which affects the guidance.
-	-- TODO: apply sub-1 chance to distract guidance in ACFM_GetAnyFlareInCone.
+	-- TODO: apply sub-1 chance to distract guidance in Countermeasures.GetAnyFlareInCone.
 	function Countermeasure.ApplyAll(Missile, Guidance)
 		local SeekCone = Guidance.SeekCone
 
@@ -105,7 +105,7 @@ if SERVER then
 
 		local Position = Missile:GetPos()
 		local Forward = Missile:GetForward()
-		local Flares = ACFM_GetFlaresInCone(Position, Forward, SeekCone)
+		local Flares = Countermeasures.GetFlaresInCone(Position, Forward, SeekCone)
 
 		for Flare in pairs(Flares) do
 			local Result = Flare.FlareObj

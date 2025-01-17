@@ -14,16 +14,18 @@ end
 if CLIENT then
 	Guidance.Description = "This guidance package is empty and provides no control."
 else
+	local Countermeasures = ACF.Classes.Countermeasures
+
 	function Guidance:OnLaunched() end
 
 	function Guidance:PreGuidance(Missile)
 		if not self.AppliedSpawnCountermeasures then
-			ACFM_ApplySpawnCountermeasures(Missile, self)
+			Countermeasures.ApplySpawnCountermeasures(Missile, self)
 
 			self.AppliedSpawnCountermeasures = true
 		end
 
-		ACFM_ApplyCountermeasures(Missile, self)
+		Countermeasures.ApplyCountermeasures(Missile, self)
 	end
 
 	function Guidance:ApplyOverride(Missile)

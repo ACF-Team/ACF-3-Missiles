@@ -75,16 +75,17 @@ function Ammo:VerifyData(ToolData)
 end
 
 if SERVER then
-	local IgniteConVar = GetConVar("ACFM_FlaresIgnite")
-	local Ballistics   = ACF.Ballistics
-	local Clock        = ACF.Utilities.Clock
+	local IgniteConVar    = GetConVar("ACFM_FlaresIgnite")
+	local Ballistics      = ACF.Ballistics
+	local Clock           = ACF.Utilities.Clock
+	local Countermeasures = ACF.Classes.Countermeasures
 
 	function Ammo:Create(_, BulletData)
 		local Bullet = Ballistics.CreateBullet(BulletData)
 
 		Bullet.CreateTime = Clock.CurTime
 
-		ACFM_RegisterFlare(Bullet)
+		Countermeasures.RegisterFlare(Bullet)
 	end
 
 	function Ammo:Network(Entity, BulletData)

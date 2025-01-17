@@ -4,6 +4,7 @@ local Guidance  = Guidances.Register("Anti-missile", "Anti-radiation")
 if CLIENT then
 	Guidance.Description = "This guidance package uses a radar to detect missiles and guides the munition towards the most centered one it can find."
 else
+	local Countermeasures = ACF.Classes.Countermeasures
 	Guidance.RadarType = "AM-Radar"
 
 	function Guidance:GetRadar()
@@ -20,7 +21,7 @@ else
 
 	function Guidance:SeekTarget(Missile)
 		local Position   = Missile.Position
-		local Targets    = ACFM_GetMissilesInCone(Position, Missile:GetForward(), self.SeekCone)
+		local Targets    = Countermeasures.GetMissilesInCone(Position, Missile:GetForward(), self.SeekCone)
 		local HighestDot = 0
 		local Target, TargetPos
 
