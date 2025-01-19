@@ -14,6 +14,8 @@ function Ammo:OnLoaded()
 		HW = true,
 		SC = true,
 	})
+
+	self.MaxStandoffRatio = .4
 end
 
 function Ammo:BaseConvert(ToolData)
