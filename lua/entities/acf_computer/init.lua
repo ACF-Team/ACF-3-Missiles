@@ -207,7 +207,6 @@ do -- Spawn and update function
 
 		if not IsValid(Entity) then return end
 
-		Entity:SetPlayer(Player)
 		Entity:SetAngles(Angle)
 		Entity:SetPos(Pos)
 		Entity:Spawn()
@@ -215,7 +214,6 @@ do -- Spawn and update function
 		Player:AddCleanup("acf_computer", Entity)
 		Player:AddCount(Limit, Entity)
 
-		Entity.Owner     = Player -- MUST be stored on ent for PP
 		Entity.Weapons   = {}
 		Entity.DataStore = Entities.GetArguments("acf_computer")
 
@@ -226,10 +224,6 @@ do -- Spawn and update function
 		end
 
 		hook.Run("ACF_OnSpawnEntity", "acf_computer", Entity, Data, Class, Computer)
-
-		WireLib.TriggerOutput(Entity, "Entity", Entity)
-
-		Entity:UpdateOverlay(true)
 
 		duplicator.ClearEntityModifier(Entity, "mass")
 

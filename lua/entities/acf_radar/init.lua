@@ -387,7 +387,6 @@ do -- Spawn and Update functions
 
 		if not IsValid(Radar) then return end
 
-		Radar:SetPlayer(Player)
 		Radar:SetAngles(Angle)
 		Radar:SetPos(Pos)
 		Radar:Spawn()
@@ -395,7 +394,6 @@ do -- Spawn and Update functions
 		Player:AddCleanup("acf_radar", Radar)
 		Player:AddCount(Limit, Radar)
 
-		Radar.Owner       = Player -- MUST be stored on ent for PP
 		Radar.Active      = false
 		Radar.Scanning    = false
 		Radar.TargetCount = 0
@@ -418,10 +416,6 @@ do -- Spawn and Update functions
 		end
 
 		hook.Run("ACF_OnSpawnEntity", "acf_radar", Radar, Data, Class, RadarData)
-
-		WireLib.TriggerOutput(Radar, "Entity", Radar)
-
-		Radar:UpdateOverlay(true)
 
 		duplicator.ClearEntityModifier(Radar, "mass")
 

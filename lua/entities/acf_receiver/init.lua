@@ -186,7 +186,6 @@ do -- Spawn and Update functions
 
 		if not IsValid(Receiver) then return end
 
-		Receiver:SetPlayer(Player)
 		Receiver:SetAngles(Ang)
 		Receiver:SetPos(Pos)
 		Receiver:Spawn()
@@ -194,7 +193,6 @@ do -- Spawn and Update functions
 		Player:AddCleanup("acf_receiver", Receiver)
 		Player:AddCount(Limit, Receiver)
 
-		Receiver.Owner       = Player -- MUST be stored on ent for PP
 		Receiver.DataStore   = Entities.GetArguments("acf_receiver")
 		Receiver.Damage		 = 0
 
@@ -205,10 +203,6 @@ do -- Spawn and Update functions
 		end
 
 		hook.Run("ACF_OnSpawnEntity", "acf_receiver", Receiver, Data, Class, ReceiverData)
-
-		WireLib.TriggerOutput(Receiver, "Entity", Receiver)
-
-		Receiver:UpdateOverlay(true)
 
 		duplicator.ClearEntityModifier(Receiver, "mass")
 

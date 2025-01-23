@@ -190,7 +190,6 @@ do -- Spawning and Updating --------------------
 
 		if not IsValid(Rack) then return end
 
-		Rack:SetPlayer(Player)
 		Rack:SetAngles(Ang)
 		Rack:SetPos(Pos)
 		Rack:Spawn()
@@ -198,7 +197,6 @@ do -- Spawning and Updating --------------------
 		Player:AddCleanup("acf_rack", Rack)
 		Player:AddCount(Limit, Rack)
 
-		Rack.Owner       = Player -- MUST be stored on ent for PP
 		Rack.Firing      = false
 		Rack.Reloading   = false
 		Rack.Spread      = 1 -- GunClass.spread
@@ -219,9 +217,6 @@ do -- Spawning and Updating --------------------
 
 		WireLib.TriggerOutput(Rack, "Rate of Fire", 60)
 		WireLib.TriggerOutput(Rack, "Reload Time", 1)
-		WireLib.TriggerOutput(Rack, "Entity", Rack)
-
-		Rack:UpdateOverlay(true)
 
 		duplicator.ClearEntityModifier(Rack, "mass")
 
