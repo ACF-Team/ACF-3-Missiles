@@ -44,6 +44,35 @@ local function CheckDistantLink(Entity, Crate, EntPos)
 	return CrateUnlinked
 end
 
+do
+	function ENT:UpdateLoadMod(cfg)
+		self.CrewsByType = self.CrewsByType or {}
+		local Sum1, Count1 = ACF.WeightedLinkSum(self.CrewsByType.Loader or {}, ACF.GetReloadEff, self, self.CurrentCrate or self)
+		local Sum2, Count2 = ACF.WeightedLinkSum(self.CrewsByType.Commander or {}, ACF.GetReloadEff, self, self.CurrentCrate or self)
+		self.LoadCrewMod = math.Clamp(Sum1 + Sum2, ACF.CrewFallbackCoef, ACF.LoaderMaxBonus)
+
+		-- print("Load", self.LoadCrewMod)
+		return self.LoadCrewMod
+	end
+
+	function ENT:FindPropagator(cfg)
+		local Temp = self:GetParent()
+		if IsValid(Temp) and Temp:GetClass() == "acf_turret" and Temp.Turret == "Turret-V" then Temp = Temp:GetParent() end
+		if IsValid(Temp) and Temp:GetClass() == "acf_turret" and Temp.Turret == "Turret-H" then return Temp end
+		if IsValid(Temp) and Temp:GetClass() == "acf_baseplate" then return Temp end
+		return nil
+	end
+
+	function ENT:UpdateAccuracyMod(cfg)
+		local Propagator = self:FindPropagator(cfg)
+		local Val = Propagator and Propagator.AccuracyCrewMod or 0
+
+		self.AccuracyCrewMod = math.Clamp(Val, ACF.CrewFallbackCoef, 1)
+		-- print("Accuracy", self.AccuracyCrewMod)
+		return self.AccuracyCrewMod
+	end
+end
+
 do -- Spawning and Updating --------------------
 	local CheckLegal  = ACF.CheckLegal
 	local WireIO      = Utilities.WireIO
@@ -212,6 +241,9 @@ do -- Spawning and Updating --------------------
 		if RackData.OnSpawn then
 			RackData.OnSpawn(Rack, Data, RackData)
 		end
+
+		ACF.AugmentedTimer(function(cfg) Rack:UpdateLoadMod(cfg) end, function() return IsValid(Rack) end, nil, {MinTime = 0.5, MaxTime = 1})
+		ACF.AugmentedTimer(function(cfg) Rack:UpdateAccuracyMod(cfg) end, function() return IsValid(Rack) end, nil, {MinTime = 0.5, MaxTime = 1})
 
 		hook.Run("ACF_OnSpawnEntity", "acf_rack", Rack, Data, RackData)
 
@@ -633,7 +665,8 @@ do -- Loading ----------------------------------
 
 		if not self.Firing and Index and Crate and not CheckDistantLink(self, Crate, self:GetPos()) then
 			local Missile    = AddMissile(self, Point, Crate)
-			local ReloadTime = Missile.ReloadTime
+			local IdealTime = Missile.ReloadTime
+			local ReloadTime = IdealTime / self.LoadCrewMod
 
 			Point.NextFire = Clock.CurTime + ReloadTime
 			Point.State    = "Loading"
@@ -647,24 +680,34 @@ do -- Loading ----------------------------------
 
 			Crate:Consume()
 
-			timer.Simple(ReloadTime, function()
-				if not IsValid(self) or Point.Removed then
-					if IsValid(Crate) then Crate:Consume(-1) end
+			ACF.ProgressTimer(
+				self,
+				function(cfg)
+					local eff = self:UpdateLoadMod() or 1
+					WireLib.TriggerOutput(self, "Reload Time", IdealTime / eff)
+					WireLib.TriggerOutput(self, "Rate of Fire", 60 / (IdealTime / eff))
+					return eff
+				end,
+				function(cfg)
+					if not IsValid(self) or Point.Removed then
+						if IsValid(Crate) then Crate:Consume(-1) end
 
-					return
-				end
+						return
+					end
 
-				if not IsValid(Missile) then
-					Missile = nil
-				else
-					Sounds.SendSound(self, "acf_missiles/fx/weapon_select.mp3", 70, math.random(99, 101), 1)
+					if not IsValid(Missile) then
+						Missile = nil
+					else
+						Sounds.SendSound(self, "acf_missiles/fx/weapon_select.mp3", 70, math.random(99, 101), 1)
 
-					Point.State = "Loaded"
-					Point.NextFire = nil
-				end
+						Point.State = "Loaded"
+						Point.NextFire = nil
+					end
 
-				self:UpdateLoad(Point, Missile)
-			end)
+					self:UpdateLoad(Point, Missile)
+				end,
+				{MinTime = 1.0,	MaxTime = 3.0, Progress = 0, Goal = IdealTime}
+			)
 		end
 
 		self.RetryReload = true
