@@ -548,7 +548,7 @@ do -- Firing -----------------------------------
 		local Ang = Rack:LocalToWorldAngles(Point.Angle)
 		local Cone = math.tan(math.rad(Rack:GetSpread()))
 		local RandDir = (Rack:GetUp() * math.Rand(-1, 1) + Rack:GetRight() * math.Rand(-1, 1)):GetNormalized()
-		local Spread = Cone * RandDir * (math.random() ^ (1 / ACF.GunInaccuracyBias))
+		local Spread = Cone * RandDir * (math.random() ^ (1 / ACF.GunInaccuracyBias)) / (Rack.AccuracyCrewMod or 1)
 		local ShootDir = (Ang:Forward() + Spread):GetNormalized()
 
 		local Missile = Point.Missile
