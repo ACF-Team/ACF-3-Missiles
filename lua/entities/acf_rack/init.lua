@@ -45,22 +45,22 @@ local function CheckDistantLink(Entity, Crate, EntPos)
 end
 
 do
-	local function GetReloadEff(Crew, Gun, Ammo)
+	local function GetReloadEff(Crew)
 		return Crew.TotalEff
 	end
 
-	function ENT:UpdateLoadMod(cfg)
+	function ENT:UpdateLoadMod()
 		self.CrewsByType = self.CrewsByType or {}
-		local Sum1, Count1 = ACF.WeightedLinkSum(self.CrewsByType.Loader or {}, GetReloadEff, self, self.CurrentCrate or self)
-		local Sum2, Count2 = ACF.WeightedLinkSum(self.CrewsByType.Commander or {}, GetReloadEff, self, self.CurrentCrate or self)
-		local Sum3, Count3 = ACF.WeightedLinkSum(self.CrewsByType.Pilot or {}, GetReloadEff, self, self.CurrentCrate or self)
+		local Sum1, _ = ACF.WeightedLinkSum(self.CrewsByType.Loader or {}, GetReloadEff, self, self.CurrentCrate or self)
+		local Sum2, _ = ACF.WeightedLinkSum(self.CrewsByType.Commander or {}, GetReloadEff, self, self.CurrentCrate or self)
+		local Sum3, _ = ACF.WeightedLinkSum(self.CrewsByType.Pilot or {}, GetReloadEff, self, self.CurrentCrate or self)
 		self.LoadCrewMod = math.Clamp(Sum1 + Sum2 + Sum3, ACF.CrewFallbackCoef, ACF.LoaderMaxBonus)
 
 		-- print("Load", self.LoadCrewMod)
 		return self.LoadCrewMod
 	end
 
-	function ENT:FindPropagator(cfg)
+	function ENT:FindPropagator()
 		local Temp = self:GetParent()
 		if IsValid(Temp) and Temp:GetClass() == "acf_turret" and Temp.Turret == "Turret-V" then Temp = Temp:GetParent() end
 		if IsValid(Temp) and Temp:GetClass() == "acf_turret" and Temp.Turret == "Turret-V" then Temp = Temp:GetParent() end
@@ -688,13 +688,13 @@ do -- Loading ----------------------------------
 
 			ACF.ProgressTimer(
 				self,
-				function(cfg)
+				function()
 					local eff = self:UpdateLoadMod() or 1
 					WireLib.TriggerOutput(self, "Reload Time", IdealTime / eff)
 					WireLib.TriggerOutput(self, "Rate of Fire", 60 / (IdealTime / eff))
 					return eff
 				end,
-				function(cfg)
+				function()
 					if not IsValid(self) or Point.Removed then
 						if IsValid(Crate) then Crate:Consume(-1) end
 
