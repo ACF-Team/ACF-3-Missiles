@@ -51,12 +51,11 @@ do
 
 	function ENT:UpdateLoadMod()
 		self.CrewsByType = self.CrewsByType or {}
-		local Sum1, _ = ACF.WeightedLinkSum(self.CrewsByType.Loader or {}, GetReloadEff, self, self.CurrentCrate or self)
-		local Sum2, _ = ACF.WeightedLinkSum(self.CrewsByType.Commander or {}, GetReloadEff, self, self.CurrentCrate or self)
-		local Sum3, _ = ACF.WeightedLinkSum(self.CrewsByType.Pilot or {}, GetReloadEff, self, self.CurrentCrate or self)
+		local Sum1 = ACF.WeightedLinkSum(self.CrewsByType.Loader or {}, GetReloadEff, self, self.CurrentCrate or self)
+		local Sum2 = ACF.WeightedLinkSum(self.CrewsByType.Commander or {}, GetReloadEff, self, self.CurrentCrate or self)
+		local Sum3 = ACF.WeightedLinkSum(self.CrewsByType.Pilot or {}, GetReloadEff, self, self.CurrentCrate or self)
 		self.LoadCrewMod = math.Clamp(Sum1 + Sum2 + Sum3, ACF.CrewFallbackCoef, ACF.LoaderMaxBonus)
 
-		-- print("Load", self.LoadCrewMod)
 		return self.LoadCrewMod
 	end
 
@@ -69,12 +68,11 @@ do
 		return nil
 	end
 
-	function ENT:UpdateAccuracyMod(cfg)
-		local Propagator = self:FindPropagator(cfg)
+	function ENT:UpdateAccuracyMod(Config)
+		local Propagator = self:FindPropagator(Config)
 		local Val = Propagator and Propagator.AccuracyCrewMod or 0
 
 		self.AccuracyCrewMod = math.Clamp(Val, ACF.CrewFallbackCoef, 1)
-		-- print("Accuracy", self.AccuracyCrewMod)
 		return self.AccuracyCrewMod
 	end
 end
@@ -248,8 +246,8 @@ do -- Spawning and Updating --------------------
 			RackData.OnSpawn(Rack, Data, RackData)
 		end
 
-		ACF.AugmentedTimer(function(cfg) Rack:UpdateLoadMod(cfg) end, function() return IsValid(Rack) end, nil, {MinTime = 0.5, MaxTime = 1})
-		ACF.AugmentedTimer(function(cfg) Rack:UpdateAccuracyMod(cfg) end, function() return IsValid(Rack) end, nil, {MinTime = 0.5, MaxTime = 1})
+		ACF.AugmentedTimer(function(Config) Rack:UpdateLoadMod(Config) end, function() return IsValid(Rack) end, nil, {MinTime = 0.5, MaxTime = 1})
+		ACF.AugmentedTimer(function(Config) Rack:UpdateAccuracyMod(Config) end, function() return IsValid(Rack) end, nil, {MinTime = 0.5, MaxTime = 1})
 
 		hook.Run("ACF_OnSpawnEntity", "acf_rack", Rack, Data, RackData)
 
