@@ -178,7 +178,7 @@ function ENT:ACF_OnDamage(DmgResult, DmgInfo)
 		if self.UseGuidance and math.random() > 0.2 * Ratio then
 			self.UseGuidance = nil
 		end
-		
+
 		-- Any Damage to the liner.
 		-- For sake of consistency and reducing of RNG on damage
 		if BulletData.Type == "GLATGM" and 0.95 > Ratio then
@@ -292,7 +292,6 @@ function ENT:Detonate()
 
 	local BulletData = self.BulletData
 	local Position   = self.Position
-	local Ammo       = AmmoTypes.Get(BulletData.Type)
 
 	BulletData.Filter = self.Filter
 	BulletData.Flight = self.Velocity:GetNormalized() * self.Speed
@@ -302,7 +301,7 @@ function ENT:Detonate()
 	self.Detonated = true
 
 	local Bullet = Ballistics.CreateBullet(BulletData)
-	
+
 	if BulletData.Type ~= "GLATGM" then
 		ACF.DoReplicatedPropHit(self, Bullet)
 	end
