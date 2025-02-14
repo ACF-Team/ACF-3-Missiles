@@ -680,7 +680,6 @@ function ENT:ACF_OnDamage(DmgResult, DmgInfo)
 	if self.Detonated or self.NoDamage then
 		return {
 			Damage = 0,
-			Overkill = 1,
 			Loss = 0,
 			Kill = false
 		}
@@ -694,12 +693,12 @@ function ENT:ACF_OnDamage(DmgResult, DmgInfo)
 		DetonateMissile(self, Owner)
 
 		return HitRes
-	elseif HitRes.Overkill > 0 then
+	elseif HitRes then
 		local Ratio      = self.ACF.Health / self.ACF.MaxHealth
 		local BulletData = self.BulletData
 
 		-- We give it a chance to explode when it gets penetrated aswell.
-		if math.random() > 0.75 * Ratio then
+		if math.random() > 0.55 * Ratio then
 			if BulletData.Type == "HEAT" then
 			BulletData.Type = "HE"
 
@@ -711,14 +710,14 @@ function ENT:ACF_OnDamage(DmgResult, DmgInfo)
 		end
 
 		-- Turning off the missile's motor.
-		if self.MotorLength > 0 and math.random() > 0.75 * Ratio then
+		if self.MotorLength > 0 and math.random() > 0.35 * Ratio then
 			self.MotorLength = 0
 
 			SetMotorState(self, false)
 		end
 
 		-- Turning off the missile's guidance.
-		if self.UseGuidance and math.random() > 0.5 * Ratio then
+		if self.UseGuidance and math.random() > 0.2 * Ratio then
 			self.UseGuidance = nil
 		end
 
