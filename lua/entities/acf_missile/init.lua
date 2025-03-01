@@ -594,7 +594,8 @@ function ENT:Detonate(Destroyed)
 		end
 	end
 
-	BulletData.Flight = self.Velocity
+	BulletData.Pos = BulletData.Pos or   self:GetPos()
+	BulletData.Flight = self.Velocity or Vector(0, 0, 0)
 
 	if Filter then
 		Filter[#Filter + 1] = self
