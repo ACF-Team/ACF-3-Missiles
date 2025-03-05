@@ -1,6 +1,6 @@
 local ACF     = ACF
 local Clock   = ACF.Utilities.Clock
-local Lights  = GetConVar("ACFM_MissileLights")
+local Lights  = GetConVar("acf_missiles_missilelights")
 local Default = Color(255, 128, 48)
 
 local function CanEmitLight(Size)

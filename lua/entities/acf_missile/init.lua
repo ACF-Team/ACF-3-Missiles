@@ -8,7 +8,6 @@ local ACF            = ACF
 local TraceData      = { start = true, endpos = true, filter = true }
 local GravityCvar    = GetConVar("sv_gravity")
 local GravityVector  = Vector(0, 0, -GravityCvar:GetFloat())
-local GhostPeriod    = GetConVar("ACFM_GhostPeriod")
 local ActiveMissiles = ACF.ActiveMissiles
 local Ballistics     = ACF.Ballistics
 local Classes        = ACF.Classes
@@ -499,7 +498,7 @@ function ENT:Launch(Delay, IsMisfire)
 
 	self.Launched    = true
 	self.ThinkDelay  = DeltaTime
-	self.GhostPeriod = Clock.CurTime + GhostPeriod:GetFloat()
+	self.GhostPeriod = Clock.CurTime + ACF.GhostPeriod
 	self.NoDamage    = nil
 	self.LastThink   = Clock.CurTime - DeltaTime
 	self.Position    = BulletData.Pos
