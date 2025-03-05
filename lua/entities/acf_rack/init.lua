@@ -617,7 +617,7 @@ do -- Loading ----------------------------------
 		local Position = Point.Position
 
 		if Data and Point.Direction then -- If no Direction is given then the point is centered
-			local Radius = (Data.Diameter or Data.Caliber) * 0.03937 * 0.5 -- Getting the radius on inches
+			local Radius = (Data.Diameter or Data.Caliber) * ACF.MmToInch * 0.5 -- Getting the radius in inches
 
 			Position = Position + Point.Direction * Radius
 		end

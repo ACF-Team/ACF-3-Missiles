@@ -3,7 +3,7 @@ local Text = "View Cone : %s degrees\nView Range : %s\nMass : %s kg\n"
 
 function ACF.CreateRadarMenu(Data, Menu)
 	local ViewCone = (Data.ViewCone or 180) * 2
-	local ViewRange = Data.Range and (math.Round(Data.Range * 0.0254, 2) .. " m") or "Unlimited"
+	local ViewRange = Data.Range and (math.Round(Data.Range * ACF.InchToMeter, 2) .. " m") or "Unlimited"
 
 	Menu:AddLabel(Text:format(ViewCone, ViewRange, Data.Mass))
 

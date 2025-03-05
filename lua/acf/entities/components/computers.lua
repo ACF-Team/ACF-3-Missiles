@@ -263,7 +263,7 @@ do -- Optical guidance computer
 
 	-- Floors the value to intervals of 10 meters
 	local function FloorMeters(Value)
-		return math.floor(Value * 0.00254) * 393.7
+		return math.floor(Value * (ACF.InchToMeter / 10)) * (ACF.MeterToInch * 10)
 	end
 
 	hook.Add("ACF_OnLaunchMissile", "ACF Optical Computer Filter", function(Missile)
@@ -319,7 +319,7 @@ do -- Optical guidance computer
 			Entity.Distance   = 0
 			Entity.TraceDist  = 0
 			Entity.Spread     = 0
-			Entity.FocusSpeed = Computer.FocusSpeed * 39.37 -- Converting to in/s
+			Entity.FocusSpeed = Computer.FocusSpeed * ACF.MeterToInch -- Converting to in/s
 			Entity.MoveSpeed  = Computer.Speed
 			Entity.MinPitch   = -Computer.Bounds.Pitch
 			Entity.MaxPitch   = Computer.Bounds.Pitch
@@ -375,7 +375,7 @@ do -- Optical guidance computer
 			if not Entity.IsComputer then return end
 
 			local Text     = "Distance: %s m\nPitch: %s degree(s)\nYaw: %s degree(s)"
-			local Distance = math.Round(FloorMeters(Entity.Distance) * 0.0254)
+			local Distance = math.Round(FloorMeters(Entity.Distance) * ACF.InchToMeter)
 			local Pitch    = math.Round(Entity.Pitch, 2)
 			local Yaw      = math.Round(Entity.Yaw, 2)
 
@@ -590,7 +590,7 @@ do -- Laser guidance computer
 			if not Entity.IsComputer then return end
 
 			local Text     = "Distance: %s m\nPitch: %s degree(s)\nYaw: %s degree(s)"
-			local Distance = math.Round(Entity.Distance * 0.0254)
+			local Distance = math.Round(Entity.Distance * ACF.InchToMeter)
 			local Pitch    = math.Round(Entity.Pitch, 2)
 			local Yaw      = math.Round(Entity.Yaw, 2)
 

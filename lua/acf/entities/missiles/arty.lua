@@ -16,7 +16,7 @@ Missiles.RegisterItem("Type 63 RA", "ARTY", {
 	Caliber		= 107,
 	Mass		= 19,
 	Length		= 80,
-	Diameter	= 6.5 * 25.4, -- in mm
+	Diameter	= 6.5 * ACF.InchToMm, -- in mm
 	Year		= 1960,
 	ReloadTime	= 10,
 	ExhaustPos  = Vector(-24),
@@ -59,7 +59,7 @@ Missiles.RegisterItem("SAKR-10 RA", "ARTY", {
 	Caliber		= 122,
 	Mass		= 56,
 	Length		= 287,
-	Diameter	= 4.6 * 25.4, -- in mm
+	Diameter	= 4.6 * ACF.InchToMm, -- in mm
 	Year		= 1980,
 	ReloadTime	= 20,
 	ExhaustPos  = Vector(-44),
@@ -102,7 +102,7 @@ Missiles.RegisterItem("SS-40 RA", "ARTY", {
 	Caliber		= 180,
 	Mass		= 152,
 	Length		= 370,
-	Diameter	= 6.75 * 25.4, -- in mm
+	Diameter	= 6.75 * ACF.InchToMm, -- in mm
 	Year		= 1983,
 	ReloadTime	= 30,
 	ExhaustPos  = Vector(-70),

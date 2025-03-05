@@ -91,8 +91,8 @@ function MakeACF_GLATGM(Gun, BulletData)
 	Entity.Filter       = Entity.BulletData.Filter
 	Entity.Agility      = 50 -- Magic multiplier that controls the agility of the missile
 	Entity.IsSubcaliber = Caliber < 100
-	Entity.LaunchVel    = math.Round(Velocity * 0.2, 2) * 39.37
-	Entity.DiffVel      = math.Round(Velocity * 0.5, 2) * 39.37 - Entity.LaunchVel
+	Entity.LaunchVel    = math.Round(Velocity * 0.2, 2) * ACF.MeterToInch
+	Entity.DiffVel      = math.Round(Velocity * 0.5, 2) * ACF.MeterToInch - Entity.LaunchVel
 	Entity.AccelLength  = math.Round(math.Clamp(BulletData.ProjMass / BulletData.PropMass + BulletData.Caliber / 7, 0.2, 10), 2)
 	Entity.AccelTime    = Entity.LastThink + Entity.AccelLength
 	Entity.Speed        = Entity.LaunchVel

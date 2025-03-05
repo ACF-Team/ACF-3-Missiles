@@ -66,7 +66,7 @@ if SERVER then
 		local EffectTable = {
 			Origin = Pos,
 			Normal = Bullet.Flight:GetNormalized(),
-			Radius = math.max(Bullet.FillerMass ^ 0.33 * 8 * 39.37, 1),
+			Radius = math.max(Bullet.FillerMass ^ 0.33 * 8 * ACF.MeterToInch, 1),
 		}
 
 		Effects.CreateEffect("ACF_GLATGMExplosion", EffectTable)
@@ -78,7 +78,7 @@ else
 		local Detonated = Bullet.Detonated
 		local EffectName = Detonated and "ACF_Penetration" or "ACF_GLATGMExplosion"
 		local BoomFillerMass = Bullet.FillerMass * ACF.HEATBoomConvert
-		local Scale = Detonated and Bullet.SimFlight:Length() or math.max(BoomFillerMass ^ 0.33 * 3 * 39.37, 1)
+		local Scale = Detonated and Bullet.SimFlight:Length() or math.max(BoomFillerMass ^ 0.33 * 3 * ACF.MeterToInch, 1)
 
 		local EffectTable = {
 			Origin = Bullet.SimPos,

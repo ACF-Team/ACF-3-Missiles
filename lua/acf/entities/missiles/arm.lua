@@ -16,7 +16,7 @@ Missiles.RegisterItem("AGM-122 ASM", "ARM", {
 	Length		= 287,
 	Caliber		= 127,
 	Mass		= 89,
-	Diameter	= 3.5 * 25.4, -- in mm
+	Diameter	= 3.5 * ACF.InchToMm, -- in mm
 	Offset		= Vector(-6, 0, 0),
 	Year		= 1986,
 	ReloadTime	= 10,
@@ -59,7 +59,7 @@ Missiles.RegisterItem("AGM-45 ASM", "ARM", {
 	Length		= 305,
 	Caliber		= 203,
 	Mass		= 177,
-	Diameter	= 6.75 * 25.4, -- in mm
+	Diameter	= 6.75 * ACF.InchToMm, -- in mm
 	Year		= 1969,
 	ReloadTime	= 25,
 	ExhaustPos  = Vector(-70),

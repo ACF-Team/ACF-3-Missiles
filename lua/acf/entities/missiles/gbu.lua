@@ -17,7 +17,7 @@ Missiles.RegisterItem("WalleyeGBU", "GBU", {
 	Caliber		= 318,
 	Mass		= 510,
 	Year		= 1967,
-	Diameter	= 16.4 * 25.4, -- in mm
+	Diameter	= 16.4 * ACF.InchToMm, -- in mm
 	ReloadTime	= 30,
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true },
 	Guidance	= { Dumb = true, ["Radio (MCLOS)"] = true },
@@ -59,7 +59,7 @@ Missiles.RegisterItem("227kgGBU", "GBU", {
 	Caliber		= 273,
 	Mass		= 227,
 	Year		= 1976,
-	Diameter	= 10 * 25.4, -- in mm
+	Diameter	= 10 * ACF.InchToMm, -- in mm
 	ReloadTime	= 25,
 	Offset		= Vector(12, 0, 0),
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true },
@@ -119,7 +119,7 @@ Missiles.RegisterItem("454kgGBU", "GBU", {
 	Caliber		= 360,
 	Mass		= 454,
 	Year		= 1976,
-	Diameter	= 11.5 * 25.4, -- in mm
+	Diameter	= 11.5 * ACF.InchToMm, -- in mm
 	ReloadTime	= 40,
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true },
 	Guidance	= { Dumb = true, Laser = true, ["GPS Guided"] = true },
@@ -177,7 +177,7 @@ Missiles.RegisterItem("909kgGBU", "GBU", {
 	Caliber		= 460,
 	Mass		= 909,
 	Year		= 1976,
-	Diameter	= 17 * 25.4, -- in mm
+	Diameter	= 17 * ACF.InchToMm, -- in mm
 	ReloadTime	= 60,
 	Offset		= Vector(15, 0, 0),
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true },

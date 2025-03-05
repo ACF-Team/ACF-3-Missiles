@@ -387,7 +387,7 @@ function MakeACF_Missile(Player, Pos, Ang, Rack, MountPoint, Crate)
 	Missile.FuelConsumption = Round.FuelConsumption * 0.001
 	Missile.StarterPercent  = Round.StarterPercent
 	Missile.FinMultiplier   = Round.FinMul
-	Missile.GLimit          = Round.GLimit * 9.81 * 39.37
+	Missile.GLimit          = Round.GLimit * 9.81 * ACF.MeterToInch
 	Missile.CanDelay        = Round.CanDelayLaunch
 	Missile.MaxLength       = Round.MaxLength
 	Missile.Agility         = (Data.Agility or 1) * 1e10
@@ -398,7 +398,7 @@ function MakeACF_Missile(Player, Pos, Ang, Rack, MountPoint, Crate)
 	Missile.Inertia         = Missile.AreaOfInertia * Missile.Mass
 	Missile.Length          = Length
 	Missile.TorqueMul       = Length * 0.15 * Round.TailFinMul
-	Missile.ControlSurfMul  = (Round.MaxAgilitySpeed * 39.37) ^ -2
+	Missile.ControlSurfMul  = (Round.MaxAgilitySpeed * ACF.MeterToInch) ^ -2
 	Missile.Navigation      = Navigation[Data.Navigation]
 	Missile.RotAxis         = Vector()
 	Missile.UseGuidance     = true

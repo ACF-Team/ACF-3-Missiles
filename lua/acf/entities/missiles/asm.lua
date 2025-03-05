@@ -16,7 +16,7 @@ Missiles.RegisterItem("AT-3 ASM", "ATGM", {
 	Length		= 86,
 	Caliber		= 125,
 	Mass		= 11,
-	Diameter	= 4.2 * 25.4,
+	Diameter	= 4.2 * ACF.InchToMm,
 	Year		= 1969,
 	ReloadTime	= 10,
 	ExhaustPos  = Vector(-16),
@@ -103,7 +103,7 @@ Missiles.RegisterItem("AGM-114 ASM", "ATGM", {
 	Length		= 160,
 	Caliber		= 180,
 	Mass		= 49,
-	Diameter	= 6.5 * 25.4, -- in mm
+	Diameter	= 6.5 * ACF.InchToMm, -- in mm
 	Year		= 1984,
 	ReloadTime	= 30,
 	ExhaustPos  = Vector(-29),
@@ -163,7 +163,7 @@ Missiles.RegisterItem("Ataka ASM", "ATGM", {
 	Length		= 183,
 	Caliber		= 130,
 	Mass		= 50,
-	Diameter	= 10.9 * 25.4, -- in mm
+	Diameter	= 10.9 * ACF.InchToMm, -- in mm
 	Year		= 1984,
 	ReloadTime	= 25,
 	ExhaustPos  = Vector(-40),
@@ -268,7 +268,7 @@ Missiles.RegisterItem("AT-2 ASM", "ATGM", {
 	Caliber		= 148,
 	Mass		= 27,
 	Year		= 1969,
-	Diameter	= 5.5 * 25.4,
+	Diameter	= 5.5 * ACF.InchToMm,
 	ReloadTime	= 15,
 	ExhaustPos  = Vector(-22),
 	Racks		= { ["1xRK_small"] = true, ["1xRK"] = true, ["2xRK"] = true },

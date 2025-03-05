@@ -17,7 +17,7 @@ Missiles.RegisterItem("50kgBOMB", "BOMB", {
 	Caliber		= 200,
 	Mass		= 50,
 	Year		= 1936,
-	Diameter	= 8.35 * 25.4, -- in mm
+	Diameter	= 8.35 * ACF.InchToMm, -- in mm
 	ReloadTime	= 10,
 	Offset		= Vector(-6, 0, 0),
 	Racks		= { ["1xRK_small"] = true, ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true },
@@ -58,7 +58,7 @@ Missiles.RegisterItem("100kgBOMB", "BOMB", {
 	Caliber		= 273,
 	Mass		= 100,
 	Year		= 1939,
-	Diameter	= 10.5 * 25.4, -- in mm
+	Diameter	= 10.5 * ACF.InchToMm, -- in mm
 	ReloadTime	= 15,
 	Offset		= Vector(-6, 0, 0),
 	Racks		= { ["1xRK_small"] = true, ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true },
@@ -99,7 +99,7 @@ Missiles.RegisterItem("250kgBOMB", "BOMB", {
 	Caliber		= 325,
 	Mass		= 250,
 	Year		= 1941,
-	Diameter	= 12.7 * 25.4, -- in mm
+	Diameter	= 12.7 * ACF.InchToMm, -- in mm
 	ReloadTime	= 25,
 	Offset		= Vector(-14, 0, 0),
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true },
@@ -140,7 +140,7 @@ Missiles.RegisterItem("500kgBOMB", "BOMB", {
 	Caliber		= 400,
 	Mass		= 500,
 	Year		= 1943,
-	Diameter	= 15.25 * 25.4, -- in mm
+	Diameter	= 15.25 * ACF.InchToMm, -- in mm
 	ReloadTime	= 40,
 	Offset		= Vector(-14, 0, 0),
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["4xRK"] = true },
@@ -181,7 +181,7 @@ Missiles.RegisterItem("1000kgBOMB", "BOMB", {
 	Caliber		= 500,
 	Mass		= 1000,
 	Year		= 1945,
-	Diameter	= 22 * 25.4, -- in mm
+	Diameter	= 22 * ACF.InchToMm, -- in mm
 	ReloadTime	= 60,
 	Offset		= Vector(-10, 0, 0),
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true },
