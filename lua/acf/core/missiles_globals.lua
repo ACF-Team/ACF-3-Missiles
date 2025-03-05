@@ -21,3 +21,12 @@ do -- Update checker
 		hook.Remove("ACF_OnLoadAddon", "ACF Missiles Update Checker")
 	end)
 end
+
+ACF.DefineSetting("FlaresIgnite", 1, "Flare ignition of players and NPCs has been %s.", ACF.BooleanDataCallback())
+ACF.DefineSetting("GhostPeriod", 0.05, "Missile ghost period has been set to %.2f seconds.", ACF.FloatDataCallback(0, 5, 2))
+
+if CLIENT then
+	local LightsDesc = "Should missiles emit light while their motors are burning? Looks nice but may affect framerate.\nSet to 1 to enable, set to 0 to disable, set to another number to set minimum light size."
+
+	CreateClientConVar("acf_missiles_missilelights", 0, true, false, LightsDesc, 0, 5)
+end

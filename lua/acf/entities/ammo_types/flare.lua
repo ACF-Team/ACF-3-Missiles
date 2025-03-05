@@ -75,7 +75,6 @@ function Ammo:VerifyData(ToolData)
 end
 
 if SERVER then
-	local IgniteConVar    = GetConVar("ACFM_FlaresIgnite")
 	local Ballistics      = ACF.Ballistics
 	local Clock           = ACF.Utilities.Clock
 	local Countermeasures = ACF.Classes.Countermeasures
@@ -103,7 +102,7 @@ if SERVER then
 	end
 
 	function Ammo:PropImpact(_, Trace)
-		if IgniteConVar:GetBool() then
+		if ACF.FlaresIgnite then
 			local Target = Trace.Entity
 			local Type = ACF.Check(Target)
 
