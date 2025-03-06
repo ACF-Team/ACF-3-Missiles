@@ -219,6 +219,9 @@ do -- Spawning and Updating --------------------
 
 		if not Player:CheckLimit(Limit) then return end
 
+		local CanSpawn = hook.Run("ACF_PreSpawnEntity", "acf_rack", Player, Data, RackData)
+		if CanSpawn == false then return false end
+
 		local Rack = ents.Create("acf_rack")
 
 		if not IsValid(Rack) then return end

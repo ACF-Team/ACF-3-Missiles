@@ -203,6 +203,9 @@ do -- Spawn and update function
 
 		if not Player:CheckLimit(Limit) then return false end
 
+		local CanSpawn = hook.Run("ACF_PreSpawnEntity", "acf_computer", Player, Data, Class, Computer)
+		if CanSpawn == false then return false end
+
 		local Entity = ents.Create("acf_computer")
 
 		if not IsValid(Entity) then return end
