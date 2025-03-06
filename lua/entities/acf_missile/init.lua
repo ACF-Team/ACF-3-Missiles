@@ -339,10 +339,6 @@ end)
 
 -- TODO: Make ACF Missiles compliant with ACF legal checks. How to deal with SetNoDraw and SetNotSolid tho
 function MakeACF_Missile(Player, Pos, Ang, Rack, MountPoint, Crate)
-	local Missile = ents.Create("acf_missile")
-
-	if not IsValid(Missile) then return end
-
 	local BulletData = Crate.BulletData
 	local Class      = Classes.GetGroup(Missiles, BulletData.Id)
 	local Data       = Class.Lookup[BulletData.Id]
@@ -350,6 +346,12 @@ function MakeACF_Missile(Player, Pos, Ang, Rack, MountPoint, Crate)
 	local Length     = Data.Length
 	local Caliber    = Data.Caliber
 	local Percent    = math.max(0.5, (BulletData.ProjLength + BulletData.PropLength) / Round.MaxLength)
+
+	local CanSpawn = hook.Run("ACF_PreSpawnEntity", "acf_missile", Player, Data, Class, Crate)
+	if CanSpawn == false then return false end
+
+	local Missile = ents.Create("acf_missile")
+	if not IsValid(Missile) then return end
 
 	Missile:SetAngles(Rack:LocalToWorldAngles(Ang))
 	Missile:SetPos(Rack:LocalToWorld(Pos))
@@ -687,7 +689,7 @@ function ENT:ACF_OnDamage(DmgResult, DmgInfo)
 	local HitRes = Damage.doPropDamage(self, DmgResult, DmgInfo) -- Calling the standard prop damage function
 	local Owner  = DmgInfo:GetAttacker()
 
--- If the missile was destroyed, then we detonate it.
+	-- If the missile was destroyed, then we detonate it.
 	if HitRes.Kill then
 		DetonateMissile(self, Owner)
 
@@ -732,6 +734,6 @@ function ENT:ACF_OnDamage(DmgResult, DmgInfo)
 	return HitRes -- This function needs to return HitRes
 end
 
-function ENT:CFW_OnParented(Entity, _)
+function ENT:CFW_OnParented(Entity)
 	Entity:SetParent()
 end

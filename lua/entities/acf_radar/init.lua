@@ -383,6 +383,9 @@ do -- Spawn and Update functions
 
 		if not Player:CheckLimit(Limit) then return false end
 
+		local CanSpawn = hook.Run("ACF_PreSpawnEntity", "acf_radar", Player, Data, Class, RadarData)
+		if CanSpawn == false then return false end
+
 		local Radar = ents.Create("acf_radar")
 
 		if not IsValid(Radar) then return end

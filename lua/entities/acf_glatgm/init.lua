@@ -43,19 +43,20 @@ local function DetonateMissile(Missile, Inflictor)
 	Missile:Detonate()
 end
 
-function MakeACF_GLATGM(Gun, BulletData)
-	local Entity = ents.Create("acf_glatgm")
+function MakeACF_GLATGM(Player, Gun, BulletData)
+	local CanSpawn = hook.Run("ACF_PreSpawnEntity", "acf_glatgm", Player, BulletData, Gun)
+	if CanSpawn == false then return false end
 
+	local Entity = ents.Create("acf_glatgm")
 	if not IsValid(Entity) then return end
 
 	local Velocity = math.Clamp(BulletData.MuzzleVel / ACF.Scale, 200, 1600)
 	local Caliber  = BulletData.Caliber * 10
-	local Owner    = Gun.Owner
 
 	Entity:SetAngles(Gun:GetAngles())
 	Entity:SetPos(BulletData.Pos)
-	Entity:CPPISetOwner(Owner)
-	Entity:SetPlayer(Owner)
+	Entity:CPPISetOwner(Player)
+	Entity:SetPlayer(Player)
 	Entity:Spawn()
 
 	if Caliber >= 140 then
@@ -74,7 +75,7 @@ function MakeACF_GLATGM(Gun, BulletData)
 
 	ParticleEffectAttach("Rocket Motor GLATGM", 4, Entity, 1)
 
-	Entity.Owner        = Gun.Owner
+	Entity.Owner        = Player
 	Entity.Name         = Caliber .. "mm Gun Launched Missile"
 	Entity.ShortName    = Caliber .. "mmGLATGM"
 	Entity.EntType      = "Gun Launched Anti-Tank Guided Missile"
@@ -117,6 +118,7 @@ function MakeACF_GLATGM(Gun, BulletData)
 
 	Missiles[Entity] = true
 
+	hook.Run("ACF_OnSpawnEntity", Entity, BulletData, Gun)
 	hook.Run("ACF_OnLaunchMissile", Entity)
 
 	return Entity
@@ -300,4 +302,8 @@ function ENT:OnRemove()
 	Missiles[self] = nil
 
 	WireLib.Remove(self)
+end
+
+function ENT:CFW_OnParented(Entity)
+	Entity:SetParent()
 end

@@ -182,6 +182,9 @@ do -- Spawn and Update functions
 
 		if not Player:CheckLimit(Limit) then return false end
 
+		local CanSpawn = hook.Run("ACF_PreSpawnEntity", "acf_receiver", Player, Data, Class, ReceiverData)
+		if CanSpawn == false then return false end
+
 		local Receiver = ents.Create("acf_receiver")
 
 		if not IsValid(Receiver) then return end
