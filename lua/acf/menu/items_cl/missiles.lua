@@ -140,7 +140,7 @@ local function CreateMenu(Menu)
 	ACF.LoadSortedList(MissileTypes, Entries, "ID")
 end
 
-ACF.AddMenuItem(101, "Entities", "Missiles", "wand", CreateMenu)
+ACF.AddMenuItem(101, "#acf.menu.entities", "Missiles", "wand", CreateMenu)
 
 hook.Add("ACF_PreCreateTracerControls", "ACF Missiles Remove Tracer Checkbox", function(_, ToolData)
 	if ToolData.PrimaryClass == "acf_rack" then return false end
