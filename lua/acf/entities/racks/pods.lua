@@ -574,6 +574,28 @@ Racks.Register("1x Kornet", {
 	}
 })
 
+Racks.Register("1x LOSAT", {
+	Name		= "LOSAT Launch Tube",
+	Description	= "Launch tube for LOSAT antitank missile.",
+	Model		= "models/novoscar/losatlauncher.mdl",
+	EntType		= "Pod",
+	Caliber		= 162,
+	Mass		= 100,
+	Year		= 1990,
+	MagSize		= 1,
+	Armor		= 2.5,
+	Preview = {
+		FOV = 60,
+	},
+
+	ProtectMissile = true,
+	HideMissile = true,
+
+	MountPoints = {
+		{ Name = "missile1", Position = Vector() }
+	}
+})
+
 Racks.Register("127mm4xPOD", {
 	Name		= "Quad Zuni Rocket Pod",
 	Description	= "LAU-10/A Pod for the Zuni rocket.",
