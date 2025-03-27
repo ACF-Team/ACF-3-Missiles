@@ -10,7 +10,7 @@ function Ammo:OnLoaded()
 	self.Model		 = "models/munitions/dart_100mm.mdl"
 	self.Description = "Ammo used for the MGM-166 LOSAT. \n Note: The peneratrations values are incorrect on the ammobox. The missile penetrates ~720mm @ 1000m and ~165mm @ 100m"
 	self.Blacklist = ACF.GetWeaponBlacklist({
-		KEM=true,
+		KEM = true,
 	})
 end
 
