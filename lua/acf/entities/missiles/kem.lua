@@ -18,7 +18,7 @@ Missiles.RegisterItem("MGM-166 KEM", "KEM", {
 	Mass		= 80,
 	Diameter	= 16.2 * ACF.InchToMm,
 	Year		= 1990,
-	ReloadTime	= 1,
+	ReloadTime	= 30,
 	ExhaustPos  = Vector(-20),
 	Racks		= {["1x LOSAT"] = true, ["2x LOSAT"] = true, ["6x LOSAT"] = true},
 	Navigation  = "APN",
@@ -35,7 +35,7 @@ Missiles.RegisterItem("MGM-166 KEM", "KEM", {
 		Thrust          = 1100000, -- in kg*in/s^2
 		FuelConsumption = 0.02, -- in g/s/f
 		StarterPercent  = 0,
-		MaxAgilitySpeed = 30, -- in m/s
+		MaxAgilitySpeed = 40, -- in m/s
 		DragCoef        = 0.0025,
 		FinMul          = 0.035,
 		GLimit          = 12,
