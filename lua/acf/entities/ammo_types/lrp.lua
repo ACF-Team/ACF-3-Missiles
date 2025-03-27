@@ -19,7 +19,7 @@ function Ammo:GetPenetration(Bullet, Speed)
 		Speed = Bullet.Flight and Bullet.Flight:Length() / ACF.Scale * ACF.InchToMeter or Bullet.MuzzleVel
 	end
 
-	return ACF.Penetration(Speed, Bullet.ProjMass, Bullet.Diameter * 0.45)
+	return ACF.Penetration(Speed, Bullet.ProjMass, Bullet.Diameter * 1.5)
 end
 
 function Ammo:UpdateRoundData(ToolData, Data, GUIData)

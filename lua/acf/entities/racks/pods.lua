@@ -578,6 +578,7 @@ Racks.Register("1x LOSAT", {
 	Name		= "LOSAT Launch Tube",
 	Description	= "Launch tube for LOSAT antitank missile.",
 	Model		= "models/novoscar/losatlauncher.mdl",
+	RackModel	= "models/novoscar/losatlaunchercaps.mdl",
 	EntType		= "Pod",
 	Caliber		= 162,
 	Mass		= 100,
@@ -589,10 +590,59 @@ Racks.Register("1x LOSAT", {
 	},
 
 	ProtectMissile = true,
-	HideMissile = true,
 
 	MountPoints = {
 		{ Name = "missile1", Position = Vector() }
+	}
+})
+
+Racks.Register("2x LOSAT", {
+	Name		= "2x LOSAT Launch Tube",
+	Description	= "2x Launch tube for LOSAT antitank missile.",
+	Model		= "models/novoscar/2losatlauncher.mdl",
+	RackModel	= "models/novoscar/losatlaunchercaps.mdl",
+	EntType		= "Pod",
+	Caliber		= 162,
+	Mass		= 100,
+	Year		= 1990,
+	MagSize		= 2,
+	Armor		= 2.5,
+	Preview = {
+		FOV = 60,
+	},
+
+	ProtectMissile = true,
+
+	MountPoints = {
+		{ Name = "missile1", Position = Vector(0, 0, 4.5916) },
+		{ Name = "missile2", Position = Vector(0, 0, -4.7659) }
+	}
+})
+
+Racks.Register("6x LOSAT", {
+	Name		= "6x LOSAT Launch Tube",
+	Description	= "6x Launch tube for LOSAT antitank missile.",
+	Model		= "models/novoscar/6losatlauncher.mdl",
+	RackModel	= "models/novoscar/losatlaunchercaps.mdl",
+	EntType		= "Pod",
+	Caliber		= 162,
+	Mass		= 100,
+	Year		= 1990,
+	MagSize		= 6,
+	Armor		= 2.5,
+	Preview = {
+		FOV = 60,
+	},
+
+	ProtectMissile = true,
+
+	MountPoints = {
+		{ Name = "missile1", Position = Vector(0, -9.35, 4.5916) },
+		{ Name = "missile2", Position = Vector(0, -9.35, -4.7659) },
+		{ Name = "missile3", Position = Vector(0, 0, -4.7659) },
+		{ Name = "missile4", Position = Vector(0, 0, 4.5916) },
+		{ Name = "missile5", Position = Vector(0, 9.35, 4.5916) },
+		{ Name = "missile6", Position = Vector(0, 9.35, -4.7659) }
 	}
 })
 

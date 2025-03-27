@@ -20,7 +20,7 @@ Missiles.RegisterItem("MGM-166 KEM", "KEM", {
 	Year		= 1990,
 	ReloadTime	= 1,
 	ExhaustPos  = Vector(-20),
-	Racks		= {["1x LOSAT"] = true},
+	Racks		= {["1x LOSAT"] = true, ["2x LOSAT"] = true, ["6x LOSAT"] = true},
 	Navigation  = "APN",
 	Guidance	= { Dumb = true, ["Radio (SACLOS)"] = true},
 	Fuzes		= { Contact = true },
@@ -30,14 +30,14 @@ Missiles.RegisterItem("MGM-166 KEM", "KEM", {
 		Model           = "models/novoscar/losat.mdl",
 		MaxLength       = 285,
 		Armor           = 2,
-		ProjLength      = 35,
+		ProjLength      = 25,
 		PropLength      = 200,
-		Thrust          = 99000, -- in kg*in/s^2
-		FuelConsumption = 0.097, -- in g/s/f
-		StarterPercent  = 0.15,
+		Thrust          = 1100000, -- in kg*in/s^2
+		FuelConsumption = 0.02, -- in g/s/f
+		StarterPercent  = 0,
 		MaxAgilitySpeed = 30, -- in m/s
 		DragCoef        = 0.0025,
-		FinMul          = 0.01,
+		FinMul          = 0.035,
 		GLimit          = 12,
 		TailFinMul      = 0.5,
 		CanDelayLaunch  = true,
