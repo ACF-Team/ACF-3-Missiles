@@ -457,12 +457,13 @@ function ENT:CreateBulletData(Crate)
 
 	Data.Destiny = ACF.FindWeaponrySource(Data.Weapon)
 
-	self.ToolData         = Data
-	self.RoundData        = Ammo
-	self.BulletData       = Ammo:ServerConvert(Data)
-	self.BulletData.Crate = self:EntIndex()
-	self.BulletData.Owner = self:GetPlayer()
-	self.BulletData.Gun   = self
+	self.ToolData          = Data
+	self.RoundData         = Ammo
+	self.BulletData        = Ammo:ServerConvert(Data)
+	self.BulletData.Crate  = self:EntIndex()
+	self.BulletData.Owner  = self:GetPlayer()
+	self.BulletData.Gun    = self
+	self.BulletData.Filter = self.Filter
 
 	if Ammo.OnFirst then
 		Ammo:OnFirst(self)
@@ -576,7 +577,6 @@ function ENT:Detonate(Destroyed)
 
 	local PhysObj = self:GetPhysicsObject()
 	local BulletData = self.BulletData
-	local Filter = BulletData.Filter
 	local Fuze = self.FuzeData
 	self:SetNotSolid(true)
 	self:SetNoDraw(true)
@@ -597,12 +597,6 @@ function ENT:Detonate(Destroyed)
 
 	BulletData.Pos = BulletData.Pos or   self:GetPos()
 	BulletData.Flight = self.Velocity or Vector(0, 0, 0)
-
-	if Filter then
-		Filter[#Filter + 1] = self
-	else
-		BulletData.Filter = { self }
-	end
 
 	if IsValid(PhysObj) then
 		PhysObj:EnableMotion(false)
