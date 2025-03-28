@@ -38,7 +38,8 @@ function ACF.ResetBulletVelocity(BulletData)
 end
 
 function ACF.DoReplicatedPropHit(Entity, Bullet)
-	local FlightRes = { Entity = Entity, HitNormal = Bullet.Flight, HitPos = Bullet.Pos, HitGroup = 0 }
+	local EntRes = not table.HasValue(Bullet.Filter, Entity) and Entity or nil -- Don't pass the entity if it's supposed to be filtered out
+	local FlightRes = { Entity = EntRes, HitNormal = Bullet.Flight, HitPos = Bullet.Pos, HitGroup = 0 }
 	local Ammo  = AmmoTypes.Get(Bullet.Type)
 	local Retry = Ammo:PropImpact(Bullet, FlightRes)
 
