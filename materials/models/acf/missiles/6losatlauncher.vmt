@@ -1,9 +1,9 @@
 "VertexLitGeneric"
 {
-	"$basetexture" "models/novoscar/losatlauncher"
+	"$basetexture" "models/acf/missiles/6losatlauncher"
 	
 	"$surfaceprop" "metal"
 	"$model" "1"
 	"$halflambert" "1"
-	"$blendtintbybasealpha" "1"
+	"$blendtintbybasealpha" "1
 }

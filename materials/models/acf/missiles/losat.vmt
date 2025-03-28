@@ -1,6 +1,6 @@
 "VertexLitGeneric"
 {
-	"$basetexture" "models/novoscar/losat"
+	"$basetexture" "models/acf/missiles/losat"
 
 	"$surfaceprop" "metal"
 	"$model" "1"

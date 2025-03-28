@@ -2,7 +2,7 @@ local Missiles = ACF.Classes.Missiles
 
 Missiles.Register("KEM", {
 	Name		= "Kinetic Energy Missiles",
-	Description	= "Missiles specialized on utilizing their kinetic energy to penerate armor.",
+	Description	= "Missiles specialized in utilizing their kinetic energy to penetrate armor.",
 	Sound		= "acf_missiles/missiles/missile_rocket.mp3",
 	Effect		= "Rocket Motor ATGM",
 	Spread		= 1,
@@ -12,13 +12,13 @@ Missiles.Register("KEM", {
 Missiles.RegisterItem("MGM-166 KEM", "KEM", {
 	Name		= "MGM-166 LOSAT",
 	Description	= "The MGM-166 was designed to be mounted on to light vehicles allowing them to defeat enemy tanks and other targets.",
-	Model		= "models/novoscar/losat.mdl",
+	Model		= "models/acf/missiles/losat.mdl",
 	Length		= 2.85,
 	Caliber		= 162,
 	Mass		= 80,
 	Diameter	= 16.2 * ACF.InchToMm,
 	Year		= 1990,
-	ReloadTime	= 30,
+	ReloadTime	= 1,
 	ExhaustPos  = Vector(-20),
 	Racks		= {["1x LOSAT"] = true, ["2x LOSAT"] = true, ["6x LOSAT"] = true},
 	Navigation  = "APN",
@@ -27,7 +27,7 @@ Missiles.RegisterItem("MGM-166 KEM", "KEM", {
 	Agility		= 0.0005,
 	ArmDelay	= 0,
 	Round = {
-		Model           = "models/novoscar/losat.mdl",
+		Model           = "models/acf/missiles/losat.mdl",
 		MaxLength       = 285,
 		Armor           = 2,
 		ProjLength      = 25,

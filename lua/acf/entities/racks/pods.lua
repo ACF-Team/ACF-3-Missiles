@@ -577,8 +577,8 @@ Racks.Register("1x Kornet", {
 Racks.Register("1x LOSAT", {
 	Name		= "LOSAT Launch Tube",
 	Description	= "Launch tube for LOSAT antitank missile.",
-	Model		= "models/novoscar/losatlauncher.mdl",
-	RackModel	= "models/novoscar/losatlaunchercaps.mdl",
+	Model		= "models/acf/missiles/losatlauncher.mdl",
+	RackModel	= "models/acf/missiles/losatlaunchercaps.mdl",
 	EntType		= "Pod",
 	Caliber		= 162,
 	Mass		= 100,
@@ -599,8 +599,8 @@ Racks.Register("1x LOSAT", {
 Racks.Register("2x LOSAT", {
 	Name		= "2x LOSAT Launch Tube",
 	Description	= "2x Launch tube for LOSAT antitank missile.",
-	Model		= "models/novoscar/2losatlauncher.mdl",
-	RackModel	= "models/novoscar/losatlaunchercaps.mdl",
+	Model		= "models/acf/missiles/2losatlauncher.mdl",
+	RackModel	= "models/acf/missiles/losatlaunchercaps.mdl",
 	EntType		= "Pod",
 	Caliber		= 162,
 	Mass		= 100,
@@ -622,8 +622,8 @@ Racks.Register("2x LOSAT", {
 Racks.Register("6x LOSAT", {
 	Name		= "6x LOSAT Launch Tube",
 	Description	= "6x Launch tube for LOSAT antitank missile.",
-	Model		= "models/novoscar/6losatlauncher.mdl",
-	RackModel	= "models/novoscar/losatlaunchercaps.mdl",
+	Model		= "models/acf/missiles/6losatlauncher.mdl",
+	RackModel	= "models/acf/missiles/losatlaunchercaps.mdl",
 	EntType		= "Pod",
 	Caliber		= 162,
 	Mass		= 100,
