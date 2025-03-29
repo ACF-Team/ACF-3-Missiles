@@ -18,28 +18,28 @@ Missiles.RegisterItem("MGM-166 KEM", "KEM", {
 	Mass		= 80,
 	Diameter	= 16.2 * ACF.InchToMm,
 	Year		= 1990,
-	ReloadTime	= 1, --change back
+	ReloadTime	= 30,
 	ExhaustPos  = Vector(-20),
 	Racks		= {["1x LOSAT"] = true, ["2x LOSAT"] = true, ["6x LOSAT"] = true},
 	Navigation  = "APN",
 	Guidance	= { Dumb = true, ["Radio (SACLOS)"] = true},
 	Fuzes		= { Contact = true },
-	Agility		= 0.0005,
+	Agility		= 0.25,
 	ArmDelay	= 0,
 	Round = {
 		Model           = "models/acf/missiles/losat.mdl",
 		MaxLength       = 285,
 		Armor           = 2,
 		ProjLength      = 45,
-		PropLength      = 200,
-		Thrust          = 1700000, -- in kg*in/s^2
-		FuelConsumption = 0.02, -- in g/s/f
+		PropLength      = 80,
+		Thrust          = 1500000, -- in kg*in/s^2
+		FuelConsumption = 0.0175, -- in g/s/f
 		StarterPercent  = 0.295,
-		MaxAgilitySpeed = 40, -- in m/s
+		MaxAgilitySpeed = 400, -- in m/s
 		DragCoef        = 0.0025,
-		FinMul          = 0.035,
-		GLimit          = 12,
-		TailFinMul      = 0.5,
+		FinMul          = 0.04,
+		GLimit          = 25,
+		TailFinMul      = 0.4,
 		CanDelayLaunch  = true,
 		ActualLength    = 280,
 		ActualWidth     = 15
