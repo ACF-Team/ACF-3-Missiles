@@ -629,7 +629,9 @@ function ENT:Think()
 	self:NextThink(Clock.CurTime + self.ThinkDelay)
 
 	CalcFlight(self)
-
+	if self.Velocity ~= nil then
+		print("speed: ".. self.Velocity:Length() * 0.0254)
+	end
 	return true
 end
 
