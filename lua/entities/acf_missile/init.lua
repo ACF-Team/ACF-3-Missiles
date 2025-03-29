@@ -629,7 +629,7 @@ function ENT:Think()
 	self:NextThink(Clock.CurTime + self.ThinkDelay)
 
 	CalcFlight(self)
-	end
+
 	return true
 end
 
