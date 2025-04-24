@@ -11,14 +11,14 @@ Missiles.Register("KEM", {
 
 Missiles.RegisterItem("MGM-166 KEM", "KEM", {
 	Name		= "MGM-166 LOSAT",
-	Description	= "The MGM-166 was designed to be mounted on to light vehicles allowing them to defeat enemy tanks and other targets.",
+	Description	= "The MGM-166 was designed to be mounted on to light vehicles allowing them to defeat enemy tanks and other targets. \nIts peak peneratration occurs at 550m-600m.",
 	Model		= "models/acf/missiles/losat.mdl",
 	Length		= 2.85,
 	Caliber		= 162,
 	Mass		= 80,
 	Diameter	= 16.2 * ACF.InchToMm,
 	Year		= 1990,
-	ReloadTime	= 30,
+	ReloadTime	= 32,
 	ExhaustPos  = Vector(-20),
 	Racks		= {["1x LOSAT"] = true, ["2x LOSAT"] = true, ["6x LOSAT"] = true},
 	Navigation  = "APN",
@@ -32,14 +32,14 @@ Missiles.RegisterItem("MGM-166 KEM", "KEM", {
 		Armor           = 2,
 		ProjLength      = 45,
 		PropLength      = 80,
-		Thrust          = 1500000, -- in kg*in/s^2
-		FuelConsumption = 0.0175, -- in g/s/f
-		StarterPercent  = 0.295,
-		MaxAgilitySpeed = 400, -- in m/s
+		Thrust          = 1100000, -- in kg*in/s^2
+		FuelConsumption = 0.0170, -- in g/s/f
+		StarterPercent  = 0.072,
+		MaxAgilitySpeed = 330, -- in m/s
 		DragCoef        = 0.0025,
-		FinMul          = 0.04,
-		GLimit          = 25,
-		TailFinMul      = 0.4,
+		FinMul          = 0.2,
+		GLimit          = 20,
+		TailFinMul      = 0.5,
 		CanDelayLaunch  = true,
 		ActualLength    = 280,
 		ActualWidth     = 15
