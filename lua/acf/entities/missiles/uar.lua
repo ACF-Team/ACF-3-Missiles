@@ -16,7 +16,7 @@ Missiles.RegisterItem("RS82 ASR", "UAR", {
 	Caliber		= 82,
 	Mass		= 7,
 	Length		= 60,
-	Diameter	= 2.2 * 25.4, -- in mm
+	Diameter	= 2.2 * ACF.InchToMm, -- in mm
 	ReloadTime	= 5,
 	Offset		= Vector(1, 0, 0),
 	Year		= 1933,
@@ -71,7 +71,7 @@ Missiles.RegisterItem("HVAR ASR", "UAR", {
 	Caliber		= 127,
 	Mass		= 64,
 	Length		= 173,
-	Diameter	= 4 * 25.4, -- in mm
+	Diameter	= 4 * ACF.InchToMm, -- in mm
 	ReloadTime	= 10,
 	Offset		= Vector(2, 0, 0),
 	Year		= 1933,
@@ -160,7 +160,7 @@ Missiles.RegisterItem("S-24 ASR", "UAR", {
 	Caliber		= 240,
 	Mass		= 235,
 	Length		= 233,
-	Diameter	= 8.3 * 25.4, -- in mm
+	Diameter	= 8.3 * ACF.InchToMm, -- in mm
 	ReloadTime	= 20,
 	Year		= 1960,
 	ExhaustPos  = Vector(-43),

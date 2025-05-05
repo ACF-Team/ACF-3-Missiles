@@ -9,7 +9,7 @@ Fuze.MaxDistance = 2500
 function Fuze:GetDisplayConfig()
 	local Config = Fuze.BaseClass.GetDisplayConfig(self)
 
-	Config.Distance = math.Round(self.Distance * 0.0254, 2) .. " m"
+	Config.Distance = math.Round(self.Distance * ACF.InchToMeter, 2) .. " m"
 
 	return Config
 end

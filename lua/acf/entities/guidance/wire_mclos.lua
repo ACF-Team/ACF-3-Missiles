@@ -11,7 +11,7 @@ end
 
 function Guidance:GetDisplayConfig()
 	return {
-		["Wire Length"] = math.Round(self.WireLength ^ 0.5 * 0.0254, 2) .. " meters"
+		["Wire Length"] = math.Round(self.WireLength ^ 0.5 * ACF.InchToMeter, 2) .. " meters"
 	}
 end
 

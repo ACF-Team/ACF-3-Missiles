@@ -17,7 +17,7 @@ Missiles.RegisterItem("100kgGBOMB", "GBOMB", {
 	Caliber		= 250,
 	Mass		= 100,
 	Year		= 1939,
-	Diameter	= 10.8 * 25.4, -- in mm
+	Diameter	= 10.8 * ACF.InchToMm, -- in mm
 	ReloadTime	= 15,
 	Racks		= { ["1xRK_small"] = true, ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true },
 	Guidance	= { Dumb = true },
@@ -56,7 +56,7 @@ Missiles.RegisterItem("250kgGBOMB", "GBOMB", {
 	Caliber		= 320,
 	Mass		= 250,
 	Year		= 1941,
-	Diameter	= 14.5 * 25.4, -- in mm
+	Diameter	= 14.5 * ACF.InchToMm, -- in mm
 	ReloadTime	= 25,
 	Racks		= { ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true },
 	Guidance	= { Dumb = true },

@@ -25,7 +25,7 @@ local Overrides =
 		local CutoutTime = Time - 1
 
 		if not Effect.FlareCutout then
-			local FlareArea = 3.1416 * (Bullet.Caliber * 0.5) * (Bullet.Caliber * 0.5)
+			local FlareArea = math.pi * (Bullet.Caliber * 0.5) * (Bullet.Caliber * 0.5)
 			local BurnRate = FlareArea * ACF.FlareBurnMultiplier
 			local Duration = Bullet.FillerMass / BurnRate
 			local Jitter = util.SharedRandom("FlareJitter", 0, 0.4, Effect.CreateTime * 10000)

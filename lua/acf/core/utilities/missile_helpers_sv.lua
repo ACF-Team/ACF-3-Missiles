@@ -7,7 +7,7 @@ local function ResetDefault(BulletData)
 	if not BulletData.MuzzleVel then return end
 
 	BulletData.Flight:Normalize()
-	BulletData.Flight = BulletData.Flight * (BulletData.MuzzleVel * 39.37)
+	BulletData.Flight = BulletData.Flight * (BulletData.MuzzleVel * ACF.MeterToInch)
 end
 
 local function ResetHEAT(BulletData)
@@ -23,7 +23,7 @@ local function ResetHEAT(BulletData)
 	end
 
 	BulletData.Flight:Normalize()
-	BulletData.Flight = BulletData.Flight * (BulletData.SlugMV * PenMul) * 39.37
+	BulletData.Flight = BulletData.Flight * (BulletData.SlugMV * PenMul) * ACF.MeterToInch
 	BulletData.NotFirstPen = false
 end
 

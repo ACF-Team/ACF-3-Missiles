@@ -514,7 +514,7 @@ function ENT:UpdateOverlayText()
 		Status = self.Scanning and "Active" or "Activating"
 	end
 
-	Range = self.Range and math.Round(self.Range / 39.37 , 2) .. " meters" or "Infinite"
+	Range = self.Range and math.Round(self.Range / ACF.MeterToInch, 2) .. " meters" or "Infinite"
 	Cone = self.ConeDegs and math.Round(self.ConeDegs, 2) or 360
 
 	return Text:format(Status, self.EntType, Range, Cone)
