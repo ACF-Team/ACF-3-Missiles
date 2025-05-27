@@ -650,7 +650,7 @@ do -- Loading ----------------------------------
 		Sounds.SendSound(Rack, "acf_missiles/fx/bomb_reload.mp3", 70, math.random(99, 101), 1)
 
 		if LimitConVar and IsValid(Owner) then
-			LimitConVar:AddCount(Owner, Missile)
+			Owner:AddCount(LimitConVar.Name, Missile)
 		end
 
 		return Missile
@@ -685,7 +685,7 @@ do -- Loading ----------------------------------
 
 			if LimitConVar then
 				Owner = self:CPPIGetOwner()
-				if IsValid(Owner) and not LimitConVar:CheckLimit(Owner) then return end
+				if IsValid(Owner) and not Owner:CheckLimit(LimitConVar.Name) then return end
 			end
 		end
 
