@@ -8,7 +8,7 @@ Missiles.Register("ATGM", {
 	Spread		= 1,
 	Blacklist	= { "AP", "APHE", "HP", "FL", "SM" },
 	LimitConVar = {
-		Name = "_acfm_atgm",
+		Name = "_acfm_asm",
 		Amount = 8,
 		Text = "Maximum number of anti-tank guided missiles that can be loaded at once. Differentiates from the acf_rack limit."
 	}
