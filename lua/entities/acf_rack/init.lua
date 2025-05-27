@@ -45,8 +45,22 @@ local function CheckDistantLink(Entity, Crate, EntPos)
 end
 
 do
-	local function GetReloadEff(Crew)
-		return Crew.TotalEff
+	-- Calculates the reload efficiency between a Crew, one of it's racks and an ammo crate
+	local function GetReloadEff(Crew, Rack, Ammo)
+		local BreechPos = Rack:GetPos()
+		local CrewPos = Crew:LocalToWorld(Crew.CrewModel.ScanOffsetL)
+		local AmmoPos = Ammo:GetPos()
+		local D1 = CrewPos:Distance(BreechPos)
+		local D2 = CrewPos:Distance(AmmoPos)
+
+		local tr = util.TraceLine({
+			start = BreechPos,
+			endpos = CrewPos,
+			filter = function(x) return not (x == Rack or x == Crew or x:GetOwner() ~= Rack:GetOwner() or x:IsPlayer()) end,
+		})
+		if tr.Hit then return 0.000001 end -- Wanna avoid division by zero...
+
+		return Crew.TotalEff * ACF.Normalize(D1 + D2, ACF.LoaderWorstDist, ACF.LoaderBestDist)
 	end
 
 	function ENT:UpdateLoadMod()
