@@ -75,6 +75,11 @@ do	-- Overlay/networking
 	local ControllerColor = Color(0, 255, 0, 25)
 	local ForwardColor = Color(255, 0, 0)
 
+	local function drawOutlineBeam(startP, endP, width, color)
+		render.DrawBeam(startP, endP, width + 0.5, 0, 1, color_black)
+		render.DrawBeam(startP, endP, width, 0, 1, color)
+	end
+
 	function ENT:DrawOverlay()
 		local SelfTbl = self:GetTable()
 
@@ -140,8 +145,8 @@ do	-- Overlay/networking
 		local dir2 = EyeVector()
 		local right = (dir:Cross(dir2)):GetNormalized()
 
-		render.DrawLine(p1, p2, ForwardColor)
-		render.DrawLine(p1, p1 + (-dir - right) * 5, ForwardColor)
-		render.DrawLine(p1, p1 + (-dir + right) * 5, ForwardColor)
+		drawOutlineBeam(p1, p2, 0.15, ForwardColor)
+		drawOutlineBeam(p1, p1 + (-dir - right) * 5, 0.15, ForwardColor)
+		drawOutlineBeam(p1, p1 + (-dir + right) * 5, 0.15, ForwardColor)
 	end
 end
