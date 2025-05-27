@@ -6,7 +6,12 @@ Missiles.Register("FFAR", {
 	Sound		= "acf_missiles/missiles/missile_rocket.mp3",
 	Effect		= "Rocket Motor",
 	Spread		= 1,
-	Blacklist	= { "AP", "APHE", "HP", "FL" }
+	Blacklist	= { "AP", "APHE", "HP", "FL" },
+	LimitConVar = {
+		Name = "_acfm_ffar",
+		Amount = 40,
+		Text = "Maximum number of folding-fin aerial rockets missiles that can be loaded at once. Differentiates from the acf_rack limit."
+	}
 })
 
 Missiles.RegisterItem("40mmFFAR", "FFAR", {

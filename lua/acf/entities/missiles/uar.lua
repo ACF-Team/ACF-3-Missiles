@@ -6,7 +6,12 @@ Missiles.Register("UAR", {
 	Sound		= "acf_missiles/missiles/missile_rocket.mp3",
 	Effect		= "Rocket Motor",
 	Spread		= 0.2,
-	Blacklist	= { "AP", "APHE", "HP", "FL", "SM" }
+	Blacklist	= { "AP", "APHE", "HP", "FL", "SM" },
+	LimitConVar = {
+		Name = "_acfm_uam",
+		Amount = 20,
+		Text = "Maximum number of unguided aerial rockets that can be loaded at once. Differentiates from the acf_rack limit."
+	}
 })
 
 Missiles.RegisterItem("RS82 ASR", "UAR", {

@@ -6,7 +6,12 @@ Missiles.Register("SAM", {
 	Sound		= "acf_missiles/missiles/missile_rocket.mp3",
 	Effect		= "Rocket Motor",
 	Spread		= 1,
-	Blacklist	= { "AP", "APHE", "HEAT", "HP", "FL", "SM" }
+	Blacklist	= { "AP", "APHE", "HEAT", "HP", "FL", "SM" },
+	LimitConVar = {
+		Name = "_acfm_sam",
+		Amount = 8,
+		Text = "Maximum number of surface-to-air missiles that can be loaded at once. Differentiates from the acf_rack limit."
+	}
 })
 
 Missiles.RegisterItem("FIM-92 SAM", "SAM", {

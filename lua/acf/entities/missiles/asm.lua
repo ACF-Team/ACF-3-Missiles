@@ -6,7 +6,12 @@ Missiles.Register("ATGM", {
 	Sound		= "acf_missiles/missiles/missile_rocket.mp3",
 	Effect		= "Rocket Motor ATGM",
 	Spread		= 1,
-	Blacklist	= { "AP", "APHE", "HP", "FL", "SM" }
+	Blacklist	= { "AP", "APHE", "HP", "FL", "SM" },
+	LimitConVar = {
+		Name = "_acfm_atgm",
+		Amount = 8,
+		Text = "Maximum number of anti-tank guided missiles that can be loaded at once. Differentiates from the acf_rack limit."
+	}
 })
 
 Missiles.RegisterItem("AT-3 ASM", "ATGM", {
