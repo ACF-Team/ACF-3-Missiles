@@ -643,11 +643,15 @@ do -- Loading ----------------------------------
 		until Select == Start -- If we've looped back around to the start then there's nothing to use
 	end
 
-	local function AddMissile(Rack, Point, Crate)
+	local function AddMissile(Rack, Point, Crate, LimitConVar, Owner)
 		local Pos, Ang = GetMissileAngPos(Crate.BulletData, Point)
 		local Missile = MakeACF_Missile(Rack.Owner, Pos, Ang, Rack, Point, Crate)
 
 		Sounds.SendSound(Rack, "acf_missiles/fx/bomb_reload.mp3", 70, math.random(99, 101), 1)
+
+		if LimitConVar and IsValid(Owner) then
+			LimitConVar:AddCount(Owner, Missile)
+		end
 
 		return Missile
 	end
@@ -655,10 +659,12 @@ do -- Loading ----------------------------------
 	-------------------------------------------------------------------------------
 
 	function ENT:CanReload()
-		if self.RetryReload then return false end
+		local SelfTable = self:GetTable()
+
+		if SelfTable.RetryReload then return false end
 		if not ACF.RacksCanFire then return false end
-		if self.Disabled then return false end
-		if self.MagSize == self.CurrentShot then return false end
+		if SelfTable.Disabled then return false end
+		if SelfTable.MagSize == SelfTable.CurrentShot then return false end
 
 		return true
 	end
@@ -670,9 +676,22 @@ do -- Loading ----------------------------------
 		local Index, Point = self:GetNextMountPoint("Empty")
 		local Crate = GetNextCrate(self)
 
+		local LimitConVar, Owner
+		if Crate.BulletData then
+			local IdName      = Crate.BulletData.Id
+			local IdGroup     = Classes.GetGroup(Classes.Missiles, IdName)
+			local IdClass     = IdGroup.Lookup[IdName]
+			LimitConVar = IdClass.LimitConVar or IdGroup.LimitConVar
+
+			if LimitConVar then
+				Owner = self:CPPIGetOwner()
+				if IsValid(Owner) and not LimitConVar:CheckLimit(Owner) then return end
+			end
+		end
+
 		if not self.Firing and Index and Crate and not CheckDistantLink(self, Crate, self:GetPos()) then
-			local Missile    = AddMissile(self, Point, Crate)
-			local IdealTime = Missile.ReloadTime
+			local Missile    = AddMissile(self, Point, Crate, LimitConVar, Owner)
+			local IdealTime  = Missile.ReloadTime
 			local ReloadTime = IdealTime / self.LoadCrewMod
 
 			Point.NextFire = Clock.CurTime + ReloadTime
@@ -706,7 +725,6 @@ do -- Loading ----------------------------------
 						Missile = nil
 					else
 						Sounds.SendSound(self, "acf_missiles/fx/weapon_select.mp3", 70, math.random(99, 101), 1)
-
 						Point.State = "Loaded"
 						Point.NextFire = nil
 					end
