@@ -255,6 +255,7 @@ do -- Spawning and Updating --------------------
 		Rack.MountPoints = {}
 		Rack.Missiles    = {}
 		Rack.Crates      = {}
+		Rack.HasInitialLoaded = false
 		Rack.DataStore   = Entities.GetArguments("acf_rack")
 
 		UpdateRack(Rack, Data, RackData)
@@ -451,12 +452,25 @@ do -- Entity Link/Unlink -----------------------
 		Weapon:UpdateOverlay()
 		Target:UpdateOverlay()
 
+		local function AttemptReload(Weapon, Target, Instant)
+			if IsValid(Weapon) and IsValid(Target) and Target:CanConsume() then
+				Weapon:Reload(Instant)
+			end
+		end
+
 		if Weapon.State == "Empty" then -- When linked to an empty weapon, attempt to load it
-			timer.Simple(0.5, function() -- Delay by 500ms just in case the wiring isn't applied at the same time or whatever weird dupe shit happens
-				if IsValid(Weapon) and IsValid(Target) and Weapon.State == "Empty" and Target:CanConsume() then
-					Weapon:Reload()
-				end
-			end)
+			if Weapon.HasInitialLoaded then
+				timer.Simple(1, function()
+					AttemptReload(Weapon, Target)
+				end)
+			else
+				Weapon.HasInitialLoaded = true
+				timer.Simple(ACF.InitReloadDelay, function()
+					for _ = 1, #Weapon.MountPoints do
+						AttemptReload(Weapon, Target, true)
+					end
+				end)
+			end
 		end
 
 		return true, "Rack linked successfully."
@@ -684,14 +698,14 @@ do -- Loading ----------------------------------
 	end
 
 	-- TODO: Once Unloading gets implemented, racks have to unload missiles if no empty mountpoint is found.
-	function ENT:Reload()
+	function ENT:Reload(Instant)
 		if not self:CanReload() then return end
 
 		local Index, Point = self:GetNextMountPoint("Empty")
 		local Crate = GetNextCrate(self)
 
 		local LimitConVar, Owner
-		if Crate.BulletData then
+		if IsValid(Crate) and Crate.BulletData then
 			local IdName      = Crate.BulletData.Id
 			local IdGroup     = Classes.GetGroup(Classes.Missiles, IdName)
 			local IdClass     = IdGroup.Lookup[IdName]
@@ -720,32 +734,39 @@ do -- Loading ----------------------------------
 
 			Crate:Consume()
 
+			local ReloadLoop = function()
+				local eff = self:UpdateLoadMod() or 1
+				WireLib.TriggerOutput(self, "Reload Time", IdealTime / eff)
+				WireLib.TriggerOutput(self, "Rate of Fire", 60 / (IdealTime / eff))
+				return eff
+			end
+
+			local ReloadFinish = function()
+				if not IsValid(self) or Point.Removed then
+					if IsValid(Crate) then Crate:Consume(-1) end
+
+					return
+				end
+
+				if not IsValid(Missile) then
+					Missile = nil
+				else
+					Sounds.SendSound(self, "acf_missiles/fx/weapon_select.mp3", 70, math.random(99, 101), 1)
+					Point.State = "Loaded"
+					Point.NextFire = nil
+				end
+
+				self:UpdateLoad(Point, Missile)
+			end
+
+			if Instant then
+				ReloadLoop()
+				ReloadFinish()
+				return true
+			end
+
 			ACF.ProgressTimer(
-				self,
-				function()
-					local eff = self:UpdateLoadMod() or 1
-					WireLib.TriggerOutput(self, "Reload Time", IdealTime / eff)
-					WireLib.TriggerOutput(self, "Rate of Fire", 60 / (IdealTime / eff))
-					return eff
-				end,
-				function()
-					if not IsValid(self) or Point.Removed then
-						if IsValid(Crate) then Crate:Consume(-1) end
-
-						return
-					end
-
-					if not IsValid(Missile) then
-						Missile = nil
-					else
-						Sounds.SendSound(self, "acf_missiles/fx/weapon_select.mp3", 70, math.random(99, 101), 1)
-						Point.State = "Loaded"
-						Point.NextFire = nil
-					end
-
-					self:UpdateLoad(Point, Missile)
-				end,
-				{MinTime = 1.0,	MaxTime = 3.0, Progress = 0, Goal = IdealTime}
+				self, ReloadLoop, ReloadFinish, {MinTime = 1.0,	MaxTime = 3.0, Progress = 0, Goal = IdealTime}
 			)
 		end
 
