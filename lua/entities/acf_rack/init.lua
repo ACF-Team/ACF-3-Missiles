@@ -47,7 +47,7 @@ end
 do
 	-- Calculates the reload efficiency between a Crew, one of it's racks and an ammo crate
 	local function GetReloadEff(Crew, Rack, Ammo)
-		local BreechPos = Rack:GetPos()
+		local BreechPos = Rack:LocalToWorld(Vector(Rack:OBBMins().x, 0, 0))
 		local CrewPos = Crew:LocalToWorld(Crew.CrewModel.ScanOffsetL)
 		local AmmoPos = Ammo:GetPos()
 		local D1 = CrewPos:Distance(BreechPos)
@@ -255,7 +255,6 @@ do -- Spawning and Updating --------------------
 		Rack.MountPoints = {}
 		Rack.Missiles    = {}
 		Rack.Crates      = {}
-		Rack.HasInitialLoaded = false
 		Rack.DataStore   = Entities.GetArguments("acf_rack")
 
 		UpdateRack(Rack, Data, RackData)
