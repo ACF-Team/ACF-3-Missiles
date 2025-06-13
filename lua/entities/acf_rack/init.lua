@@ -464,9 +464,12 @@ do -- Entity Link/Unlink -----------------------
 				end)
 			else
 				Weapon.HasInitialLoaded = true
+
 				timer.Simple(ACF.InitReloadDelay, function()
-					for _ = 1, #Weapon.MountPoints do
-						AttemptReload(Weapon, Target, true)
+					if IsValid(Weapon) then
+						for _ = 1, #Weapon.MountPoints do
+							AttemptReload(Weapon, Target, true)
+						end
 					end
 				end)
 			end
