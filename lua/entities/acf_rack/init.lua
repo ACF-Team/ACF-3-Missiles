@@ -15,6 +15,21 @@ local Sounds      = Utilities.Sounds
 local MaxDistance = ACF.LinkDistance * ACF.LinkDistance
 local UnlinkSound = "physics/metal/metal_box_impact_bullet%s.wav"
 
+-- Force unregisters an entity from the Count/Limit system in Sandbox
+-- Kind of hacky but Garry's Mod doesn't provide this and we need to remove missiles
+-- from the convar limit after firing
+local function RemoveCount(player, str, ent)
+	local key = player:UniqueID()
+	g_SBoxObjects[key] = g_SBoxObjects[key] or {}
+	g_SBoxObjects[key][str] = g_SBoxObjects[key][str] or {}
+
+	local tab = g_SBoxObjects[key][str]
+	if table.RemoveByValue(tab, ent) then
+		player:GetCount(str)
+		ent:RemoveCallOnRemove("GetCountUpdate")
+	end
+end
+
 local function UpdateTotalAmmo(Entity)
 	local Total = 0
 
@@ -581,6 +596,9 @@ do -- Firing -----------------------------------
 		BulletData.Flight = ShootDir
 
 		Missile:Launch(Rack.LaunchDelay)
+		if Missile.LimitConVar then
+			RemoveCount(Missile:CPPIGetOwner(), Missile.LimitConVar.Name, Missile)
+		end
 
 		Rack.LastFired = Missile
 		Rack:UpdateLoad(Point)
@@ -680,6 +698,7 @@ do -- Loading ----------------------------------
 		Sounds.SendSound(Rack, "acf_missiles/fx/bomb_reload.mp3", 70, math.random(99, 101), 1)
 
 		if LimitConVar and IsValid(Owner) then
+			Missile.LimitConVar = LimitConVar
 			Owner:AddCount(LimitConVar.Name, Missile)
 		end
 
