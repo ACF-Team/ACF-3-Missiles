@@ -74,17 +74,7 @@ do	-- Overlay/networking
 	local RadarColor = Color(255, 255, 0, 25)
 	local ControllerColor = Color(0, 255, 0, 25)
 	local ForwardColor = Color(255, 0, 0)
-
-	local function drawOutlineBeam(width, color, ...)
-		local args = {...}
-		for i = 1, #args, 2 do
-			render.DrawBeam(args[i], args[i + 1], width + 0.5, 0, 1, color_black)
-		end
-		for i = 1, #args, 2 do
-			render.DrawBeam(args[i], args[i + 1], width, 0, 1, color)
-		end
-	end
-
+	local drawOutlineBeam = ACF.DrawOutlineBeam
 	function ENT:DrawOverlay()
 		local SelfTbl = self:GetTable()
 
