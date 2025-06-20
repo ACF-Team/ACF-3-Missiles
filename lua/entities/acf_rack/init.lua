@@ -63,6 +63,8 @@ do
 	local Red = Color(255, 0, 0)
 	local Green = Color(0, 255, 0)
 
+	local TraceConfig = {start = Vector(), endpos = Vector(), filter = nil}
+
 	-- Calculates the reload efficiency between a Crew, one of it's racks and an ammo crate
 	local function GetReloadEff(Crew, Rack, Ammo)
 		local BreechPos = Rack:LocalToWorld(Vector(Rack:OBBMins().x, 0, 0))
@@ -71,11 +73,10 @@ do
 		local D1 = CrewPos:Distance(BreechPos)
 		local D2 = CrewPos:Distance(AmmoPos)
 
-		local tr = util.TraceLine({
-			start = BreechPos,
-			endpos = CrewPos,
-			filter = function(x) return not (x == Rack or x == Crew or x:GetOwner() ~= Rack:GetOwner() or x:IsPlayer() or x:GetClass() == "acf_missile") end,
-		})
+		TraceConfig.start = BreechPos
+		TraceConfig.endpos = CrewPos
+		TraceConfig.filter = function(x) return not (x == Rack or x == Crew or x:GetOwner() ~= Rack:GetOwner() or x:IsPlayer() or x:GetClass() == "acf_missile") end
+		local tr = util.TraceLine(TraceConfig)
 
 		debugoverlay.Line(CrewPos, tr.HitPos, 1, Green, true)
 		debugoverlay.Line(tr.HitPos, BreechPos, 1, Red, true)
