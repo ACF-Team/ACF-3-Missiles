@@ -60,6 +60,9 @@ local function CheckDistantLink(Entity, Crate, EntPos)
 end
 
 do
+	local Red = Color(255, 0, 0)
+	local Green = Color(0, 255, 0)
+
 	-- Calculates the reload efficiency between a Crew, one of it's racks and an ammo crate
 	local function GetReloadEff(Crew, Rack, Ammo)
 		local BreechPos = Rack:LocalToWorld(Vector(Rack:OBBMins().x, 0, 0))
@@ -71,8 +74,14 @@ do
 		local tr = util.TraceLine({
 			start = BreechPos,
 			endpos = CrewPos,
-			filter = function(x) return not (x == Rack or x == Crew or x:GetOwner() ~= Rack:GetOwner() or x:IsPlayer()) end,
+			filter = function(x) return not (x == Rack or x == Crew or x:GetOwner() ~= Rack:GetOwner() or x:IsPlayer() or x:GetClass() == "acf_missile") end,
 		})
+
+		debugoverlay.Line(CrewPos, tr.HitPos, 1, Green, true)
+		debugoverlay.Line(tr.HitPos, BreechPos, 1, Red, true)
+
+		Crew.OverlayErrors.LOSCheck = tr.Hit and "Crew cannot see the breech\nOf: " .. (tostring(Rack) or "<INVALID ENTITY???>") .. "\nBlocked by " .. (tostring(tr.Entity) or "<INVALID ENTITY???>") or nil
+		Crew:UpdateOverlay()
 		if tr.Hit then return 0.000001 end -- Wanna avoid division by zero...
 
 		return Crew.TotalEff * ACF.Normalize(D1 + D2, ACF.LoaderWorstDist, ACF.LoaderBestDist)
@@ -90,7 +99,6 @@ do
 
 	function ENT:FindPropagator()
 		local Temp = self:GetParent()
-		if IsValid(Temp) and Temp:GetClass() == "acf_turret" and Temp.Turret == "Turret-V" then Temp = Temp:GetParent() end
 		if IsValid(Temp) and Temp:GetClass() == "acf_turret" and Temp.Turret == "Turret-V" then Temp = Temp:GetParent() end
 		if IsValid(Temp) and Temp:GetClass() == "acf_turret" and Temp.Turret == "Turret-H" then return Temp end
 		if IsValid(Temp) and Temp:GetClass() == "acf_baseplate" then return Temp end
