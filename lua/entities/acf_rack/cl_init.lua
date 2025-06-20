@@ -75,6 +75,7 @@ do	-- Overlay/networking
 	local ControllerColor = Color(0, 255, 0, 25)
 	local ForwardColor = Color(255, 0, 0)
 	local drawOutlineBeam = ACF.DrawOutlineBeam
+	local Purple = Color(255, 0, 255, 100)
 	function ENT:DrawOverlay()
 		local SelfTbl = self:GetTable()
 
@@ -96,6 +97,7 @@ do	-- Overlay/networking
 			end
 		end
 
+		-- Visualize mount point locations
 		if next(SelfTbl.MountPoints) then
 			for _, T in ipairs(SelfTbl.MountPoints) do
 				local Pos1 = self:LocalToWorld(T.Pos - T.Dir * 6)
@@ -112,6 +114,7 @@ do	-- Overlay/networking
 			cam.End2D()
 		end
 
+		-- Visualize radar location
 		if IsValid(SelfTbl.Radar) then
 			local Radar = SelfTbl.Radar
 			local RadPos, RadAng, OBBMin, OBBMax = Radar:GetPos(), Radar:GetAngles(), Radar:OBBMins(), Radar:OBBMaxs()
@@ -124,6 +127,7 @@ do	-- Overlay/networking
 
 		render.SetColorMaterial()
 
+		-- Visualize guidance computer location
 		if IsValid(SelfTbl.Computer) then
 			local Computer = SelfTbl.Computer
 			local ComPos, ComAng, OBBMin, OBBMax = Computer:GetPos(), Computer:GetAngles(), Computer:OBBMins(), Computer:OBBMaxs()
@@ -134,6 +138,7 @@ do	-- Overlay/networking
 			render.DrawSprite(Computer:LocalToWorld(Computer:OBBCenter()), 12, 12, color_white)
 		end
 
+		-- Rack forward direction
 		local p1 = self:GetPos() + self:GetForward() * 24
 		local p2 = self:GetPos()
 		local dir = (p1 - p2):GetNormalized()
@@ -144,5 +149,9 @@ do	-- Overlay/networking
 			p1, p2,
 			p1, p1 + (-dir - right) * 5,
 			p1, p1 + (-dir + right) * 5)
+
+		-- Visualize breech location
+		local BreechPos = self:LocalToWorld(Vector(self:OBBMins().x, 0, 0))
+		render.DrawWireframeSphere(BreechPos, 2, 10, 10, Purple, true)
 	end
 end
