@@ -6,7 +6,12 @@ Missiles.Register("GBOMB", {
 	Sound		= "acf_missiles/fx/clunk.mp3",
 	NoThrust	= true,
 	Spread		= 1,
-	Blacklist	= { "AP", "APHE", "HP", "FL" }
+	Blacklist	= { "AP", "APHE", "HP", "FL" },
+	LimitConVar = {
+		Name = "_acfm_gbomb",
+		Amount = 8,
+		Text = "Maximum number of gliding bombs that can be loaded at once. Differentiates from the acf_rack limit."
+	}
 })
 
 Missiles.RegisterItem("100kgGBOMB", "GBOMB", {

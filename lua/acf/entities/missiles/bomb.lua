@@ -6,7 +6,12 @@ Missiles.Register("BOMB", {
 	Sound		= "acf_missiles/fx/clunk.mp3",
 	NoThrust	= true,
 	Spread		= 1,
-	Blacklist	= { "AP", "APHE", "HP", "FL" }
+	Blacklist	= { "AP", "APHE", "HP", "FL" },
+	LimitConVar = {
+		Name = "_acfm_bomb",
+		Amount = 8,
+		Text = "Maximum number of free-falling bombs that can be loaded at once. Differentiates from the acf_rack limit."
+	}
 })
 
 Missiles.RegisterItem("50kgBOMB", "BOMB", {

@@ -10,6 +10,10 @@ function Missiles.Register(ID, Data)
 		Group.Entity = "acf_rack"
 	end
 
+	if Data.LimitConVar then
+		Classes.AddSboxLimit(Data.LimitConVar)
+	end
+
 	return Group
 end
 
@@ -17,6 +21,10 @@ function Missiles.RegisterItem(ID, ClassID, Data)
 	local Class = Classes.AddGroupItem(ID, ClassID, Entries, Data)
 
 	Class.Destiny = "Missiles"
+
+	if Data.LimitConVar then
+		Classes.AddSboxLimit(Data.LimitConVar)
+	end
 
 	return Class
 end

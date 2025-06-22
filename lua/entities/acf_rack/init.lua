@@ -15,6 +15,21 @@ local Sounds      = Utilities.Sounds
 local MaxDistance = ACF.LinkDistance * ACF.LinkDistance
 local UnlinkSound = "physics/metal/metal_box_impact_bullet%s.wav"
 
+-- Force unregisters an entity from the Count/Limit system in Sandbox
+-- Kind of hacky but Garry's Mod doesn't provide this and we need to remove missiles
+-- from the convar limit after firing
+local function RemoveCount(player, str, ent)
+	local key = player:UniqueID()
+	g_SBoxObjects[key] = g_SBoxObjects[key] or {}
+	g_SBoxObjects[key][str] = g_SBoxObjects[key][str] or {}
+
+	local tab = g_SBoxObjects[key][str]
+	if table.RemoveByValue(tab, ent) then
+		player:GetCount(str)
+		ent:RemoveCallOnRemove("GetCountUpdate")
+	end
+end
+
 local function UpdateTotalAmmo(Entity)
 	local Total = 0
 
@@ -42,6 +57,62 @@ local function CheckDistantLink(Entity, Crate, EntPos)
 	end
 
 	return CrateUnlinked
+end
+
+do
+	local Red = Color(255, 0, 0)
+	local Green = Color(0, 255, 0)
+
+	local TraceConfig = {start = Vector(), endpos = Vector(), filter = nil}
+
+	-- Calculates the reload efficiency between a Crew, one of it's racks and an ammo crate
+	local function GetReloadEff(Crew, Rack, Ammo)
+		local BreechPos = Rack:LocalToWorld(Vector(Rack:OBBMins().x, 0, 0))
+		local CrewPos = Crew:LocalToWorld(Crew.CrewModel.ScanOffsetL)
+		local AmmoPos = Ammo:GetPos()
+		local D1 = CrewPos:Distance(BreechPos)
+		local D2 = CrewPos:Distance(AmmoPos)
+
+		TraceConfig.start = BreechPos
+		TraceConfig.endpos = CrewPos
+		TraceConfig.filter = function(x) return not (x == Rack or x == Crew or x:GetOwner() ~= Rack:GetOwner() or x:IsPlayer() or x:GetClass() == "acf_missile") end
+		local tr = util.TraceLine(TraceConfig)
+
+		debugoverlay.Line(CrewPos, tr.HitPos, 1, Green, true)
+		debugoverlay.Line(tr.HitPos, BreechPos, 1, Red, true)
+
+		Crew.OverlayErrors.LOSCheck = tr.Hit and "Crew cannot see the breech\nOf: " .. (tostring(Rack) or "<INVALID ENTITY???>") .. "\nBlocked by " .. (tostring(tr.Entity) or "<INVALID ENTITY???>") or nil
+		Crew:UpdateOverlay()
+		if tr.Hit then return 0.000001 end -- Wanna avoid division by zero...
+
+		return Crew.TotalEff * ACF.Normalize(D1 + D2, ACF.LoaderWorstDist, ACF.LoaderBestDist)
+	end
+
+	function ENT:UpdateLoadMod()
+		self.CrewsByType = self.CrewsByType or {}
+		local Sum1 = ACF.WeightedLinkSum(self.CrewsByType.Loader or {}, GetReloadEff, self, self.CurrentCrate or self)
+		local Sum2 = ACF.WeightedLinkSum(self.CrewsByType.Commander or {}, GetReloadEff, self, self.CurrentCrate or self)
+		local Sum3 = ACF.WeightedLinkSum(self.CrewsByType.Pilot or {}, GetReloadEff, self, self.CurrentCrate or self)
+		self.LoadCrewMod = math.Clamp(Sum1 + Sum2 + Sum3, ACF.CrewFallbackCoef, ACF.LoaderMaxBonus)
+
+		return self.LoadCrewMod
+	end
+
+	function ENT:FindPropagator()
+		local Temp = self:GetParent()
+		if IsValid(Temp) and Temp:GetClass() == "acf_turret" and Temp.Turret == "Turret-V" then Temp = Temp:GetParent() end
+		if IsValid(Temp) and Temp:GetClass() == "acf_turret" and Temp.Turret == "Turret-H" then return Temp end
+		if IsValid(Temp) and Temp:GetClass() == "acf_baseplate" then return Temp end
+		return nil
+	end
+
+	function ENT:UpdateAccuracyMod(Config)
+		local Propagator = self:FindPropagator(Config)
+		local Val = Propagator and Propagator.AccuracyCrewMod or 0
+
+		self.AccuracyCrewMod = math.Clamp(Val, ACF.CrewFallbackCoef, 1)
+		return self.AccuracyCrewMod
+	end
 end
 
 do -- Spawning and Updating --------------------
@@ -215,6 +286,9 @@ do -- Spawning and Updating --------------------
 		if RackData.OnSpawn then
 			RackData.OnSpawn(Rack, Data, RackData)
 		end
+
+		ACF.AugmentedTimer(function(Config) Rack:UpdateLoadMod(Config) end, function() return IsValid(Rack) end, nil, {MinTime = 0.5, MaxTime = 1})
+		ACF.AugmentedTimer(function(Config) Rack:UpdateAccuracyMod(Config) end, function() return IsValid(Rack) end, nil, {MinTime = 0.5, MaxTime = 1})
 
 		hook.Run("ACF_OnSpawnEntity", "acf_rack", Rack, Data, RackData)
 
@@ -401,12 +475,28 @@ do -- Entity Link/Unlink -----------------------
 		Weapon:UpdateOverlay()
 		Target:UpdateOverlay()
 
+		local function AttemptReload(Weapon, Target, Instant)
+			if IsValid(Weapon) and IsValid(Target) and Target:CanConsume() then
+				Weapon:Reload(Instant)
+			end
+		end
+
 		if Weapon.State == "Empty" then -- When linked to an empty weapon, attempt to load it
-			timer.Simple(0.5, function() -- Delay by 500ms just in case the wiring isn't applied at the same time or whatever weird dupe shit happens
-				if IsValid(Weapon) and IsValid(Target) and Weapon.State == "Empty" and Target:CanConsume() then
-					Weapon:Reload()
-				end
-			end)
+			if Weapon.HasInitialLoaded then
+				timer.Simple(1, function()
+					AttemptReload(Weapon, Target)
+				end)
+			else
+				Weapon.HasInitialLoaded = true
+
+				timer.Simple(ACF.InitReloadDelay, function()
+					if IsValid(Weapon) then
+						for _ = 1, #Weapon.MountPoints do
+							AttemptReload(Weapon, Target, true)
+						end
+					end
+				end)
+			end
 		end
 
 		return true, "Rack linked successfully."
@@ -515,6 +605,9 @@ do -- Firing -----------------------------------
 		BulletData.Flight = ShootDir
 
 		Missile:Launch(Rack.LaunchDelay)
+		if Missile.LimitConVar then
+			RemoveCount(Missile:CPPIGetOwner(), Missile.LimitConVar.Name, Missile)
+		end
 
 		Rack.LastFired = Missile
 		Rack:UpdateLoad(Point)
@@ -531,7 +624,7 @@ do -- Firing -----------------------------------
 	end
 
 	function ENT:GetSpread()
-		return self.Spread * ACF.GunInaccuracyScale
+		return self.Spread * ACF.GunInaccuracyScale / (self.AccuracyCrewMod or 1)
 	end
 
 	function ENT:Shoot()
@@ -607,11 +700,16 @@ do -- Loading ----------------------------------
 		until Select == Start -- If we've looped back around to the start then there's nothing to use
 	end
 
-	local function AddMissile(Rack, Point, Crate)
+	local function AddMissile(Rack, Point, Crate, LimitConVar, Owner)
 		local Pos, Ang = GetMissileAngPos(Crate.BulletData, Point)
 		local Missile = MakeACF_Missile(Rack.Owner, Pos, Ang, Rack, Point, Crate)
 
 		Sounds.SendSound(Rack, "acf_missiles/fx/bomb_reload.mp3", 70, math.random(99, 101), 1)
+
+		if LimitConVar and IsValid(Owner) then
+			Missile.LimitConVar = LimitConVar
+			Owner:AddCount(LimitConVar.Name, Missile)
+		end
 
 		return Missile
 	end
@@ -619,24 +717,40 @@ do -- Loading ----------------------------------
 	-------------------------------------------------------------------------------
 
 	function ENT:CanReload()
-		if self.RetryReload then return false end
+		local SelfTable = self:GetTable()
+
+		if SelfTable.RetryReload then return false end
 		if not ACF.RacksCanFire then return false end
-		if self.Disabled then return false end
-		if self.MagSize == self.CurrentShot then return false end
+		if SelfTable.Disabled then return false end
+		if SelfTable.MagSize == SelfTable.CurrentShot then return false end
 
 		return true
 	end
 
 	-- TODO: Once Unloading gets implemented, racks have to unload missiles if no empty mountpoint is found.
-	function ENT:Reload()
+	function ENT:Reload(Instant)
 		if not self:CanReload() then return end
 
 		local Index, Point = self:GetNextMountPoint("Empty")
 		local Crate = GetNextCrate(self)
 
+		local LimitConVar, Owner
+		if IsValid(Crate) and Crate.BulletData then
+			local IdName      = Crate.BulletData.Id
+			local IdGroup     = Classes.GetGroup(Classes.Missiles, IdName)
+			local IdClass     = IdGroup.Lookup[IdName]
+			LimitConVar = IdClass.LimitConVar or IdGroup.LimitConVar
+
+			if LimitConVar then
+				Owner = self:CPPIGetOwner()
+				if IsValid(Owner) and not Owner:CheckLimit(LimitConVar.Name) then return end
+			end
+		end
+
 		if not self.Firing and Index and Crate and not CheckDistantLink(self, Crate, self:GetPos()) then
-			local Missile    = AddMissile(self, Point, Crate)
-			local ReloadTime = Missile.ReloadTime
+			local Missile    = AddMissile(self, Point, Crate, LimitConVar, Owner)
+			local IdealTime  = Missile.ReloadTime
+			local ReloadTime = IdealTime / self.LoadCrewMod
 
 			Point.NextFire = Clock.CurTime + ReloadTime
 			Point.State    = "Loading"
@@ -650,7 +764,14 @@ do -- Loading ----------------------------------
 
 			Crate:Consume()
 
-			timer.Simple(ReloadTime, function()
+			local ReloadLoop = function()
+				local eff = self:UpdateLoadMod() or 1
+				WireLib.TriggerOutput(self, "Reload Time", IdealTime / eff)
+				WireLib.TriggerOutput(self, "Rate of Fire", 60 / (IdealTime / eff))
+				return eff
+			end
+
+			local ReloadFinish = function()
 				if not IsValid(self) or Point.Removed then
 					if IsValid(Crate) then Crate:Consume(-1) end
 
@@ -661,13 +782,22 @@ do -- Loading ----------------------------------
 					Missile = nil
 				else
 					Sounds.SendSound(self, "acf_missiles/fx/weapon_select.mp3", 70, math.random(99, 101), 1)
-
 					Point.State = "Loaded"
 					Point.NextFire = nil
 				end
 
 				self:UpdateLoad(Point, Missile)
-			end)
+			end
+
+			if Instant then
+				ReloadLoop()
+				ReloadFinish()
+				return true
+			end
+
+			ACF.ProgressTimer(
+				self, ReloadLoop, ReloadFinish, {MinTime = 1.0,	MaxTime = 3.0, Progress = 0, Goal = IdealTime}
+			)
 		end
 
 		self.RetryReload = true

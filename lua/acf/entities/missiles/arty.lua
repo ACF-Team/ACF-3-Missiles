@@ -6,7 +6,12 @@ Missiles.Register("ARTY", {
 	Sound		= "acf_missiles/missiles/missile_rocket.mp3",
 	Effect		= "Rocket Motor",
 	Spread		= 1,
-	Blacklist	= { "AP", "APHE", "HP", "FL", "SM" }
+	Blacklist	= { "AP", "APHE", "HP", "FL", "SM" },
+	LimitConVar = {
+		Name = "_acfm_arty",
+		Amount = 12,
+		Text = "Maximum number of artillery rockets that can be loaded at once. Differentiates from the acf_rack limit."
+	}
 })
 
 Missiles.RegisterItem("Type 63 RA", "ARTY", {
