@@ -9,5 +9,6 @@
 
 	$envmap			env_cubemap
 	$envmapmask		"models/bluemetaknight/Detector_EnvMask"
+	$normalmapalphaenvmapmask 1
 }
 

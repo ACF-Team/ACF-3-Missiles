@@ -1,6 +1,6 @@
 local Classes  = ACF.Classes
 local Missiles = Classes.Missiles
-local Entries  = {}
+local Entries  = Classes.GetOrCreateEntries(Missiles)
 
 
 function Missiles.Register(ID, Data)

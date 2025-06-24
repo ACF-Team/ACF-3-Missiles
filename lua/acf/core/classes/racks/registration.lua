@@ -1,6 +1,6 @@
 local Classes = ACF.Classes
 local Racks   = Classes.Racks
-local Entries = {}
+local Entries = Classes.GetOrCreateEntries(Racks)
 
 function Racks.Register(ID, Data)
 	local Class = Classes.AddSimple(ID, Entries, Data)

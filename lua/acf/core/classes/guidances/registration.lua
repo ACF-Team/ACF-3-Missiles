@@ -1,6 +1,6 @@
 local Classes   = ACF.Classes
 local Guidances = Classes.Guidances
-local Entries   = {}
+local Entries   = Classes.GetOrCreateEntries(Guidances)
 
 
 function Guidances.Register(ID, Base)

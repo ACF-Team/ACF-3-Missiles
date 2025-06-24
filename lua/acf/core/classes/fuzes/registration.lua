@@ -1,6 +1,6 @@
 local Classes = ACF.Classes
 local Fuzes   = Classes.Fuzes
-local Entries = {}
+local Entries = Classes.GetOrCreateEntries(Fuzes)
 
 
 function Fuzes.Register(ID, Base)

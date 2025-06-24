@@ -1,6 +1,6 @@
 local Classes  = ACF.Classes
 local Measures = Classes.Countermeasures
-local Entries  = {}
+local Entries  = Classes.GetOrCreateEntries(Measures)
 
 
 function Measures.Register(ID, Base)
