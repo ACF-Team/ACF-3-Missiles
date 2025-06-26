@@ -4,6 +4,7 @@ local Countermeasures = ACF.Classes.Countermeasures
 
 Sensors.Register("AM-Radar", {
 	Name		= "Missile Radar",
+	SpawnModel  = "models/missiles/agm_114.mdl",
 	Entity		= "acf_radar",
 	CreateMenu	= ACF.CreateRadarMenu,
 	LimitConVar	= {

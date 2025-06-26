@@ -4,6 +4,7 @@ local Trace   = ACF.trace
 
 Sensors.Register("WARN-Receiver", {
 	Name		= "Warning Receiver",
+	SpawnModel  = "icon16/error.png",
 	Entity		= "acf_receiver",
 	CreateMenu	= ACF.CreateReceiverMenu,
 	LimitConVar	= {
