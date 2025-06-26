@@ -3,6 +3,7 @@ local Weapons = ACF.Classes.Weapons
 
 Weapons.Register("FGL", {
 	Name        = "Flare Launcher",
+	Model       = "models/missiles/blackjellypod.mdl",
 	Description = "Flare Launchers can fire flares much more rapidly than other launchers, but can't load any other ammo types.",
 	MuzzleFlash = "gl_muzzleflash_noscale",
 	ROFMod      = 0.6,
