@@ -82,7 +82,6 @@ local function SetMotorState(Missile, Enabled)
 		if Missile.Detonated then return end
 
 		Missile.Thrust = Missile.MaxThrust
-
 		Missile:SetNW2Float("LightSize", Missile.BulletData.Caliber)
 
 		LaunchEffect(Missile)

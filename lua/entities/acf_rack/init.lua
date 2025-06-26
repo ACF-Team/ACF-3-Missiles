@@ -572,7 +572,7 @@ do -- Entity Inputs ----------------------------
 end ---------------------------------------------
 
 do -- Entity Overlay ----------------------------
-	local Text = "%s\n\nLoaded ammo: %s\nRounds remaining: %s\nReload time: %s second(s)\nFire delay: %s second(s)"
+	local Text = "%s\n\nLoaded ammo: %s\nMounted:        %s\nReady to fire: %s\nReload time: %s second(s)\nFire delay: %s second(s)"
 
 	function ENT:UpdateOverlayText()
 		local Delay  = math.Round(self.FireDelay, 2)
@@ -587,7 +587,14 @@ do -- Entity Overlay ----------------------------
 			Status = "Not linked to an ammo crate!"
 		end
 
-		return Text:format(Status, Ammo, self.CurrentShot, Reload, Delay)
+		local ReadyToFire = 0
+		for _, Mount in ipairs(self.MountPoints) do
+			if Mount.State == "Loaded" then
+				ReadyToFire = ReadyToFire + 1
+			end
+		end
+
+		return Text:format(Status, Ammo, self.CurrentShot, ReadyToFire, Reload, Delay)
 	end
 end ---------------------------------------------
 
