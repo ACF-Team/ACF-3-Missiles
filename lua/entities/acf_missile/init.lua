@@ -70,7 +70,7 @@ local function LaunchEffect(Missile)
 	if ACF_SOUND_EXT then
 		hook.Run("ACF_SOUND_MISSILE", Missile, Sound)
 	else
-		Sounds.SendSound(Missile, Sound, 180, math.random(99, 101), 1)
+		Sounds.SendSound(Missile.Launcher, Sound, 180, math.random(99, 101), 1)
 	end
 end
 
