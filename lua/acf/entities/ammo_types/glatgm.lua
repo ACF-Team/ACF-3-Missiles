@@ -7,6 +7,7 @@ function Ammo:OnLoaded()
 	Ammo.BaseClass.OnLoaded(self)
 
 	self.Name		 = "Gun-Launched Anti-Tank Missile"
+	self.SpawnIcon   = "acf/icons/shell_glatgm.png"
 	self.Description = "A missile fired from a gun. While slower than a traditional shell, it makes up for that with guidance."
 	self.Blacklist = ACF.GetWeaponBlacklist({
 		C = true,

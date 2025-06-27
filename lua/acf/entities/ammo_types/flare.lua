@@ -6,6 +6,7 @@ function Ammo:OnLoaded()
 	Ammo.BaseClass.OnLoaded(self)
 
 	self.Name		 = "Flare"
+	self.SpawnIcon   = "acf/icons/shell_flare.png"
 	self.Description = "A countermeasure for infrared guided munitions."
 	self.Blacklist = ACF.GetWeaponBlacklist({
 		SL = true,

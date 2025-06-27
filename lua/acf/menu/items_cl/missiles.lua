@@ -94,7 +94,7 @@ local function CreateMenu(Menu)
 
 		MissileClass:SetText(Data.Description)
 
-		ACF.LoadSortedList(MissileList, Data.Items, "Caliber")
+		ACF.LoadSortedList(MissileList, Data.Items, "Caliber", "Model")
 
 		AmmoList:LoadEntries(Data.ID)
 	end
@@ -108,7 +108,7 @@ local function CreateMenu(Menu)
 		ACF.SetClientData("Weapon", Data.ID)
 		ACF.SetClientData("Destiny", Data.Destiny or "Missiles")
 
-		ACF.LoadSortedList(RackList, GetRackList(Data), "MagSize")
+		ACF.LoadSortedList(RackList, GetRackList(Data), "MagSize", "Model")
 
 		MissileDesc:SetText(Data.Description)
 
@@ -137,7 +137,7 @@ local function CreateMenu(Menu)
 		RackPreview:UpdateSettings(Data.Preview)
 	end
 
-	ACF.LoadSortedList(MissileTypes, Entries, "ID")
+	ACF.LoadSortedList(MissileTypes, Entries, "ID", "Model")
 end
 
 ACF.AddMenuItem(101, "#acf.menu.entities", "Missiles", "wand", CreateMenu)
