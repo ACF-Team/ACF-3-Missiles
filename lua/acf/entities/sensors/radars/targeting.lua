@@ -3,7 +3,7 @@ local Sensors = ACF.Classes.Sensors
 
 Sensors.Register("TGT-Radar", {
 	Name		= "Targeting Radar",
-	SpawnModel  = "models/vehicles/pilot_seat.mdl",
+	SpawnModel  = "acf/icons/target.png",
 	Entity		= "acf_radar",
 	CreateMenu	= ACF.CreateRadarMenu,
 	LimitConVar	= {
