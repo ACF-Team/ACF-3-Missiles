@@ -73,9 +73,9 @@ do
 		local D1 = CrewPos:Distance(BreechPos)
 		local D2 = CrewPos:Distance(AmmoPos)
 
-		TraceConfig.start = BreechPos
-		TraceConfig.endpos = CrewPos
-		TraceConfig.filter = function(x) return not (x == Rack or x == Crew or x:GetOwner() ~= Rack:GetOwner() or x:IsPlayer() or x:GetClass() == "acf_missile") end
+		TraceConfig.start = CrewPos
+		TraceConfig.endpos = BreechPos
+		TraceConfig.filter = function(x) return not (x == Rack or x == Crew or x.noradius or x:GetOwner() ~= Rack:GetOwner() or x:IsPlayer() or x:GetClass() == "acf_missile") end
 		local tr = util.TraceLine(TraceConfig)
 
 		debugoverlay.Line(CrewPos, tr.HitPos, 1, Green, true)
