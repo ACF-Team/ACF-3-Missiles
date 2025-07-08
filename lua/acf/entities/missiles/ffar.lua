@@ -191,7 +191,7 @@ Missiles.RegisterItem("Zuni ASR", "FFAR", {
 	Racks		= { ["127mm4xPOD"] = true },
 	Guidance	= { Dumb = true },
 	Navigation  = "Chase",
-	Fuzes		= { Contact = true, Timed = true, Optical = true, Radio = true },
+	Fuzes		= { Contact = true, Timed = true, Optical = true, Radio = true, Altitude = true },
 	Agility		= 0.05,
 	ArmDelay	= 0.1,
 	Round = {
