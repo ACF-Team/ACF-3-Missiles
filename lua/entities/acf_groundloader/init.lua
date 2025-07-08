@@ -82,8 +82,18 @@ do
 
 	function RackTrackData:TryLink(Crates)
 		if not IsValid(self.Rack) then return end
-		-- Evaluate the current condition.
+		-- Evaluate the validity of the rack.
+		-- Only allow baseplate-parented & aircraft baseplates.
 		local Rack       = self.Rack
+
+		local Contraption = Rack:GetContraption()
+		if not Contraption then self.Complete = true return end
+
+		local Base = Contraption.Base
+		if not IsValid(Base) then self.Complete = true return end
+		if Base:ACF_GetUserVar("BaseplateType") ~= "Aircraft" then self.Complete = true return end
+
+		-- Evaluate the current condition.
 		local CurrentPos = Rack:GetPos()
 		local LastPos    = self.LastPos
 		local DeltaPos   = (CurrentPos - LastPos)
