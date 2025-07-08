@@ -5,6 +5,7 @@ local LoadingRadius, ReceivingRadius = include("shared.lua")
 local LoadingBoxMin, LoadingBoxMax = -Vector(LoadingRadius, LoadingRadius, LoadingRadius), Vector(LoadingRadius, LoadingRadius, LoadingRadius)
 local StillTimeToLink            = 3 -- Must be relatively still for X seconds to start loading
 local DistanceTravelledTolerance = 2
+local function TimeToBeLoadableAgain() return math.random(5, 8) end
 
 ENT.ACF_Limit = 2
 -- dbg cant be set in the same statement because shouldDbg isnt true until after that statement - hence the semicolon separator
@@ -47,14 +48,55 @@ function ENT:PreEntityCopy()
 end
 
 function ENT:ACF_PostSpawn(_, _, _, ClientData)
-	ACF.Contraption.SetMass(self, 20000)
+	ACF.Contraption.SetMass(self, 1000)
 	WireIO.SetupOutputs(self, Outputs, ClientData)
 	WireLib.TriggerOutput(self, "Entity", self)
 
 	self.TrackedRacks  = {}
 	self.TrackData = {}
+	self.LastPos = self:GetPos()
+	self.LastMoveTime = 0
+	self.TimeUntilLoadable = 5
+	self.CanLoadRacks = true
+
+	ACF.AugmentedTimer(function(Cfg) self:CheckForSelfMovement(Cfg) end, function() return IsValid(self) end, nil, {MinTime = 1, MaxTime = 4})
 	ACF.AugmentedTimer(function(Cfg) self:CheckForNewRacks(Cfg) end, function() return IsValid(self) end, nil, {MinTime = 1, MaxTime = 2})
 	ACF.AugmentedTimer(function(Cfg) self:CheckOnTrackedRacks(Cfg) end, function() return IsValid(self) end, nil, {MinTime = 0.5, MaxTime = 1})
+
+	self:SetStatus("Ready to load")
+end
+
+function ENT:CheckForSelfMovement()
+	local Pos     = self:GetPos()
+	local LastPos = self.LastPos
+	self.LastPos = Pos
+
+	local Recovered = false
+	if not self.CanLoadRacks then
+		local DeltaTime = Clock.CurTime - self.LastMoveTime
+		if DeltaTime > self.TimeUntilLoadable then
+			self.CanLoadRacks = true -- Passthrough to next check too
+			Recovered = true
+		else
+			return
+		end
+	end
+
+	if self.CanLoadRacks then
+		local DeltaPos = (Pos - LastPos)
+		local DistanceTravelled = DeltaPos:Length()
+		if DistanceTravelled > 0 then
+			self.LastMoveTime = Clock.CurTime
+			self.TimeUntilLoadable = TimeToBeLoadableAgain()
+			self.CanLoadRacks = false
+			self:SetStatus("The loader has moved; must be stationary to load racks!")
+			return
+		end
+	end
+
+	if Recovered then
+		self:SetStatus("Ready to load")
+	end
 end
 
 local function SimpleClass()
@@ -172,6 +214,7 @@ function ENT:CheckOnTrackedRacks(_)
 	-- Something hasn't run yet - that's ok we'll wait
 	if not TrackedRacks then return end
 	if not TrackData then return end
+	if not self.CanLoadRacks then return end
 
 	local Crates = self:ACF_GetUserVar("LinkedAmmoCrates")
 
@@ -182,15 +225,14 @@ function ENT:CheckOnTrackedRacks(_)
 	end
 end
 
--- TODO: status
-local Text = "Ground Loader"
+local Text = "Ground Loader\n\nStatus: %s"
 function ENT:SetStatus(Status)
 	self.Status = Status
 	self:UpdateOverlay()
 end
 
 function ENT:UpdateOverlayText()
-	return Text:format()
+	return Text:format(self.Status)
 end
 
 function ENT:Think()
