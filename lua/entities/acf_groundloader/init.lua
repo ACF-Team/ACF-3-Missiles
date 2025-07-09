@@ -3,9 +3,9 @@ AddCSLuaFile("cl_init.lua")
 
 local LoadingRadius, ReceivingRadius = include("shared.lua")
 local LoadingBoxMin, LoadingBoxMax = -Vector(LoadingRadius, LoadingRadius, LoadingRadius), Vector(LoadingRadius, LoadingRadius, LoadingRadius)
-local StillTimeToLink            = 3 -- Must be relatively still for X seconds to start loading
+local StillTimeToLink            = 6 -- Must be relatively still for X seconds to start loading
 local DistanceTravelledTolerance = 2
-local function TimeToBeLoadableAgain() return math.random(5, 8) end
+local function TimeToBeLoadableAgain() return math.random(30, 45) end
 
 ENT.ACF_Limit = 2
 -- dbg cant be set in the same statement because shouldDbg isnt true until after that statement - hence the semicolon separator
