@@ -61,6 +61,8 @@ function ENT:ACF_PostSpawn(_, _, _, ClientData)
 	ACF.AugmentedTimer(function(Cfg) self:CheckForSelfMovement(Cfg) end, function() return IsValid(self) end, nil, {MinTime = 1, MaxTime = 4, Delay = 0.1})
 	ACF.AugmentedTimer(function(Cfg) self:CheckForNewRacks(Cfg) end, function() return IsValid(self) end, nil, {MinTime = 1, MaxTime = 2})
 	ACF.AugmentedTimer(function(Cfg) self:CheckOnTrackedRacks(Cfg) end, function() return IsValid(self) end, nil, {MinTime = 0.5, MaxTime = 1})
+	-- TODO: confirm the ammo is within distance! this will be exploited surely otherwise
+	-- just don't feel like doing it yet
 
 	self:SetStatus("Ready to load")
 end
