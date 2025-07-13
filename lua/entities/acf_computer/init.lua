@@ -194,7 +194,7 @@ do -- Spawn and update function
 
 	-------------------------------------------------------------------------------
 
-	function MakeACF_Computer(Player, Pos, Angle, Data)
+	function ACF.MakeComputer(Player, Pos, Angle, Data)
 		VerifyData(Data)
 
 		local Class = Classes.GetGroup(Components, Data.Computer)
@@ -241,8 +241,8 @@ do -- Spawn and update function
 		return Entity
 	end
 
-	Entities.Register("acf_opticalcomputer", MakeACF_Computer, "Computer") -- Backwards compatibility
-	Entities.Register("acf_computer", MakeACF_Computer, "Computer")
+	Entities.Register("acf_opticalcomputer", ACF.MakeComputer, "Computer") -- Backwards compatibility
+	Entities.Register("acf_computer", ACF.MakeComputer, "Computer")
 
 	ACF.RegisterLinkSource("acf_computer", "Weapons")
 

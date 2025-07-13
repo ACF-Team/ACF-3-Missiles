@@ -173,7 +173,7 @@ do -- Spawn and Update functions
 		Contraption.SetMass(Entity, Receiver.Mass)
 	end
 
-	function MakeACF_Receiver(Player, Pos, Ang, Data)
+	function ACF.MakeReceiver(Player, Pos, Ang, Data)
 		VerifyData(Data)
 
 		local Class = Classes.GetGroup(Sensors, Data.Receiver)
@@ -216,7 +216,7 @@ do -- Spawn and Update functions
 		return Receiver
 	end
 
-	Entities.Register("acf_receiver", MakeACF_Receiver, "Receiver")
+	Entities.Register("acf_receiver", ACF.MakeReceiver, "Receiver")
 
 	------------------- Updating ---------------------
 

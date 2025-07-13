@@ -249,7 +249,7 @@ do -- Spawning and Updating --------------------
 
 	-------------------------------------------------------------------------------
 
-	function MakeACF_Rack(Player, Pos, Ang, Data)
+	function ACF.MakeRack(Player, Pos, Ang, Data)
 		VerifyData(Data)
 
 		local RackData = Racks.Get(Data.Rack)
@@ -318,7 +318,7 @@ do -- Spawning and Updating --------------------
 		return Rack
 	end
 
-	Entities.Register("acf_rack", MakeACF_Rack, "Rack")
+	Entities.Register("acf_rack", ACF.MakeRack, "Rack")
 
 	ACF.RegisterLinkSource("acf_rack", "Crates")
 	ACF.RegisterLinkSource("acf_rack", "Computer", true)
@@ -709,7 +709,7 @@ do -- Loading ----------------------------------
 
 	local function AddMissile(Rack, Point, Crate, LimitConVar, Owner)
 		local Pos, Ang = GetMissileAngPos(Crate.BulletData, Point)
-		local Missile = MakeACF_Missile(Rack.Owner, Pos, Ang, Rack, Point, Crate)
+		local Missile = ACF.MakeMissile(Rack.Owner, Pos, Ang, Rack, Point, Crate)
 
 		Sounds.SendSound(Rack, "acf_missiles/fx/bomb_reload.mp3", 70, math.random(99, 101), 1)
 

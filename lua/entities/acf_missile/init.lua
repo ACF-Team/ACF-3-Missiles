@@ -337,7 +337,7 @@ end)
 -------------------------------[[ Global Functions ]]-------------------------------
 
 -- TODO: Make ACF Missiles compliant with ACF legal checks. How to deal with SetNoDraw and SetNotSolid tho
-function MakeACF_Missile(Player, Pos, Ang, Rack, MountPoint, Crate)
+function ACF.MakeMissile(Player, Pos, Ang, Rack, MountPoint, Crate)
 	local BulletData = Crate.BulletData
 	local Class      = Classes.GetGroup(Missiles, BulletData.Id)
 	local Data       = Class.Lookup[BulletData.Id]

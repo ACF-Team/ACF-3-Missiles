@@ -374,7 +374,7 @@ do -- Spawn and Update functions
 		Contraption.SetMass(Entity, Radar.Mass)
 	end
 
-	function MakeACF_Radar(Player, Pos, Angle, Data)
+	function ACF.MakeRadar(Player, Pos, Angle, Data)
 		VerifyData(Data)
 
 		local Class = Classes.GetGroup(Sensors, Data.Radar)
@@ -433,8 +433,8 @@ do -- Spawn and Update functions
 		return Radar
 	end
 
-	Entities.Register("acf_missileradar", MakeACF_Radar, "Radar") -- Backwards compatibility
-	Entities.Register("acf_radar", MakeACF_Radar, "Radar")
+	Entities.Register("acf_missileradar", ACF.MakeRadar, "Radar") -- Backwards compatibility
+	Entities.Register("acf_radar", ACF.MakeRadar, "Radar")
 
 	ACF.RegisterLinkSource("acf_radar", "Weapons")
 

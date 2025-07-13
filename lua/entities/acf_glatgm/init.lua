@@ -42,7 +42,7 @@ local function DetonateMissile(Missile, Inflictor)
 	Missile:Detonate()
 end
 
-function MakeACF_GLATGM(Player, Gun, BulletData)
+function ACF.MakeGLATGM(Player, Gun, BulletData)
 	local CanSpawn = hook.Run("ACF_PreSpawnEntity", "acf_glatgm", Player, BulletData, Gun)
 	if CanSpawn == false then return false end
 
