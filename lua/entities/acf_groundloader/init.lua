@@ -165,7 +165,7 @@ do
 						end
 					end
 				end
-				Rack:SetLoadModOverride(1)
+				Rack:SetLoadModOverride(0.5)
 				return true
 			end
 		end
