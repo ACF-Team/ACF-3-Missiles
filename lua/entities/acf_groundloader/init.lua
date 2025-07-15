@@ -9,7 +9,7 @@ local function TimeToBeLoadableAgain() return math.random(30, 45) end
 
 ENT.ACF_Limit = 2
 -- dbg cant be set in the same statement because shouldDbg isnt true until after that statement - hence the semicolon separator
-local shouldDbg, dbg = true; dbg = shouldDbg and function(...) print(...) end or function() end
+local shouldDbg, dbg = false; dbg = shouldDbg and function(...) print(...) end or function() end
 
 local ACF      		= ACF
 local Clock         = ACF.Utilities.Clock
@@ -17,7 +17,6 @@ local Classes  		= ACF.Classes
 local Entities 		= Classes.Entities
 local Utilities   	= ACF.Utilities
 local WireIO      	= Utilities.WireIO
-local EmptyTable	= {}
 
 ACF.RegisterClassLink("acf_groundloader", "acf_ammo", function(This, Crate)
 	local Crates = This:ACF_GetUserVar("LinkedAmmoCrates")
