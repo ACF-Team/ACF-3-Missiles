@@ -157,15 +157,16 @@ do
 			local DeltaTime = Clock.CurTime - self.LastMoveTime
 			dbg("Still, waiting... delta-time " .. DeltaTime)
 			if DeltaTime > StillTimeToLink then -- We can link, the rack has been still for X seconds
-				-- Try linking all crates to the rack
-				for Crate in pairs(Crates) do
-					if IsValid(Crate) then
-						dbg(Crate, Rack, "linked!")
-						Crate:Link(Rack)
+				if not self.Complete then
+					-- Try linking all crates to the rack
+					for Crate in pairs(Crates) do
+						if IsValid(Crate) then
+							dbg(Crate, Rack, "linked!")
+							Crate:Link(Rack)
+						end
 					end
 				end
 				Rack:SetLoadModOverride(1)
-				self.Complete = true
 				return true
 			end
 		end
@@ -227,9 +228,7 @@ function ENT:CheckOnTrackedRacks(_)
 	local Crates = self:ACF_GetUserVar("LinkedAmmoCrates")
 
 	for _, State in pairs(TrackData) do
-		if not State:IsComplete() then
-			State:TryLink(Crates)
-		end
+		State:TryLink(Crates)
 	end
 end
 
