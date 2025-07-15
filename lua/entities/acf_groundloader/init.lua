@@ -17,6 +17,7 @@ local Classes  		= ACF.Classes
 local Entities 		= Classes.Entities
 local Utilities   	= ACF.Utilities
 local WireIO      	= Utilities.WireIO
+local EmptyTable	= {}
 
 ACF.RegisterClassLink("acf_groundloader", "acf_ammo", function(This, Crate)
 	local Crates = This:ACF_GetUserVar("LinkedAmmoCrates")
@@ -121,6 +122,9 @@ do
 
 	function RackTrackData:ResetTime()
 		self.LastMoveTime = Clock.CurTime
+		local Rack = self.Rack
+		if not IsValid(Rack) then return end
+		Rack:SetLoadModOverride(nil)
 	end
 
 	function RackTrackData:IsComplete() return self.Complete end
@@ -136,7 +140,6 @@ do
 
 		local Base = Contraption.Base
 		if not IsValid(Base) then self.Complete = true return end
-		if Base:ACF_GetUserVar("BaseplateType") ~= "Aircraft" then self.Complete = true return end
 
 		-- Evaluate the current condition.
 		local CurrentPos = Rack:GetPos()
@@ -161,6 +164,7 @@ do
 						Crate:Link(Rack)
 					end
 				end
+				Rack:SetLoadModOverride(1)
 				self.Complete = true
 				return true
 			end

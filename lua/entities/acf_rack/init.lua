@@ -95,6 +95,7 @@ do
 		local Sum3 = ACF.WeightedLinkSum(self.CrewsByType.Pilot or {}, GetReloadEff, self, self.CurrentCrate or self)
 		self.LoadCrewMod = math.Clamp(Sum1 + Sum2 + Sum3, ACF.CrewFallbackCoef, ACF.LoaderMaxBonus)
 
+		self.LoadCrewMod = self.LoadCrewModOverride or self.LoadCrewMod
 		return self.LoadCrewMod
 	end
 
@@ -112,6 +113,10 @@ do
 
 		self.AccuracyCrewMod = math.Clamp(Val, ACF.CrewFallbackCoef, 1)
 		return self.AccuracyCrewMod
+	end
+
+	function ENT:SetLoadModOverride(Efficiency)
+		self.LoadCrewModOverride = Efficiency
 	end
 end
 
@@ -280,6 +285,7 @@ do -- Spawning and Updating --------------------
 		Rack.Missiles    = {}
 		Rack.Crates      = {}
 		Rack.DataStore   = Entities.GetArguments("acf_rack")
+		Rack.ReloadTimers = {}
 
 		UpdateRack(Rack, Data, RackData)
 
@@ -802,7 +808,7 @@ do -- Loading ----------------------------------
 				return true
 			end
 
-			ACF.ProgressTimer(
+			self.ReloadTimers[Point] = ACF.ProgressTimer(
 				self, ReloadLoop, ReloadFinish, {MinTime = 1.0,	MaxTime = 3.0, Progress = 0, Goal = IdealTime}
 			)
 		end
