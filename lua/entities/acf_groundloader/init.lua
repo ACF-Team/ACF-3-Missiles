@@ -203,6 +203,7 @@ function ENT:CheckForNewRacks(_)
 		if not TrackedRacks[Rack] then
 			TrackData[Rack] = nil
 			dbg("Stopped tracking", Rack)
+			Rack:SetLoadModOverride(nil)
 		end
 	end
 	-- Any rack that was not in TrackData but now is in TrackedRacks must be initially tracked
