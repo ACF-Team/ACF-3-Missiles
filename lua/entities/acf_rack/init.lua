@@ -75,7 +75,7 @@ do
 
 		TraceConfig.start = CrewPos
 		TraceConfig.endpos = BreechPos
-		TraceConfig.filter = function(x) return not (x == Rack or x == Crew or x.noradius or x:GetOwner() ~= Rack:GetOwner() or x:IsPlayer() or x:GetClass() == "acf_missile") end
+		TraceConfig.filter = function(x) return not (x == Rack or x == Crew or x.noradius or x:GetOwner() ~= Rack:GetOwner() or x:IsPlayer() or x:GetClass() == "acf_missile" or ACF.GlobalFilter[x:GetClass()]) end
 		local tr = util.TraceLine(TraceConfig)
 
 		debugoverlay.Line(CrewPos, tr.HitPos, 1, Green, true)
@@ -362,6 +362,20 @@ do -- Spawning and Updating --------------------
 
 		return true, "Rack updated successfully!"
 	end
+
+	hook.Add("cfw.contraption.entityAdded", "ACF_CFWRackIndex", function(contraption, ent)
+		if ent:GetClass() == "acf_rack" then
+			contraption.Racks = contraption.Racks or {}
+			contraption.Racks[ent] = true
+		end
+	end)
+
+	hook.Add("cfw.contraption.entityRemoved", "ACF_CFWRackUnIndex", function(contraption, ent)
+		if ent:GetClass() == "acf_rack" then
+			contraption.Racks = contraption.Racks or {}
+			contraption.Racks[ent] = nil
+		end
+	end)
 end ---------------------------------------------
 
 do -- Custom ACF damage ------------------------
