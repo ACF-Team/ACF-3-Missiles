@@ -733,6 +733,5 @@ function ENT:ACF_OnDamage(DmgResult, DmgInfo)
 end
 
 function ENT:CFW_PreParented(Entity)
-	print("ok i dont wanna, ", Entity)
 	return false
 end
