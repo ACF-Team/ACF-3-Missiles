@@ -732,6 +732,6 @@ function ENT:ACF_OnDamage(DmgResult, DmgInfo)
 	return HitRes -- This function needs to return HitRes
 end
 
-function ENT:CFW_OnParented(Entity)
-	Entity:SetParent()
+function ENT:CFW_OnParented()
+	return false
 end
