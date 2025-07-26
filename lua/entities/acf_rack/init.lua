@@ -639,9 +639,9 @@ do -- Firing -----------------------------------
 		Missile:CallOnRemove("ACF_Rack_Remove" .. Missile:EntIndex(), function()
 			if not IsValid(Rack) then return end
 			Rack.InAirMissiles[Missile] = nil
-			WireLib.TriggerOutput(Rack, "In Air", table.Count(Rack.InAirMissiles))
+			WireLib.TriggerOutput(Rack, "In Air", next(Rack.InAirMissiles) and 1 or 0)
 		end)
-		WireLib.TriggerOutput(Rack, "In Air", table.Count(Rack.InAirMissiles))
+		WireLib.TriggerOutput(Rack, "In Air", next(Rack.InAirMissiles) and 1 or 0)
 
 		Rack:UpdateLoad(Point)
 	end
