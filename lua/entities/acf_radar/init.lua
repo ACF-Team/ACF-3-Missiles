@@ -43,7 +43,7 @@ local CheckLegal  = ACF.CheckLegal
 local Sounds      = ACF.Utilities.Sounds
 local UnlinkSound = "physics/metal/metal_box_impact_bullet%s.wav"
 local MaxDistance = ACF.LinkDistance * ACF.LinkDistance
-local TraceData	  = { start = true, endpos = true, mask = MASK_SOLID_BRUSHONLY }
+local TraceData	  = { start = true, endpos = true, mask = MASK_SOLID_BRUSHONLY, filter = {} }
 local Indexes	  = {}
 local Unused	  = {}
 local IndexCount  = 0
