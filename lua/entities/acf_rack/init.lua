@@ -138,6 +138,7 @@ do -- Spawning and Updating --------------------
 		"Rate of Fire (Returns the amount of missiles per minute the rack can fire.)",
 		"Reload Time (Returns the amount of time in seconds it'll take to reload the currently selected hardpoint.)",
 		"Missile (Returns the next missile to be fired.) [ENTITY]",
+		"In Air (Returns 1 if a missile this rack fired is currently in the air.)",
 		"Entity (The rack itself.) [ENTITY]"
 	}
 
@@ -194,6 +195,7 @@ do -- Spawning and Updating --------------------
 		Entity.ReloadTime     = 1
 		Entity.CurrentShot    = 0
 		Entity.Spread         = Rack.Spread or 1
+		Entity.InAirMissiles  = {}
 
 		WireIO.SetupInputs(Entity, Inputs, Data, Rack)
 		WireIO.SetupOutputs(Entity, Outputs, Data, Rack)
@@ -631,6 +633,16 @@ do -- Firing -----------------------------------
 		end
 
 		Rack.LastFired = Missile
+
+		-- Track in air missiles
+		Rack.InAirMissiles[Missile] = true
+		Missile:CallOnRemove("ACF_Rack_Remove" .. Missile:EntIndex(), function()
+			if not IsValid(Rack) then return end
+			Rack.InAirMissiles[Missile] = nil
+			WireLib.TriggerOutput(Rack, "In Air", table.Count(Rack.InAirMissiles))
+		end)
+		WireLib.TriggerOutput(Rack, "In Air", table.Count(Rack.InAirMissiles))
+
 		Rack:UpdateLoad(Point)
 	end
 
