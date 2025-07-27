@@ -11,6 +11,7 @@ end
 do -- Serverside settings
 	ACF.AddServerSettings(1000, "Missile Behavior", function(Base)
 		Base:AddCheckBox("Allow flares to ignite players and NPCs. Does not affect players in godmode."):LinkToServerData("FlaresIgnite")
+		Base:AddCheckBox("Prevent players from being identifiable in radar data."):LinkToServerData("RestrictRadarInfo")
 
 		Base:AddSlider("Missile Ghost Period"):LinkToServerData("GhostPeriod")
 		Base:AddHelp("Sets the number of seconds that missiles should ignore impacts for after being launched.")

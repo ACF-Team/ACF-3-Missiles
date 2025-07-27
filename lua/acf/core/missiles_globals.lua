@@ -23,6 +23,7 @@ do -- Update checker
 end
 
 ACF.DefineSetting("FlaresIgnite", 1, "Flare ignition of players and NPCs has been %s.", ACF.BooleanDataCallback())
+ACF.DefineSetting("RestrictRadarInfo", 0, "Player radar info restrictions have been %s.", ACF.BooleanDataCallback())
 ACF.DefineSetting("GhostPeriod", 0.05, "Missile ghost period has been set to %.2f seconds.", ACF.FloatDataCallback(0, 5, 2))
 
 if CLIENT then
