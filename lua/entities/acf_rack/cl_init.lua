@@ -1,5 +1,7 @@
 local Clock		= ACF.Utilities.Clock
+local Classes     = ACF.Classes
 local Racks = ACF.Classes.Racks
+local Missiles = ACF.Classes.Missiles
 local Queued	= {}
 
 include("shared.lua")
@@ -154,17 +156,21 @@ do	-- Overlay/networking
 			p1, p1 + (-dir + right) * 5)
 
 		-- Visualize breech location
-		local Length = self:GetNW2Float("Length", 0)
-		local Class = self:GetNWString("ACF_Class")
-		local ClassData = Racks.Get(Class)
-		if not ClassData then return end
-		if ClassData.BreechConfigs then
-			local BreechIndex = self:GetNW2Int("BreechIndex", 1)
-			local Caliber = self:GetNW2Float("Caliber", 0) / ACF.InchToCm
-			local Depth = -Length / ACF.InchToCm / 2
+		local RackClassData = Racks.Get(self:GetNWString("ACF_Class"))
+		if not RackClassData then return end
 
-			for Index, Config in ipairs(ClassData.BreechConfigs.Locations) do
-				local Pos = self:LocalToWorld(Config.LPos * self:OBBMins())
+		local IdName	  		= self:GetNWString("ACF_MissileClass")
+		if not IdName or IdName == "" then return end
+		local IdGroup     		= Classes.GetGroup(Classes.Missiles, IdName)
+		local MissileClassData  = IdGroup.Lookup[IdName]
+
+		if RackClassData.BreechConfigs then
+			local BreechIndex = self:GetNW2Int("BreechIndex", 1)
+			local Caliber = MissileClassData.Caliber / 10 / ACF.InchToCm
+			local Depth = -MissileClassData.Length / ACF.InchToCm / 2
+
+			for Index, Config in ipairs(RackClassData.BreechConfigs.Locations) do
+				local Pos = self:LocalToWorld(Vector(self:OBBCenter().x, 0, 0) + Config.LPos * (self:OBBMaxs() - self:OBBMins()) / 2)
 				local Ang = self:LocalToWorldAngles(Config.LAng)
 				local MinBox = Vector(Depth, -Caliber, -Caliber)
 				local MaxBox = Vector(0, Caliber, Caliber)
