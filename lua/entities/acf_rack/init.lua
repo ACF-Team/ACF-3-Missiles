@@ -247,20 +247,6 @@ do -- Spawning and Updating --------------------
 		Entity.Spread         = Rack.Spread or 1
 		Entity.InAirMissiles  = {}
 
-		-- Breech information
-		Entity.BreechIndex  = Data.BreechIndex or 1
-		local BreechConfigs = Entity.ClassData.BreechConfigs
-		if BreechConfigs then
-			-- If a custom breech config is specified, use it
-			local BreechConfig = BreechConfigs.Locations[Entity.BreechIndex] or {}
-			Entity.BreechPos = Vector(Entity:OBBCenter().x, 0, 0) + BreechConfig.LPos * (Entity:OBBMaxs() - Entity:OBBMins()) / 2
-			Entity.BreechAng = BreechConfig.LAng
-		else
-			-- If no custom breech config is specified, use the rear of the model
-			Entity.BreechPos = Vector(Entity:OBBMins().x, 0, 0)
-			Entity.BreechAng = Angle(0, 0, 0)
-		end
-
 		Entity.OverlayErrors = {}
 
 		WireIO.SetupInputs(Entity, Inputs, Data, Rack)
@@ -304,6 +290,21 @@ do -- Spawning and Updating --------------------
 			end
 
 			Entity:UpdatePoint()
+		end
+
+		-- Breech information
+		Entity.BreechIndex  = Data.BreechIndex or 1
+		local BreechConfigs = Entity.ClassData.BreechConfigs
+		if BreechConfigs then
+			-- If a custom breech config is specified, use it
+			local BreechConfig = BreechConfigs.Locations[Entity.BreechIndex] or {}
+			local MountPos = Entity.MountPoints[1].Position
+			Entity.BreechPos = Vector(Entity:OBBCenter().x, MountPos.y, MountPos.z) + BreechConfig.LPos * (Entity:OBBMaxs() - Entity:OBBMins()) / 2
+			Entity.BreechAng = BreechConfig.LAng
+		else
+			-- If no custom breech config is specified, use the rear of the model
+			Entity.BreechPos = Vector(Entity:OBBMins().x, 0, 0)
+			Entity.BreechAng = Angle(0, 0, 0)
 		end
 
 		UpdateTotalAmmo(Entity)

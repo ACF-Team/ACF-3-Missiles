@@ -170,7 +170,8 @@ do	-- Overlay/networking
 			local Depth = -MissileClassData.Length / ACF.InchToCm / 2
 
 			for Index, Config in ipairs(RackClassData.BreechConfigs.Locations) do
-				local Pos = self:LocalToWorld(Vector(self:OBBCenter().x, 0, 0) + Config.LPos * (self:OBBMaxs() - self:OBBMins()) / 2)
+				local MountPos = self.MountPoints[1].Pos
+				local Pos = self:LocalToWorld(Vector(self:OBBCenter().x, MountPos.y, MountPos.z) + Config.LPos * (self:OBBMaxs() - self:OBBMins()) / 2)
 				local Ang = self:LocalToWorldAngles(Config.LAng)
 				local MinBox = Vector(Depth, -Caliber, -Caliber)
 				local MaxBox = Vector(0, Caliber, Caliber)
