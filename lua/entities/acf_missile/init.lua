@@ -187,6 +187,7 @@ local function CalcFlight(Missile)
 	local Guidance    = Missile.UseGuidance and Missile.GuidanceData:GetGuidance(Missile)
 	local TargetPos   = Guidance and Guidance.TargetPos
 
+	-- debugoverlay.Line(Missile.Position, TargetPos, 10, Color(0, 0, 255), true)
 	if TargetPos then
 		-- Getting the relative position, velocity and acceleration
 		local RelPos = TargetPos - Pos
@@ -222,11 +223,14 @@ local function CalcFlight(Missile)
 		Missile.LastRelVel = RelVel
 	end
 
+	-- debugoverlay.Line(Pos, Pos + Missile.RotAxis * 10, 10, Color(0, 0, 255), true)
+	-- debugoverlay.Line(Pos, Pos + Torque / Inertia * DeltaTime * 10, 10, Color(255, 0, 0), true)
 	Missile.RotAxis = Missile.RotAxis + Torque / Inertia * DeltaTime
 	local DirAng  = Dir:Angle()
 	DirAng:RotateAroundAxis(Missile.RotAxis:GetNormalized(), Missile.RotAxis:Length() * DeltaTime)
 	Dir = DirAng:Forward()
 	Missile.RotAxis = Missile.RotAxis * (1 - 0.7 * DeltaTime)
+	-- debugoverlay.Line(Missile.Position, Missile.Position + Missile.RotAxis * 10, 10, Color(255, 0, 0), true)
 
 	local FuelMod = math.Clamp(Missile.MotorLength / DeltaTime, 0, 1)
 	if Missile.MotorEnabled then
@@ -245,6 +249,10 @@ local function CalcFlight(Missile)
 	local Up        = Dir:Cross(LastVel):Cross(Dir):GetNormalized()
 	local DotSimple = Up.x * VelNorm.x + Up.y * VelNorm.y + Up.z * VelNorm.z
 	local Lift      = -Up * DotSimple * LiftMultiplier
+	
+	-- debugoverlay.Line(Missile.Position, Missile.Position + VelNorm * 10, 10, Color(0, 0, 255), true)
+	-- debugoverlay.Line(Missile.Position, Missile.Position + Up * 10, 10, Color(255, 0, 0), true)
+	-- debugoverlay.Line(Missile.Position, Missile.Position + Dir * 10, 10, Color(255, 0, 0), true)
 	local Drag      = LastVel * (Missile.DragCoef * LastSpeed) / ACF.DragDiv * ACF.Scale / Missile.Mass
 	local Vel       = LastVel + (GravityVector + Thrust + Lift - Drag) * DeltaTime
 	local EndPos    = Pos + Vel * DeltaTime

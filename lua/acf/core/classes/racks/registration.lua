@@ -17,6 +17,15 @@ function Racks.Register(ID, Data)
 		}
 	end
 
+	if not Class.BreechConfigs then
+		Class.BreechConfigs = {
+			Locations = {
+				{Name = "Rear", LPos = Vector(-1, 0, 0), LAng = Angle(180, 0, 0)},
+				{Name = "Front", LPos = Vector(1, 0, 0), LAng = Angle(0, 0, 0)},
+			}
+		}
+	end
+
 	Classes.AddSboxLimit(Class.LimitConVar)
 
 	return Class

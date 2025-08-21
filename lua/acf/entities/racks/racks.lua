@@ -17,7 +17,7 @@ Racks.Register("1xRK", {
 
 	MountPoints = {
 		{ Name = "missile1", Position = Vector(0, 0, 2.5), Direction = Vector(0, 0, -1) }
-	}
+	},
 })
 
 Racks.Register("1xRK_small", {

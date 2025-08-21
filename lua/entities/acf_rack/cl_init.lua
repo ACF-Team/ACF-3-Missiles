@@ -1,4 +1,5 @@
 local Clock		= ACF.Utilities.Clock
+local Racks = ACF.Classes.Racks
 local Queued	= {}
 
 include("shared.lua")
@@ -69,6 +70,8 @@ do	-- Overlay/networking
 
 	-- icon16/feed.png radar sprite
 	-- icon16/joystick.png controller sprite
+	local Purple = Color(255, 0, 255, 100)
+	local Cyan = Color(0, 255, 255, 100)
 	local RadarSprite = Material("icon16/transmit.png")
 	local JoystickMat = Material("icon16/joystick.png")
 	local RadarColor = Color(255, 255, 0, 25)
@@ -151,7 +154,24 @@ do	-- Overlay/networking
 			p1, p1 + (-dir + right) * 5)
 
 		-- Visualize breech location
-		local BreechPos = self:LocalToWorld(Vector(self:OBBMins().x, 0, 0))
-		render.DrawWireframeSphere(BreechPos, 2, 10, 10, Purple, true)
+		local Length = self:GetNW2Float("Length", 0)
+		local Class = self:GetNWString("ACF_Class")
+		local ClassData = Racks.Get(Class)
+		if not ClassData then return end
+		if ClassData.BreechConfigs then
+			local BreechIndex = self:GetNW2Int("BreechIndex", 1)
+			local Caliber = self:GetNW2Float("Caliber", 0) / ACF.InchToCm
+			local Depth = -Length / ACF.InchToCm / 2
+
+			for Index, Config in ipairs(ClassData.BreechConfigs.Locations) do
+				local Pos = self:LocalToWorld(Config.LPos * self:OBBMins())
+				local Ang = self:LocalToWorldAngles(Config.LAng)
+				local MinBox = Vector(Depth, -Caliber, -Caliber)
+				local MaxBox = Vector(0, Caliber, Caliber)
+
+				render.DrawWireframeBox(Pos, Ang, MinBox, MaxBox, Index == BreechIndex and Purple or Cyan, true)
+				if Index == BreechIndex then render.DrawWireframeSphere(Pos, 2, 10, 10, Purple, true) end -- Draw the location of the breech
+			end
+		end
 	end
 end
