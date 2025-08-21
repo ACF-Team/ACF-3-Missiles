@@ -105,12 +105,12 @@ do
 			-- Check assuming 2 piece for now.
 			local ShellLength = IdClass.Length / ACF.InchToCm / 2
 			local p1 = self.BreechPos
-			local p2 = p1 - Vector(ShellLength, 0, 0)
+			local p2 = p1 - Vector(self.BreechDir * ShellLength, 0, 0)
 			local wp1, wp2 = self:LocalToWorld(p1), self:LocalToWorld(p2)
 
 			TraceConfig.start = wp1
 			TraceConfig.endpos = wp2
-			TraceConfig.filter = function(x) return not (x == self or x.noradius or x:GetOwner() ~= self:GetOwner() or x:IsPlayer() or ACF.GlobalFilter[x:GetClass()]) end
+			TraceConfig.filter = function(x) return not (x == self or x.noradius or x:GetOwner() ~= self:GetOwner() or x:IsPlayer() or x:GetClass() == "acf_missile" or ACF.GlobalFilter[x:GetClass()]) end
 			local tr = TraceLine(TraceConfig)
 
 			debugoverlay.Line(wp1, tr.HitPos, 1, Green, true)
@@ -301,10 +301,12 @@ do -- Spawning and Updating --------------------
 			local MountPos = Entity.MountPoints[1].Position
 			Entity.BreechPos = Vector(Entity:OBBCenter().x, MountPos.y, MountPos.z) + BreechConfig.LPos * (Entity:OBBMaxs() - Entity:OBBMins()) / 2
 			Entity.BreechAng = BreechConfig.LAng
+			Entity.BreechDir = BreechConfig.Direction or 1
 		else
 			-- If no custom breech config is specified, use the rear of the model
 			Entity.BreechPos = Vector(Entity:OBBMins().x, 0, 0)
 			Entity.BreechAng = Angle(0, 0, 0)
+			Entity.BreechDir = 1
 		end
 
 		UpdateTotalAmmo(Entity)

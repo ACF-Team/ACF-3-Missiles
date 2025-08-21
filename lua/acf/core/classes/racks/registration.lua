@@ -20,8 +20,8 @@ function Racks.Register(ID, Data)
 	if not Class.BreechConfigs then
 		Class.BreechConfigs = {
 			Locations = {
-				{Name = "Rear", LPos = Vector(-1, 0, 0), LAng = Angle(0, 0, 0)},
-				{Name = "Front", LPos = Vector(1, 0, 0), LAng = Angle(180, 0, 0)},
+				{Name = "Rear", LPos = Vector(-1, 0, 0), LAng = Angle(0, 0, 0), Direction = 1},
+				{Name = "Front", LPos = Vector(1, 0, 0), LAng = Angle(180, 0, 0), Direction = -1},
 			}
 		}
 	end
