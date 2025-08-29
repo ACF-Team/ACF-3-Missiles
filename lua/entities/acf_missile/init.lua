@@ -249,7 +249,7 @@ local function CalcFlight(Missile)
 	local Up        = Dir:Cross(LastVel):Cross(Dir):GetNormalized()
 	local DotSimple = Up.x * VelNorm.x + Up.y * VelNorm.y + Up.z * VelNorm.z
 	local Lift      = -Up * DotSimple * LiftMultiplier
-	
+
 	-- debugoverlay.Line(Missile.Position, Missile.Position + VelNorm * 10, 10, Color(0, 0, 255), true)
 	-- debugoverlay.Line(Missile.Position, Missile.Position + Up * 10, 10, Color(255, 0, 0), true)
 	-- debugoverlay.Line(Missile.Position, Missile.Position + Dir * 10, 10, Color(255, 0, 0), true)

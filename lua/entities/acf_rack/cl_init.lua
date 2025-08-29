@@ -1,7 +1,6 @@
 local Clock		= ACF.Utilities.Clock
 local Classes     = ACF.Classes
 local Racks = ACF.Classes.Racks
-local Missiles = ACF.Classes.Missiles
 local Queued	= {}
 
 include("shared.lua")
