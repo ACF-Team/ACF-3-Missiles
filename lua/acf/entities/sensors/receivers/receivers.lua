@@ -28,7 +28,7 @@ do -- Laser Receiver
 		end
 
 		-- Wiremod laser pointer, because it's, you know, a laser
-		for _, ply in ipairs(player.GetAll()) do
+		for _, ply in player.Iterator() do
 			local Wep = ply:GetWeapon("laserpointer")
 			if not IsValid(Wep) then continue end
 			if Wep ~= ply:GetActiveWeapon() then continue end
@@ -111,7 +111,8 @@ do -- Radar Receiver
 		return RadarSource
 	end
 
-	local TraceData	  = { start = true, endpos = true, mask = MASK_SOLID_BRUSHONLY }
+	local TraceData = { start = true, endpos = true, mask = MASK_SOLID_BRUSHONLY, filter = {} }
+
 	local function CheckLOS(_, _, Start, End)
 		TraceData.start = Start
 		TraceData.endpos = End

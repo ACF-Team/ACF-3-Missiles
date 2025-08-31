@@ -9,7 +9,7 @@ Missiles.Register("FFAR", {
 	Blacklist	= { "AP", "APHE", "HP", "FL" },
 	LimitConVar = {
 		Name = "_acfm_ffar",
-		Amount = 40,
+		Amount = 64,
 		Text = "Maximum number of folding-fin aerial rockets missiles that can be loaded at once. Differentiates from the acf_rack limit."
 	}
 })

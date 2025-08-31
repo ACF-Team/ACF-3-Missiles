@@ -77,6 +77,8 @@ local function CreateMenu(Menu)
 	local RackPreview = RackBase:AddModelPreview(nil, true)
 	local RackInfo = RackBase:AddLabel()
 
+	local BreechIndex = RackBase:AddComboBox()
+
 	local AmmoList = ACF.CreateAmmoMenu(Menu)
 
 	ACF.SetClientData("PrimaryClass", "acf_rack")
@@ -128,6 +130,8 @@ local function CreateMenu(Menu)
 		self.ListData.Index = Index
 		self.Selected = Data
 
+		print("Missile", Data.ID)
+
 		ACF.SetClientData("Rack", Data.ID)
 
 		RackDesc:SetText(Data.Description)
@@ -135,6 +139,23 @@ local function CreateMenu(Menu)
 
 		RackPreview:UpdateModel(Data.Model)
 		RackPreview:UpdateSettings(Data.Preview)
+
+		BreechIndex:Clear()
+		if Data.BreechConfigs then
+			for Index, Config in ipairs(Data.BreechConfigs.Locations) do
+				BreechIndex:AddChoice("Loaded At: " .. Config.Name, Index)
+			end
+
+			BreechIndex:SetVisible(true)
+			BreechIndex:SetClientData("BreechIndex", "OnSelect")
+			BreechIndex:DefineSetter(function(_, _, _, Value)
+				ACF.SetClientData("BreechIndex", Value)
+				return Value
+			end)
+			BreechIndex:ChooseOptionID(Data.BreechIndex or 1)
+		else
+			BreechIndex:SetVisible(false)
+		end
 	end
 
 	ACF.LoadSortedList(MissileTypes, Entries, "ID", "Model")

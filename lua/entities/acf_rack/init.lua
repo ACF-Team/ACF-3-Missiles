@@ -14,6 +14,7 @@ local Clock       = Utilities.Clock
 local Sounds      = Utilities.Sounds
 local MaxDistance = ACF.LinkDistance * ACF.LinkDistance
 local UnlinkSound = "physics/metal/metal_box_impact_bullet%s.wav"
+local TraceLine = util.TraceLine
 
 -- Force unregisters an entity from the Count/Limit system in Sandbox
 -- Kind of hacky but Garry's Mod doesn't provide this and we need to remove missiles
@@ -67,7 +68,7 @@ do
 
 	-- Calculates the reload efficiency between a Crew, one of it's racks and an ammo crate
 	local function GetReloadEff(Crew, Rack, Ammo)
-		local BreechPos = Rack:LocalToWorld(Vector(Rack:OBBMins().x, 0, 0))
+		local BreechPos = Rack:LocalToWorld(Rack.BreechPos)
 		local CrewPos = Crew:LocalToWorld(Crew.CrewModel.ScanOffsetL)
 		local AmmoPos = Ammo:GetPos()
 		local D1 = CrewPos:Distance(BreechPos)
@@ -94,6 +95,49 @@ do
 		local Sum2 = ACF.WeightedLinkSum(self.CrewsByType.Commander or {}, GetReloadEff, self, self.CurrentCrate or self)
 		local Sum3 = ACF.WeightedLinkSum(self.CrewsByType.Pilot or {}, GetReloadEff, self, self.CurrentCrate or self)
 		self.LoadCrewMod = math.Clamp(Sum1 + Sum2 + Sum3, ACF.CrewFallbackCoef, ACF.LoaderMaxBonus)
+
+		-- Check space behind breech
+		if self.BulletData and self.BulletData.Type ~= "Empty" and self.ClassData.BreechConfigs then
+			local IdName      = self.BulletData.Id
+			local IdGroup     = Classes.GetGroup(Classes.Missiles, IdName)
+			local IdClass     = IdGroup.Lookup[IdName]
+
+			-- Check assuming 2 piece for now.
+			local ShellLength = IdClass.Length / ACF.InchToCm / 2
+			local p1 = self.BreechPos
+			local p2 = p1 - Vector(self.BreechDir * ShellLength, 0, 0)
+			local wp1, wp2 = self:LocalToWorld(p1), self:LocalToWorld(p2)
+
+			TraceConfig.start = wp1
+			TraceConfig.endpos = wp2
+			TraceConfig.filter = function(x) return not (x == self or x.noradius or x:GetOwner() ~= self:GetOwner() or x:IsPlayer() or x:GetClass() == "acf_missile" or ACF.GlobalFilter[x:GetClass()]) end
+			local tr = TraceLine(TraceConfig)
+
+			debugoverlay.Line(wp1, tr.HitPos, 1, Green, true)
+			debugoverlay.Line(tr.HitPos, wp2, 1, Red, true)
+
+			-- Additional Randomized check just in case
+			local tr2
+			if not tr.Hit then
+				local Width = IdClass.Caliber / 10 / ACF.InchToCm * 2
+				local rb = Vector(0, Width, Width) / 2 * VectorRand()
+				local rp1 = p1 + rb
+				local rp2 = p2 + rb
+				local wrp1, wrp2 = self:LocalToWorld(rp1), self:LocalToWorld(rp2)
+
+				TraceConfig.start = wrp1
+				TraceConfig.endpos = wrp2
+				tr2 = TraceLine(TraceConfig)
+
+				debugoverlay.Line(wrp1, tr2.HitPos, 1, Green, true)
+				debugoverlay.Line(tr2.HitPos, wrp2, 1, Red, true)
+			end
+
+			local IsBlocked = (tr.Hit or (tr2 and tr2.Hit))
+			self.OverlayErrors.BreechCheck = IsBlocked and "Not enough space behind breech!\nHover with ACF menu tool" or nil
+			self:UpdateOverlay()
+			if IsBlocked then return 0.000001 end
+		end
 
 		return self.LoadCrewMod
 	end
@@ -155,6 +199,11 @@ do -- Spawning and Updating --------------------
 			Rack = Racks.Get("1xRK")
 		end
 
+		-- For breech locations
+		if not Data.BreechIndex then
+			Data.BreechIndex = 1
+		end
+
 		do -- External verifications
 			if Rack.VerifyData then
 				Rack.VerifyData(Data, Rack)
@@ -182,6 +231,7 @@ do -- Spawning and Updating --------------------
 		Entity.EntType        = Rack.EntType
 		Entity.RackData       = Rack
 		Entity.Class          = Rack.ID
+		Entity.ClassData      = Rack
 		Entity.Caliber        = Rack.Caliber or 0
 		Entity.MagSize        = Rack.MagSize or 1
 		Entity.ForcedIndex    = Entity.ForcedIndex and math.max(Entity.ForcedIndex, Entity.MagSize)
@@ -197,10 +247,13 @@ do -- Spawning and Updating --------------------
 		Entity.Spread         = Rack.Spread or 1
 		Entity.InAirMissiles  = {}
 
+		Entity.OverlayErrors = {}
+
 		WireIO.SetupInputs(Entity, Inputs, Data, Rack)
 		WireIO.SetupOutputs(Entity, Outputs, Data, Rack)
 
 		Entity:SetNWString("WireName", "ACF " .. Entity.Name)
+		Entity:SetNWString("ACF_Class", Entity.Class)
 
 		ACF.Activate(Entity, true)
 
@@ -237,6 +290,23 @@ do -- Spawning and Updating --------------------
 			end
 
 			Entity:UpdatePoint()
+		end
+
+		-- Breech information
+		Entity.BreechIndex  = Data.BreechIndex or 1
+		local BreechConfigs = Entity.ClassData.BreechConfigs
+		if BreechConfigs then
+			-- If a custom breech config is specified, use it
+			local BreechConfig = BreechConfigs.Locations[Entity.BreechIndex] or {}
+			local MountPos = Entity.MountPoints[1].Position
+			Entity.BreechPos = Vector(Entity:OBBCenter().x, MountPos.y, MountPos.z) + BreechConfig.LPos * (Entity:OBBMaxs() - Entity:OBBMins()) / 2
+			Entity.BreechAng = BreechConfig.LAng
+			Entity.BreechDir = BreechConfig.Direction or 1
+		else
+			-- If no custom breech config is specified, use the rear of the model
+			Entity.BreechPos = Vector(Entity:OBBMins().x, 0, 0)
+			Entity.BreechAng = Angle(0, 0, 0)
+			Entity.BreechDir = 1
 		end
 
 		UpdateTotalAmmo(Entity)
@@ -320,7 +390,7 @@ do -- Spawning and Updating --------------------
 		return Rack
 	end
 
-	Entities.Register("acf_rack", ACF.MakeRack, "Rack")
+	Entities.Register("acf_rack", ACF.MakeRack, "Rack", "BreechIndex")
 
 	ACF.RegisterLinkSource("acf_rack", "Crates")
 	ACF.RegisterLinkSource("acf_rack", "Computer", true)
@@ -603,6 +673,16 @@ do -- Entity Overlay ----------------------------
 			Status = "Not linked to an ammo crate!"
 		end
 
+		local ErrorCount = table.Count(self.OverlayErrors)
+		if ErrorCount > 0 then
+			Status = Status .. " (" .. ErrorCount .. " errors)"
+		end
+
+		-- Compile error messages
+		for _, Error in pairs(self.OverlayErrors) do
+			Status = Status .. "\n\n" .. Error
+		end
+
 		local ReadyToFire = 0
 		for _, Mount in ipairs(self.MountPoints) do
 			if Mount.State == "Loaded" then
@@ -772,6 +852,7 @@ do -- Loading ----------------------------------
 			local IdName      = Crate.BulletData.Id
 			local IdGroup     = Classes.GetGroup(Classes.Missiles, IdName)
 			local IdClass     = IdGroup.Lookup[IdName]
+			self:SetNWString("ACF_MissileClass", IdName)
 			LimitConVar = IdClass.LimitConVar or IdGroup.LimitConVar
 
 			if LimitConVar then
@@ -796,6 +877,8 @@ do -- Loading ----------------------------------
 			WireLib.TriggerOutput(self, "Reload Time", ReloadTime)
 
 			Crate:Consume()
+
+			self:SetNW2Int("BreechIndex", self.BreechIndex or 1)
 
 			local ReloadLoop = function()
 				local eff = self:UpdateLoadMod() or 1
