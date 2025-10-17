@@ -157,6 +157,10 @@ do
 		self.AccuracyCrewMod = math.Clamp(Val, ACF.CrewFallbackCoef, 1)
 		return self.AccuracyCrewMod
 	end
+
+	function ENT:SetLoadModOverride(Efficiency)
+		self.LoadCrewModOverride = Efficiency
+	end
 end
 
 do -- Spawning and Updating --------------------
@@ -352,6 +356,7 @@ do -- Spawning and Updating --------------------
 		Rack.Missiles    = {}
 		Rack.Crates      = {}
 		Rack.DataStore   = Entities.GetArguments("acf_rack")
+		Rack.ReloadTimers = {}
 
 		UpdateRack(Rack, Data, RackData)
 
@@ -911,7 +916,7 @@ do -- Loading ----------------------------------
 				return true
 			end
 
-			ACF.ProgressTimer(
+			self.ReloadTimers[Point] = ACF.ProgressTimer(
 				self, ReloadLoop, ReloadFinish, {MinTime = 1.0,	MaxTime = 3.0, Progress = 0, Goal = IdealTime}
 			)
 		end
