@@ -573,7 +573,7 @@ do -- Entity Link/Unlink -----------------------
 		end
 
 		if Weapon.State == "Empty" then -- When linked to an empty weapon, attempt to load it
-			if Weapon.HasInitialLoaded then
+			if Weapon.HasInitialLoaded and Weapon.HasCompletedInitialLoad then
 				timer.Simple(1, function()
 					AttemptReload(Weapon, Target)
 				end)
@@ -906,6 +906,7 @@ do -- Loading ----------------------------------
 					Point.State = "Loaded"
 					Point.NextFire = nil
 				end
+				self.HasCompletedInitialLoad = true
 
 				self:UpdateLoad(Point, Missile)
 			end
