@@ -96,12 +96,6 @@ do
 		local Sum3 = ACF.WeightedLinkSum(self.CrewsByType.Pilot or {}, GetReloadEff, self, self.CurrentCrate or self)
 		self.LoadCrewMod = self.LoadCrewModOverride or math.Clamp(Sum1 + Sum2 + Sum3, ACF.CrewFallbackCoef, ACF.LoaderMaxBonus)
 
-		local IsLoaded = true
-		for _, Mount in ipairs(self.MountPoints) do
-			if Mount.State ~= "Loaded" then IsLoaded = false end
-		end
-		if IsLoaded then return self.LoadCrewMod end
-
 		-- Check space behind breech
 		if self.BulletData and self.BulletData.Type ~= "Empty" and self.ClassData.BreechConfigs then
 			local IdName      = self.BulletData.Id
