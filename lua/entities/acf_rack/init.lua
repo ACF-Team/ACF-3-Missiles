@@ -15,7 +15,6 @@ local Sounds      = Utilities.Sounds
 local MaxDistance = ACF.LinkDistance * ACF.LinkDistance
 local UnlinkSound = "physics/metal/metal_box_impact_bullet%s.wav"
 local TraceLine = util.TraceLine
-local Clock           = ACF.Utilities.Clock
 
 -- Force unregisters an entity from the Count/Limit system in Sandbox
 -- Kind of hacky but Garry's Mod doesn't provide this and we need to remove missiles
@@ -103,14 +102,8 @@ do
 		end
 		if IsLoaded then return self.LoadCrewMod end
 
-		-- Timers do not communicate with each other so if there's many munitions reloading concurrently, they will spam this function...
-		-- I want to find a better solution later.
-		self.LastTraceTime = self.LastTraceTime or Clock.CurTime
-
 		-- Check space behind breech
-		if self.BulletData and self.BulletData.Type ~= "Empty" and (Clock.CurTime - self.LastTraceTime) > 0.1 then
-			self.LastTraceTime = Clock.CurTime
-
+		if self.BulletData and self.BulletData.Type ~= "Empty" and self.ClassData.BreechConfigs then
 			local IdName      = self.BulletData.Id
 			local IdGroup     = Classes.GetGroup(Classes.Missiles, IdName)
 			local IdClass     = IdGroup.Lookup[IdName]
