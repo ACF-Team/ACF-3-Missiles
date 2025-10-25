@@ -1,5 +1,4 @@
 local ACF       = ACF
-local Clock     = ACF.Utilities.Clock
 local Guidances = ACF.Classes.Guidances
 local Guidance  = Guidances.Register("GPS Guided", "Radio (MCLOS)")
 
