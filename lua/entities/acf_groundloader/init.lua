@@ -136,10 +136,9 @@ do
 
 		local Contraption = Rack:GetContraption()
 		if not Contraption then self.Complete = true return end
-		
+
 		local Base = Contraption.ACF_Baseplate
 		if not IsValid(Base) then self.Complete = true return end
-	
 
 		-- Evaluate the current condition.
 		local CurrentPos = Rack:GetPos()
