@@ -21,6 +21,6 @@ else
 	function Guidance:GetGuidance()
 		if not self.TarPos then return end
 
-		return { TargetPos = self.LastPos }
+		return { TargetPos = self.TarPos }
 	end
 end
