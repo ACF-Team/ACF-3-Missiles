@@ -164,7 +164,6 @@ do
 end
 
 do -- Spawning and Updating --------------------
-	local CheckLegal  = ACF.CheckLegal
 	local WireIO      = Utilities.WireIO
 	local Entities    = Classes.Entities
 	local Racks       = Classes.Racks
@@ -373,8 +372,6 @@ do -- Spawning and Updating --------------------
 		WireLib.TriggerOutput(Rack, "Reload Time", 1)
 
 		duplicator.ClearEntityModifier(Rack, "mass")
-
-		CheckLegal(Rack)
 
 		timer.Create("ACF Rack Clock " .. Rack:EntIndex(), 3, 0, function()
 			if not IsValid(Rack) then return end

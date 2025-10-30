@@ -39,7 +39,6 @@ end)
 
 local Radars	  = ACF.ActiveRadars
 local Damage      = ACF.Damage
-local CheckLegal  = ACF.CheckLegal
 local Sounds      = ACF.Utilities.Sounds
 local UnlinkSound = "physics/metal/metal_box_impact_bullet%s.wav"
 local MaxDistance = ACF.LinkDistance * ACF.LinkDistance
@@ -437,8 +436,6 @@ do -- Spawn and Update functions
 
 		duplicator.ClearEntityModifier(Radar, "mass")
 
-		CheckLegal(Radar)
-
 		TimerCreate("ACF Radar Clock " .. Radar:EntIndex(), 3, 0, function()
 			if not IsValid(Radar) then return end
 
@@ -503,7 +500,7 @@ function ENT:ACF_OnRepaired() -- OldArmor, OldHealth, Armor, Health
 end
 
 function ENT:Enable()
-	if not CheckLegal(self) then return end
+	if not ACF.CheckLegal(self) then return end
 
 	if self.Inputs.Active.Path then
 		self:TriggerInput("Active", self.Inputs.Active.Value)

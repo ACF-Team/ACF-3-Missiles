@@ -70,7 +70,6 @@ end)
 -- Local Funcs and Vars
 --===============================================================================================--
 
-local CheckLegal  = ACF.CheckLegal
 local UnlinkSound = "physics/metal/metal_box_impact_bullet%s.wav"
 local MaxDistance = ACF.LinkDistance * ACF.LinkDistance
 
@@ -229,8 +228,6 @@ do -- Spawn and update function
 		hook.Run("ACF_OnSpawnEntity", "acf_computer", Entity, Data, Class, Computer)
 
 		duplicator.ClearEntityModifier(Entity, "mass")
-
-		CheckLegal(Entity)
 
 		timer.Create("ACF Computer Clock " .. Entity:EntIndex(), 3, 0, function()
 			if not IsValid(Entity) then return end
