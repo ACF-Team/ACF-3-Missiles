@@ -12,7 +12,6 @@ local Contraption	= ACF.Contraption
 --===============================================================================================--
 
 local Damage      = ACF.Damage
-local CheckLegal  = ACF.CheckLegal
 local Sounds      = ACF.Utilities.Sounds
 local TimerExists = timer.Exists
 local TimerCreate = timer.Create
@@ -209,8 +208,6 @@ do -- Spawn and Update functions
 
 		duplicator.ClearEntityModifier(Receiver, "mass")
 
-		CheckLegal(Receiver)
-
 		SetActive(Receiver, true)
 
 		return Receiver
@@ -286,7 +283,7 @@ function ENT:ACF_Activate(Recalc)
 end
 
 function ENT:Enable()
-	if not CheckLegal(self) then return end
+	if not ACF.CheckLegal(self) then return end
 
 	SetActive(self, true)
 

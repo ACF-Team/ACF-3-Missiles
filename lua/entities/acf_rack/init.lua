@@ -94,7 +94,7 @@ do
 		local Sum1 = ACF.WeightedLinkSum(self.CrewsByType.Loader or {}, GetReloadEff, self, self.CurrentCrate or self)
 		local Sum2 = ACF.WeightedLinkSum(self.CrewsByType.Commander or {}, GetReloadEff, self, self.CurrentCrate or self)
 		local Sum3 = ACF.WeightedLinkSum(self.CrewsByType.Pilot or {}, GetReloadEff, self, self.CurrentCrate or self)
-		self.LoadCrewMod = math.Clamp(Sum1 + Sum2 + Sum3, ACF.CrewFallbackCoef, ACF.LoaderMaxBonus)
+		self.LoadCrewMod = self.LoadCrewModOverride or math.Clamp(Sum1 + Sum2 + Sum3, ACF.CrewFallbackCoef, ACF.LoaderMaxBonus)
 
 		-- Check space behind breech
 		if self.BulletData and self.BulletData.Type ~= "Empty" and self.ClassData.BreechConfigs then
@@ -157,10 +157,13 @@ do
 		self.AccuracyCrewMod = math.Clamp(Val, ACF.CrewFallbackCoef, 1)
 		return self.AccuracyCrewMod
 	end
+
+	function ENT:SetLoadModOverride(Efficiency)
+		self.LoadCrewModOverride = Efficiency
+	end
 end
 
 do -- Spawning and Updating --------------------
-	local CheckLegal  = ACF.CheckLegal
 	local WireIO      = Utilities.WireIO
 	local Entities    = Classes.Entities
 	local Racks       = Classes.Racks
@@ -352,6 +355,7 @@ do -- Spawning and Updating --------------------
 		Rack.Missiles    = {}
 		Rack.Crates      = {}
 		Rack.DataStore   = Entities.GetArguments("acf_rack")
+		Rack.ReloadTimers = {}
 
 		UpdateRack(Rack, Data, RackData)
 
@@ -368,8 +372,6 @@ do -- Spawning and Updating --------------------
 		WireLib.TriggerOutput(Rack, "Reload Time", 1)
 
 		duplicator.ClearEntityModifier(Rack, "mass")
-
-		CheckLegal(Rack)
 
 		timer.Create("ACF Rack Clock " .. Rack:EntIndex(), 3, 0, function()
 			if not IsValid(Rack) then return end
@@ -568,7 +570,7 @@ do -- Entity Link/Unlink -----------------------
 		end
 
 		if Weapon.State == "Empty" then -- When linked to an empty weapon, attempt to load it
-			if Weapon.HasInitialLoaded then
+			if Weapon.HasInitialLoaded and Weapon.HasCompletedInitialLoad then
 				timer.Simple(1, function()
 					AttemptReload(Weapon, Target)
 				end)
@@ -901,6 +903,7 @@ do -- Loading ----------------------------------
 					Point.State = "Loaded"
 					Point.NextFire = nil
 				end
+				self.HasCompletedInitialLoad = true
 
 				self:UpdateLoad(Point, Missile)
 			end
@@ -911,7 +914,7 @@ do -- Loading ----------------------------------
 				return true
 			end
 
-			ACF.ProgressTimer(
+			self.ReloadTimers[Point] = ACF.ProgressTimer(
 				self, ReloadLoop, ReloadFinish, {MinTime = 1.0,	MaxTime = 3.0, Progress = 0, Goal = IdealTime}
 			)
 		end

@@ -39,7 +39,6 @@ end)
 
 local Radars	  = ACF.ActiveRadars
 local Damage      = ACF.Damage
-local CheckLegal  = ACF.CheckLegal
 local Sounds      = ACF.Utilities.Sounds
 local UnlinkSound = "physics/metal/metal_box_impact_bullet%s.wav"
 local MaxDistance = ACF.LinkDistance * ACF.LinkDistance
@@ -85,6 +84,7 @@ local function ResetOutputs(Entity)
 	WireLib.TriggerOutput(Entity, "Position", TargetInfo.Position)
 	WireLib.TriggerOutput(Entity, "Velocity", TargetInfo.Velocity)
 	WireLib.TriggerOutput(Entity, "Distance", TargetInfo.Distance)
+	WireLib.TriggerOutput(Entity, "Size", TargetInfo.Size)
 end
 
 local function SetSequence(Entity, Active)
@@ -162,6 +162,7 @@ local function ScanForEntities(Entity)
 	local Position = TargetInfo.Position
 	local Velocity = TargetInfo.Velocity
 	local Distance = TargetInfo.Distance
+	local Size = TargetInfo.Size
 
 	local EntDamage = Entity.Damage
 	local Spread = ACF.MaxDamageInaccuracy * EntDamage
@@ -181,6 +182,15 @@ local function ScanForEntities(Entity)
 
 			local EntDist = Origin:Distance(EntPos)
 
+			local EntSize = 0
+			if Ent.IsACFMissile then
+				EntSize = (Ent.Caliber or 0) / ACF.InchToMm
+			elseif Ent:GetContraption() then
+				local Mins, Maxs, _ = Ent:GetContraption():GetAABB()
+				EntSize = (Maxs - Mins):Length()
+			end
+			EntSize = math.Round(EntSize) -- Round to nearest inch
+
 			Targets[Ent] = {
 				Index = Index,
 				Owner = Owner,
@@ -195,6 +205,7 @@ local function ScanForEntities(Entity)
 			Position[Count] = EntPos
 			Velocity[Count] = EntVel
 			Distance[Count] = EntDist
+			Size[Count] = EntSize
 
 			if EntDist < Closest then
 				Closest = EntDist
@@ -211,6 +222,7 @@ local function ScanForEntities(Entity)
 	WireLib.TriggerOutput(Entity, "Velocity", Velocity)
 	WireLib.TriggerOutput(Entity, "Distance", Distance)
 	WireLib.TriggerOutput(Entity, "Detected", Count)
+	WireLib.TriggerOutput(Entity, "Size", Size)
 
 	if Count ~= Entity.TargetCount then
 		if Count > Entity.TargetCount then
@@ -303,6 +315,7 @@ do -- Spawn and Update functions
 		"Position (Returns a list of position vectors from all the detected targets.) [ARRAY]",
 		"Velocity (Returns a list of velocity vectors from all the detected targets.) [ARRAY]",
 		"Distance (Returns a list of distances from all the detected targets.) [ARRAY]",
+		"Size (Returns a list of diameters, in mm, of all the detected targets.) [ARRAY]",
 		"Think Delay (Returns the amount of time in seconds between each scan.)",
 		"Entity (The radar itself.) [ENTITY]"
 	}
@@ -409,7 +422,8 @@ do -- Spawn and Update functions
 			Owner = {},
 			Position = {},
 			Velocity = {},
-			Distance = {}
+			Distance = {},
+			Size = {}
 		}
 
 		UpdateRadar(Radar, Data, Class, RadarData)
@@ -421,8 +435,6 @@ do -- Spawn and Update functions
 		hook.Run("ACF_OnSpawnEntity", "acf_radar", Radar, Data, Class, RadarData)
 
 		duplicator.ClearEntityModifier(Radar, "mass")
-
-		CheckLegal(Radar)
 
 		TimerCreate("ACF Radar Clock " .. Radar:EntIndex(), 3, 0, function()
 			if not IsValid(Radar) then return end
@@ -488,7 +500,7 @@ function ENT:ACF_OnRepaired() -- OldArmor, OldHealth, Armor, Health
 end
 
 function ENT:Enable()
-	if not CheckLegal(self) then return end
+	if not ACF.CheckLegal(self) then return end
 
 	if self.Inputs.Active.Path then
 		self:TriggerInput("Active", self.Inputs.Active.Value)
