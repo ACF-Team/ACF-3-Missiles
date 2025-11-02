@@ -90,9 +90,7 @@ Missiles.RegisterItem("AIM-120 AAM", "AAM", {
 		FinMul          = 0.2,
 		GLimit          = 20,
 		TailFinMul      = 0.001,
-		CanDelayLaunch  = true,
-		ActualLength    = 370,
-		ActualWidth     = 18
+		CanDelayLaunch  = true
 	},
 	Preview = {
 		Height = 60,
