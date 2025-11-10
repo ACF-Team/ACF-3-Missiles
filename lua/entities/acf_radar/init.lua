@@ -442,6 +442,9 @@ do -- Spawn and Update functions
 			CheckDistantLinks(Radar, "Weapons")
 		end)
 
+		-- Radars should be active by default
+		Radar:TriggerInput("Active", 1)
+
 		return Radar
 	end
 
