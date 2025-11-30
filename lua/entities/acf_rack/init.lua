@@ -726,6 +726,12 @@ do -- Firing -----------------------------------
 		WireLib.TriggerOutput(Rack, "In Air", next(Rack.InAirMissiles) and 1 or 0)
 
 		Rack:UpdateLoad(Point)
+
+		-- Mark contraption as in combat when firing
+		local Contraption = Rack:GetContraption()
+		if Contraption then
+			Contraption.InCombat = engine.TickCount()
+		end
 	end
 
 	-------------------------------------------------------------------------------

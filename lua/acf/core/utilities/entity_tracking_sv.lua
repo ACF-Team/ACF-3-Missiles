@@ -135,7 +135,10 @@ local function GetAncestorEntities()
 		K.Position = nil
 		K.Velocity = nil
 
-		K:RemoveCallOnRemove("ACF Ancestor Tracking")
+		-- Weird that this causes errors, but RemoveCallOnRemove dies here now?? - March 11/9/2025
+		if K:GetTable() ~= nil then
+			K:RemoveCallOnRemove("ACF Ancestor Tracking")
+		end
 	end
 
 	NextUpdate = Clock.CurTime + math.Rand(3, 5)
