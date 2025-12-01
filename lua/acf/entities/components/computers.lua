@@ -808,16 +808,25 @@ do -- GPS transmitter
 	})
 end
 
+local GroundLoaderText = "Mass : %s kg\n"
+
+function ACF.CreateGroundLoaderMenu(Data, Menu)
+	Menu:AddLabel(GroundLoaderText:format(Data.Mass))
+
+	ACF.SetClientData("PrimaryClass", "acf_groundloader")
+end
 
 -- Wow I love this file so much
 -- This is just to get it in the menu.
 Components.Register("GND-LDR", {
 	Name   = "Ground Loader",
-	Entity = "acf_groundloader"
+	Entity = "acf_groundloader",
+	CreateMenu = ACF.CreateGroundLoaderMenu,
 })
 
 Components.RegisterItem("GND-LDR-ITM", "GND-LDR", {
 	Name        = "Ground Loader",
 	Description = "An entity capable of linking to ammo crates and loading racks within line of sight and range. Must be stationary to function.",
 	Model       = "models/props_vehicles/generatortrailer01.mdl",
+	Mass        = 200,
 })
