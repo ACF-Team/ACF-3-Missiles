@@ -61,8 +61,8 @@ Missiles.RegisterItem("RS82 ASR", "UAR", {
 		TailFinMul      = 0.4,
 		PenMul          = 0.8,
 		CanDelayLaunch  = true,
-		ActualLength    = 60,
-		ActualWidth     = 8.2
+		ActualLength    = 24,
+		ActualWidth     = 6
 	},
 	Preview = {
 		FOV = 70,
@@ -107,8 +107,8 @@ Missiles.RegisterItem("HVAR ASR", "UAR", {
 		LinerMassMul    = 1,
 		Standoff        = 7,
 		CanDelayLaunch  = true,
-		ActualLength    = 173,
-		ActualWidth     = 12.7
+		ActualLength    = 68,
+		ActualWidth     = 5
 	},
 	Preview = {
 		FOV = 60,
@@ -150,8 +150,8 @@ Missiles.RegisterItem("SPG-9 ASR", "UAR", {
 		FillerMul       = 1.06,
 		LinerMassMul    = 2.8,
 		Standoff        = 33.3,
-		ActualLength    = 128.18,
-		ActualWidth     = 7.3
+		ActualLength    = 39,
+		ActualWidth     = 3
 	},
 	Preview = {
 		FOV = 60,
@@ -192,8 +192,8 @@ Missiles.RegisterItem("S-24 ASR", "UAR", {
 		TailFinMul      = 0.3,
 		PenMul          = 1.05,
 		CanDelayLaunch  = true,
-		ActualLength    = 233,
-		ActualWidth     = 24
+		ActualLength    = 92,
+		ActualWidth     = 17
 	},
 	Preview = {
 		FOV = 70,
@@ -232,8 +232,8 @@ Missiles.RegisterItem("RW61 ASR", "UAR", {
 		GLimit          = 1,
 		TailFinMul      = 38.25,
 		PenMul          = 1.2,
-		ActualLength    = 150,
-		ActualWidth     = 38
+		ActualLength    = 59,
+		ActualWidth     = 15
 	},
 	Preview = {
 		FOV = 75,

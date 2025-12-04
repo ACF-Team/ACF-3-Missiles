@@ -49,8 +49,8 @@ Missiles.RegisterItem("AGM-122 ASM", "ARM", {
 		GLimit          = 20,
 		TailFinMul      = 0.001,
 		CanDelayLaunch  = true,
-		ActualLength    = 287,
-		ActualWidth     = 12.7
+		ActualLength    = 113,
+		ActualWidth     = 18
 	},
 	Preview = {
 		FOV = 60,
@@ -91,8 +91,8 @@ Missiles.RegisterItem("AGM-45 ASM", "ARM", {
 		GLimit          = 20,
 		TailFinMul      = 0.001,
 		CanDelayLaunch  = true,
-		ActualLength    = 305,
-		ActualWidth     = 20.3
+		ActualLength    = 120,
+		ActualWidth     = 26
 	},
 	Preview = {
 		Height = 80,

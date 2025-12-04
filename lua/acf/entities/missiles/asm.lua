@@ -51,8 +51,8 @@ Missiles.RegisterItem("AT-3 ASM", "ATGM", {
 		LinerMassMul    = 1.2,
 		Standoff        = 22,
 		CanDelayLaunch  = true,
-		ActualLength    = 86,
-		ActualWidth     = 12.5
+		ActualLength    = 34,
+		ActualWidth     = 8
 	},
 	Preview = {
 		FOV = 100,
@@ -93,8 +93,8 @@ Missiles.RegisterItem("BGM-71E ASM", "ATGM", {
 		FillerMul       = 12,
 		LinerMassMul    = 1,
 		Standoff        = 33.5,
-		ActualLength    = 117,
-		ActualWidth     = 15.2
+		ActualLength    = 46,
+		ActualWidth     = 6
 	},
 	Preview = {
 		FOV = 60,
@@ -152,8 +152,8 @@ Missiles.RegisterItem("AGM-114 ASM", "ATGM", {
 		LinerMassMul    = 1,
 		Standoff        = 51,
 		CanDelayLaunch  = true,
-		ActualLength    = 160,
-		ActualWidth     = 18
+		ActualLength    = 64,
+		ActualWidth     = 10
 	},
 	Preview = {
 		Height = 90,
@@ -183,6 +183,7 @@ Missiles.RegisterItem("Ataka ASM", "ATGM", {
 	Round = {
 		Model           = "models/missiles/9m120.mdl",
 		RackModel       = "models/missiles/9m120_rk1.mdl",
+		IgnoreRackModel = true, -- Ignore the rack model when determining the size of the round for ammo crates
 		MaxLength       = 183,
 		Armor           = 2,
 		ProjLength      = 17.5,
@@ -199,8 +200,8 @@ Missiles.RegisterItem("Ataka ASM", "ATGM", {
 		FillerMul       = 5,
 		LinerMassMul    = 1.2,
 		Standoff        = 56,
-		ActualLength    = 183,
-		ActualWidth     = 13
+		ActualLength    = 72,
+		ActualWidth     = 5
 	},
 	Preview = {
 		Height = 90,
@@ -254,8 +255,8 @@ Missiles.RegisterItem("9M133 ASM", "ATGM", {
 		FillerMul       = 10,
 		LinerMassMul    = 1.2,
 		Standoff        = 64,
-		ActualLength    = 120,
-		ActualWidth     = 15.2
+		ActualLength    = 47,
+		ActualWidth     = 6
 	},
 	Preview = {
 		Height = 90,
@@ -302,8 +303,8 @@ Missiles.RegisterItem("AT-2 ASM", "ATGM", {
 		LinerMassMul    = 2,
 		Standoff        = 5.7,
 		CanDelayLaunch  = true,
-		ActualLength    = 116,
-		ActualWidth     = 14.8
+		ActualLength    = 46,
+		ActualWidth     = 27
 	},
 	Preview = {
 		FOV = 80,

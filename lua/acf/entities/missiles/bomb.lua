@@ -47,8 +47,8 @@ Missiles.RegisterItem("50kgBOMB", "BOMB", {
 		TailFinMul      = 10,
 		PenMul          = 1,
 		FillerRatio     = 0.78,
-		ActualLength    = 109,
-		ActualWidth     = 20
+		ActualLength    = 43,
+		ActualWidth     = 8
 	},
 	Preview = {
 		FOV = 75,
@@ -88,8 +88,8 @@ Missiles.RegisterItem("100kgBOMB", "BOMB", {
 		TailFinMul      = 30,
 		PenMul          = 1,
 		FillerRatio     = 0.78,
-		ActualLength    = 106,
-		ActualWidth     = 27.3
+		ActualLength    = 42,
+		ActualWidth     = 11
 	},
 	Preview = {
 		FOV = 80,
@@ -129,8 +129,8 @@ Missiles.RegisterItem("250kgBOMB", "BOMB", {
 		TailFinMul      = 50,
 		PenMul          = 1,
 		FillerRatio     = 0.8,
-		ActualLength    = 145,
-		ActualWidth     = 32.5
+		ActualLength    = 57,
+		ActualWidth     = 13
 	},
 	Preview = {
 		FOV = 70,
@@ -170,8 +170,8 @@ Missiles.RegisterItem("500kgBOMB", "BOMB", {
 		TailFinMul      = 70,
 		PenMul          = 1,
 		FillerRatio     = 0.79,
-		ActualLength    = 240,
-		ActualWidth     = 40
+		ActualLength    = 94,
+		ActualWidth     = 16
 	},
 	Preview = {
 		FOV = 70,
@@ -211,8 +211,8 @@ Missiles.RegisterItem("1000kgBOMB", "BOMB", {
 		TailFinMul      = 200,
 		PenMul          = 1,
 		FillerRatio     = 0.85,
-		ActualLength    = 270,
-		ActualWidth     = 50
+		ActualLength    = 106,
+		ActualWidth     = 32
 	},
 	Preview = {
 		FOV = 80,

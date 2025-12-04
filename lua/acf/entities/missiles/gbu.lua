@@ -48,8 +48,8 @@ Missiles.RegisterItem("WalleyeGBU", "GBU", {
 		TailFinMul      = 1,
 		PenMul          = 1,
 		FillerRatio     = 0.63,
-		ActualLength    = 345,
-		ActualWidth     = 31.8
+		ActualLength    = 136,
+		ActualWidth     = 32
 	},
 	Preview = {
 		FOV = 75,
@@ -107,8 +107,8 @@ Missiles.RegisterItem("227kgGBU", "GBU", {
 		TailFinMul      = 0.5,
 		PenMul          = 1,
 		FillerRatio     = 0.89,
-		ActualLength    = 327,
-		ActualWidth     = 27.3
+		ActualLength    = 129,
+		ActualWidth     = 16
 	},
 	Preview = {
 		Height = 90,
@@ -166,8 +166,8 @@ Missiles.RegisterItem("454kgGBU", "GBU", {
 		TailFinMul      = 2,
 		PenMul          = 1,
 		FillerRatio     = 0.82,
-		ActualLength    = 370,
-		ActualWidth     = 36
+		ActualLength    = 146,
+		ActualWidth     = 20
 	},
 	Preview = {
 		FOV = 65,
@@ -225,8 +225,8 @@ Missiles.RegisterItem("909kgGBU", "GBU", {
 		TailFinMul      = 4,
 		PenMul          = 1,
 		FillerRatio     = 0.85,
-		ActualLength    = 434,
-		ActualWidth     = 46
+		ActualLength    = 171,
+		ActualWidth     = 26
 	},
 	Preview = {
 		FOV = 70,

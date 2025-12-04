@@ -48,8 +48,8 @@ Missiles.RegisterItem("AIM-9 AAM", "AAM", {
 		GLimit          = 20,
 		TailFinMul      = 0.001,
 		CanDelayLaunch  = true,
-		ActualLength    = 289,
-		ActualWidth     = 12.7
+		ActualLength    = 119,
+		ActualWidth     = 18
 	},
 	Preview = {
 		Height = 100,
@@ -90,7 +90,9 @@ Missiles.RegisterItem("AIM-120 AAM", "AAM", {
 		FinMul          = 0.2,
 		GLimit          = 20,
 		TailFinMul      = 0.001,
-		CanDelayLaunch  = true
+		CanDelayLaunch  = true,
+		ActualLength    = 144,
+		ActualWidth     = 15
 	},
 	Preview = {
 		Height = 60,
@@ -132,8 +134,8 @@ Missiles.RegisterItem("AIM-7 AAM", "AAM", {
 		GLimit          = 12,
 		TailFinMul      = 0.001,
 		CanDelayLaunch  = true,
-		ActualLength    = 370,
-		ActualWidth     = 20
+		ActualLength    = 144,
+		ActualWidth     = 29
 	},
 	Preview = {
 		Height = 100,
@@ -175,8 +177,8 @@ Missiles.RegisterItem("AIM-54 AAM", "AAM", {
 		GLimit          = 12,
 		TailFinMul      = 0.001,
 		CanDelayLaunch  = true,
-		ActualLength    = 400,
-		ActualWidth     = 38
+		ActualLength    = 156,
+		ActualWidth     = 26
 	},
 	Preview = {
 		Height = 100,

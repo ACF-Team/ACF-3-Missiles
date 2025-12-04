@@ -47,8 +47,8 @@ Missiles.RegisterItem("FIM-92 SAM", "SAM", {
 		FinMul          = 0.03,
 		GLimit          = 20,
 		TailFinMul      = 0.001,
-		ActualLength    = 152,
-		ActualWidth     = 7
+		ActualLength    = 60,
+		ActualWidth     = 5
 	},
 	Preview = {
 		Height = 80,
@@ -77,6 +77,7 @@ Missiles.RegisterItem("Strela-1 SAM", "SAM", {
 	Round = {
 		Model           = "models/missiles/9m31.mdl",
 		RackModel       = "models/missiles/9m31f.mdl",
+		IgnoreRackModel = true, -- Ignore the rack model when determining the size of the round for ammo crates
 		MaxLength       = 180,
 		Armor           = 2,
 		ProjLength      = 60,
@@ -89,8 +90,8 @@ Missiles.RegisterItem("Strela-1 SAM", "SAM", {
 		FinMul          = 0.04,
 		GLimit          = 20,
 		TailFinMul      = 0.001,
-		ActualLength    = 180,
-		ActualWidth     = 12
+		ActualLength    = 71,
+		ActualWidth     = 5
 	},
 	Preview = {
 		Height = 60,
