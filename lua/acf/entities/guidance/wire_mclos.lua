@@ -9,10 +9,8 @@ function Guidance:Configure(Missile)
 	self.WireLength = 31496 * 31496 -- Missile.WireLength * Missile.WireLength or 31496
 end
 
-function Guidance:GetDisplayConfig()
-	return {
-		["Wire Length"] = math.Round(self.WireLength ^ 0.5 * ACF.InchToMeter, 2) .. " meters"
-	}
+function Guidance:WriteDisplayConfig(State)
+	State:AddSubKeyValue("Wire Length", math.Round(self.WireLength ^ 0.5 * ACF.InchToMeter, 2) .. " meters")
 end
 
 if CLIENT then

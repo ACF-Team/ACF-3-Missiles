@@ -260,10 +260,10 @@ else
 
 		local Guidance     = Crate.GuidanceData
 		local Fuze         = Crate.FuzeData
-		local GuidanceText = ConcatConfig(Guidance:GetDisplayConfig())
-		local FuzeText     = ConcatConfig(Fuze:GetDisplayConfig())
 
-		State:AddKeyValue("Guidance", Guidance.Name .. GuidanceText)
-		State:AddKeyValue("Fuze", Fuze.Name .. FuzeText)
+		State:AddKeyValue("Guidance", Guidance.Name)
+		Guidance:WriteDisplayConfig(State)
+		State:AddKeyValue("Fuze", Fuze.Name)
+		Fuze:WriteDisplayConfig(State)
 	end)
 end

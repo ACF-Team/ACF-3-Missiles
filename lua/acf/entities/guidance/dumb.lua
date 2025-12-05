@@ -7,8 +7,8 @@ end
 
 function Guidance:Configure() end
 
-function Guidance:GetDisplayConfig()
-	return {}
+function Guidance:WriteDisplayConfig(State)
+
 end
 
 if CLIENT then

@@ -6,12 +6,9 @@ local Fuze    = Fuzes.Register("Optical", "Contact")
 Fuze.MinDistance = 40
 Fuze.MaxDistance = 2500
 
-function Fuze:GetDisplayConfig()
-	local Config = Fuze.BaseClass.GetDisplayConfig(self)
-
-	Config.Distance = math.Round(self.Distance * ACF.InchToMeter, 2) .. " m"
-
-	return Config
+function Fuze:WriteDisplayConfig(State)
+	Fuze.BaseClass.WriteDisplayConfig(self, State)
+	State:AddSubKeyValue("Distance", math.Round(self.Distance * ACF.InchToMeter, 2) .. " m")
 end
 
 if CLIENT then
