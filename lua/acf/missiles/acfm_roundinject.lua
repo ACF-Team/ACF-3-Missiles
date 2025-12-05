@@ -124,7 +124,6 @@ if CLIENT then
 		ACF.LoadSortedList(FuzeList, GetFuzeList(Missile), "Name")
 	end)
 else
-	local Display      = "%s: %s%s\n\n%s: %s%s"
 	local AllowedClass = {
 		acf_missile = true,
 		acf_ammo = true,
@@ -256,7 +255,7 @@ else
 
 	Entities.AddArguments("acf_ammo", "Guidance", "Fuze") -- Adding extra info to ammo crates
 
-	ACF.RegisterOverlayText("acf_ammo", "ACF Missile Overlay", function(Crate)
+	ACF.RegisterAdditionalOverlay("acf_ammo", "Missile Info", function(Crate, State)
 		if not Crate.IsMissileAmmo then return end
 
 		local Guidance     = Crate.GuidanceData
@@ -264,6 +263,7 @@ else
 		local GuidanceText = ConcatConfig(Guidance:GetDisplayConfig())
 		local FuzeText     = ConcatConfig(Fuze:GetDisplayConfig())
 
-		return Display:format("Guidance", Guidance.Name, GuidanceText, "Fuze", Fuze.Name, FuzeText)
+		State:AddKeyValue("Guidance", Guidance.Name .. GuidanceText)
+		State:AddKeyValue("Fuze", Fuze.Name .. FuzeText)
 	end)
 end
