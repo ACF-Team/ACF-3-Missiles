@@ -130,8 +130,6 @@ local function CreateMenu(Menu)
 		self.ListData.Index = Index
 		self.Selected = Data
 
-		print("Missile", Data.ID)
-
 		ACF.SetClientData("Rack", Data.ID)
 
 		RackDesc:SetText(Data.Description)

@@ -15,7 +15,7 @@ PrecacheParticleSystem("ACFM_Flare")
 
 do -- Update checker
 	hook.Add("ACF_OnLoadAddon", "ACF Missiles Update Checker", function()
-		ACF.AddRepository("ACF-Team", "ACF-3-Missiles", "lua/acf/core/missiles_globals.lua")
+		ACF.AddRepository("ACF-Team", "ACF-3-Missiles")
 
 		hook.Remove("ACF_OnLoadAddon", "ACF Missiles Update Checker")
 	end)
@@ -31,7 +31,7 @@ if CLIENT then
 	CreateClientConVar("acf_missiles_missilelights", 0, true, false, LightsDesc, 0, 5)
 else
 	hook.Add("ACF_OnLoadPersistedData", "ACF Missiles Workshop Content", function()
-		if ACF.WorkshopContent then
+		if ACF.ServerData.WorkshopContent then
 			resource.AddWorkshop("3248769787") -- ACF-3 Missiles
 		end
 	end)

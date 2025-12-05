@@ -46,8 +46,8 @@ Missiles.RegisterItem("40mmFFAR", "FFAR", {
 		GLimit          = 1,
 		TailFinMul      = 0.05,
 		PenMul          = 0.91,
-		ActualLength    = 60,
-		ActualWidth     = 4
+		ActualLength    = 24,
+		ActualWidth     = 2
 	},
 	Preview = {
 		Height = 100,
@@ -87,8 +87,8 @@ Missiles.RegisterItem("57mmFFAR", "FFAR", {
 		GLimit          = 1,
 		TailFinMul      = 0.005,
 		PenMul          = 1.3,
-		ActualLength    = 85,
-		ActualWidth     = 5.7,
+		ActualLength    = 40,
+		ActualWidth     = 3,
 	},
 	Preview = {
 		Height = 100,
@@ -128,8 +128,8 @@ Missiles.RegisterItem("70mmFFAR", "FFAR", {
 		GLimit          = 1,
 		TailFinMul      = 0.04,
 		PenMul          = 0.85,
-		ActualLength    = 106,
-		ActualWidth     = 7
+		ActualLength    = 42,
+		ActualWidth     = 3
 	},
 	Preview = {
 		Height = 100,
@@ -169,8 +169,8 @@ Missiles.RegisterItem("80mmFFAR", "FFAR", {
 		GLimit          = 1,
 		TailFinMul      = 0.08,
 		PenMul          = 0.85,
-		ActualLength    = 127,
-		ActualWidth     = 8
+		ActualLength    = 60,
+		ActualWidth     = 4
 	},
 	Preview = {
 		Height = 100,
@@ -210,8 +210,8 @@ Missiles.RegisterItem("Zuni ASR", "FFAR", {
 		GLimit          = 1,
 		TailFinMul      = 0.08,
 		PenMul          = 1,
-		ActualLength    = 200,
-		ActualWidth     = 12.7
+		ActualLength    = 77,
+		ActualWidth     = 5
 	},
 	Preview = {
 		Height = 100,
