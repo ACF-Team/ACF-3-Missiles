@@ -77,6 +77,7 @@ Missiles.RegisterItem("BGM-71E ASM", "ATGM", {
 	ArmDelay	= 0.1,
 	Round = {
 		Model           = "models/missiles/bgm_71e.mdl",
+		RackModel       = "models/missiles/bgm_71e_round.mdl",
 		MaxLength       = 117,
 		Armor           = 2,
 		ProjLength      = 20,
@@ -183,7 +184,6 @@ Missiles.RegisterItem("Ataka ASM", "ATGM", {
 	Round = {
 		Model           = "models/missiles/9m120.mdl",
 		RackModel       = "models/missiles/9m120_rk1.mdl",
-		IgnoreRackModel = true, -- Ignore the rack model when determining the size of the round for ammo crates
 		MaxLength       = 183,
 		Armor           = 2,
 		ProjLength      = 17.5,
@@ -239,6 +239,7 @@ Missiles.RegisterItem("9M133 ASM", "ATGM", {
 	},
 	Round = {
 		Model           = "models/kali/weapons/kornet/parts/9m133 kornet missile.mdl",
+		RackModel       = "models/kali/weapons/kornet/parts/9m133 kornet tube.mdl",
 		MaxLength       = 120,
 		Armor           = 2,
 		ProjLength      = 21,
