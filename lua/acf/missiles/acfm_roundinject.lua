@@ -152,16 +152,6 @@ else
 		return Name, next(Arguments) and Arguments
 	end
 
-	local function ConcatConfig(tbl)
-		local Result = ""
-
-		for K, V in pairs(tbl) do
-			Result = Result .. "\n" .. tostring(K) .. ": " .. tostring(V)
-		end
-
-		return Result
-	end
-
 	hook.Add("ACF_OnVerifyData", "ACF Missile Ammo", function(EntClass, Data, ...)
 		if not AllowedClass[EntClass] then return end
 		if Data.Destiny ~= "Missiles" then return end

@@ -7,7 +7,7 @@ end
 
 function Guidance:Configure() end
 
-function Guidance:WriteDisplayConfig(State)
+function Guidance:WriteDisplayConfig()
 
 end
 
