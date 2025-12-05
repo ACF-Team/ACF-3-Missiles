@@ -128,14 +128,13 @@ do -- Joystick
 				return "In use"
 			end
 		end,
-		OnOverlayBody = function(Entity)
+		OnOverlayBody = function(Entity, State)
 			if not Entity.IsJoystick then return end
 
-			local Text  = "Pitch: %s degree(s)\nYaw: %s degree(s)"
-			local Pitch = math.Round(Entity.Pitch, 2)
-			local Yaw   = math.Round(Entity.Yaw, 2)
+			local Pitch, Yaw = Entity.Pitch, Entity.Yaw
 
-			return Text:format(Pitch, Yaw)
+			State:AddNumber("Pitch", Entity.Pitch, Pitch >= 1 and Pitch < 2 and " degree" or " degrees")
+			State:AddNumber("Yaw", Entity.Yaw, Yaw >= 1 and Yaw < 2 and " degree" or " degrees")
 		end,
 		OnDamaged = function(Entity)
 			Entity.Spread = 1 - math.Round(Entity.ACF.Health / Entity.ACF.MaxHealth, 2)
@@ -371,15 +370,14 @@ do -- Optical guidance computer
 				return "In use"
 			end
 		end,
-		OnOverlayBody = function(Entity)
+		OnOverlayBody = function(Entity, State)
 			if not Entity.IsComputer then return end
 
-			local Text     = "Distance: %s m\nPitch: %s degree(s)\nYaw: %s degree(s)"
-			local Distance = math.Round(FloorMeters(Entity.Distance) * ACF.InchToMeter)
-			local Pitch    = math.Round(Entity.Pitch, 2)
-			local Yaw      = math.Round(Entity.Yaw, 2)
+			local Pitch, Yaw = Entity.Pitch, Entity.Yaw
 
-			return Text:format(Distance, Pitch, Yaw)
+			State:AddNumber("Distance", FloorMeters(Entity.Distance) * ACF.InchToMeter, " m", 2)
+			State:AddNumber("Pitch", Entity.Pitch, Pitch >= 1 and Pitch < 2 and " degree" or " degrees")
+			State:AddNumber("Yaw", Entity.Yaw, Yaw >= 1 and Yaw < 2 and " degree" or " degrees")
 		end,
 		OnDamaged = function(Entity)
 			Entity.Spread = 1 - math.Round(Entity.ACF.Health / Entity.ACF.MaxHealth, 2)
@@ -586,15 +584,15 @@ do -- Laser guidance computer
 				return "In use"
 			end
 		end,
-		OnOverlayBody = function(Entity)
+		OnOverlayBody = function(Entity, State)
 			if not Entity.IsComputer then return end
 
-			local Text     = "Distance: %s m\nPitch: %s degree(s)\nYaw: %s degree(s)"
 			local Distance = math.Round(Entity.Distance * ACF.InchToMeter)
-			local Pitch    = math.Round(Entity.Pitch, 2)
-			local Yaw      = math.Round(Entity.Yaw, 2)
+			local Pitch, Yaw = Entity.Pitch, Entity.Yaw
 
-			return Text:format(Distance, Pitch, Yaw)
+			State:AddNumber("Distance", Distance, " m", 0)
+			State:AddNumber("Pitch", Entity.Pitch, Pitch >= 1 and Pitch < 2 and " degree" or " degrees")
+			State:AddNumber("Yaw", Entity.Yaw, Yaw >= 1 and Yaw < 2 and " degree" or " degrees")
 		end,
 		OnDamaged = function(Entity)
 			Entity.Spread = 1 - math.Round(Entity.ACF.Health / Entity.ACF.MaxHealth, 2)
@@ -769,17 +767,10 @@ do -- GPS transmitter
 				return "Transmitting"
 			end
 		end,
-		OnOverlayBody = function(Entity)
+		OnOverlayBody = function(Entity, State)
 			if not Entity.IsGPS then return end
 
-			local Text = "Coordinates: [%s, %s, %s]"
-			local X, Y, Z = Entity.Coordinates:Unpack()
-
-			X = math.Round(X, 2)
-			Y = math.Round(Y, 2)
-			Z = math.Round(Z, 2)
-
-			return Text:format(X, Y, Z)
+			State:AddCoordinates("Coordinates", Entity.Coordinates:Unpack())
 		end,
 		OnDamaged = function(Entity)
 			Entity.Spread = ACF.MaxDamageInaccuracy * (1 - math.Round(Entity.ACF.Health / Entity.ACF.MaxHealth, 2))

@@ -297,13 +297,16 @@ function ENT:Disable()
 	end
 end
 
-function ENT:UpdateOverlayText()
-	local Title = self.OverlayTitle and self:OverlayTitle() or "Idle"
-	local Body = self.OverlayBody and self:OverlayBody()
+function ENT:ACF_UpdateOverlayState(State)
+	if self.OverlayTitle then
+		self:OverlayTitle(State)
+	else
+		State:AddSuccess("Idle")
+	end
 
-	Body = Body and ("\n\n" .. Body) or ""
-
-	return Title .. Body
+	if self.OverlayBody then
+		self:OverlayBody(State)
+	end
 end
 
 function ENT:Think()
