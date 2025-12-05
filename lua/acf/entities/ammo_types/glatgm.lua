@@ -36,7 +36,6 @@ function Ammo:BaseConvert(ToolData)
 end
 
 if SERVER then
-	local CrateText  = "Peak Velocity: %s m/s\nLaunch Velocity: %s m/s\nAcceleration: %s s\nMax Penetration: %s mm\nBlast Radius: %s m\nBlast Energy: %s KJ"
 	local Ballistics = ACF.Ballistics
 
 	function Ammo:Create(Gun, BulletData)
@@ -53,14 +52,19 @@ if SERVER then
 		Entity:SetNW2String("AmmoType", "GLATGM")
 	end
 
-	function Ammo:GetCrateText(BulletData)
+	function Ammo:UpdateCrateOverlay(BulletData, State)
 		local Data      = self:GetDisplayData(BulletData)
 		local Velocity  = math.Clamp(BulletData.MuzzleVel / ACF.Scale, 200, 1600) -- Minimum initial launch velocity of 40m/s and lowest peak at 100m/s while top speed is 800m/s
 		local PeakVel   = math.Round(Velocity * 0.5, 2)
 		local LaunchVel = math.Round(Velocity * 0.2, 2)
 		local Accel     = math.Round(math.Clamp(BulletData.ProjMass / BulletData.PropMass + BulletData.Caliber / 7, 0.2, 10), 2)
 
-		return CrateText:format(PeakVel, LaunchVel, Accel,  math.floor(Data.MaxPen), math.Round(Data.BlastRadius, 2), math.floor(BulletData.BoomFillerMass * ACF.HEPower))
+		State:AddNumber("Peak Velocity", PeakVel, " m/s")
+		State:AddNumber("Launch Velocity", LaunchVel, " m/s")
+		State:AddNumber("Acceleration", Accel, " s")
+		State:AddNumber("Max Penetration", math.floor(Data.MaxPen), " mm")
+		State:AddNumber("Blast Radius", Data.BlastRadius, " m")
+		State:AddNumber("Blast Energy", math.floor(BulletData.BoomFillerMass * ACF.HEPower), " kJ")
 	end
 
 	function Ammo:HEATExplosionEffect(Bullet, Pos)
