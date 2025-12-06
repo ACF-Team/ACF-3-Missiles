@@ -134,8 +134,8 @@ Missiles.RegisterItem("SS-40 RA", "ARTY", {
 		TailFinMul      = 50,
 		PenMul          = 1.4,
 		CanDelayLaunch  = true,
-		ActualLength    = 370,
-		ActualWidth     = 18
+		ActualLength    = 165,
+		ActualWidth     = 6.75
 	},
 	Preview = {
 		Height = 80,
