@@ -19,8 +19,8 @@ function Fuze:Configure()
 	self.TimeStarted = Clock.CurTime
 end
 
-function Fuze:GetDisplayConfig()
-	return { Primer = math.Round(self.Primer, 2) .. " s" }
+function Fuze:WriteDisplayConfig(State)
+	State:AddSubKeyValue("Primer", math.Round(self.Primer, 2))
 end
 
 if CLIENT then

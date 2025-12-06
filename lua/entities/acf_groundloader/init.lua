@@ -231,14 +231,13 @@ function ENT:CheckOnTrackedRacks(_)
 	end
 end
 
-local Text = "Ground Loader\n\nStatus: %s"
 function ENT:SetStatus(Status)
 	self.Status = Status
 	self:UpdateOverlay()
 end
 
-function ENT:UpdateOverlayText()
-	return Text:format(self.Status)
+function ENT:ACF_UpdateOverlayState(State)
+	State:AddKeyValue("Status", self.Status)
 end
 
 function ENT:Think()
