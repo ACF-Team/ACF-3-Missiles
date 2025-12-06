@@ -516,23 +516,21 @@ function ENT:Disable()
 	self:TriggerInput("Active", 0)
 end
 
-local Text = "%s\n\n%s\nDetection range: %s\nScanning angle: %s degrees"
-
-function ENT:UpdateOverlayText()
-	local Status, Range, Cone
-
+function ENT:ACF_UpdateOverlayState(State)
 	if self.TargetCount > 0 then
-		Status = self.TargetCount .. " target(s) detected"
+		State:AddSuccess(self.TargetCount .. " target(s) detected")
 	elseif not self.Active then
-		Status = "Idle"
+		State:AddWarning("Idle")
 	else
-		Status = self.Scanning and "Active" or "Activating"
+		if self.Scanning then
+			State:AddWarning("Activating")
+		else
+			State:AddSuccess("Active")
+		end
 	end
 
-	Range = self.Range and math.Round(self.Range / ACF.MeterToInch, 2) .. " meters" or "Infinite"
-	Cone = self.ConeDegs and math.Round(self.ConeDegs, 2) or 360
-
-	return Text:format(Status, self.EntType, Range, Cone)
+	State:AddKeyValue("Detection range", self.Range and math.Round(self.Range / ACF.MeterToInch, 2) .. " meters" or "Infinite")
+	State:AddNumber("Scanning angle", self.ConeDegs and math.Round(self.ConeDegs, 2) or 360)
 end
 
 function ENT:OnRemove()

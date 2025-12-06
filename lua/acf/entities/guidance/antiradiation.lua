@@ -9,11 +9,9 @@ function Guidance:Configure(Missile)
 	self.SeekConeCos = math.cos(math.rad(self.SeekCone))
 end
 
-function Guidance:GetDisplayConfig()
-	return {
-		Seeking = math.Round(self.SeekCone * 2, 2) .. " degrees",
-		Tracking = math.Round(self.ViewCone * 2, 2) .. " degrees"
-	}
+function Guidance:WriteDisplayConfig(State)
+	State:AddSubKeyValue("Tracking", math.Round(self.SeekCone * 2, 2) .. " degrees")
+	State:AddSubKeyValue("Seeking",  math.Round(self.ViewCone * 2, 2) .. " degrees")
 end
 
 if CLIENT then

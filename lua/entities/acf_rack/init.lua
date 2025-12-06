@@ -660,29 +660,31 @@ do -- Entity Inputs ----------------------------
 end ---------------------------------------------
 
 do -- Entity Overlay ----------------------------
-	local Text = "%s\n\nLoaded ammo: %s\nMounted:        %s\nReady to fire: %s\nReload time: %s second(s)\nFire delay: %s second(s)"
-
-	function ENT:UpdateOverlayText()
+	function ENT:ACF_UpdateOverlayState(State)
 		local Delay  = math.Round(self.FireDelay, 2)
 		local Reload = math.Round(self.ReloadTime, 2)
 		local Bullet = self.BulletData
 		local Ammo   = (Bullet.Id and (Bullet.Id .. " ") or "") .. Bullet.Type
 		local Status = self.State
 
+		local Error = false
 		if self.Jammed then
+			Error = true
 			Status = "Jammed!\nRepair this rack to be able to use it again."
 		elseif not next(self.Crates) then
+			Error = true
 			Status = "Not linked to an ammo crate!"
 		end
 
-		local ErrorCount = table.Count(self.OverlayErrors)
-		if ErrorCount > 0 then
-			Status = Status .. " (" .. ErrorCount .. " errors)"
+		if Error then
+			State:AddError(Status)
+		else
+			State:AddLabel(Status)
 		end
 
 		-- Compile error messages
 		for _, Error in pairs(self.OverlayErrors) do
-			Status = Status .. "\n\n" .. Error
+			State:AddError(Error)
 		end
 
 		local ReadyToFire = 0
@@ -692,7 +694,11 @@ do -- Entity Overlay ----------------------------
 			end
 		end
 
-		return Text:format(Status, Ammo, self.CurrentShot, ReadyToFire, Reload, Delay)
+		State:AddKeyValue("Loaded ammo", Ammo)
+		State:AddNumber("Mounted", self.CurrentShot)
+		State:AddNumber("Ready to fire", ReadyToFire)
+		State:AddNumber("Reload time", Reload, (Reload >= 1 and Reload < 2) and " second" or " seconds")
+		State:AddNumber("Fire delay", Delay, (Delay >= 1 and Delay < 2) and " second" or " seconds")
 	end
 end ---------------------------------------------
 

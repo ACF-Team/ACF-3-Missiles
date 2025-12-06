@@ -95,11 +95,13 @@ if SERVER then
 		Entity:SetNW2Float("FillerMass", BulletData.FillerMass)
 	end
 
-	function Ammo:GetCrateText(BulletData)
-		local Text = "Muzzle Velocity: %s m/s\nBurn Rate: %s kg/s\nBurn Duration: %s s\nDistract Chance: %s%%"
+	function Ammo:UpdateCrateOverlay(BulletData, State)
 		local Data = self:GetDisplayData(BulletData)
 
-		return Text:format(math.Round(BulletData.MuzzleVel, 2), math.Round(Data.BurnRate, 2), math.Round(Data.BurnTime, 2), math.floor(Data.DistractChance * 100))
+		State:AddNumber("Muzzle Velocity", BulletData.MuzzleVel, " m/s")
+		State:AddNumber("Burn Rate", Data.BurnRate, " kg/s")
+		State:AddNumber("Burn Duration", Data.BurnTime, " s")
+		State:AddNumber("Distract Chance", math.floor(Data.DistractChance * 100), "%")
 	end
 
 	function Ammo:PropImpact(_, Trace)

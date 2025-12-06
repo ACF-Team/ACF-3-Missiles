@@ -14,12 +14,9 @@ function Fuze:OnFirst(Entity, Data)
 	self.Timer = Data.FuzeTimer
 end
 
-function Fuze:GetDisplayConfig()
-	local Config = Fuze.BaseClass.GetDisplayConfig(self)
-
-	Config.Timer = math.Round(self.Timer, 2) .. " s"
-
-	return Config
+function Fuze:WriteDisplayConfig(State)
+	Fuze.BaseClass.WriteDisplayConfig(self, State)
+	State:AddSubKeyValue("Timer",  math.Round(self.Timer, 2) .. " s")
 end
 
 if CLIENT then

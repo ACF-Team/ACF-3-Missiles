@@ -294,12 +294,12 @@ function ENT:Disable()
 	SetActive(self, false)
 end
 
-local Text = "%s\n\n%s"
-
-function ENT:UpdateOverlayText()
-	local Status = self.Detected and "Detected" or "Undetected"
-
-	return Text:format(Status, self.EntType)
+function ENT:ACF_UpdateOverlayState(State)
+	if self.Detected then
+		State:AddSuccess("Detected")
+	else
+		State:AddWarning("Undetected")
+	end
 end
 
 function ENT:OnRemove()
