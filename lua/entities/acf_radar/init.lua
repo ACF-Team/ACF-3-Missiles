@@ -523,9 +523,9 @@ function ENT:ACF_UpdateOverlayState(State)
 		State:AddWarning("Idle")
 	else
 		if self.Scanning then
-			State:AddWarning("Activating")
-		else
 			State:AddSuccess("Active")
+		else
+			State:AddWarning("Activating")
 		end
 	end
 
