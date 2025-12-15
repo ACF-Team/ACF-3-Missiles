@@ -97,7 +97,7 @@ do
 		self.LoadCrewMod = self.LoadCrewModOverride or math.Clamp(Sum1 + Sum2 + Sum3, ACF.CrewFallbackCoef, ACF.LoaderMaxBonus)
 
 		-- Check space behind breech
-		if self.BulletData and self.BulletData.Type ~= "Empty" and self.ClassData.BreechConfigs then
+		if ACF.LegalChecks and self.BulletData and self.BulletData.Type ~= "Empty" and self.ClassData.BreechConfigs then
 			local IdName      = self.BulletData.Id
 			local IdGroup     = Classes.GetGroup(Classes.Missiles, IdName)
 			local IdClass     = IdGroup.Lookup[IdName]
