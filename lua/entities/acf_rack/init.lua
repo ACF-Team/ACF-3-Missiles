@@ -68,7 +68,6 @@ do
 
 	-- Calculates the reload efficiency between a Crew, one of it's racks and an ammo crate
 	local function GetReloadEff(Crew, Rack, Ammo)
-		if not ACF.LegalChecks then return end
 		local BreechPos = Rack:LocalToWorld(Rack.BreechPos)
 		local CrewPos = Crew:LocalToWorld(Crew.CrewModel.ScanOffsetL)
 		local AmmoPos = Ammo:GetPos()
