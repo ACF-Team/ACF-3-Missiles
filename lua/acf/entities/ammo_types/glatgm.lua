@@ -40,9 +40,9 @@ if SERVER then
 
 	function Ammo:Create(Gun, BulletData)
 		if Gun:GetClass() == "acf_ammo" then
-			Ballistics.CreateBullet(BulletData)
+			return Ballistics.CreateBullet(BulletData)
 		else
-			ACF.MakeGLATGM(Gun.Owner, Gun, BulletData)
+			return ACF.MakeGLATGM(Gun.Owner, Gun, BulletData)
 		end
 	end
 
