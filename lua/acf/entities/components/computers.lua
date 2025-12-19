@@ -39,6 +39,14 @@ if SERVER then
 		if Entity.InputHitPos == Value then return end
 
 		Entity.InputHitPos = Value
+		
+		-- If the input is 0,0,0, reset angles
+		if Entity.InputHitPos == Vector() then
+			Entity.InputPitch = 0
+			Entity.InputYaw = 0
+			return
+		end
+
 		local RayOrigin = Entity:LocalToWorld(Entity.Offset)
 		local Angle = (Value - RayOrigin):Angle()
 		local LocalAngle = Entity:WorldToLocalAngles(Angle)
@@ -393,6 +401,7 @@ do -- Optical guidance computer
 			State:AddNumber("Distance", FloorMeters(Entity.Distance) * ACF.InchToMeter, " m", 2)
 			State:AddNumber("Pitch", Entity.Pitch, Pitch >= 1 and Pitch < 2 and " degree" or " degrees")
 			State:AddNumber("Yaw", Entity.Yaw, Yaw >= 1 and Yaw < 2 and " degree" or " degrees")
+			State:AddCoordinates("HitPos", Entity.HitPos:Unpack())
 		end,
 		OnDamaged = function(Entity)
 			Entity.Spread = 1 - math.Round(Entity.ACF.Health / Entity.ACF.MaxHealth, 2)
@@ -610,6 +619,7 @@ do -- Laser guidance computer
 			State:AddNumber("Distance", Distance, " m", 0)
 			State:AddNumber("Pitch", Entity.Pitch, Pitch >= 1 and Pitch < 2 and " degree" or " degrees")
 			State:AddNumber("Yaw", Entity.Yaw, Yaw >= 1 and Yaw < 2 and " degree" or " degrees")
+			State:AddCoordinates("HitPos", Entity.HitPos:Unpack())
 		end,
 		OnDamaged = function(Entity)
 			Entity.Spread = 1 - math.Round(Entity.ACF.Health / Entity.ACF.MaxHealth, 2)
