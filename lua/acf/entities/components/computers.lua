@@ -39,7 +39,7 @@ if SERVER then
 		if Entity.InputHitPos == Value then return end
 
 		Entity.InputHitPos = Value
-		
+
 		-- If the input is 0,0,0, reset angles
 		if Entity.InputHitPos == Vector() then
 			Entity.InputPitch = 0
