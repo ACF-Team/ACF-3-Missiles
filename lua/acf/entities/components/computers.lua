@@ -39,19 +39,6 @@ if SERVER then
 		if Entity.InputHitPos == Value then return end
 
 		Entity.InputHitPos = Value
-
-		-- If the input is 0,0,0, reset angles
-		if Entity.InputHitPos == Vector() then
-			Entity.InputPitch = 0
-			Entity.InputYaw = 0
-			return
-		end
-
-		local RayOrigin = Entity:LocalToWorld(Entity.Offset)
-		local Angle = (Value - RayOrigin):Angle()
-		local LocalAngle = Entity:WorldToLocalAngles(Angle)
-		Entity.InputPitch = math.Round(math.Clamp(-LocalAngle.p, Entity.MinPitch, Entity.MaxPitch), 2)
-		Entity.InputYaw = math.Round(math.Clamp(-LocalAngle.y, Entity.MinYaw, Entity.MaxYaw), 2)
 	end)
 
 	ACF.AddInputAction("acf_computer", "Lase", function(Entity, Value)
@@ -429,6 +416,14 @@ do -- Optical guidance computer
 			local Focus = Entity.FocusSpeed * Tick * math.Rand(Entity.Spread, 1)
 			local Changed
 
+			if Entity.InputHitPos ~= Vector() then
+				local RayOrigin = Entity:LocalToWorld(Entity.Offset)
+				local Angle = (Entity.InputHitPos - RayOrigin):Angle()
+				local LocalAngle = Entity:WorldToLocalAngles(Angle)
+				Entity.InputPitch = math.Round(math.Clamp(-LocalAngle.p, Entity.MinPitch, Entity.MaxPitch), 2)
+				Entity.InputYaw = math.Round(math.Clamp(-LocalAngle.y, Entity.MinYaw, Entity.MaxYaw), 2)
+			end
+
 			if Entity.Pitch ~= Entity.InputPitch then
 				local Delta = math.Clamp(Entity.InputPitch - Entity.Pitch, -Speed, Speed)
 
@@ -651,6 +646,14 @@ do -- Laser guidance computer
 			local Tick  = engine.TickInterval()
 			local Speed = Entity.MoveSpeed * Tick
 			local Changed
+
+			if Entity.InputHitPos ~= Vector() then
+				local RayOrigin = Entity:LocalToWorld(Entity.Offset)
+				local Angle = (Entity.InputHitPos - RayOrigin):Angle()
+				local LocalAngle = Entity:WorldToLocalAngles(Angle)
+				Entity.InputPitch = math.Round(math.Clamp(-LocalAngle.p, Entity.MinPitch, Entity.MaxPitch), 2)
+				Entity.InputYaw = math.Round(math.Clamp(-LocalAngle.y, Entity.MinYaw, Entity.MaxYaw), 2)
+			end
 
 			if Entity.Pitch ~= Entity.InputPitch then
 				local Delta = math.Clamp(Entity.InputPitch - Entity.Pitch, -Speed, Speed)
