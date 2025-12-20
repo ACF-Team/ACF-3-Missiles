@@ -146,11 +146,12 @@ local function GetAncestorEntities()
 	return Ancestors
 end
 
-function ACF.GetEntitiesInCone(Position, Direction, Degrees)
+function ACF.GetEntitiesInCone(Position, Direction, Degrees, Contraption)
 	local Result = {}
 
 	for Entity in pairs(GetAncestorEntities()) do
 		if not IsValid(Entity) then continue end
+		if Contraption and Entity:GetContraption() == Contraption then continue end
 
 		if Countermeasures.ConeContainsPos(Position, Direction, Degrees, Entity:GetPos()) then
 			Result[Entity] = true
@@ -160,12 +161,13 @@ function ACF.GetEntitiesInCone(Position, Direction, Degrees)
 	return Result
 end
 
-function ACF.GetEntitiesInSphere(Position, Radius)
+function ACF.GetEntitiesInSphere(Position, Radius, Contraption)
 	local Result = {}
 	local RadiusSqr = Radius * Radius
 
 	for Entity in pairs(GetAncestorEntities()) do
 		if not IsValid(Entity) then continue end
+		if Contraption and Entity:GetContraption() == Contraption then continue end
 
 		if Position:DistToSqr(Entity:GetPos()) <= RadiusSqr then
 			Result[Entity] = true

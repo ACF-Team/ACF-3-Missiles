@@ -33,6 +33,14 @@ if SERVER then
 		Entity.InputYaw = Value
 	end)
 
+	ACF.AddInputAction("acf_computer", "HitPos", function(Entity, Value)
+		if not Entity.InputHitPos then return end
+
+		if Entity.InputHitPos == Value then return end
+
+		Entity.InputHitPos = Value
+	end)
+
 	ACF.AddInputAction("acf_computer", "Lase", function(Entity, Value)
 		if Entity.Lasing == nil then return end
 		if Entity.OnCooldown then return end
@@ -281,7 +289,7 @@ do -- Optical guidance computer
 		Offset      = Vector(6, -1, 0),
 		Speed       = 10, -- Degrees per second
 		FocusSpeed  = 300, -- Meters per second
-		Inputs      = { "Pitch (Degrees on the vertical axis)", "Yaw (Degrees on the horizontal axis)" },
+		Inputs      = { "Pitch (Degrees on the vertical axis)", "Yaw (Degrees on the horizontal axis)", "HitPos (Target location to aim laser at) [VECTOR]" },
 		Outputs     = {
 			"Ranging (Whether or not the computer is currently adjusting to focus)",
 			"Distance (The currently measured distance from the computer, in meters)",
@@ -329,6 +337,7 @@ do -- Optical guidance computer
 			Entity.Yaw        = 0
 			Entity.InputPitch = 0
 			Entity.InputYaw   = 0
+			Entity.InputHitPos = Vector()
 
 			Computers[Entity] = true
 
@@ -360,6 +369,7 @@ do -- Optical guidance computer
 			Entity.Yaw        = nil
 			Entity.InputPitch = nil
 			Entity.InputYaw   = nil
+			Entity.InputHitPos = nil
 
 			Computers[Entity] = nil
 		end,
@@ -378,6 +388,7 @@ do -- Optical guidance computer
 			State:AddNumber("Distance", FloorMeters(Entity.Distance) * ACF.InchToMeter, " m", 2)
 			State:AddNumber("Pitch", Entity.Pitch, Pitch >= 1 and Pitch < 2 and " degree" or " degrees")
 			State:AddNumber("Yaw", Entity.Yaw, Yaw >= 1 and Yaw < 2 and " degree" or " degrees")
+			State:AddCoordinates("HitPos", Entity.HitPos:Unpack())
 		end,
 		OnDamaged = function(Entity)
 			Entity.Spread = 1 - math.Round(Entity.ACF.Health / Entity.ACF.MaxHealth, 2)
@@ -404,6 +415,14 @@ do -- Optical guidance computer
 			local Speed = Entity.MoveSpeed * Tick * math.Rand(Entity.Spread, 1)
 			local Focus = Entity.FocusSpeed * Tick * math.Rand(Entity.Spread, 1)
 			local Changed
+
+			if Entity.InputHitPos ~= Vector() then
+				local RayOrigin = Entity:LocalToWorld(Entity.Offset)
+				local Angle = (Entity.InputHitPos - RayOrigin):Angle()
+				local LocalAngle = Entity:WorldToLocalAngles(Angle)
+				Entity.InputPitch = math.Round(math.Clamp(-LocalAngle[1], Entity.MinPitch, Entity.MaxPitch), 2)
+				Entity.InputYaw = math.Round(math.Clamp(-LocalAngle[2], Entity.MinYaw, Entity.MaxYaw), 2)
+			end
 
 			if Entity.Pitch ~= Entity.InputPitch then
 				local Delta = math.Clamp(Entity.InputPitch - Entity.Pitch, -Speed, Speed)
@@ -475,7 +494,7 @@ do -- Laser guidance computer
 		Cooldown    = 10,
 		Offset      = Vector(6, -1, 0),
 		Speed       = 45, -- Degrees per second
-		Inputs      = { "Lase (Turns on the laser)", "Pitch (Degrees on the vertical axis)", "Yaw (Degrees on the horizontal axis)" },
+		Inputs      = { "Lase (Turns on the laser)", "Pitch (Degrees on the vertical axis)", "Yaw (Degrees on the horizontal axis)", "HitPos (Target location to aim laser at) [VECTOR]" },
 		Outputs     = {
 			"Lasing (Whether or not the laser is on)",
 			"Lase Time (How long the laser can stay on before requiring a cool down)",
@@ -531,6 +550,7 @@ do -- Laser guidance computer
 			Entity.Yaw        = 0
 			Entity.InputPitch = 0
 			Entity.InputYaw   = 0
+			Entity.InputHitPos = Vector()
 
 			Entity:SetNW2Vector("Direction", Vector(1))
 
@@ -573,6 +593,7 @@ do -- Laser guidance computer
 			Entity.Yaw        = nil
 			Entity.InputPitch = nil
 			Entity.InputYaw   = nil
+			Entity.InputHitPos = nil
 
 			ACF.ClearLaserSource(Entity)
 		end,
@@ -593,6 +614,7 @@ do -- Laser guidance computer
 			State:AddNumber("Distance", Distance, " m", 0)
 			State:AddNumber("Pitch", Entity.Pitch, Pitch >= 1 and Pitch < 2 and " degree" or " degrees")
 			State:AddNumber("Yaw", Entity.Yaw, Yaw >= 1 and Yaw < 2 and " degree" or " degrees")
+			State:AddCoordinates("HitPos", Entity.HitPos:Unpack())
 		end,
 		OnDamaged = function(Entity)
 			Entity.Spread = 1 - math.Round(Entity.ACF.Health / Entity.ACF.MaxHealth, 2)
@@ -624,6 +646,14 @@ do -- Laser guidance computer
 			local Tick  = engine.TickInterval()
 			local Speed = Entity.MoveSpeed * Tick
 			local Changed
+
+			if Entity.InputHitPos ~= Vector() then
+				local RayOrigin = Entity:LocalToWorld(Entity.Offset)
+				local Angle = (Entity.InputHitPos - RayOrigin):Angle()
+				local LocalAngle = Entity:WorldToLocalAngles(Angle)
+				Entity.InputPitch = math.Round(math.Clamp(-LocalAngle.p, Entity.MinPitch, Entity.MaxPitch), 2)
+				Entity.InputYaw = math.Round(math.Clamp(-LocalAngle.y, Entity.MinYaw, Entity.MaxYaw), 2)
+			end
 
 			if Entity.Pitch ~= Entity.InputPitch then
 				local Delta = math.Clamp(Entity.InputPitch - Entity.Pitch, -Speed, Speed)

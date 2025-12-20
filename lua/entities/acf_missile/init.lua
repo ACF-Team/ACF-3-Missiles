@@ -160,6 +160,9 @@ function Navigation.APN(TimeToHit, RelPos, RelVel, RelAcc)
 	return Scalar * (Pos + Vel + Acc) - GravityVector
 end
 
+local MIN_BOUNDS = -math.pow(2, 14)
+local MAX_BOUNDS = math.pow(2, 14)
+
 -- TODO: Missiles must base their movement off an ACF bullet
 local function CalcFlight(Missile)
 	if not Missile.Launched then return end
@@ -267,16 +270,27 @@ local function CalcFlight(Missile)
 	local Result = ACF.trace(TraceData)
 	local Ghosted = Time < Missile.GhostPeriod
 	local GhostHit = Ghosted and Result.HitWorld
+	local HitSky   = Result.HitSky
 
-	-- TODO: Missiles must be able to leave the map
-	if Result.Hit and (GhostHit or not Ghosted) then
-		Missile.HitNormal = Result.HitNormal
-		Missile.Disabled = GhostHit
+	-- If hitting the sky, continue so they can leave the map.
+	if Missile.InSky and not Result.HitWorld and Pos[3] < Missile.InSky then
+		Missile.InSky = nil
+	end
 
-		Missile:DoFlight(Result.HitPos)
-		Missile:Detonate()
+	if not Missile.InSky and Result.Hit and (GhostHit or not Ghosted) then
+		if HitSky then
+			Missile.InSky = Result.HitPos[3]
+			-- ^^ This is the Z component. We will not exit the sky until we go lower than this.
+			-- The reason this matters is in case we hit the sky but then there's a skybox right above the sky, etc.
+			-- So only exit sky-ignoring when we cross the same boundary we crossed entering it
+		else
+			Missile.HitNormal = Result.HitNormal
+			Missile.Disabled = GhostHit
 
-		return
+			Missile:DoFlight(Result.HitPos)
+			Missile:Detonate()
+			return
+		end
 	end
 
 	if Missile.FuzeData:GetDetonate(Missile, Missile.GuidanceData) then
@@ -564,6 +578,15 @@ end
 function ENT:DoFlight(ToPos, ToDir)
 	local NewPos = ToPos or self.Position
 	local NewDir = ToDir or self.CurDir
+
+	-- Destroy the missile if it is out of bounds. Allow OOB upward, though.
+	do
+		local X, Y, Z = NewPos:Unpack()
+		if X < MIN_BOUNDS or X > MAX_BOUNDS or Y < MIN_BOUNDS or Y > MAX_BOUNDS or Z < MIN_BOUNDS then
+			self:Remove()
+			return
+		end
+	end
 
 	self:SetPos(NewPos)
 	self:SetAngles(NewDir:Angle())
