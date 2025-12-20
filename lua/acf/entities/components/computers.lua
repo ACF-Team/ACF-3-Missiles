@@ -420,8 +420,8 @@ do -- Optical guidance computer
 				local RayOrigin = Entity:LocalToWorld(Entity.Offset)
 				local Angle = (Entity.InputHitPos - RayOrigin):Angle()
 				local LocalAngle = Entity:WorldToLocalAngles(Angle)
-				Entity.InputPitch = math.Round(math.Clamp(-LocalAngle.p, Entity.MinPitch, Entity.MaxPitch), 2)
-				Entity.InputYaw = math.Round(math.Clamp(-LocalAngle.y, Entity.MinYaw, Entity.MaxYaw), 2)
+				Entity.InputPitch = math.Round(math.Clamp(-LocalAngle[1], Entity.MinPitch, Entity.MaxPitch), 2)
+				Entity.InputYaw = math.Round(math.Clamp(-LocalAngle[2], Entity.MinYaw, Entity.MaxYaw), 2)
 			end
 
 			if Entity.Pitch ~= Entity.InputPitch then
