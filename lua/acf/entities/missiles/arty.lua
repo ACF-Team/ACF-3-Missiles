@@ -21,7 +21,6 @@ Missiles.RegisterItem("Type 63 RA", "ARTY", {
 	Caliber		= 107,
 	Mass		= 19,
 	Length		= 80,
-	Diameter	= 6.5 * ACF.InchToMm, -- in mm
 	Year		= 1960,
 	ReloadTime	= 10,
 	ExhaustPos  = Vector(-24),
@@ -60,11 +59,10 @@ Missiles.RegisterItem("Type 63 RA", "ARTY", {
 Missiles.RegisterItem("SAKR-10 RA", "ARTY", {
 	Name		= "SAKR-10 Rocket",
 	Description	= "A short-range but formidable artillery rocket, based upon the Grad. Well suited to the backs of trucks.",
-	Model		= "models/missiles/9m31.mdl",
+	Model		= "models/missiles/hvar_folded.mdl",
 	Caliber		= 122,
 	Mass		= 56,
 	Length		= 287,
-	Diameter	= 4.6 * ACF.InchToMm, -- in mm
 	Year		= 1980,
 	ReloadTime	= 20,
 	ExhaustPos  = Vector(-44),
@@ -76,7 +74,8 @@ Missiles.RegisterItem("SAKR-10 RA", "ARTY", {
 	ViewCone	= 45,
 	ArmDelay	= 0.4,
 	Round = {
-		Model           = "models/missiles/9m31.mdl",
+		Model           = "models/missiles/hvar_folded.mdl",
+		RackModel       = "models/missiles/hvar_folded.mdl",
 		MaxLength       = 287,
 		Armor           = 2,
 		ProjLength      = 100,
@@ -91,8 +90,8 @@ Missiles.RegisterItem("SAKR-10 RA", "ARTY", {
 		TailFinMul      = 30,
 		PenMul          = 1.2,
 		CanDelayLaunch  = true,
-		ActualLength    = 287,
-		ActualWidth     = 12.2
+		ActualLength    = 113,
+		ActualWidth     = 4.6
 	},
 	Preview = {
 		Height = 60,
@@ -103,11 +102,10 @@ Missiles.RegisterItem("SAKR-10 RA", "ARTY", {
 Missiles.RegisterItem("SS-40 RA", "ARTY", {
 	Name		= "SS-40 Rocket",
 	Description	= "A large, heavy, guided artillery rocket for taking out stationary or dug-in targets. Slow to load, slow to fire, slow to guide, and slow to arrive.",
-	Model		= "models/missiles/aim120.mdl",
+	Model		= "models/missiles/hvar_folded.mdl",
 	Caliber		= 180,
 	Mass		= 152,
 	Length		= 370,
-	Diameter	= 6.75 * ACF.InchToMm, -- in mm
 	Year		= 1983,
 	ReloadTime	= 30,
 	ExhaustPos  = Vector(-70),
@@ -119,7 +117,8 @@ Missiles.RegisterItem("SS-40 RA", "ARTY", {
 	ViewCone	= 45,
 	ArmDelay	= 0.6,
 	Round = {
-		Model           = "models/missiles/aim120.mdl",
+		Model           = "models/missiles/hvar_folded.mdl",
+		RackModel       = "models/missiles/hvar_folded.mdl",
 		MaxLength       = 370,
 		Armor           = 2,
 		ProjLength      = 140,
@@ -134,7 +133,7 @@ Missiles.RegisterItem("SS-40 RA", "ARTY", {
 		TailFinMul      = 50,
 		PenMul          = 1.4,
 		CanDelayLaunch  = true,
-		ActualLength    = 165,
+		ActualLength    = 146,
 		ActualWidth     = 6.75
 	},
 	Preview = {
