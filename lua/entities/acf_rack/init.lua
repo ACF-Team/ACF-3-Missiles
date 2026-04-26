@@ -91,7 +91,7 @@ do
 
 	function ENT:UpdateLoadMod()
 		self.CrewsByType = self.CrewsByType or {}
-		if IsValid(self.Autoloader) and self.Autoloader.ACF.Health > 0 then
+		if IsValid(self.Autoloader) and self.Autoloader.ACF.Health > 0 and table.Count(self.MountPoints) == 1 then
 			local Sum1 = self.Autoloader:GetReloadEffAuto(self, self.CurrentCrate)
 			self.LoadCrewMod = self.LoadCrewModOverride or math.Clamp(Sum1, ACF.AutoloaderFallbackCoef, ACF.AutoloaderMaxBonus)
 		else
@@ -740,7 +740,7 @@ do -- Firing -----------------------------------
 		Rack:UpdateLoad(Point)
 
 		-- Mark contraption as in combat when firing
-		local Contraption = Rack:GetContraption()
+		local Contraption = Rack:CFW_GetContraption()
 		if Contraption then
 			Contraption.InCombat = engine.TickCount()
 		end
@@ -1174,17 +1174,17 @@ do -- Misc -------------------------------------
 
 	function ENT:Think()
 		local Time     = Clock.CurTime
-		local Previous = self.Position
+		local Previous = self.ACF_Position
 		local Current  = GetPosition(self)
 
-		self.Position = Current
+		self.ACF_Position = Current
 
 		if Previous then
 			local DeltaTime = Time - self.LastThink
 
-			self.Velocity = (Current - Previous) / DeltaTime
+			self.ACF_Velocity = (Current - Previous) / DeltaTime
 		else
-			self.Velocity = Vector()
+			self.ACF_Velocity = Vector()
 		end
 
 		self:NextThink(Time)

@@ -3,31 +3,49 @@ local Clock           = ACF.Utilities.Clock
 local Countermeasures = ACF.Classes.Countermeasures
 local Contraptions    = {}
 
+local ENTITY  = FindMetaTable("Entity")
+local PHYSOBJ = FindMetaTable("PhysObj")
+local VECTOR  = FindMetaTable("Vector")
+
+local IsEntityValid  = ACF.Optimizations.IsEntityValid
+local IsPhysObjValid = ACF.Optimizations.IsPhysObjValid
+
 local function UpdateValues(Contraption)
 	local Entity = Contraption.ACF_Baseplate
 	-- If legal checks are disabled, use any ancestor
-	if not ACF.LegalChecks and not IsValid(Entity) and Contraption and Contraption.families and next(Contraption.families) and next(Contraption.families).ancestor then Entity = next(Contraption.families).ancestor end
-	if not IsValid(Entity) then return end
+	if not ACF.LegalChecks and not IsEntityValid(Entity) and Contraption and Contraption.families then
+		local NextFamily = next(Contraption.families)
+		if NextFamily then
+			local Ancestor   = NextFamily.ancestor
+			if IsEntityValid(Ancestor) then
+				Entity = Ancestor
+			end
+		end
+	end
 
-	local PhysObj  = Entity:GetPhysicsObject()
-	local Velocity = Entity:GetVelocity()
-	local PrevPos  = Entity.Position
+	if not IsEntityValid(Entity) then return end
+
+	local SelfTable = ENTITY.GetTable(Entity)
+	local PhysObj   = ENTITY.GetPhysicsObject(Entity)
+	local Velocity  = ENTITY.GetVelocity(Entity)
+	local PrevPos   = SelfTable.ACF_Position
 	local Position
 
-	if IsValid(PhysObj) then
-		Position = Entity:LocalToWorld(PhysObj:GetMassCenter())
+	if IsPhysObjValid(PhysObj) then
+		Position = ENTITY.LocalToWorld(Entity, PHYSOBJ.GetMassCenter(PhysObj))
 	else
-		Position = Entity:GetPos()
+		Position = ENTITY.GetPos(Entity)
 	end
 
 	-- Entities being moved around by SetPos will have a velocity of 0
 	-- By using the difference between positions we can get a proper value
-	if Velocity:LengthSqr() == 0 and PrevPos then
-		Velocity = (Position - PrevPos) / Clock.DeltaTime
+	if VECTOR.LengthSqr(Velocity) == 0 and PrevPos then
+		Velocity = Position - PrevPos
+		VECTOR.Div(Velocity, Clock.DeltaTime)
 	end
 
-	Entity.Position = Position
-	Entity.Velocity = Velocity
+	SelfTable.ACF_Position = Position
+	SelfTable.ACF_Velocity = Velocity
 	Contraption.Ancestor = Entity
 end
 
@@ -37,6 +55,10 @@ hook.Add("cfw.contraption.created", "ACF Entity Tracking", function(Contraption)
 end)
 
 hook.Add("cfw.contraption.removed", "ACF Entity Tracking", function(Contraption)
+	Contraptions[Contraption] = nil
+end)
+
+hook.Add("cfw.contraption.merged", "ACF Entity Tracking", function(Contraption)
 	Contraptions[Contraption] = nil
 end)
 
@@ -50,7 +72,7 @@ function ACF.GetEntitiesInCone(Position, Direction, Degrees, Contraption)
 	for Con in pairs(Contraptions) do
 		local Entity = Con.Ancestor
 		if not IsValid(Entity) then continue end
-		local EntityContraption = Entity:GetContraption()
+		local EntityContraption = Entity:CFW_GetContraption()
 		if Contraption and EntityContraption == Contraption then continue end
 
 		if ACF.LegalChecks and Entity:GetClass() == "acf_baseplate" and Entity.Disabled then continue end
@@ -70,7 +92,7 @@ function ACF.GetEntitiesInSphere(Position, Radius, Contraption)
 	for Con in pairs(Contraptions) do
 		local Entity = Con.Ancestor
 		if not IsValid(Entity) then continue end
-		if Contraption and Entity:GetContraption() == Contraption then continue end
+		if Contraption and Entity:CFW_GetContraption() == Contraption then continue end
 		-- Skip disabled baseplates here
 
 		if Position:DistToSqr(Entity:GetPos()) <= RadiusSqr then

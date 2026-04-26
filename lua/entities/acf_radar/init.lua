@@ -168,11 +168,11 @@ local function ScanForEntities(Entity)
 	local Spread = ACF.MaxDamageInaccuracy * EntDamage
 
 	for Ent in pairs(Detected) do
-		local EntPos = Ent.Position or Ent:GetPos()
+		local EntPos = Ent.ACF_Position or Ent:GetPos()
 
 		if CheckLOS(Origin, EntPos) and (math.Rand(0, 1) >= (EntDamage / 10)) then
 			local EntSpread = VectorRand(-Spread, Spread)
-			local EntVel = Ent.Velocity or Ent:GetVelocity()
+			local EntVel = Ent.ACF_Velocity or Ent:GetVelocity()
 			local Owner = GetEntityOwner(Entity.Owner, Ent)
 			local Index = GetEntityIndex(Ent)
 
@@ -185,8 +185,8 @@ local function ScanForEntities(Entity)
 			local EntSize = 0
 			if Ent.IsACFMissile then
 				EntSize = (Ent.Caliber or 0) / ACF.InchToMm
-			elseif Ent:GetContraption() then
-				local Mins, Maxs, _ = Ent:GetContraption():GetAABB()
+			elseif Ent:CFW_GetContraption() then
+				local Mins, Maxs, _ = Ent:CFW_GetContraption():GetAABB()
 				EntSize = (Maxs - Mins):Length()
 			end
 			EntSize = math.Round(EntSize) -- Round to nearest inch
@@ -450,6 +450,10 @@ do -- Spawn and Update functions
 
 	Entities.Register("acf_missileradar", ACF.MakeRadar, "Radar") -- Backwards compatibility
 	Entities.Register("acf_radar", ACF.MakeRadar, "Radar")
+
+	-- Compatibility with ACE radar entities
+	Entities.Register("ace_trackingradar", ACF.MakeRadar, "Radar")
+	Entities.Register("ace_searchradar", ACF.MakeRadar, "Radar")
 
 	ACF.RegisterLinkSource("acf_radar", "Weapons")
 
