@@ -1,7 +1,0 @@
-"VertexLitGeneric"
-{
-
-	$basetexture			"models/missiles/bgm_71e.vtf"
-	$halflambert 			1
-
-}
