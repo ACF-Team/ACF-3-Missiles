@@ -1,6 +1,0 @@
-"VertexLitGeneric"
-{
-	"$baseTexture" "models\bombs/an-m66"
-	$halflambert 			1
-	$blendtintbybasealpha		1
-}
